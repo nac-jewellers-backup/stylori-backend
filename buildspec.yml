@@ -8,7 +8,7 @@ phases:
       - echo logging in to AWS ECR...
   build:
     commands:
-      - echo during build time
+      - docker build -t nac-auth:latest .
   post_build:
     commands:
       - echo build Docker image complete `date`
