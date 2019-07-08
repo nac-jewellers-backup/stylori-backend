@@ -1,0 +1,14 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - echo install step...
+  pre_build:
+    commands:
+      - echo logging in to AWS ECR...
+  build:
+    commands:
+      - docker build -t nac-auth:latest .
+  post_build:
+    commands:
+      - echo build Docker image complete `date`
