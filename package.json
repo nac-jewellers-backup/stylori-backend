@@ -1,0 +1,13 @@
+{
+    "name": "nac-auth",
+    "version": "1.0.0",
+    "description": "Nac authentication server",
+    "scripts": {
+      "start": "node app.js"
+    },
+    "author": "sandeep",
+    "license": "ISC",
+    "dependencies": {
+      "express": "^4.17.1"
+    }
+  }
