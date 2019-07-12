@@ -156,10 +156,10 @@ exports.resetpassword = (req, res) => {
                   return user
                     .update({ password:bcrypt.hashSync(req.body.password, 8) })
                     .then(updatedUser => {
-                      return res.status(403).json(`User with ${user.email} has been verified`);
+                      return res.status(403).json(`Password Reset Successfully`);
                     })
                     .catch(reason => {
-                      return res.status(403).json(`Verification failed`);
+                      return res.status(403).json(`Please Try Again`);
                     });
                 } else {
                   return res.status(404).json(`Token expired` );
@@ -171,7 +171,7 @@ exports.resetpassword = (req, res) => {
           
         })
         .catch(reason => {
-          return res.status(404).json(`Email not found1`);
+          return res.status(404).json(`Email not found`);
         });
 }
 exports.forgotpassword = (req, res) => {
@@ -185,7 +185,7 @@ exports.forgotpassword = (req, res) => {
         if(user)
         {  
         if(!user.isVerified) {
-          return res.status(409).json('User with email address already exists');
+          return res.status(409).json('Please verify email then try reset password');
         } else {
               
                         return models.VerificationToken.create({
@@ -197,7 +197,7 @@ exports.forgotpassword = (req, res) => {
                             return res.status(200).json('Reset Password link sent to your registered Email Id');
                           })
                           .catch((error) => {
-                            return res.status(500).json("error"+error);
+                            return res.status(500).json(error);
                           });
       
         }
@@ -206,7 +206,7 @@ exports.forgotpassword = (req, res) => {
     }
       })
       .catch((error) => {
-        return res.status(500).json("error1"+error);
+        return res.status(500).json(error);
       });
       
 }
