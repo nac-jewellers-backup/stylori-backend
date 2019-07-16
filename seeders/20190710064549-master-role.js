@@ -6,49 +6,25 @@ module.exports = {
       return queryInterface.bulkInsert('Roles', [
       {
         id:1,
-        name: 'Super Admin',
+        name: 'Admin',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id:2,
-        name: 'Business Development Executive - BDE',
+        name: 'Marketing Executive',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id:3,
-        name: 'Team Lead - TL',
+        name: 'Sales Manager',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id:4,
-        name: 'Photographer',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id:5,
-        name: 'Photoshop Team',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id:6,
-        name: 'Quality Check',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id:7,
-        name: 'Finance',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id:8,
-        name: 'Management (Owner)',
+        name: 'Sales Person',
         createdAt: new Date(),
         updatedAt: new Date()
       }
