@@ -5,15 +5,34 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const config = require(__dirname + '/../config/config');
 const db = {};
 
+// let sequelize;
+// if (config.use_env_variable) {
+//   sequelize = new Sequelize(process.env[config.use_env_variable], config);
+// } else {
+//   sequelize = new Sequelize(config.database, config.username, config.password, config);
+// }
 let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+if (env === "production") {
+  sequelize = new Sequelize(config.production.database, config.production.username, config.production.password, config.production,{
+    host:config.production.host,
+    dialect:config.production.dialect
+  });
+} else if(env === "development"){
+  sequelize = new Sequelize(config.local.database, config.local.username, config.local.password, config.local,{
+    host:config.local.host,
+    dialect:config.local.dialect
+  });
 } else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+  sequelize = new Sequelize(config.staging.database, config.staging.username, config.staging.password,
+    {
+      host:config.staging.host,
+      dialect:config.staging.dialect
+    });
 }
+
 
 fs
   .readdirSync(__dirname)
