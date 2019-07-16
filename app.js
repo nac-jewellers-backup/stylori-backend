@@ -8,7 +8,7 @@ const app = express();
 
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('NAC Auth running');
 });
 app.use(cors())
 app.use(express.json());
@@ -19,7 +19,7 @@ require('./routes/route.js')(app);
 
 
 app.listen(process.env.PORT, () =>
-  console.log(`Example app listening on port ${process.env.PORT}!`),
+  console.log(`NAC Ecommerce running ${process.env.PORT}!`),
 );
 
 
