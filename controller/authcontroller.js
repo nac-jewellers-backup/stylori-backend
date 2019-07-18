@@ -6,8 +6,7 @@ import 'dotenv/config';
 const Op= require('sequelize').Op;
 
 exports.signin = (req, res) => {
-    console.log("Sign-In");
-        console.log(req.body);
+ 
     models.User.findOne({
 
         where: {
@@ -37,9 +36,9 @@ exports.signin = (req, res) => {
     });
 }
 exports.signup = (req, res) => {
-    console.log(JSON.stringify(req.body.userName));
+ 
     var uservalue = {
-        userName: req.body.userName,
+        userName: req.body.username,
         password: bcrypt.hashSync(req.body.password, 8),
         email: req.body.email
     }
@@ -73,7 +72,7 @@ exports.signup = (req, res) => {
                             tokentype: 1
                           }).then((result) => {
                            // sendVerificationEmail(user.email, result.token);
-                            return res.status(200).json(`${user.email} account created successfully. To verify your account please click this link localhost:8000/verification/${user.email}/${verifytoken}`);
+                            return res.status(200).json(`${user.email} account created successfully. To verify your account please click this link http://auth-dev.ap-south-1.elasticbeanstalk.com/verification/${user.email}/${verifytoken}`);
                           })
                           .catch((error) => {
                             return res.status(500).json("error"+error);
