@@ -11,7 +11,7 @@ exports.signin = (req, res) => {
     models.User.findOne({
 
         where: {
-            userName: req.body.username
+          email: req.body.email
         },
         include: [{
             model: models.Role,
@@ -66,14 +66,14 @@ exports.signup = (req, res) => {
               //    res.status(200).send(roles);
                   if (user) {
                       user.setRoles(roles).then(() => {
-                          
+                          var verifytoken = crypto({length: 16});
                         return models.VerificationToken.create({
                             userId: user.id,
-                            token: crypto({length: 16}),
+                            token: verifytoken,
                             tokentype: 1
                           }).then((result) => {
                            // sendVerificationEmail(user.email, result.token);
-                            return res.status(200).json(`${user.email} account created successfully`);
+                            return res.status(200).json(`${user.email} account created successfully. To verify your account please click this link localhost:8000/verification/${user.email}/${verifytoken}`);
                           })
                           .catch((error) => {
                             return res.status(500).json("error"+error);
@@ -94,18 +94,15 @@ exports.signup = (req, res) => {
       });
 }
 exports.verification = (req, res) => {
-    console.log(req.query.email)
+    console.log(req.params.email)
     return models.User.findOne({
-        where: { email: req.query.email }
+        where: { email: req.params.email }
       }).then(user => {
-
           if (user.isVerified) {
             return res.status(202).json(`Email Already Verified`);
           } else {
-            console.log(req.query.verificationToken)
-
             return models.VerificationToken.findOne({
-              where: { token: req.query.verificationToken,tokentype: 1, userId: user.id,
+              where: { token: req.params.token,tokentype: 1, userId: user.id,
                     createdAt: {
                     [Op.lt]: new Date(),
                     [Op.gt]: new Date(new Date() - 24 * 60 * 60 * 1000)
