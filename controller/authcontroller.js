@@ -189,7 +189,7 @@ exports.forgotpassword = (req, res) => {
                             token: crypto({length: 16})
                           }).then((result) => {
                            // sendVerificationEmail(user.email, result.token);
-                            return res.status(200).json('Reset Password link sent to your registered Email Id');
+                            return res.status(200).json('Reset Password link sent to your registered Email Id'+result.token);
                           })
                           .catch((error) => {
                             return res.status(500).json(error);
