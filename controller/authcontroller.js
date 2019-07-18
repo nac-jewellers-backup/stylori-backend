@@ -134,7 +134,6 @@ exports.verification = (req, res) => {
         });
 }
 exports.resetpassword = (req, res) => {
-    console.log(req.query.email)
     return models.User.findOne({
         where: { email: req.query.email }
       }).then(user => {
