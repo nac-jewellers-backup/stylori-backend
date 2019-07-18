@@ -134,11 +134,11 @@ exports.verification = (req, res) => {
 }
 exports.resetpassword = (req, res) => {
     return models.User.findOne({
-        where: { email: req.query.email }
+        where: { email: req.body.email }
       }).then(user => {
           
             return models.VerificationToken.findOne({
-              where: { token: req.query.verificationToken,tokentype: 2, userId: user.id,
+              where: { token: req.body.verificationToken,tokentype: 2, userId: user.id,
                     createdAt: {
                     [Op.lt]: new Date(),
                     [Op.gt]: new Date(new Date() - 24 * 60 * 60 * 1000)
