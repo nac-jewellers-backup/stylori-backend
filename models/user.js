@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
+  const User = sequelize.define('user', {
   	id: 
     {
         allowNull: false,
@@ -35,11 +35,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE
       }
     
-  }, {});
+  }, {
+    underscore:true,
+    schema:'auth',
+  });
   User.associate = function(models) {
     // associations can be defined here
     
-    User.belongsToMany(models.Role, { through: 'user_roles', foreignKey: 'userId', otherKey: 'roleId'});
+    //User.belongsToMany(models.Role, { through: 'user_roles', foreignKey: 'userId', otherKey: 'roleId'});
     User.hasOne(models.VerificationToken, {
       as: 'VerificationToken',
       foreignKey: 'userId',

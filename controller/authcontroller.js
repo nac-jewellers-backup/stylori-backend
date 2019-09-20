@@ -1,7 +1,7 @@
 import crypto from 'crypto-random-string';
-const models=require('./../models');
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
+const models=require('./../models');
 import 'dotenv/config';
 const Op= require('sequelize').Op;
 

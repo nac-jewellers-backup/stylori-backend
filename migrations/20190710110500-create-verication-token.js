@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('VerificationTokens', {
+    return queryInterface.createTable('verificationTokens', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -13,7 +13,7 @@ module.exports = {
         allowNull: false,
         onUpdate: "cascade",
         onDelete: "cascade",
-        references: { model: "Users", key: "id" }
+        references: {  model:{ schema: 'auth', tableName: 'users' }, key: "id" }
       },
       token: {
         type: Sequelize.STRING
@@ -34,6 +34,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('VerificationTokens');
+    return queryInterface.dropTable('verificationTokens');
   }
 };

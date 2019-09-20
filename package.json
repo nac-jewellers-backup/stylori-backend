@@ -17,13 +17,16 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
+    "postgraphile": "^4.4.0",
     "sequelize": "^5.9.4",
-    "sequelize-cli": "^5.5.0"
+    "sequelize-cli": "^5.5.0",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.5.4",
     "@babel/node": "^7.5.0",
     "@babel/preset-env": "^7.4.5",
+    "eslint": "^6.4.0",
     "nodemon": "^1.19.1"
   }
 }

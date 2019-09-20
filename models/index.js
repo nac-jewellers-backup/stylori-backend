@@ -17,6 +17,8 @@ console.log(env);
 // }
 let sequelize;
 if (env === "production") {
+    console.log(env);
+
   sequelize = new Sequelize(config.production.database, config.production.username, config.production.password, config.production,{
     host:config.production.host,
     dialect:config.production.dialect
@@ -34,11 +36,17 @@ else if(env === "development"){
     dialect:config.local.dialect
   });
 } else {
+  console.log("dsadasd"+env);
+
   sequelize = new Sequelize(config.staging.database, config.staging.username, config.staging.password,
     {
       host:config.staging.host,
       dialect:config.staging.dialect
     });
+  // sequelize = new Sequelize(config.local.database, config.local.username, config.local.password, config.local,{
+  //   host:config.local.host,
+  //   dialect:config.local.dialect
+  // });
 }
 
 
