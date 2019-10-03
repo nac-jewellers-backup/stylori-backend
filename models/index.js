@@ -30,23 +30,24 @@ else if(env === "staging"){
     dialect:config.staging.dialect
   });
 }
-else if(env === "development"){
+else if(env === "local"){
+  console.log("dsadasd"+config.local.database);
+
   sequelize = new Sequelize(config.local.database, config.local.username, config.local.password, config.local,{
     host:config.local.host,
     dialect:config.local.dialect
   });
 } else {
-  console.log("dsadasd"+env);
 
-  sequelize = new Sequelize(config.staging.database, config.staging.username, config.staging.password,
-    {
-      host:config.staging.host,
-      dialect:config.staging.dialect
-    });
-  // sequelize = new Sequelize(config.local.database, config.local.username, config.local.password, config.local,{
-  //   host:config.local.host,
-  //   dialect:config.local.dialect
-  // });
+  // sequelize = new Sequelize(config.staging.database, config.staging.username, config.staging.password,
+  //   {
+  //     host:config.staging.host,
+  //     dialect:config.staging.dialect
+  //   });
+  sequelize = new Sequelize(config.local.database, config.local.username, config.local.password, config.local,{
+    host:config.local.host,
+    dialect:config.local.dialect
+  });
 }
 
 

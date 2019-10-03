@@ -34,7 +34,11 @@ module.exports = {
       },
 
       product_sku: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        references: {
+          model: 'product_lists', // name of Source model
+          key: 'product_id',
+        }
       },
       createdAt: {
         allowNull: false,

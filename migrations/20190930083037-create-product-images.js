@@ -1,25 +1,24 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('users', {
+    return queryInterface.createTable('product_images', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
-      userName: {
+      product_color: {
         type: Sequelize.STRING
       },
-      password: {
-        type: Sequelize.STRING
+      product_id: {
+        type: Sequelize.STRING,
+        references: {
+          model: 'product_lists', // name of Source model
+          key: 'product_id',
+        }
       },
-      email: {
+      image_url: {
         type: Sequelize.STRING
-      },
-      isVerified: {
-        type: Sequelize.BOOLEAN,
-        defaultValue : false
       },
       createdAt: {
         allowNull: false,
@@ -29,11 +28,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    },{
-      schema: 'auth' 
     });
   },
-  down: (queryInterfa) => {
-    return queryInterface.dropTable('users');
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('product_images');
   }
 };

@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
 
     },
     purity: {
-      type: DataTypes.INTEGER
+      type: DataTypes.STRING
     },
     metal_color: {
       type: DataTypes.STRING
@@ -33,6 +33,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
 
     },
+    sku_size:{
+      type: DataTypes.STRING
+    }, 
     sku_weight:{
       type: DataTypes.DOUBLE
     }, 
@@ -42,6 +45,25 @@ module.exports = (sequelize, DataTypes) => {
     selling_price:{
       type: DataTypes.DOUBLE
     }, 
+    markup_price:{
+      type: DataTypes.DOUBLE
+    },
+    cost_price_tax:{
+      type: DataTypes.DOUBLE
+    },
+    selling_price_tax:{
+      type: DataTypes.DOUBLE
+    },
+    markup_price_tax:{
+      type: DataTypes.DOUBLE
+    },
+    discount_price_tax:{
+      type: DataTypes.DOUBLE
+    },
+     discount_price:{
+      type: DataTypes.DOUBLE
+    }, 
+    
     margin_on_sale_percentage:{
       type: DataTypes.DOUBLE
     } }, {
@@ -55,10 +77,14 @@ module.exports = (sequelize, DataTypes) => {
     //   foreignKey: 'product_sku',
     //   targetKey: 'generated_sku'
     // });
-    // models.trans_sku_lists.hasMany(models.product_diamonds,{
-    //   foreignKey: 'product_sku',
-    //   targetKey: 'generated_sku'
-    // });
+    models.trans_sku_lists.hasMany(models.pricing_sku_materials,{
+      foreignKey: 'product_sku',
+      targetKey: 'generated_sku'
+    });
+    models.trans_sku_lists.hasMany(models.pricing_sku_metals,{
+      foreignKey: 'product_sku',
+      targetKey: 'generated_sku'
+    });
     models.trans_sku_lists.belongsTo(models.product_lists,{
       foreignKey: 'product_id',
       targetKey: 'product_id'

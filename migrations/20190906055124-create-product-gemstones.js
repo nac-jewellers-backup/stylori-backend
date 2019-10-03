@@ -29,11 +29,13 @@ module.exports = {
         type: Sequelize.STRING
       },
       product_sku: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        references: {
+          model: 'product_lists', // name of Source model
+          key: 'product_id',
+        }
       },
-      stone_count:{
-        type: Sequelize.INTEGER
-      },
+     
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

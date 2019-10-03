@@ -4,14 +4,22 @@ module.exports = {
     return queryInterface.createTable('pricing_sku_materials', {
       id: {
         allowNull: false,
-        primaryKey: true,
         type: Sequelize.UUID
+      },
+      component: {
+        allowNull: true,
+        type: Sequelize.STRING
       },
       material_name: {
         type: Sequelize.STRING
       },
       product_id: {
         type: Sequelize.STRING
+      },
+      product_sku: {
+        type: Sequelize.STRING,
+        primaryKey: true,
+
       },
       cost_price: {
         type: Sequelize.DOUBLE
@@ -20,6 +28,9 @@ module.exports = {
         type: Sequelize.DOUBLE
       },
       markup: {
+        type: Sequelize.DOUBLE
+      },
+      discount_price: {
         type: Sequelize.DOUBLE
       },
       margin_percentage: {

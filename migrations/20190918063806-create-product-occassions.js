@@ -11,7 +11,11 @@ module.exports = {
         type: Sequelize.STRING
       },
       product_id: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        references: {
+          model: 'product_lists', // name of Source model
+          key: 'product_id',
+        }
       },
       createdAt: {
         allowNull: false,

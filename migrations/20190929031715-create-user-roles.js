@@ -4,24 +4,25 @@ module.exports = {
     return queryInterface.createTable('user_roles', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
-      userId: {
-        type: Sequelize.INTEGER,
+      role_name: {
+        type: Sequelize.STRING
+        
+      },
+      user_id: {
+        type: Sequelize.UUID,
         references: {
-          model:{ schema: 'auth', tableName: 'users' },
-          key: 'id'
+          model: { schema: 'auth', tableName: 'users' }, // name of Source model
+          key: 'id',
         }
       },
-      roleId: {
-        type: Sequelize.INTEGER,
+      role_id: {
+        type: Sequelize.UUID,
         references: {
-          model: {
-            tableName: 'roles'
-          },
-          key: 'id'
+          model:  { schema: 'auth', tableName: 'master_roles' }, // name of Source model
+          key: 'id',
         }
       },
       createdAt: {
@@ -32,6 +33,8 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    },{
+      schema: 'auth'
     });
   },
   down: (queryInterface, Sequelize) => {

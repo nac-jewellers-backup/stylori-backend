@@ -8,13 +8,20 @@ module.exports = {
         type: Sequelize.UUID
       },
       purity: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       metal_color: {
         type: Sequelize.STRING
       },
-      product_id: {
+      sku_size: {
         type: Sequelize.STRING
+      },
+      product_id: {
+        type: Sequelize.STRING,
+        references: {
+          model: 'product_lists', // name of Source model
+          key: 'product_id',
+        }
       },
       isdefault: {
         type: Sequelize.BOOLEAN
@@ -33,7 +40,30 @@ module.exports = {
       },
       selling_price:{
         type: Sequelize.DOUBLE
+      },
+      markup_price:{
+        type: Sequelize.DOUBLE
+      },
+      discount_price:{
+        type: Sequelize.DOUBLE
       }, 
+      
+      cost_price_tax:{
+          type: Sequelize.DOUBLE
+
+      },
+      selling_price_tax:{
+        type: Sequelize.DOUBLE
+
+      },
+      markup_price_tax:{
+        type: Sequelize.DOUBLE
+
+      },
+      discount_price_tax:{
+        type: Sequelize.DOUBLE
+
+      },
       margin_on_sale_percentage:{
         type: Sequelize.DOUBLE
       },

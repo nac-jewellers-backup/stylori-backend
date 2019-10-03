@@ -1,29 +1,21 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('gold_price_settings', {
+    return queryInterface.createTable('product_collections', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      material: {
+      collection_name: {
         type: Sequelize.STRING
       },
-      purity: {
-        type: Sequelize.INTEGER
-      },
-      cost_price: {
-        type: Sequelize.DOUBLE
-      },
-      selling_price_type:{
-        type: Sequelize.INTEGER
-      },
-      selling_price:{
-        type: Sequelize.DOUBLE
-      },
-      vendor_code:{
-        type: Sequelize.STRING
+      product_id: {
+        type: Sequelize.STRING,
+        references: {
+          model: 'product_lists', // name of Source model
+          key: 'product_id',
+        }
       },
       createdAt: {
         allowNull: false,
@@ -36,6 +28,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('gold_price_settings');
+    return queryInterface.dropTable('product_collections');
   }
 };

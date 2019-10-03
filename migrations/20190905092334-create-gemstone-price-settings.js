@@ -19,15 +19,21 @@ module.exports = {
       weight_end: {
         type: Sequelize.DOUBLE
       },
+      rate_type: {
+        type: Sequelize.INTEGER
+      },
+
+      price_type: {
+        type: Sequelize.INTEGER
+      },
       selling_price_type: {
         type: Sequelize.INTEGER
       },
-      cost_price: {
+      price: {
         type: Sequelize.DOUBLE
       },
-      selling_price: {
-        type: Sequelize.DOUBLE
-      },
+      
+     
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

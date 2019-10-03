@@ -1,34 +1,25 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('pricing_sku_metals', {
+    return queryInterface.createTable('material_markups', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       material_name: {
         type: Sequelize.STRING
       },
-      product_sku: {
-        type: Sequelize.STRING,
-        primaryKey: true,
-
+      markup_type: {
+        type: Sequelize.INTEGER
       },
-      cost_price: {
+      price_min: {
         type: Sequelize.DOUBLE
       },
-      selling_price: {
+      price_max: {
         type: Sequelize.DOUBLE
       },
-      markup: {
-        type: Sequelize.DOUBLE
-      },
-      discount_price: {
-        type: Sequelize.DOUBLE
-      },
-      margin_percentage: {
+      markup_value: {
         type: Sequelize.DOUBLE
       },
       createdAt: {
@@ -42,6 +33,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('pricing_sku_metals');
+    return queryInterface.dropTable('material_markups');
   }
 };

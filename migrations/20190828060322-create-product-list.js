@@ -8,7 +8,8 @@ module.exports = {
       },
       product_id: {
         type: Sequelize.STRING,
-        primaryKey: true
+        primaryKey: true,
+        
       },
       product_series: {
         type: Sequelize.INTEGER
@@ -44,6 +45,18 @@ module.exports = {
         type: Sequelize.STRING
       },
       product_vendor_code: {
+        type: Sequelize.STRING
+      },
+      product_sizes: {
+        type: Sequelize.STRING
+      },
+      size_varient: {
+        type: Sequelize.STRING
+      },
+      colour_varient: {
+        type: Sequelize.STRING
+      },
+      earring_backing:{
         type: Sequelize.STRING
       },
       isreorderable: {

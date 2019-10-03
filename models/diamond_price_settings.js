@@ -17,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
     selling_price_type: DataTypes.INTEGER,
     selling_price: DataTypes.DOUBLE
   },{
-    timestamps: false,
     freezeTableName: true
   });
   diamond_price_settings.associate = function(models) {

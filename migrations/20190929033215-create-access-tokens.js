@@ -1,18 +1,21 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('roles', {
+    return queryInterface.createTable('access_tokens', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
-      name: {
+      user_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: { schema: 'auth', tableName: 'users' }, // name of Source model
+          key: 'id',
+        }
+      },
+      access_token: {
         type: Sequelize.STRING
-      },
-      isactive: {
-        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -22,9 +25,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    },{
+      schema:'auth'
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('roles');
+    return queryInterface.dropTable('access_tokens');
   }
 };

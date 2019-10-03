@@ -12,15 +12,15 @@ module.exports = (sequelize, DataTypes) => {
 
     },
     material: DataTypes.STRING,
+    vendor_code: DataTypes.STRING,
     purity: DataTypes.INTEGER,
     weight_start: DataTypes.DOUBLE,
     weight_end: DataTypes.DOUBLE,
-    cost_price: DataTypes.DOUBLE,
-    selling_price_type: DataTypes.INTEGER,
     rate_type: DataTypes.INTEGER,
-    selling_price: DataTypes.DOUBLE
+    price_type: DataTypes.INTEGER,
+    selling_price_type: DataTypes.INTEGER,
+    price: DataTypes.DOUBLE
   }, {
-    timestamps: false,
     freezeTableName: true
   });
   making_charge_settings.associate = function(models) {

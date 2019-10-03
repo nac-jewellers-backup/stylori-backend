@@ -14,8 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     vendor_code: DataTypes.STRING,
     weight_start: DataTypes.DOUBLE,
     weight_end: DataTypes.DOUBLE,
-    cost_price: DataTypes.DOUBLE,
-    selling_price: DataTypes.DOUBLE,
+    price: DataTypes.DOUBLE,
+    rate_type: DataTypes.INTEGER,
+    price_type: DataTypes.INTEGER,
     selling_price_type: DataTypes.INTEGER
   }, {
     freezeTableName: true

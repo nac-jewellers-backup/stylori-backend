@@ -25,15 +25,16 @@ module.exports = {
       rate_type: {
         type: Sequelize.INTEGER
       },
-      cost_price: {
-        type: Sequelize.DOUBLE
-      },
-      selling_price: {
-        type: Sequelize.DOUBLE
+      price_type:{
+        type: Sequelize.INTEGER
       },
       selling_price_type:{
         type: Sequelize.INTEGER
       },
+      price: {
+        type: Sequelize.DOUBLE
+      },
+     
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

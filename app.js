@@ -5,6 +5,9 @@ import cookieParser from 'cookie-parser';
 import {postgraphile, makePluginHook} from 'postgraphile';
 const dotenv = require('dotenv');
 dotenv.config();
+const env = process.env.NODE_ENV || 'staging';
+const ConnectionFilterPlugin = require("postgraphile-plugin-connection-filter");
+
 const app = express();
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
@@ -39,19 +42,37 @@ require('./routes/route.js')(app);
 
 //Configuring postgraphile middleware
 let connString;
-connString={
-  host:process.env.DB_HOST,
-  user:process.env.DB_USER,
-  password:process.env.DB_PASS,
-  database:process.env.DATABASE,  
-  port:process.env.DB_PORT      
-}
+console.log("dasd")
+console.log(process.env.LOCAL_DB_PORT)
+// if(dotenv === "local")
+// {
+  connString={
+    host:process.env.LOCAL_DB_HOST,
+    user:process.env.LOCAL_DB_USER,
+    password:process.env.LOCAL_DB_PASS,
+    database:process.env.LOCAL_DB,  
+    port:process.env.LOCAL_DB_PORT      
+  }
+// }else{
+//   connString={
+//     host:process.env.DB_HOST,
+//     user:process.env.DB_USER,
+//     password:process.env.DB_PASS,
+//     database:process.env.DATABASE,  
+//     port:process.env.DB_PORT      
+//   }
+// }
+
 
 app.use(postgraphile(connString,{
     graphiql:true,  
     live: true,
     subscriptions: true,
-    simpleSubscriptions: true
+    simpleSubscriptions: true,
+    appendPlugins: [ConnectionFilterPlugin],
+    graphileBuildOptions: {
+      connectionFilterRelations: true, // default: false
+    },
     // ownerConnectionString: `postgres://${connString.user}:${connString.password}@${connString.host}/${connString.database}`,
      
 }));

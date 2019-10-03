@@ -13,10 +13,10 @@ module.exports = (sequelize, DataTypes) => {
     material: DataTypes.STRING,
     purity: DataTypes.INTEGER,
     cost_price: DataTypes.DOUBLE,
-    selling_price_percentage: DataTypes.DOUBLE,
+    selling_price_type: DataTypes.INTEGER,
+    selling_price: DataTypes.DOUBLE,
     vendor_code: DataTypes.STRING,
   }, {
-    timestamps: false,
     freezeTableName: true
   });
   gold_price_settings.associate = function(models) {

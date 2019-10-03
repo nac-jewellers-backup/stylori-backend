@@ -4,16 +4,17 @@ var jwt = require('jsonwebtoken');
 const models=require('./../models');
 import 'dotenv/config';
 const Op= require('sequelize').Op;
+const uuidv1 = require('uuid/v1');
 
 exports.signin = (req, res) => {
  
-    models.User.findOne({
+    models.users.findOne({
 
         where: {
           email: req.body.email
         },
         include: [{
-            model: models.Role,
+            model: models.user_roles,
             attributes: ['id']
         }]
     }).then(user => {
@@ -26,72 +27,74 @@ exports.signin = (req, res) => {
             return res.status(401).send({ auth: false, accessToken: null, message: "Invalid Password!" });
         }
         
-        var token = jwt.sign({ id: user.userName }, process.env.SECRET, {
+        var token = jwt.sign({ id: user.username }, process.env.SECRET, {
           expiresIn: '1d' // expires in 24 hours
         });
         
-        res.status(200).send({ user_role:  user.Roles[0].id, accessToken: token });
+        res.status(200).send({ user_role:  user.user_roles[0].id, accessToken: token });
     }).catch(err => {
         res.status(500).send('Error -> ' + err);
     });
 }
-exports.signup = (req, res) => {
- 
-    var uservalue = {
-        userName: req.body.username,
-        password: bcrypt.hashSync(req.body.password, 8),
-        email: req.body.email
-    }
-    return models.User.findOrCreate({
-       
-        where: { email:  req.body.email },
-        defaults: uservalue
 
-      })
-      .spread((user, created) => {
-        console.log(user.userName);
-          // if user email already exists
-        if(!created) {
-          return res.status(409).json('User with email address already exists');
-        } else {
-            models.Role.findAll({
-                where: {
-                  name: {
-                      [Op.in]: req.body.roles
-                    }
-                }
-              }).then(roles => {
-               console.log(roles)
-              //    res.status(200).send(roles);
-                  if (user) {
-                      user.setRoles(roles).then(() => {
-                          var verifytoken = crypto({length: 16});
-                        return models.VerificationToken.create({
-                            userId: user.id,
-                            token: verifytoken,
-                            tokentype: 1
-                          }).then((result) => {
-                           // sendVerificationEmail(user.email, result.token);
-                            return res.status(200).json(`${user.email} account created successfully. To verify your account please click this link http://auth-dev.ap-south-1.elasticbeanstalk.com/verification/${user.email}/${verifytoken}`);
-                          })
-                          .catch((error) => {
-                            return res.status(500).json("error"+error);
-                          });
-      
-                          
-                      });
+
+exports.signup = (req, res) => {
+  let {username, password, email, roles} = req.body;
+  var uservalue = {
+      id: uuidv1(),
+      username: username,
+      password: bcrypt.hashSync(password, 8),
+      email: email
+  }
+
+  models.users.findOrCreate({
+     
+      where: { email },
+      defaults: uservalue
+
+    })
+    .spread(async (user, created) => {
+        if(!created)
+        {
+              res.send(409,{message:"Email ID Already Exist"});
+
+        }else{
+          let user_roles  =  await  models.master_roles.findAll({
+              where: {
+                  role_name :{
+                      [Op.in]:roles
                   }
-              }).catch(err => {
-                  console.log("error")
-                //  res.status(500).send("Error -> " + err);
-              });
-         
+              }
+            })
+            var userroles = []
+            user_roles.forEach(role => {
+                  const roleobj = {
+                      id:uuidv1(),
+                      user_id: user.id,
+                      role_name: role.role_name,
+                      role_id:role.id
+                  }
+                  userroles.push(roleobj);
+            })
+
+                await models.user_roles.bulkCreate(
+                  userroles, {individualHooks: true})
+          var verifytoken = crypto({length: 16});
+
+           await  models.access_tokens.create({
+                id: uuidv1(),
+                user_id: user.id,
+                token: verifytoken
+            })
+        
+          res.send(200,user);
+
         }
-      })
-      .catch((error) => {
-        return res.status(500).json("error1"+error);
-      });
+
+    })
 }
+
+
 exports.verification = (req, res) => {
     console.log(req.params.email)
     return models.User.findOne({

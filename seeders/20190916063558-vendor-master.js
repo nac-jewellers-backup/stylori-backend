@@ -341,6 +341,22 @@ module.exports = {
         organization: 'NAP&Sons e Retailing Solutions Pvt Ltd',
         createdAt: new Date('2019-08-09T18:53:57Z'),
         updatedAt: new Date('2019-08-09T18:53:57Z')
+      },
+      {
+        id: uuidv1(),
+        name: 'AK COINS',
+        short_code: 'STYPA 121',
+        address:'',
+        vendor_delivary_days:14,
+        currency:'INR',
+        city: '',
+        state: '',
+        pincode: '',
+        gst_no: '',
+        partner_category:'Supplier - Trade',
+        organization: 'NAP&Sons e Retailing Solutions Pvt Ltd',
+        createdAt: new Date('2019-08-09T18:53:57Z'),
+        updatedAt: new Date('2019-08-09T18:53:57Z')
       }
       ], {});
   },

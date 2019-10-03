@@ -7,21 +7,32 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
-     
-      material: {
+      name: {
         type: Sequelize.STRING
       },
       discount_type: {
         type: Sequelize.INTEGER
       },
-      selling_price_min: {
-        type: Sequelize.DOUBLE
-      },
-      selling_price_max: {
-        type: Sequelize.DOUBLE
-      },
       discount_value: {
         type: Sequelize.DOUBLE
+      },
+      diamond_discount: {
+        type: Sequelize.DOUBLE
+      },
+      gemstone_discount: {
+        type: Sequelize.DOUBLE
+      },
+      makingcharge_discount: {
+        type: Sequelize.DOUBLE
+      },
+      goldprice_discount: {
+        type: Sequelize.DOUBLE
+      },
+      start_date: {
+        type: Sequelize.DATE
+      },
+      end_date: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
