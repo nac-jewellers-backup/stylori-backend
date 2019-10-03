@@ -31,7 +31,7 @@ exports.signin = (req, res) => {
           expiresIn: '1d' // expires in 24 hours
         });
         
-        res.status(200).send({ user_role:  user.user_roles[0].id, accessToken: token });
+        res.status(200).send({  accessToken: token });
     }).catch(err => {
         res.status(500).send('Error -> ' + err);
     });
