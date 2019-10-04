@@ -20,6 +20,12 @@ module.exports = {
       image_url: {
         type: Sequelize.STRING
       },
+      image_position: {
+        type: Sequelize.INTEGER
+      },
+      ishover: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

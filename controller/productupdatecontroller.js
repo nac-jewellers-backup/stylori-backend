@@ -9,8 +9,10 @@ var splitArray = require('split-array');
 exports.updateproduct = (req, res) => {
     req.setTimeout(50000000);
 
-   //     var gemstoneobj = req.body.goldprice;
-  //   var gemstones_obj = JSON.parse(gemstoneobj)
+
+       var gemstoneobj = req.body.Images;
+     var gemstones_obj = JSON.parse(gemstoneobj)
+     update_product_images(gemstones_obj)
   // update_diamondpricesettings(gemstones_obj);
 //update_gemstonesetup(gemstones_obj);
     //  update_makingcharge(gemstones_obj);
@@ -29,18 +31,56 @@ exports.updateproduct = (req, res) => {
     var product_obj = JSON.parse(product_json_obj)
     updateproduct()*/
   
-      var product_sku_obj = JSON.parse(req.body.sku)
-      update_product_sku(product_sku_obj)
+    //  var product_sku_obj = JSON.parse(req.body.sku)
+    //    update_product_sku(product_sku_obj)
 
    
 
    
-      res.send(200,{message: 'success'})
+     // res.send(200,{message: 'success'})
 
       // update_product_gemstones(product_gemstones_obj)
    //update_product_diamonds(product_diamonds_obj)
    // update_product_collections(product_collections_obj);
-        function update_markup(markups)
+      
+    function update_product_images(product_images)
+    {
+        var image_count = 0;
+        console.log(product_images.length)
+        var product_images_arr = [];
+        product_images.forEach(imgobj  => {
+            let hoverval = false
+            if(imgobj.Hover)
+            {
+                hoverval = true
+            }
+            const img_obj = {
+                id: uuidv1(),
+                product_color : imgobj.Metal_Colour,
+                product_id: imgobj.Product_Code,
+                image_url: imgobj['URL '],
+                image_position: imgobj.Position, 
+                ishover: hoverval
+            }
+
+            if(image_count >= 21542)
+            {
+                product_images_arr.push(img_obj)
+
+            }
+
+            image_count++ 
+        })
+        models.product_images.bulkCreate(
+            product_images_arr, {individualHooks: true}).then(function(response){
+                   
+                     res.send(200,{message: 'success'})
+    
+                })  .catch((error) => {
+                          console.log("errorresponse"+error.message)
+              });
+    }
+   function update_markup(markups)
         {
             var markup_arr = []
             markups.forEach(mkup => {
