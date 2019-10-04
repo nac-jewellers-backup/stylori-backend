@@ -893,7 +893,8 @@ exports.priceupdate = (req, res) => {
               purity: parseInt(purityval.replace('K',''))
             }
         }).then(async gold_price=> {
-           
+           if(gold_price)
+           {
             costprice = gold_price.cost_price * skuobj.sku_weight
             if(gold_price.selling_price_type == 2)
             {
@@ -974,10 +975,14 @@ exports.priceupdate = (req, res) => {
 
               }
             })
+          }else{
+            makingcharge(vendorcode);
+          }
               
 
     
         });
+
       }
 
       function makingcharge(vendorcode)
@@ -1000,7 +1005,8 @@ exports.priceupdate = (req, res) => {
               }
           }).then(async makingcharge=> {
             console.log(">>>>>>>>"+JSON.stringify(makingcharge))
-
+            if(makingcharge)
+            {
               makingcharge.forEach(makingcharge_obj => {
                 if(makingcharge_obj.price_type == 1)
                 {
@@ -1097,6 +1103,9 @@ exports.priceupdate = (req, res) => {
                   });
                 }
               })
+            }else{
+              updateskuprice()
+            }
           });
       }
       function getmaterialmarkupsum(skuvalue)

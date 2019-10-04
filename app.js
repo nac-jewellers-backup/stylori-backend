@@ -46,21 +46,21 @@ console.log("dasd")
 console.log(process.env.LOCAL_DB_PORT)
 // if(dotenv === "local")
 // {
-  // connString={
-  //   host:process.env.LOCAL_DB_HOST,
-  //   user:process.env.LOCAL_DB_USER,
-  //   password:process.env.LOCAL_DB_PASS,
-  //   database:process.env.LOCAL_DB,  
-  //   port:process.env.LOCAL_DB_PORT      
-  // }
-// }else{
   connString={
-    host:process.env.DB_HOST,
-    user:process.env.DB_USER,
-    password:process.env.DB_PASS,
-    database:process.env.DATABASE,  
-    port:process.env.DB_PORT      
-   }
+    host:process.env.LOCAL_DB_HOST,
+    user:process.env.LOCAL_DB_USER,
+    password:process.env.LOCAL_DB_PASS,
+    database:process.env.LOCAL_DB,  
+    port:process.env.LOCAL_DB_PORT      
+  }
+// }else{
+  // connString={
+  //   host:process.env.DB_HOST,
+  //   user:process.env.DB_USER,
+  //   password:process.env.DB_PASS,
+  //   database:process.env.DATABASE,  
+  //   port:process.env.DB_PORT      
+  //  }
 // }
 
 
