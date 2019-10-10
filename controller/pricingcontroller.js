@@ -42,7 +42,8 @@ exports.priceupdate = (req, res) => {
        }
       ],*/
       where: {
-        isactive : true
+        isactive : true,
+        product_id: 'SR0271'
       }
     }).then(product=> {
      
@@ -60,7 +61,7 @@ exports.priceupdate = (req, res) => {
           include: [{
             model: models.trans_sku_lists,
             where:{
-                 //generated_sku: 'SP0036-14230000'
+                 generated_sku: 'SR0271-18110000-15'
             }
            },
            
@@ -70,19 +71,19 @@ exports.priceupdate = (req, res) => {
            },
            {
             model: models.product_gemstones,
-    
-           },
-           {
-            model: models.product_occassions,
-    
-           },{
-            model: models.product_styles,
-    
-           },
-           {
-            model: models.product_themes,
-    
            }
+          //  },
+          //  {
+          //   model: models.product_occassions,
+    
+          //  },{
+          //   model: models.product_styles,
+    
+          //  },
+          //  {
+          //   model: models.product_themes,
+    
+          //  }
           ],
           where: {
             product_id: currentproduct.product_id
@@ -157,15 +158,15 @@ exports.priceupdate = (req, res) => {
       {
         product_type.push(product_obj.product_type);
       }
-      product_obj.product_occassions.forEach(function(element) {
-        product_occassions.push(element.occassion_name);
-      });
-      product_obj.product_styles.forEach(function(element) {
-        product_styles.push(element.style_name);
-      });
-      product_obj.product_themes.forEach(function(element) {
-        product_themes.push(element.theme_name);
-      });
+      // product_obj.product_occassions.forEach(function(element) {
+      //   product_occassions.push(element.occassion_name);
+      // });
+      // product_obj.product_styles.forEach(function(element) {
+      //   product_styles.push(element.style_name);
+      // });
+      // product_obj.product_themes.forEach(function(element) {
+      //   product_themes.push(element.theme_name);
+      // });
 
       // var newsellingmarkup = materialsellingprice;
       // if(discountval)
@@ -1133,7 +1134,7 @@ exports.priceupdate = (req, res) => {
           }
           })
       }
-      async function updateskuprice()
+       function updateskuprice()
       {
 
         
@@ -1233,7 +1234,6 @@ exports.priceupdate = (req, res) => {
               let transskuobj = {
                 cost_price : total_costprice + costpricetax,
                 cost_price_tax : costpricetax,
-
                 selling_price : total_sellingprice + sellingpricetax ,
                 selling_price_tax : sellingpricetax,
                 discount_price: skudiscount  + discountpricetax,
@@ -1244,18 +1244,11 @@ exports.priceupdate = (req, res) => {
   
               }
              // res.send(200,{"material":materialsum,"metal":matalsum});
-              models.trans_sku_lists.findOne({
+             models.trans_sku_lists.update(transskuobj,{
               where: {generated_sku: productskus[skucount].generated_sku}
             }).then(price_splitup_model=> {
-              if (price_splitup_model) {
-                price_splitup_model.update(transskuobj)
-                .then(updatedsku => {
-                  isskuexist()
-                })
-                .catch(reason => {
-                  isskuexist()
-                });
-              }
+              isskuexist
+              
             });       
 
 
