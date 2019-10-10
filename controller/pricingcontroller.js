@@ -42,8 +42,7 @@ exports.priceupdate = (req, res) => {
        }
       ],*/
       where: {
-        isactive : true,
-        product_id: 'SR0271'
+        isactive : true
       }
     }).then(product=> {
      
@@ -61,7 +60,7 @@ exports.priceupdate = (req, res) => {
           include: [{
             model: models.trans_sku_lists,
             where:{
-                 generated_sku: 'SR0271-18110000-15'
+               //  generated_sku: 'SR0271-18110000-15'
             }
            },
            
