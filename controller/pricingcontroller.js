@@ -61,6 +61,11 @@ exports.priceupdate = (req, res) => {
             model: models.trans_sku_lists,
             where:{
                //  generated_sku: 'SR0271-18110000-15'
+               cost_price: {
+                // "$eq" changes to "[Op.eq]"
+                  [Op.eq]: null
+              }
+
             }
            },
            
@@ -91,8 +96,14 @@ exports.priceupdate = (req, res) => {
        // product_obj = products[processed_product_count]
        if(product_obj)
        {
-        processskus(product_obj.trans_sku_lists, product_obj)
+        if(product_obj.trans_sku_lists.length > 0)
+        {
+          processskus(product_obj.trans_sku_lists, product_obj)
 
+        }else{
+          processed_product_count = processed_product_count  + 1;
+          processproduct();
+        }
        }else
        {
         processed_product_count = processed_product_count  + 1;
@@ -1245,10 +1256,13 @@ exports.priceupdate = (req, res) => {
              // res.send(200,{"material":materialsum,"metal":matalsum});
              models.trans_sku_lists.update(transskuobj,{
               where: {generated_sku: productskus[skucount].generated_sku}
-            }).then(price_splitup_model=> {
-              isskuexist
+              }).then(price_splitup_model=> {
+                console.log("price updated")
+                isskuexist()
               
-            });       
+            }).catch(reason => {
+              console.log(reason)
+            });;       
 
 
           });
@@ -1264,14 +1278,18 @@ exports.priceupdate = (req, res) => {
       function isskuexist()
       {
 
-
-        skucount = skucount + 1;
+        console.log("i am here")
+          skucount = skucount + 1;
           if(product_obj.trans_sku_lists.length > skucount)
           {
+            console.log("i am here1")
+
         
               updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
 
           }else{
+            console.log("i am here2")
+
             processed_product_count = processed_product_count  + 1;
             processproduct();
           }
