@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     last_name: DataTypes.STRING,
     username: DataTypes.STRING,
     email: DataTypes.STRING,
+    otp: DataTypes.STRING,
     mobile: DataTypes.STRING,
     ismobileverified: DataTypes.BOOLEAN,
     isemailverified: DataTypes.BOOLEAN,
@@ -22,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   user_profiles.associate = function(models) {
     // associations can be defined here
+    // models.user_profiles.hasMany(models.user_address,{
+    //   foreignKey: 'userprofile_id',
+    //   targetKey: 'id'
+    // });
   };
   return user_profiles;
 };

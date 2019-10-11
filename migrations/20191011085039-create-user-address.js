@@ -1,62 +1,51 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('user_profiles', {
+    return queryInterface.createTable('user_addresses', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      user_id: {
-        type: Sequelize.UUID,
-        references: {  model:{ schema: 'auth', tableName: 'users' }, key: "id" }
+      userprofile_id: {
+        type: Sequelize.STRING
+       
       },
-      first_name: {
+      firstname: {
         type: Sequelize.STRING
       },
-      last_name: {
-        type: Sequelize.STRING
-      },
-      username: {
-        type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      otp: {
-        type: Sequelize.STRING
-      },
-      mobile: {
-        type: Sequelize.STRING
-      },
-      ismobileverified: {
-        type: Sequelize.BOOLEAN
-      },
-      isemailverified: {
-        type: Sequelize.BOOLEAN
-      },
-      address: {
-        type: Sequelize.STRING
-      },
-      city: {
-        type: Sequelize.STRING
-      },
-      country: {
+      lastname: {
         type: Sequelize.STRING
       },
       pincode: {
         type: Sequelize.STRING
       },
-      islogin: {
+      addressline1: {
+        type: Sequelize.STRING
+      },
+      addressline2: {
+        type: Sequelize.STRING
+      },
+      city: {
+        type: Sequelize.STRING
+      },
+      state: {
+        type: Sequelize.STRING
+      },
+      country: {
+        type: Sequelize.STRING
+      },
+      country_code: {
+        type: Sequelize.STRING
+      },
+      contact_number: {
+        type: Sequelize.STRING
+      },
+      default_billing: {
         type: Sequelize.BOOLEAN
       },
-      lastlogin: {
-        type: Sequelize.DATE
-      },
-      status: {
-        type: Sequelize.ENUM,
-        values: ['Active','Inactive','Blocked'],
-        defaultValue: 'Active'
+      default_shipping: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -69,6 +58,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('user_profiles');
+    return queryInterface.dropTable('user_addresses');
   }
 };

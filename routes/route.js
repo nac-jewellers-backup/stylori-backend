@@ -8,6 +8,7 @@ module.exports = function(app) {
 	const productupdatecontroller = require('../controller/productupdatecontroller.js');
 	const discountcontroller = require('../controller/checkdiscount.js');
 	const updatesizecontroller = require('../controller/product_size_update_controller.js');
+    const cartcontroller = require('../controller/cartcontroller.js');
 
 	app.post('/api/auth/signin', authcontroller.signin);
 	app.post('/api/auth/signup', authcontroller.signup);	
@@ -22,5 +23,9 @@ module.exports = function(app) {
 	app.post('/updatepricelist', pricingontroller.priceupdate);
 	app.post('/checkdiscount', discountcontroller.checkdiscount);
 	app.post('/updatesize', updatesizecontroller.updatesize);
+	app.post('/api/auth/guestlogin', authcontroller.guestlogin);
+	app.post('/api/auth/verifyotp', authcontroller.verifyotp);
+	
+	app.post('/addtocart', cartcontroller.addtocart);
 
 }

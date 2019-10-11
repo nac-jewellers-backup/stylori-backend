@@ -366,6 +366,7 @@ exports.productupload =  async (req, res) => {
 
         console.log("size"+product_skus.length)
        var  uploadskus = []
+       var uploaddescriptions = []
         product_skus.forEach(prodkt => {
                 var isdefault = false
                 var sku_weight = default_weight;
@@ -380,7 +381,11 @@ exports.productupload =  async (req, res) => {
                 
                 sku_weight =  parseFloat(sku_weight) + parseFloat((sizedifferent * 0.1))
                 
-                
+                const sku_desc = {
+                    sku_id: prodkt.generated_sku,
+                    vendor_code: vendor_code,
+                    sku_description : "Earrings set in 18 Kt Yellow Gold 3.45 gm with Diamonds (0.19 ct, IJ - SI )"
+                }
                 var prod_obj = {
                     ...prodkt,
                     id: uuidv1(),
@@ -402,11 +407,12 @@ exports.productupload =  async (req, res) => {
 
 
   //  res.json(product_skus);
-          models.trans_sku_lists.bulkCreate(
+         models.trans_sku_lists.bulkCreate(
             uploadskus
               , {individualHooks: true}).then(function(response){
                 res.json(uploadskus);
               })
+              
             //  res.send(200, { submitted: true })
         // models.trans_sku_descriptions.create(
         //     {id:uuidv1(), sku_id: 'b73216a0-c95f-11e9-8ee8-a9d9fbea3b2a'}

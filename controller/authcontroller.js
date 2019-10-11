@@ -80,13 +80,21 @@ exports.signup = (req, res) => {
                 await models.user_roles.bulkCreate(
                   userroles, {individualHooks: true})
           var verifytoken = crypto({length: 16});
-
+            
            await  models.access_tokens.create({
                 id: uuidv1(),
                 user_id: user.id,
                 token: verifytoken
             })
-        
+            await models.user_profiles.create(
+              {
+                id:uuidv1(),
+                user_id: user.id,
+                email: email,
+                isemailverified: false
+              }
+
+            )
           res.send(200,user);
 
         }
@@ -231,4 +239,74 @@ exports.userContent = (req, res) => {
             "error": err
         });
     })
+}
+
+exports.guestlogin = (req, res) => {
+  const {email} = req.body
+
+  models.user_profiles.findOne({
+      where: {email},
+      attributes: ['user_id','id']
+      
+  }).then(user => {
+      if(!user)
+      {
+        let otp = Math.floor(100000 + Math.random() * 900000)
+
+        const guest = {
+          id:uuidv1(),
+          email:email,
+          otp:otp,
+          isemailverified: false
+        }
+        models.user_profiles.create(guest, {
+          returning: true
+        }).then(guestuser => {
+          res.status(200).json({
+            "description": "User Content Page",
+            "user": guestuser
+        });
+        });
+      }else{
+        res.status(200).json({
+          "description": "User Content Page",
+          "user": user
+      });
+      }
+      
+  }).catch(err => {
+      res.status(500).json({
+          "description": "Can not access User Page",
+          "error": err
+      });
+  })
+}
+
+
+exports.verifyotp = (req, res) => {
+  const {email,otp} = req.body
+
+  models.user_profiles.findOne({
+      where: {email,otp},
+      attributes: ['id']
+      
+  }).then(user => {
+      if(!user)
+      {
+        res.status(401).json({
+          "message": "Otp wrong"
+      });
+      }else{
+        res.status(200).json({
+          "description": "User Content Page",
+          "user": user
+      });
+      }
+      
+  }).catch(err => {
+      res.status(500).json({
+          "description": "Can not access User Page",
+          "error": err
+      });
+  })
 }
