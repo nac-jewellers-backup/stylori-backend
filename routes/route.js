@@ -18,6 +18,7 @@ module.exports = function(app) {
 
 	app.post('/productupload', productcontroller.productupload);
 	app.post('/productupdate', productupdatecontroller.updateproduct);
+	app.post('/priceupdate', productcontroller.priceupdate);
 
 	app.get('/api/userprofile', [authJwt.verifyToken], authcontroller.userContent);
 	app.post('/updatepricelist', pricingontroller.priceupdate);

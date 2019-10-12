@@ -1,9 +1,24 @@
 
 const models=require('./../models');
 import 'dotenv/config';
+var request = require('request');
+
 const Op= require('sequelize').Op;
 import apidata from './apidata.json';
 const uuidv1 = require('uuid/v1');
+exports.priceupdate =  async (req, res) => {
+    request({
+        url: 'http://localhost:8000/updatepricelist',
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({req_product_id : 'SR3261'})
+    }, function(error, response, body) {
+       console.log(body)
+    });
+
+}
+
+
 
 exports.productupload =  async (req, res) => {
     var apidata = req.body;
@@ -410,6 +425,14 @@ exports.productupload =  async (req, res) => {
          models.trans_sku_lists.bulkCreate(
             uploadskus
               , {individualHooks: true}).then(function(response){
+                request({
+                    url: '/updatepricelist',
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({req_product_id : 'SR3261'})
+                }, function(error, response, body) {
+                   console.log(body)
+                });
                 res.json(uploadskus);
               })
               

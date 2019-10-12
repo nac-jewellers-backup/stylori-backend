@@ -13,6 +13,19 @@ exports.priceupdate = (req, res) => {
     var products = []
     var processed_product_count = 0;
     res.send(200,{message:"success"})
+    console.log(req.body)
+    const {req_product_id} = req.body
+    let whereclause1 = {
+      isactive : true
+    }
+    if(req_product_id)
+    {
+      whereclause1 = {
+        product_id : req_product_id,
+
+      }
+    }
+    console.log(JSON.stringify(whereclause1))
     models.product_lists.findAll({
       /*include: [{
         model: models.trans_sku_lists,
@@ -41,9 +54,7 @@ exports.priceupdate = (req, res) => {
 
        }
       ],*/
-      where: {
-        isactive : true
-      }
+      where: whereclause1
     }).then(product=> {
      
       products = product;
