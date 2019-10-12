@@ -65,7 +65,8 @@ console.log(process.env.LOCAL_DB_PORT)
 
 
 app.use(postgraphile(connString,{
-    graphiql:true,  
+  watchPg: true,
+  graphiql:true,  
     live: true,
     subscriptions: true,
     simpleSubscriptions: true,

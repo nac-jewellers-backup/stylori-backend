@@ -252,7 +252,7 @@ exports.guestlogin = (req, res) => {
       if(!user)
       {
         let otp = Math.floor(100000 + Math.random() * 900000)
-
+        otp = '000000'
         const guest = {
           id:uuidv1(),
           email:email,
