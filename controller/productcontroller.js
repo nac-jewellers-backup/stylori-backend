@@ -407,7 +407,7 @@ exports.productupload =  async (req, res) => {
                     isdefault,
                     sku_weight
                 }
-                
+                     uploaddescriptions(sku_desc)
                     uploadskus.push(prod_obj)
 
                 
@@ -425,23 +425,26 @@ exports.productupload =  async (req, res) => {
          models.trans_sku_lists.bulkCreate(
             uploadskus
               , {individualHooks: true}).then(function(response){
-                request({
-                    url: '/updatepricelist',
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({req_product_id : 'SR3261'})
-                }, function(error, response, body) {
-                   console.log(body)
-                });
-                res.json(uploadskus);
+                models.trans_sku_descriptions.bulkCreate(
+                    uploaddescriptions
+                      , {individualHooks: true}).then(function(response){ // Notice: There are no arguments here, as of right now you'll have to...
+                      request({
+                        url: '/updatepricelist',
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({req_product_id : 'SR3261'})
+                    }, function(error, response, body) {
+                       console.log(body)
+                    });
+                    res.json(uploadskus);
+
+                    })
+                
+               
               })
               
             //  res.send(200, { submitted: true })
-        // models.trans_sku_descriptions.create(
-        //     {id:uuidv1(), sku_id: 'b73216a0-c95f-11e9-8ee8-a9d9fbea3b2a'}
-        //   ).then(() => { // Notice: There are no arguments here, as of right now you'll have to...
-        //     console.log("created");
-        //   })
+       
     
 
 }
