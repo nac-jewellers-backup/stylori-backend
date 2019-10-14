@@ -5,7 +5,7 @@ const Op= require('sequelize').Op;
 const squelize= require('sequelize');
 const uuidv1 = require('uuid/v1');
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+sgMail.setApiKey('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');
 exports.priceupdate = (req, res) => {
     var costprice = 0;
     var sellingprice = 0;
