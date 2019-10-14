@@ -4,6 +4,8 @@ import 'dotenv/config';
 const Op= require('sequelize').Op;
 const squelize= require('sequelize');
 const uuidv1 = require('uuid/v1');
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 exports.priceupdate = (req, res) => {
     var costprice = 0;
     var sellingprice = 0;
@@ -25,6 +27,13 @@ exports.priceupdate = (req, res) => {
 
       }
     }
+    const msg = {
+      to: "manokarantk@gmail.com",
+      subject: 'Pricing update started',
+      from: 'info@ustimeapp.com',
+      html: "<b>started</>"
+      };
+      sgMail.send(msg);
     console.log(JSON.stringify(whereclause1))
     models.product_lists.findAll({
       /*include: [{
@@ -71,11 +80,11 @@ exports.priceupdate = (req, res) => {
           include: [{
             model: models.trans_sku_lists,
             where:{
-               //  generated_sku: 'SR0271-18110000-15'
-               cost_price: {
-                // "$eq" changes to "[Op.eq]"
-                  [Op.eq]: null
-              }
+                 generated_sku: 'SR0271-18110000-15',
+              //  cost_price: {
+              //   // "$eq" changes to "[Op.eq]"
+              //     [Op.eq]: null
+              // }
 
             }
            },
@@ -124,8 +133,16 @@ exports.priceupdate = (req, res) => {
         //diamond_price(product_obj.vendor_code, product_obj.product_diamonds)
       }else{
        // res.send(200,{message: "succes1s"})
-       processed_product_count = processed_product_count  + 1;
-       processproduct();
+      //  processed_product_count = processed_product_count  + 1;
+      //  processproduct();
+
+        const msg = {
+        to: "manokarantk@gmail.com",
+        subject: 'Pricing update finished',
+        from: 'info@ustimeapp.com',
+        html: "<b>ended</>"
+        };
+        sgMail.send(msg);
       }
     }
 
