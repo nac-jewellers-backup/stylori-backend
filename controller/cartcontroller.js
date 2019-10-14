@@ -73,7 +73,7 @@ exports.addtocart = async (req, res) => {
 exports.uploadimage =  (req, res) => {
     console.log(req.body)
     const s3 = new aws.S3();  // Create a new instance of S3
-  const fileName = uuidv1()+'.'+req.body.image;
+  const fileName = 'base_images/'+uuidv1()+'.'+req.body.image;
   const fileType = req.body.image;
   console.log(fileName)
 
