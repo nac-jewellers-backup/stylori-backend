@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     schema: 'auth'
   });
   users.associate = function(models) {
-    // associations can be defined here
     models.users.hasMany(models.access_tokens,{
       foreignKey: 'id',
       targetKey: 'user_id'
