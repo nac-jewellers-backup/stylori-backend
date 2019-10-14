@@ -80,7 +80,7 @@ exports.priceupdate = (req, res) => {
           include: [{
             model: models.trans_sku_lists,
             where:{
-                 generated_sku: 'SR0271-18110000-15',
+               //  generated_sku: 'SR0271-18110000-15',
               //  cost_price: {
               //   // "$eq" changes to "[Op.eq]"
               //     [Op.eq]: null
