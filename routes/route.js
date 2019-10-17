@@ -9,6 +9,7 @@ module.exports = function(app) {
 	const discountcontroller = require('../controller/checkdiscount.js');
 	const updatesizecontroller = require('../controller/product_size_update_controller.js');
     const cartcontroller = require('../controller/cartcontroller.js');
+    const filtercontroller = require('../controller/filtercontroller.js');
 
 	app.post('/api/auth/signin', authcontroller.signin);
 	app.post('/api/auth/signup', authcontroller.signup);	
@@ -30,6 +31,7 @@ module.exports = function(app) {
 	app.post('/addtocart', cartcontroller.addtocart);
 	app.post('/addaddress', cartcontroller.addaddress);
 	app.post('/uploadimage', cartcontroller.uploadimage);
+	app.post('/filterlist', filtercontroller.filteroptions);
 
 	
 }
