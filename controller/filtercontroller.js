@@ -20,5 +20,54 @@ var master_category =    await models.master_product_categories.findAll({
   })
 
 
-    res.send(200,{master_category,master_product_type})
+  var master_styles = await models.product_styles.findAll({
+    attributes: ['style_name'],
+    group: ['style_name']
+  })
+
+  var master_themes = await models.product_themes.findAll({
+    attributes: ['theme_name'],
+    group: ['theme_name']
+  })
+
+  var master_occassion = await models.product_occassions.findAll({
+    attributes: ['occassion_name'],
+    group: ['occassion_name']
+  })
+  var master_occassion = await models.product_occassions.findAll({
+    attributes: ['occassion_name'],
+    group: ['occassion_name']
+  })
+
+  var master_material = await models.product_materials.findAll({
+    attributes: ['material_name'],
+    group: ['material_name']
+  })
+  var master_collection = await models.product_collections.findAll({
+    attributes: ['collection_name'],
+    group: ['collection_name']
+  })
+
+
+  var master_collection = await models.product_collections.findAll({
+    attributes: ['collection_name'],
+    group: ['collection_name']
+  })
+
+  var master_purity = await models.trans_sku_lists.findAll({
+    attributes: ['purity'],
+    group: ['purity']
+  })
+
+  var master_colors = await models.trans_sku_lists.findAll({
+    attributes: ['metal_color'],
+    group: ['metal_color']
+  })
+
+    res.send(200,{master_category,master_product_type,master_styles,master_themes,
+        master_occassion,
+        master_material,
+        master_collection,
+        master_purity,
+        master_colors})
 }
