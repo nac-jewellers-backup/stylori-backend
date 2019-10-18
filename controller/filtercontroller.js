@@ -103,7 +103,12 @@ var master_category =    await models.master_product_categories.findAll({
 
   var master_colors = await models.trans_sku_lists.findAll({
     attributes: ['metal_color'],
-    group: ['metal_color']
+    group: ['metal_color'],
+    where: {
+      metal_color : {
+        [Op.ne]: null
+      }
+    }
   })
 
     res.send(200,{master_category,master_product_type,master_styles,master_themes,
