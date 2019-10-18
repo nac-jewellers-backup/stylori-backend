@@ -103,7 +103,10 @@ exports.addaddress = async (req, res) => {
     let {user_id, address,cart_id} = req.body
     
     let address_arr = [];
+    let add_user_address = [];
+
     address.forEach(element => {
+
         const address_obj = {
             cart_id:cart_id,
             userprofile_id:user_id,
@@ -120,8 +123,34 @@ exports.addaddress = async (req, res) => {
             address_type:element.addresstype
         }
         address_arr.push(address_obj)
-
+        if(!element.address_id)
+        {
+          const user_address_obj = {
+            userprofile_id:user_id,
+            firstname:element.firstname,
+            lastname:element.lastname,
+            pincode:element.pincode,
+            addressline1:element.addressline1,
+            addressline2:element.addressline2,
+            city:element.city,
+            state:element.state,
+            country:element.country,
+            country_code:element.country_code,
+            contact_number:element.contactno,
+            address_type:element.addresstype,
+            default_billing:false,
+            default_shipping:false
+        }
+        add_user_address.push(user_address_obj)
+        }
     })
+    if(add_user_address.length > 0)
+    {
+     await models.user_address.bulkCreate(
+      add_user_address
+          , {individualHooks: true}).then(function(response){
+    })
+    }
     models.cart_addresses.bulkCreate(
         address_arr
           , {individualHooks: true}).then(function(response){
