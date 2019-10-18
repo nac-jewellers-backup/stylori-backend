@@ -10,7 +10,7 @@ exports.filteroptions = async (req, res) => {
 
 const {product_type } = req.body
 var product_list = [];
-var whereclause = {};
+//var whereclause = {};
 
 // var products = await models.product_lists.findAll({
 //     attributes:['product_id'],
