@@ -12,12 +12,12 @@ const {product_type } = req.body
 var product_list = [];
 var whereclause = {};
 
-var products = await models.product_lists.findAll({
-    attributes:['product_id'],
-    where: {
-       // product_type
-    }
-  })
+// var products = await models.product_lists.findAll({
+//     attributes:['product_id'],
+//     where: {
+//        // product_type
+//     }
+//   })
 // products.forEach(element => {
 //     product_list.push(element.product_id);
 // });
@@ -106,5 +106,11 @@ var master_category =    await models.master_product_categories.findAll({
     group: ['metal_color']
   })
 
-    res.send(200,{master_themes})
+    res.send(200,{master_category,master_product_type,master_styles,master_themes,
+        master_occassion,
+        master_material,
+        master_collection,
+        master_purity,
+        master_colors
+        })
 }
