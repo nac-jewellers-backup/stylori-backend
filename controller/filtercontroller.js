@@ -8,7 +8,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material, theme, occassion, style } = req.body
+const {material, theme,collection, occassion, style, metalpurity, producttype, style } = req.body
 var product_list = [];
 var whereclause = {};
 var includeclause = [];
@@ -44,12 +44,39 @@ var includeclause = [];
 //           [Op.eq]:style
 //           },
 if(material)
-{
+{         
   whereclause['$product_materials.material_name$'] = {
     [Op.eq]:material
     }
     includeclause.push({
       model : models.product_materials
+     })
+}
+if(collection)
+{
+  whereclause['$product_collections.collection_name$'] = {
+    [Op.eq]:collection
+    }
+    includeclause.push({
+      model : models.product_collections
+     })
+}
+if(occassion)
+{
+  whereclause['$product_occassions.occassion_name$'] = {
+    [Op.eq]:occassion
+    }
+    includeclause.push({
+      model : models.product_occassions
+     })
+},
+if(style)
+{
+  whereclause['$product_styles.style_name$'] = {
+    [Op.eq]:style
+    }
+    includeclause.push({
+      model : models.product_styles
      })
 }
 if(theme)
@@ -79,11 +106,22 @@ var master_category =    await models.master_product_categories.findAll({
 
 
  
+let prod_type_where = {} 
 
+  if(producttype)
+  {
+    purity_where =  {
+      'product_type':producttype,
+      product_id : {
+        [Op.in]: product_list
+      }
+    }
+  }
 
  var master_product_type = await models.product_lists.findAll({
     attributes: ['product_type'],
-    group: ['product_type']
+    group: ['product_type'],
+    where:prod_type_where
   })
 
 
@@ -143,10 +181,20 @@ var master_category =    await models.master_product_categories.findAll({
     attributes: ['collection_name'],
     group: ['collection_name']
   })
-
+  let purity_where = {}
+  if(metalpurity)
+  {
+    purity_where =  {
+      'purity':metalpurity,
+      product_id : {
+        [Op.in]: product_list
+      }
+    }
+  }
   var master_purity = await models.trans_sku_lists.findAll({
     attributes: ['purity'],
-    group: ['purity']
+    group: ['purity'],
+    where:purity_where
   })
 
   var master_colors = await models.trans_sku_lists.findAll({
