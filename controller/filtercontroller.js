@@ -88,6 +88,13 @@ if(theme)
            model : models.product_themes
     })
 }
+if(producttype)
+{
+  whereclause['product_type']= {
+    [Op.eq]:producttype
+    }
+
+}
 var products = await models.product_lists.findAll({
     attributes:['product_id'],
     include:includeclause,
@@ -110,8 +117,7 @@ let prod_type_where = {}
 
   if(producttype)
   {
-    purity_where =  {
-      'product_type':producttype,
+    prod_type_where =  {
       product_id : {
         [Op.in]: product_list
       }
