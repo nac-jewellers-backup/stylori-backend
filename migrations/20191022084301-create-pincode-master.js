@@ -4,9 +4,8 @@ module.exports = {
     return queryInterface.createTable('pincode_masters', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       picode: {
         type: Sequelize.STRING
@@ -28,6 +27,12 @@ module.exports = {
       },
       lng: {
         type: Sequelize.DOUBLE
+      },
+      is_cod: {
+        type: Sequelize.BOOLEAN
+      },
+      is_delivery: {
+        type: Sequelize.BOOLEAN
       },
       is_active: {
         type: Sequelize.BOOLEAN

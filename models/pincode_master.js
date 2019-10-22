@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     country: DataTypes.STRING,
     lat: DataTypes.DOUBLE,
     lng: DataTypes.DOUBLE,
+    is_cod: DataTypes.BOOLEAN,
+    is_delivery: DataTypes.BOOLEAN,
     is_active: DataTypes.BOOLEAN
   }, {});
   pincode_master.associate = function(models) {
