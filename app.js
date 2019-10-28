@@ -79,7 +79,7 @@ app.use(postgraphile(connString,{
 
 
 app.listen(process.env.PORT, () =>
-  console.log(`NAC Ecommerce running ${process.env.PORT}!`),
+  console.log(`NAC Ecommerce unning ${process.env.PORT}!`),
 );
 
 
