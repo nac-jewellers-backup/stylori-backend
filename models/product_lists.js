@@ -71,11 +71,23 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'product_id',
       targetKey: 'product_id'
     });
+    models.product_lists.hasMany(models.product_purities,{
+      foreignKey: 'product_id',
+      targetKey: 'product_id'
+    });
     models.product_lists.hasMany(models.product_collections,{
       foreignKey: 'product_id',
       targetKey: 'product_id'
     });
     models.product_lists.hasMany(models.product_images,{
+      foreignKey: 'product_id',
+      targetKey: 'product_id'
+    });
+    models.product_lists.hasMany(models.product_stonecolor,{
+      foreignKey: 'product_id',
+      targetKey: 'product_id'
+    });
+    models.product_lists.hasMany(models.product_stonecount,{
       foreignKey: 'product_id',
       targetKey: 'product_id'
     });

@@ -10,6 +10,7 @@ module.exports = function(app) {
 	const updatesizecontroller = require('../controller/product_size_update_controller.js');
     const cartcontroller = require('../controller/cartcontroller.js');
     const filtercontroller = require('../controller/filtercontroller.js');
+    const master_uploaddata_controller = require('../controller/master_uploaddata_controller.js');
 
 	app.post('/api/auth/signin', authcontroller.signin);
 	app.post('/api/auth/signup', authcontroller.signup);	
@@ -33,5 +34,12 @@ module.exports = function(app) {
 	app.post('/uploadimage', cartcontroller.uploadimage);
 	app.post('/filterlist', filtercontroller.filteroptions);
 
+	app.post('/pincodemaster', master_uploaddata_controller.updatepincode);
+	app.post('/updateproduct_color', master_uploaddata_controller.updateproduct_color);
+	app.post('/updateproduct_gender', master_uploaddata_controller.updateproduct_gender);
+	app.post('/updateproduct_purity', master_uploaddata_controller.updateproduct_purity);
+	app.post('/updateproduct_stonecolor', master_uploaddata_controller.updateproduct_stonecolor);
+
+	
 	
 }

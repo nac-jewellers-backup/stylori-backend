@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const pincode_master = sequelize.define('pincode_master', {
-    picode: DataTypes.STRING,
+    pincode: DataTypes.STRING,
     area: DataTypes.STRING,
     district: DataTypes.STRING,
     state: DataTypes.STRING,

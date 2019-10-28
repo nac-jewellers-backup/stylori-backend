@@ -23,53 +23,53 @@ exports.priceupdate = (req, res) => {
     if(req_product_id)
     {
       whereclause1 = {
-        product_id : req_product_id,
+        product_id : "SB0509",
 
       }
     }
-    const msg = {
-      to: "manokarantk@gmail.com",
-      subject: 'Pricing update started',
-      from: 'info@ustimeapp.com',
-      html: "<b>started</>"
-      };
-      sgMail.send(msg);
+    // const msg = {
+    //   to: "manokarantk@gmail.com",
+    //   subject: 'Pricing update started',
+    //   from: 'info@ustimeapp.com',
+    //   html: "<b>started</>"
+    //   };
+    //   sgMail.send(msg);
     console.log(JSON.stringify(whereclause1))
     models.product_lists.findAll({
-      /*include: [{
-        model: models.trans_sku_lists,
-        where:{
-            generated_sku: 'SP0036-14230000'
-        }
-       },
+      // include: [{
+      //   model: models.trans_sku_lists,
+      //   where:{
+      //       generated_sku: 'SB0013-18230000'
+      //   }
+      //  },
        
-       {
-        model: models.product_diamonds,
+      //  {
+      //   model: models.product_diamonds,
 
-       },
-       {
-        model: models.product_gemstones,
+      //  },
+      //  {
+      //   model: models.product_gemstones,
 
-       },
-       {
-        model: models.product_occassions,
+      //  },
+      //  {
+      //   model: models.product_occassions,
 
-       },{
-        model: models.product_styles,
+      //  },{
+      //   model: models.product_styles,
 
-       },
-       {
-        model: models.product_themes,
+      //  },
+      //  {
+      //   model: models.product_themes,
 
-       }
-      ],*/
+      //  }
+      // ],
       where: whereclause1
     }).then(product=> {
      
       products = product;
       console.log(">>>>>>>"+products.length)
- //    pricingresult()
-//    res.send(200, products);
+   // pricingresult()
+   //res.send(200, products[0]);
          processproduct()
     });
     async function processproduct(){
@@ -80,7 +80,7 @@ exports.priceupdate = (req, res) => {
           include: [{
             model: models.trans_sku_lists,
             where:{
-               //  generated_sku: 'SR0271-18110000-15',
+              //   generated_sku: 'SB0026-18110000-2.4',
               //  cost_price: {
               //   // "$eq" changes to "[Op.eq]"
               //     [Op.eq]: null
@@ -619,8 +619,8 @@ exports.priceupdate = (req, res) => {
     {
       var skucount = 0;
 
-    //updategoldprice(productobj.vendor_code, productskus[0])
-   updatediamondprice(productobj.vendor_code, productskus[0])
+    updategoldprice(productobj.vendor_code, productskus[0])
+   //updatediamondprice(productobj.vendor_code, productskus[0])
     async  function updatediamondprice(vendor_code,productsku)
      {
       var costprice_diamond = 0;
@@ -932,6 +932,8 @@ exports.priceupdate = (req, res) => {
               purity: parseInt(purityval.replace('K',''))
             }
         }).then(async gold_price=> {
+          console.log("updatepricevalue")
+          console.log(JSON.stringify(gold_price))
            if(gold_price)
            {
             costprice = gold_price.cost_price * skuobj.sku_weight
@@ -971,7 +973,8 @@ exports.priceupdate = (req, res) => {
 
             }
           }
-            console.log("updatediscount>>>>>>>"+sellingprice)
+            console.log("xxxxxgoldprice>>>>>>>"+sellingprice)
+            console.log("xxxxxgoldprice>>>>>>>"+skuobj.generated_sku)
 
             var goldmargin = ((sellingprice - costprice)/costprice)*100
 
@@ -992,10 +995,13 @@ exports.priceupdate = (req, res) => {
             models.pricing_sku_metals.findOne({
               where: {product_sku: skuobj.generated_sku, material_name: 'goldprice'}
             }).then(price_splitup_model=> {
+              console.log("pricevaluethere")
               if (price_splitup_model) {
                 price_splitup_model.update(goldprice)
                 .then(updatedgoldprice => {
-                  console.log('iamhere')
+                  console.log('iamhereupdated')
+                  console.log(JSON.stringify(updatedgoldprice))
+
                   makingcharge(vendorcode);
                 })
                 .catch(reason => {
@@ -1006,6 +1012,9 @@ exports.priceupdate = (req, res) => {
               else{
                 models.pricing_sku_metals.create(goldprice).then((result) => {
                   makingcharge(vendorcode);
+                console.log('iamherecreated')
+                  console.log(JSON.stringify(result))
+
                 })
                 .catch((error) => {
                   console.log("errodmessage"+JSON.stringify(error.message))
@@ -1015,9 +1024,10 @@ exports.priceupdate = (req, res) => {
               }
             })
           }else{
-            makingcharge(vendorcode);
+            console.log("update gold price")
+           makingcharge(vendorcode);
           }
-              
+            
 
     
         });
