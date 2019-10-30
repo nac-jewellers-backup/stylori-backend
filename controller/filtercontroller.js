@@ -8,7 +8,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material, theme,collection, occassion, style, metalpurity, producttype, stoneshape, gender } = req.body
+const {material, theme,collection, occassion, style, metalpurity, producttype, stoneshape, gender, stonecolor } = req.body
 var product_list = [];
 var whereclause = {};
 var includeclause = [];
@@ -98,7 +98,7 @@ if(theme)
     })
 }
 
-if(product_stonecolors)
+if(stonecolor)
 {
   whereclause['$product_stonecolors.stonecolor$'] = {
     [Op.eq]:product_stonecolors
