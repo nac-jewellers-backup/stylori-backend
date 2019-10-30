@@ -222,7 +222,6 @@ let prod_type_where = {}
     where: material_whereclause
   })
 
-
   let collection_whereclause = {}
   if(product_list.length > 0)
   {
