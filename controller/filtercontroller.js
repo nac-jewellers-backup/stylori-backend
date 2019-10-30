@@ -98,6 +98,16 @@ if(theme)
     })
 }
 
+if(product_stonecolors)
+{
+  whereclause['$product_stonecolors.stonecolor$'] = {
+    [Op.eq]:product_stonecolors
+    }
+    includeclause.push({
+           model : models.product_stonecolors
+    })
+}
+
 if(producttype)
 {
   whereclause['product_type']= {
@@ -156,6 +166,11 @@ let prod_type_where = {}
     }
   }
 
+  var master_stonecolor = await models.product_stonecolors.findAll({
+    attributes: ['stonecolor'],
+    group: ['stonecolor'],
+    where:prod_type_where
+  })
  var master_product_type = await models.product_lists.findAll({
     attributes: ['product_type'],
     group: ['product_type'],
@@ -214,6 +229,8 @@ let prod_type_where = {}
     group: ['material_name'],
     where: material_whereclause
   })
+
+
 
 
   var gemstone_shape = await models.product_gemstones.findAll({
@@ -290,6 +307,7 @@ let prod_type_where = {}
         master_purity,
         master_colors,
         gemstone_shape,
-        master_gender
+        master_gender,
+        master_stonecolor
         })
 }
