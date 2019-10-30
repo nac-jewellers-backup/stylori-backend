@@ -100,11 +100,11 @@ if(theme)
 
 if(stonecolor)
 {
-  whereclause['$product_stonecolors.stonecolor$'] = {
-    [Op.eq]:product_stonecolors
+  whereclause['$product_stonecolor.stonecolor$'] = {
+    [Op.eq]:stonecolor
     }
     includeclause.push({
-           model : models.product_stonecolors
+           model : models.product_stonecolor
     })
 }
 
@@ -166,7 +166,7 @@ let prod_type_where = {}
     }
   }
 
-  var master_stonecolor = await models.product_stonecolors.findAll({
+  var master_stonecolor = await models.product_stonecolor.findAll({
     attributes: ['stonecolor'],
     group: ['stonecolor'],
     where:prod_type_where
