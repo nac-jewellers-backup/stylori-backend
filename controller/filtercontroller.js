@@ -8,7 +8,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material, theme,collection, occassion, style, metalpurity, producttype, stoneshape, gender, stonecolor } = req.body
+const {material, theme,collection, occassion, style, metalpurity, producttype, stoneshape, gender, stonecolor, stonecount } = req.body
 var product_list = [];
 var whereclause = {};
 var includeclause = [];
@@ -108,6 +108,15 @@ if(stonecolor)
     })
 }
 
+if(stonecount)
+{
+  whereclause['$product_stonecount.stonecount$'] = {
+    [Op.eq]:stonecount
+    }
+    includeclause.push({
+           model : models.product_stonecount
+    })
+}
 if(producttype)
 {
   whereclause['product_type']= {
@@ -171,6 +180,14 @@ let prod_type_where = {}
     group: ['stonecolor'],
     where:prod_type_where
   })
+
+
+  var master_stonecount = await models.product_stonecount.findAll({
+    attributes: ['stonecount'],
+    group: ['stonecount'],
+    where:prod_type_where
+  })
+
  var master_product_type = await models.product_lists.findAll({
     attributes: ['product_type'],
     group: ['product_type'],
@@ -308,6 +325,7 @@ let prod_type_where = {}
         master_colors,
         gemstone_shape,
         master_gender,
-        master_stonecolor
+        master_stonecolor,
+        master_stonecount
         })
 }
