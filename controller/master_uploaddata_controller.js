@@ -171,9 +171,76 @@ exports.updateproduct_stonecolor = async (req, res) => {
     
          
 }
+exports.updatecodpincodes = async (req, res) => {
+    console.log("I ma here")
+    var pincodes = req.body.cod_pincode;
+    var pincodes_obj = JSON.parse(pincodes)
+    var process_pincode_count = 0
+    res.send(200, {"message":"success"})
+
+    processpincode(process_pincode_count)
+   async function processpincode(process_pincode_count)
+    {
+        
+        var pincode = pincodes_obj[process_pincode_count];
+        console.log("I ma here"+pincode.pincode)
+
+     await   models.pincode_master.update(
+            
+            {is_cod: true, max_cartvalue : pincode.maxlimit , min_cartvalue: pincode.maxlimit},
+                {where: {
+                pincode: pincode.pincode
+                }
+             }
+            
+        )
+        process_pincode_count++ 
+        if(pincodes_obj.length > process_pincode_count)
+        {
+
+          processpincode(process_pincode_count)
+        }else{
+              console.log("finished")
+        }
+    }
+}
+
+exports.updateurlparams = async (req, res) => {
+    var pincodes = req.body.urlparams;
+    var pincodes_obj = JSON.parse(pincodes)
+    var process_pincode_count = 0
+    res.send(200, {"message":"success"})
+
+    processpincode(process_pincode_count)
+   async function processpincode(process_pincode_count)
+    {
+        var pincode = pincodes_obj[process_pincode_count];
+        var urlobj = {
+            id:uuidv1(),
+            attribute_name: pincode.name,
+            attribute_value: pincode.value,
+            seo_text: pincode.text,
+            seo_value:pincode.value,
+            seo_url:pincode.url,
+            priority: pincode.priority,
+            is_active: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }
+        await models.seo_url_priorities.create(urlobj)
+        process_pincode_count++ 
+        if(pincodes_obj.length > process_pincode_count)
+        {
+
+          processpincode(process_pincode_count)
+        }else{
+              console.log("finished")
+        }
+    }
+}
 
 exports.updatepincode = async (req, res) => {
-    var pincodes = req.body.Sheet1;
+    var pincodes = req.body.delivery_pin_code;
     var pincodes_obj = JSON.parse(pincodes)
     var process_pincode_count = 0
     res.send(200, {"message":"success"})
@@ -181,8 +248,9 @@ exports.updatepincode = async (req, res) => {
     processpincode(process_pincode_count)
     function processpincode(process_pincode_count)
     {
-        var pincode = pincodes_obj[process_pincode_count].Pincode;
-    request({
+        var pincode = pincodes_obj[process_pincode_count].pincode;
+        console.log(pincode)
+        request({
         url: 'http://www.postalpincode.in/api/pincode/'+pincode,
         method: "GET",
         headers: {},

@@ -60,10 +60,15 @@ module.exports = (sequelize, DataTypes) => {
     discount_price_tax:{
       type: DataTypes.DOUBLE
     },
-     discount_price:{
+    discount_price:{
       type: DataTypes.DOUBLE
     }, 
-    
+    vendor_delivery_time:{
+      type: DataTypes.INTEGER
+    },
+    is_ready_to_ship:{
+      type: DataTypes.BOOLEAN
+    },
     margin_on_sale_percentage:{
       type: DataTypes.DOUBLE
     } }, {

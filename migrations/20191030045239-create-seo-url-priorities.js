@@ -1,44 +1,26 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('pincode_masters', {
+    return queryInterface.createTable('seo_url_priorities', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      picode: {
+      attribute_name: {
         type: Sequelize.STRING
       },
-      area: {
+      attribute_value: {
         type: Sequelize.STRING
       },
-      district: {
+      seo_text: {
         type: Sequelize.STRING
       },
-      state: {
+      seo_url: {
         type: Sequelize.STRING
       },
-      country: {
-        type: Sequelize.STRING
-      },
-      min_cartvalue: {
-        type: Sequelize.DOUBLE
-      },
-      max_cartvalue: {
-        type: Sequelize.DOUBLE
-      },
-      lat: {
-        type: Sequelize.DOUBLE
-      },
-      lng: {
-        type: Sequelize.DOUBLE
-      },
-      is_cod: {
-        type: Sequelize.BOOLEAN
-      },
-      is_delivery: {
-        type: Sequelize.BOOLEAN
+      priority: {
+        type: Sequelize.INTEGER
       },
       is_active: {
         type: Sequelize.BOOLEAN
@@ -54,6 +36,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('pincode_masters');
+    return queryInterface.dropTable('seo_url_priorities');
   }
 };

@@ -39,6 +39,8 @@ module.exports = function(app) {
 	app.post('/updateproduct_gender', master_uploaddata_controller.updateproduct_gender);
 	app.post('/updateproduct_purity', master_uploaddata_controller.updateproduct_purity);
 	app.post('/updateproduct_stonecolor', master_uploaddata_controller.updateproduct_stonecolor);
+	app.post('/updateurlparams', master_uploaddata_controller.updateurlparams);
+	app.post('/updatecodpincodes', master_uploaddata_controller.updatecodpincodes);
 
 	
 	

@@ -6,6 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     district: DataTypes.STRING,
     state: DataTypes.STRING,
     country: DataTypes.STRING,
+    min_cartvalue: DataTypes.DOUBLE,
+    max_cartvalue: DataTypes.DOUBLE,
     lat: DataTypes.DOUBLE,
     lng: DataTypes.DOUBLE,
     is_cod: DataTypes.BOOLEAN,
