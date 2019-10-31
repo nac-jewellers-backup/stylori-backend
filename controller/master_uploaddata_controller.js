@@ -102,6 +102,47 @@ exports.updateproduct_color = async (req, res) => {
             }
       }
 }
+
+exports.updatedefaultimage = async (req, res) => {
+    var product_count = 0
+    var product_msters = await models.product_lists.findAll({
+        attributes: ['product_id']
+      })
+
+      updatemetalcolor(product_count)
+      async function updatemetalcolor(product_count) {
+        var product_id = product_msters[product_count].product_id
+
+        var product_colors = await models.trans_sku_lists.findOne({
+            attributes: ['metal_color'],
+            
+           where: {
+                product_id: product_id,
+                isdefault: true
+            }
+          })
+
+         if(product_colors && product_colors.metal_color)
+         {
+          var query = "UPDATE product_images SET isdefault = true where product_id ='"+product_id+"' and product_color = '"+product_colors.metal_color+"'" ;
+          await models.sequelize.query(query).then(([results, metadata]) => {
+            // Results will be an empty array and metadata will contain the number of affected rows.
+          })
+        }
+
+     
+
+        product_count++ 
+        if(product_msters.length > product_count)
+        {
+
+            updatemetalcolor(product_count)
+        }else{
+              console.log("finished")
+        }
+      }
+}
+
 exports.updateproduct_purity = async (req, res) => {
     var product_count = 0
     var product_msters = await models.product_lists.findAll({

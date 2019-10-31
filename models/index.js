@@ -7,7 +7,7 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'staging';
 const config = require(__dirname + '/../config/config');
 const db = {};
-console.log("env variable");
+console.log("env variable1");
 console.log(env);
 // let sequelize;
 // if (config.use_env_variable) {
@@ -15,18 +15,23 @@ console.log(env);
 // } else {
 //   sequelize = new Sequelize(config.database, config.username, config.password, config);
 // }
+var sequelize_logging = new Function();
+
 let sequelize;
 if (env === "production") {
     console.log(env);
 
   sequelize = new Sequelize(config.production.database, config.production.username, config.production.password, config.production,{
     host:config.production.host,
+    logging: sequelize_logging(),
     dialect:config.production.dialect
   });
 }
 else if(env === "staging"){
+  console.log("i am")
   sequelize = new Sequelize(config.staging.database, config.staging.username, config.staging.password, config.staging,{
     host:config.staging.host,
+    logging: false,
     dialect:config.staging.dialect
   });
 }
@@ -35,6 +40,7 @@ else if(env === "local"){
 
   sequelize = new Sequelize(config.local.database, config.local.username, config.local.password, config.local,{
     host:config.local.host,
+    logging: false,
     dialect:config.local.dialect
   });
 } else {
@@ -44,8 +50,11 @@ else if(env === "local"){
   //     host:config.staging.host,
   //     dialect:config.staging.dialect
   //   });
+  
   sequelize = new Sequelize(config.local.database, config.local.username, config.local.password, config.local,{
     host:config.local.host,
+    logging: false,
+
     dialect:config.local.dialect
   });
 }

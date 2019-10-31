@@ -2,6 +2,8 @@
 const models=require('./../models');
 import 'dotenv/config';
 const Op= require('sequelize').Op;
+const sequelize= require('sequelize');
+
 import apidata from './apidata.json';
 const uuidv1 = require('uuid/v1');
 var splitArray = require('split-array');
@@ -316,6 +318,11 @@ let prod_type_where = {}
     group: ['metal_color'],
     where: metalcolor_where
   })
+  var price_range = await models.trans_sku_lists.findAll({
+    attributes:[[sequelize.fn('max', sequelize.col('selling_price_tax')),'max'],[sequelize.fn('min', sequelize.col('selling_price_tax')),'min']]
+  ,
+    where: metalcolor_where
+  })
 
     res.send(200,{master_category,master_product_type,master_styles,master_themes,
         master_occassion,
@@ -326,6 +333,7 @@ let prod_type_where = {}
         gemstone_shape,
         master_gender,
         master_stonecolor,
-        master_stonecount
+        master_stonecount,
+        price_range
         })
 }

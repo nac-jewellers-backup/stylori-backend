@@ -13,28 +13,26 @@ exports.priceupdate = (req, res) => {
     var responseobj = {};
     var pricesplitup = []
     var products = []
-    var processed_product_count = 0;
+    var processed_product_count = 244;
     res.send(200,{message:"success"})
-    console.log(req.body)
     const {req_product_id} = req.body
     let whereclause1 = {
       isactive : true
     }
     if(req_product_id)
     {
-      whereclause1 = {
-        product_id : "SB0509",
+      // whereclause1 = {
+      //   product_id : "SB0509",
 
-      }
+      // }
     }
-    // const msg = {
-    //   to: "manokarantk@gmail.com",
-    //   subject: 'Pricing update started',
-    //   from: 'info@ustimeapp.com',
-    //   html: "<b>started</>"
-    //   };
-    //   sgMail.send(msg);
-    console.log(JSON.stringify(whereclause1))
+    const msg = {
+      to: "manokarantk@gmail.com",
+      subject: 'Pricing update started',
+      from: 'info@ustimeapp.com',
+      html: "<b>started</>"
+      };
+      sgMail.send(msg);
     models.product_lists.findAll({
       // include: [{
       //   model: models.trans_sku_lists,
@@ -73,6 +71,7 @@ exports.priceupdate = (req, res) => {
          processproduct()
     });
     async function processproduct(){
+      console.log(">>>><<<<<<>>>>><<<<<<"+processed_product_count)
       if(products.length > processed_product_count)
       {
         let currentproduct = products[processed_product_count]
@@ -113,6 +112,8 @@ exports.priceupdate = (req, res) => {
             product_id: currentproduct.product_id
           }
         })
+        console.log(">>>><<<<<<>>>>><<<<<<"+currentproduct.product_id)
+
        // product_obj = products[processed_product_count]
        if(product_obj)
        {
@@ -399,8 +400,6 @@ exports.priceupdate = (req, res) => {
         var sell_price_type = 0;
         var sell_percent_flat = 0;
 
-        console.log("gemstonepricesettings")
-        console.log(JSON.stringify(gemstonecharge));
         gemstonecharge.forEach(pricingobj => {
           if(pricingobj.price_type == 1)
           {
@@ -628,7 +627,6 @@ exports.priceupdate = (req, res) => {
       var processcount = 0;
        var diamondprice1 = []
         let product_diamonds = await productdiamonds(productsku.product_id,productsku.diamond_type)
-          console.log("diamondcountval"+product_diamonds.length);
 
           if(product_diamonds.length > 0)
         {
@@ -723,7 +721,6 @@ exports.priceupdate = (req, res) => {
   
   
         }
-       console.log("i am here");
       };
     
 
@@ -772,8 +769,7 @@ exports.priceupdate = (req, res) => {
             var sell_price_type = 0;
             var sell_percent_flat = 0;
             
-            console.log("gemstonepricesettings")
-            console.log(JSON.stringify(gemstonecharge));
+          
             gemstonecharge.forEach(pricingobj => {
               if(pricingobj.price_type == 1)
               {
@@ -871,7 +867,6 @@ exports.priceupdate = (req, res) => {
               product_sku: productskus[skucount].generated_sku,
               product_id: product_obj.product_id
             }  
-           console.log("iamaheerertoodas"+JSON.stringify(gemstoneprice));
             models.pricing_sku_materials.findOne({
               where: {product_sku: productskus[skucount].generated_sku, material_name: gemstoneprice.material_name}
             }).then(price_splitup_model=> {
@@ -897,11 +892,7 @@ exports.priceupdate = (req, res) => {
           })
         function isgemstoneexist()
         {
-          console.log("skugemcount"+skucount)
-
-          console.log("gemstonescount"+gemstone_count)
-          console.log("productgemstonecount"+product_gemstones.length)
-
+  
             if(product_gemstones.length > gemstone_count)
             {
               gemstone_process(product_gemstones[gemstone_count],product_obj.vendor_code)
@@ -932,8 +923,7 @@ exports.priceupdate = (req, res) => {
               purity: parseInt(purityval.replace('K',''))
             }
         }).then(async gold_price=> {
-          console.log("updatepricevalue")
-          console.log(JSON.stringify(gold_price))
+
            if(gold_price)
            {
             costprice = gold_price.cost_price * skuobj.sku_weight
@@ -973,9 +963,7 @@ exports.priceupdate = (req, res) => {
 
             }
           }
-            console.log("xxxxxgoldprice>>>>>>>"+sellingprice)
-            console.log("xxxxxgoldprice>>>>>>>"+skuobj.generated_sku)
-
+          
             var goldmargin = ((sellingprice - costprice)/costprice)*100
 
             var goldprice ={
@@ -995,13 +983,10 @@ exports.priceupdate = (req, res) => {
             models.pricing_sku_metals.findOne({
               where: {product_sku: skuobj.generated_sku, material_name: 'goldprice'}
             }).then(price_splitup_model=> {
-              console.log("pricevaluethere")
               if (price_splitup_model) {
                 price_splitup_model.update(goldprice)
                 .then(updatedgoldprice => {
-                  console.log('iamhereupdated')
-                  console.log(JSON.stringify(updatedgoldprice))
-
+                  
                   makingcharge(vendorcode);
                 })
                 .catch(reason => {
@@ -1012,19 +997,16 @@ exports.priceupdate = (req, res) => {
               else{
                 models.pricing_sku_metals.create(goldprice).then((result) => {
                   makingcharge(vendorcode);
-                console.log('iamherecreated')
-                  console.log(JSON.stringify(result))
+              
 
                 })
                 .catch((error) => {
-                  console.log("errodmessage"+JSON.stringify(error.message))
                   makingcharge(vendorcode);
                 });
 
               }
             })
           }else{
-            console.log("update gold price")
            makingcharge(vendorcode);
           }
             
@@ -1053,7 +1035,6 @@ exports.priceupdate = (req, res) => {
                
               }
           }).then(async makingcharge=> {
-            console.log(">>>>>>>>"+JSON.stringify(makingcharge))
             if(makingcharge)
             {
               makingcharge.forEach(makingcharge_obj => {
@@ -1145,7 +1126,6 @@ exports.priceupdate = (req, res) => {
 
                   })
                   .catch((error) => {
-                    console.log("makingchargeprice"+error.message)
                     
                     
                     updateskuprice();
@@ -1213,7 +1193,6 @@ exports.priceupdate = (req, res) => {
           
             
              let markupobj =  await materialmarkupval(total_sellingprice)
-            console.log('$$$$$$$$$$'+JSON.stringify(markupobj))
              if(markupobj.length > 0)
               {
                 markupobj.forEach(async markup => {
@@ -1226,7 +1205,6 @@ exports.priceupdate = (req, res) => {
                   }
                   if(markup.material == 'Gem Stone')
                   {
-                    console.log('$$$$$$$$$$'+markup.markup_value)
 
                     var query = "UPDATE pricing_sku_materials SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and component LIKE 'gemstone%'" ;
                     await models.sequelize.query(query).then(([results, metadata]) => {
@@ -1295,7 +1273,6 @@ exports.priceupdate = (req, res) => {
              models.trans_sku_lists.update(transskuobj,{
               where: {generated_sku: productskus[skucount].generated_sku}
               }).then(price_splitup_model=> {
-                console.log("price updated")
                 isskuexist()
               
             }).catch(reason => {
@@ -1316,17 +1293,14 @@ exports.priceupdate = (req, res) => {
       function isskuexist()
       {
 
-        console.log("i am here")
           skucount = skucount + 1;
           if(product_obj.trans_sku_lists.length > skucount)
           {
-            console.log("i am here1")
 
         
               updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
 
           }else{
-            console.log("i am here2")
 
             processed_product_count = processed_product_count  + 1;
             processproduct();

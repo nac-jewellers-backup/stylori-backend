@@ -41,6 +41,7 @@ module.exports = function(app) {
 	app.post('/updateproduct_stonecolor', master_uploaddata_controller.updateproduct_stonecolor);
 	app.post('/updateurlparams', master_uploaddata_controller.updateurlparams);
 	app.post('/updatecodpincodes', master_uploaddata_controller.updatecodpincodes);
+	app.post('/updatedefaultimage', master_uploaddata_controller.updatedefaultimage);
 
 	
 	
