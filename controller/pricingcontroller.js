@@ -21,10 +21,9 @@ exports.priceupdate = (req, res) => {
     }
     if(req_product_id)
     {
-      // whereclause1 = {
-      //   product_id : "SB0509",
-
-      // }
+      whereclause1 = {
+        product_id : req_product_id,
+      }
     }
     const msg = {
       to: "manokarantk@gmail.com",
@@ -1202,9 +1201,8 @@ exports.priceupdate = (req, res) => {
             let total_sellingprice = accs.selling_price + product_splitup.selling_price;
             let sku_margin = ((total_sellingprice - total_costprice)/total_costprice)*100
             //let taxcomponent = await gettaxmaster('Rings');
-            let final_selling_price = total_sellingprice / 0.75
-            console.log("finalsellingprice")
-            console.log(final_selling_price)
+           
+          
             
              let markupobj =  await materialmarkupval(total_sellingprice)
              if(markupobj.length > 0)
@@ -1212,7 +1210,7 @@ exports.priceupdate = (req, res) => {
                 markupobj.forEach(async markup => {
                   if(markup.material == 'Diamond')
                   {
-                    var query = "UPDATE pricing_sku_materials SET markup = (selling_price *"+markup.markup_value+"/100) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name ='"+productskus[skucount].diamond_type+"'" ;
+                    var query = "UPDATE pricing_sku_materials SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name ='"+productskus[skucount].diamond_type+"'" ;
                     await models.sequelize.query(query).then(([results, metadata]) => {
                       // Results will be an empty array and metadata will contain the number of affected rows.
                     })
@@ -1220,21 +1218,21 @@ exports.priceupdate = (req, res) => {
                   if(markup.material == 'Gem Stone')
                   {
 
-                    var query = "UPDATE pricing_sku_materials SET markup = (selling_price *"+markup.markup_value+"/100) where product_sku ='"+productskus[skucount].generated_sku+"' and component LIKE 'gemstone%'" ;
+                    var query = "UPDATE pricing_sku_materials SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and component LIKE 'gemstone%'" ;
                     await models.sequelize.query(query).then(([results, metadata]) => {
                       // Results will be an empty array and metadata will contain the number of affected rows.
                     })
                   }
                   if(markup.material == 'Making Charge')
                   {
-                    var query = "UPDATE pricing_sku_metals SET markup =   (selling_price *"+markup.markup_value+"/100) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'makingcharge'" ;
+                    var query = "UPDATE pricing_sku_metals SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'makingcharge'" ;
                     await models.sequelize.query(query).then(([results, metadata]) => {
                       // Results will be an empty array and metadata will contain the number of affected rows.
                     })
                   }
                   if(markup.material == 'Gold')
                   {
-                    var query = "UPDATE pricing_sku_metals SET markup =   (selling_price *"+markup.markup_value+"/100) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'goldprice'" ;
+                    var query = "UPDATE pricing_sku_metals SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'goldprice'" ;
                     await models.sequelize.query(query).then(([results, metadata]) => {
                       // Results will be an empty array and metadata will contain the number of affected rows.
                     })
@@ -1243,11 +1241,11 @@ exports.priceupdate = (req, res) => {
 
               }
 
-              var mkquery = "UPDATE pricing_sku_metals SET discount_price = (((selling_price + markup) * 100) /(100 - 25)) where product_sku ='"+productskus[skucount].generated_sku+"'" ;
+              var mkquery = "UPDATE pricing_sku_metals SET discount_price = ((markup * 100) /(100 - 25)) where product_sku ='"+productskus[skucount].generated_sku+"'" ;
              await models.sequelize.query(mkquery).then(([results, metadata]) => {
                 // Results will be an empty array and metadata will contain the number of affected rows.
               })
-              var materialquery = "UPDATE pricing_sku_materials SET discount_price = (((selling_price + markup) * 100)/(100 - 25)) where product_sku ='"+productskus[skucount].generated_sku+"'" ;
+              var materialquery = "UPDATE pricing_sku_materials SET discount_price = ((markup * 100)/(100 - 25)) where product_sku ='"+productskus[skucount].generated_sku+"'" ;
                   await  models.sequelize.query(materialquery).then(([results, metadata]) => {
                       // Results will be an empty array and metadata will contain the number of affected rows.
                     })
