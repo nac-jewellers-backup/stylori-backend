@@ -42,6 +42,7 @@ module.exports = function(app) {
 	app.post('/updateurlparams', master_uploaddata_controller.updateurlparams);
 	app.post('/updatecodpincodes', master_uploaddata_controller.updatecodpincodes);
 	app.post('/updatedefaultimage', master_uploaddata_controller.updatedefaultimage);
+	app.get('/viewskupricesummary/:skuid', master_uploaddata_controller.viewskupricesummary);
 
 	
 	

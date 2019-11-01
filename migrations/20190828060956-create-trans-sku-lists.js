@@ -23,6 +23,9 @@ module.exports = {
           key: 'product_id',
         }
       },
+      isfeatured: {
+        type: Sequelize.BOOLEAN
+      },
       isdefault: {
         type: Sequelize.BOOLEAN
       },

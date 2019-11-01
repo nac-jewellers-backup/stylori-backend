@@ -19,7 +19,10 @@ module.exports = {
       product_sku: {
         type: Sequelize.STRING,
         primaryKey: true,
-
+        references: {
+          model: 'trans_sku_lists', // name of Source model
+          key: 'generated_sku',
+        }
       },
       cost_price: {
         type: Sequelize.DOUBLE

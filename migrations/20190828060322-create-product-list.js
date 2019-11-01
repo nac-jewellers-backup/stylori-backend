@@ -14,6 +14,11 @@ module.exports = {
       product_series: {
         type: Sequelize.INTEGER
       },
+      product_category: {
+        type: Sequelize.STRING,
+        
+      },
+     
       vendor_code: {
         type: Sequelize.STRING
       },

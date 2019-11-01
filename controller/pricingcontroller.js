@@ -70,10 +70,16 @@ exports.priceupdate = (req, res) => {
    //res.send(200, products[0]);
          processproduct()
     });
+    var start = 0;
     async function processproduct(){
       console.log(">>>><<<<<<>>>>><<<<<<"+processed_product_count)
+      var end = new Date() - start
+      console.log("'Execution time: %dms', "+end)
+
       if(products.length > processed_product_count)
       {
+         start = new Date()
+
         let currentproduct = products[processed_product_count]
         product_obj =   await  models.product_lists.findOne({
           include: [{
@@ -113,6 +119,8 @@ exports.priceupdate = (req, res) => {
           }
         })
         console.log(">>>><<<<<<>>>>><<<<<<"+currentproduct.product_id)
+        var getskulisttime = new Date() - start
+        console.log(">>>><<<<<<>>>>><<<<<<"+getskulisttime)
 
        // product_obj = products[processed_product_count]
        if(product_obj)
@@ -917,7 +925,6 @@ exports.priceupdate = (req, res) => {
 
         var purityval = skuobj.purity;
         models.gold_price_settings.findOne({
-
             where: {
               vendor_code: product_obj.vendor_code,
               purity: parseInt(purityval.replace('K',''))
@@ -926,6 +933,8 @@ exports.priceupdate = (req, res) => {
 
            if(gold_price)
            {
+            console.log("goldpriceavailable")
+
             costprice = gold_price.cost_price * skuobj.sku_weight
             if(gold_price.selling_price_type == 2)
             {
@@ -983,30 +992,38 @@ exports.priceupdate = (req, res) => {
             models.pricing_sku_metals.findOne({
               where: {product_sku: skuobj.generated_sku, material_name: 'goldprice'}
             }).then(price_splitup_model=> {
+              console.log("goldpricethen"+JSON.stringify(price_splitup_model))
               if (price_splitup_model) {
                 price_splitup_model.update(goldprice)
                 .then(updatedgoldprice => {
-                  
+                  console.log("goldpriceupdated")
+
                   makingcharge(vendorcode);
                 })
                 .catch(reason => {
+                  console.log("goldpriceupdatecatch")
 
                   makingcharge(vendorcode);
                 });
               }
               else{
                 models.pricing_sku_metals.create(goldprice).then((result) => {
+                  console.log("goldpricecreated")
                   makingcharge(vendorcode);
               
 
                 })
                 .catch((error) => {
+                  console.log("goldpricecatch")
+
                   makingcharge(vendorcode);
                 });
 
               }
             })
           }else{
+            console.log("goldpricenotavailable")
+
            makingcharge(vendorcode);
           }
             

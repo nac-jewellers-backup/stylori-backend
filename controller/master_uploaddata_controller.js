@@ -186,7 +186,47 @@ exports.updateproduct_purity = async (req, res) => {
             }
       }
 }
+exports.viewskupricesummary = async (req, res) => {
+    var response = {}
+    models.trans_sku_lists.findOne({
+        include:[
+            {
+            model: models.product_lists,
+            attributes:['vendor_code']
+            }
+        ],
+        attributes: [
+            'cost_price','selling_price','markup_price','discount_price',
+            'cost_price_tax','markup_price_tax','discount_price_tax','margin_on_sale_percentage'
+        ],
+        where: {
+        generated_sku: req.params.skuid
+        }
+    }).then(accs => {
+        response['skuprice'] = accs
+        models.pricing_sku_materials.findAll({
+            where:{
+                product_sku: req.params.skuid
+            }
+        }).then(material_price => {
 
+            response['materials'] = material_price
+            models.pricing_sku_metals.findAll({
+                where:{
+                    product_sku: req.params.skuid
+                }
+            }).then(metal_price => {
+    
+                response['metals'] = metal_price
+                res.send(200,{"price_summary":response})
+    
+            })
+
+        })
+
+
+    })
+}
 
 exports.updateproduct_stonecolor = async (req, res) => {
     var product_count = 0   
