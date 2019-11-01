@@ -1202,8 +1202,9 @@ exports.priceupdate = (req, res) => {
             let total_sellingprice = accs.selling_price + product_splitup.selling_price;
             let sku_margin = ((total_sellingprice - total_costprice)/total_costprice)*100
             //let taxcomponent = await gettaxmaster('Rings');
-           
-          
+            let final_selling_price = total_sellingprice / 0.75
+            console.log("finalsellingprice")
+            console.log(final_selling_price)
             
              let markupobj =  await materialmarkupval(total_sellingprice)
              if(markupobj.length > 0)
