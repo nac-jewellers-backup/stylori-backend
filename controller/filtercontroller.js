@@ -312,7 +312,8 @@ let prod_type_where = {}
 
     }
   }
-
+  var seo_url = 'white+gold-drops-earrings-jewellery'
+  var seo_text = 'For casual, formal and everything in between. Stylori\'s range of earrings suits every style and occasion. Choose from our collections of gold earrings and diamond earrings with a diverse range of drops, ear studs and many more styles. Shop online for the latest trends in fashion jewellery or plan for a wedding with the bridal jewellery collection. Crafted using the finest jewellery design and jewellery making principles, buy our jewellery online for fast deliveries and an easy returns policy.For every occasion and non-occasion. Shop our range of everyday fashion jewellery featuring gold, silver and stone rings and earrings, for work, play and everything in between. Give special occasions a little extra glimmer with our range of bridal jewellery ranging from engagement rings to wedding rings to classic party wear. Crafted using the finest jewellery design and jewellery making principles, buy our jewellery online for fast deliveries and an easy returns policy.'
   var master_colors = await models.trans_sku_lists.findAll({
     attributes: ['metal_color'],
     group: ['metal_color'],
@@ -334,6 +335,8 @@ let prod_type_where = {}
         master_gender,
         master_stonecolor,
         master_stonecount,
-        price_range
+        price_range,
+        seo_url,
+        seo_text
         })
 }

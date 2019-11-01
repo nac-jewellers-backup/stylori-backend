@@ -73,8 +73,7 @@ exports.priceupdate = (req, res) => {
     var start = 0;
     async function processproduct(){
       console.log(">>>><<<<<<>>>>><<<<<<"+processed_product_count)
-      var end = new Date() - start
-      console.log("'Execution time: %dms', "+end)
+      
 
       if(products.length > processed_product_count)
       {
@@ -118,9 +117,7 @@ exports.priceupdate = (req, res) => {
             product_id: currentproduct.product_id
           }
         })
-        console.log(">>>><<<<<<>>>>><<<<<<"+currentproduct.product_id)
-        var getskulisttime = new Date() - start
-        console.log(">>>><<<<<<>>>>><<<<<<"+getskulisttime)
+       
 
        // product_obj = products[processed_product_count]
        if(product_obj)
@@ -626,10 +623,12 @@ exports.priceupdate = (req, res) => {
     {
       var skucount = 0;
 
-    updategoldprice(productobj.vendor_code, productskus[0])
-   //updatediamondprice(productobj.vendor_code, productskus[0])
+   // updategoldprice(productobj.vendor_code, productskus[0])
+   updatediamondprice(productobj.vendor_code, productskus[0])
     async  function updatediamondprice(vendor_code,productsku)
      {
+       console.log("*$**$*$***$$*")
+       console.log(productsku.generated_sku)
       var costprice_diamond = 0;
       var sellingprice_diamond = 0;
       var processcount = 0;
@@ -642,7 +641,7 @@ exports.priceupdate = (req, res) => {
         }else
         {
          // updateskuprice()
-         updategemstone_price(product_obj.vendor_code, productskus[0])
+         updategemstone_price(product_obj.vendor_code, productsku)
 
        }
 
@@ -718,7 +717,7 @@ exports.priceupdate = (req, res) => {
                   diamond_process(product_diamonds[processcount],vendorcode)
                   }else{
                   //  updateskuprice() 
-                    updategemstone_price(product_obj.vendor_code, productskus[0])
+                    updategemstone_price(product_obj.vendor_code, productsku)
 
   
                   }
@@ -734,6 +733,7 @@ exports.priceupdate = (req, res) => {
 
     async  function updategemstone_price(vendor_code,productsku)
       {
+        console.log("gemstone")
         var  gemstonemargin = 0;
         var  gemstonecost = 0;
         var  gemstonesell = 0;
@@ -921,19 +921,21 @@ exports.priceupdate = (req, res) => {
     
       function updategoldprice(vendorcode, skuobj )
     {
+      console.log("goldprice")
 
 
         var purityval = skuobj.purity;
+        console.log(purityval)
         models.gold_price_settings.findOne({
             where: {
               vendor_code: product_obj.vendor_code,
               purity: parseInt(purityval.replace('K',''))
             }
         }).then(async gold_price=> {
-
+          console.log(gold_price.selling_price)
            if(gold_price)
            {
-            console.log("goldpriceavailable")
+            console.log(skuobj.generated_sku)
 
             costprice = gold_price.cost_price * skuobj.sku_weight
             if(gold_price.selling_price_type == 2)
@@ -956,7 +958,7 @@ exports.priceupdate = (req, res) => {
 
             // let goldmarkup =  await materialmarkupval('Gold',sellingprice)  
             // sellingprice = calculatesellingmarkup(goldmarkup, sellingprice)
-            
+            let markupprice = 0;
             let golddiscount1 =  await calculatediscountmarkup(product_obj,skuobj.generated_sku)  
              let golddiscount = golddiscount1[0]
               if(golddiscount)
@@ -965,7 +967,7 @@ exports.priceupdate = (req, res) => {
               {
               if(golddiscount.discount_type === 2)
               {
-                sellingprice =  sellingprice - (sellingprice * golddiscount.goldprice_discount)/100;
+                markupprice =  sellingprice - (sellingprice * golddiscount.goldprice_discount)/100;
               }else{
 
               }
@@ -979,7 +981,7 @@ exports.priceupdate = (req, res) => {
               material_name: 'goldprice',
               cost_price:costprice,
               selling_price:sellingprice,
-              markup:sellingprice,
+              markup:markupprice,
               discount_price:sellingprice,
               margin_percentage: goldmargin,
               product_sku: skuobj.generated_sku,
@@ -987,34 +989,29 @@ exports.priceupdate = (req, res) => {
               modifiedAt: new Date()
             }  
             pricesplitup.push(goldpriceobj);
-            
+
 
             models.pricing_sku_metals.findOne({
               where: {product_sku: skuobj.generated_sku, material_name: 'goldprice'}
             }).then(price_splitup_model=> {
-              console.log("goldpricethen"+JSON.stringify(price_splitup_model))
               if (price_splitup_model) {
                 price_splitup_model.update(goldprice)
                 .then(updatedgoldprice => {
-                  console.log("goldpriceupdated")
 
                   makingcharge(vendorcode);
                 })
                 .catch(reason => {
-                  console.log("goldpriceupdatecatch")
 
                   makingcharge(vendorcode);
                 });
               }
               else{
                 models.pricing_sku_metals.create(goldprice).then((result) => {
-                  console.log("goldpricecreated")
                   makingcharge(vendorcode);
               
 
                 })
                 .catch((error) => {
-                  console.log("goldpricecatch")
 
                   makingcharge(vendorcode);
                 });
@@ -1022,7 +1019,6 @@ exports.priceupdate = (req, res) => {
               }
             })
           }else{
-            console.log("goldpricenotavailable")
 
            makingcharge(vendorcode);
           }
@@ -1215,7 +1211,7 @@ exports.priceupdate = (req, res) => {
                 markupobj.forEach(async markup => {
                   if(markup.material == 'Diamond')
                   {
-                    var query = "UPDATE pricing_sku_materials SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name ='"+productskus[skucount].diamond_type+"'" ;
+                    var query = "UPDATE pricing_sku_materials SET markup = (selling_price *"+markup.markup_value+"/100) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name ='"+productskus[skucount].diamond_type+"'" ;
                     await models.sequelize.query(query).then(([results, metadata]) => {
                       // Results will be an empty array and metadata will contain the number of affected rows.
                     })
@@ -1223,21 +1219,21 @@ exports.priceupdate = (req, res) => {
                   if(markup.material == 'Gem Stone')
                   {
 
-                    var query = "UPDATE pricing_sku_materials SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and component LIKE 'gemstone%'" ;
+                    var query = "UPDATE pricing_sku_materials SET markup = (selling_price *"+markup.markup_value+"/100) where product_sku ='"+productskus[skucount].generated_sku+"' and component LIKE 'gemstone%'" ;
                     await models.sequelize.query(query).then(([results, metadata]) => {
                       // Results will be an empty array and metadata will contain the number of affected rows.
                     })
                   }
                   if(markup.material == 'Making Charge')
                   {
-                    var query = "UPDATE pricing_sku_metals SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'makingcharge'" ;
+                    var query = "UPDATE pricing_sku_metals SET markup =   (selling_price *"+markup.markup_value+"/100) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'makingcharge'" ;
                     await models.sequelize.query(query).then(([results, metadata]) => {
                       // Results will be an empty array and metadata will contain the number of affected rows.
                     })
                   }
                   if(markup.material == 'Gold')
                   {
-                    var query = "UPDATE pricing_sku_metals SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'goldprice'" ;
+                    var query = "UPDATE pricing_sku_metals SET markup =   (selling_price *"+markup.markup_value+"/100) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'goldprice'" ;
                     await models.sequelize.query(query).then(([results, metadata]) => {
                       // Results will be an empty array and metadata will contain the number of affected rows.
                     })
@@ -1246,11 +1242,11 @@ exports.priceupdate = (req, res) => {
 
               }
 
-              var mkquery = "UPDATE pricing_sku_metals SET discount_price = ((markup * 100) /(100 - 25)) where product_sku ='"+productskus[skucount].generated_sku+"'" ;
+              var mkquery = "UPDATE pricing_sku_metals SET discount_price = (((selling_price + markup) * 100) /(100 - 25)) where product_sku ='"+productskus[skucount].generated_sku+"'" ;
              await models.sequelize.query(mkquery).then(([results, metadata]) => {
                 // Results will be an empty array and metadata will contain the number of affected rows.
               })
-              var materialquery = "UPDATE pricing_sku_materials SET discount_price = ((markup * 100)/(100 - 25)) where product_sku ='"+productskus[skucount].generated_sku+"'" ;
+              var materialquery = "UPDATE pricing_sku_materials SET discount_price = (((selling_price + markup) * 100)/(100 - 25)) where product_sku ='"+productskus[skucount].generated_sku+"'" ;
                   await  models.sequelize.query(materialquery).then(([results, metadata]) => {
                       // Results will be an empty array and metadata will contain the number of affected rows.
                     })
