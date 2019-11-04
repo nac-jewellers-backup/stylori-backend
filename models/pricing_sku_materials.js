@@ -13,10 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   pricing_sku_materials.associate = function(models) {
     // associations can be defined here
-    models.pricing_sku_materials.belongsTo(models.trans_sku_lists,{
-      foreignKey: 'product_sku',
-      targetKey: 'generated_sku'
-    });
+  
   };
   return pricing_sku_materials;
 };

@@ -791,8 +791,10 @@ exports.priceupdate = (req, res) => {
             var sell_price_type = 0;
             var sell_percent_flat = 0;
             
-          
+            console.log(">>>>><<")
+            console.log(JSON.stringify(gemstonecharge))
             gemstonecharge.forEach(pricingobj => {
+
               if(pricingobj.price_type == 1)
               {
                 gemstonecost = pricingobj.price
@@ -811,7 +813,13 @@ exports.priceupdate = (req, res) => {
                 {
                   if(gemstoneobj.stone_weight){
                     gemstonecost = gemstonecost * gemstoneobj.stone_weight
+                  }else{
+                    gemstonecost = gemstonecost * gemstoneobj.stone_count
+
                   }
+                }else
+                {
+
                 }
                 if(sell_price_type == 1)
                 {
@@ -824,14 +832,10 @@ exports.priceupdate = (req, res) => {
                   
                 }else if(sell_price_type == 2)
                 {
-                  if(sell_percent_flat == 2)
+                  if(gemstoneobj.stone_count)
                   {
-                    gemstonesell = calculatepercentage(gemstonecost,gemstonesell)  
-                  }else{
-                  if(gemstoneobj.stone_weight){
-                    gemstonesell = pricingobj.price * gemstoneobj.stone_weight
+                    gemstonesell = gemstoneobj.stone_count * gemstonesell
                   }
-                }
                 }
     
            /* if(gemstonecharge.selling_price_type == 3)
