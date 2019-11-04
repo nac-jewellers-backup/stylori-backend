@@ -151,7 +151,6 @@ if(producttype)
   whereclause['product_type']= {
     [Op.eq]:producttype
     }
-
 }
 
 if(metalpurity)
