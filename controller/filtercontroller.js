@@ -16,7 +16,8 @@ var whereclause = {};
 var includeclause = [];
 var seofilterattribute = []
 var seofilterattributevalue = []
-
+seofilterattribute.push('Category')
+  seofilterattributevalue.push('jewellery')
 // [
 //   {
 //    model : models.product_materials
@@ -163,6 +164,7 @@ if(metalpurity)
     })
 
 }
+
 if(gender)
 {
 
