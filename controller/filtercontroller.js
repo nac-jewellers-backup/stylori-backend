@@ -378,7 +378,7 @@ let prod_type_where = {}
       seourls_arr.push(element.seo_url);
       seotexts_arr.push(element.seo_text)
     })
-    seo_url = seourls_arr.join(' ')
+    seo_url = seourls_arr.join('-')
     seo_text = seotexts_arr.join(' ')
     res.send(200,{master_category,master_product_type,master_styles,master_themes,
         master_occassion,
