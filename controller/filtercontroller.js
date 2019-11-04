@@ -14,6 +14,8 @@ const {material, theme,collection, occassion, style, metalpurity, producttype, s
 var product_list = [];
 var whereclause = {};
 var includeclause = [];
+var seofilterattribute = []
+var seofilterattributevalue = []
 
 // [
 //   {
@@ -47,6 +49,9 @@ var includeclause = [];
 //           },
 if(material)
 {         
+  seofilterattribute.push('Material')
+  seofilterattributevalue.push(material)
+
   whereclause['$product_materials.material_name$'] = {
     [Op.eq]:material
     }
@@ -56,6 +61,10 @@ if(material)
 }
 if(collection)
 {
+  
+
+  seofilterattribute.push('Collection')
+  seofilterattributevalue.push(collection)
   whereclause['$product_collections.collection_name$'] = {
     [Op.eq]:collection
     }
@@ -65,6 +74,8 @@ if(collection)
 }
 if(occassion)
 {
+  seofilterattribute.push('Occasion')
+  seofilterattributevalue.push(occassion)
   whereclause['$product_occassions.occassion_name$'] = {
     [Op.eq]:occassion
     }
@@ -74,6 +85,9 @@ if(occassion)
 }
 if(stoneshape)
 {
+  seofilterattribute.push('Stone Shape')
+  seofilterattributevalue.push(stoneshape)
+  
   whereclause['$product_gemstones.gemstone_shape$'] = {
     [Op.eq]:stoneshape
     }
@@ -83,6 +97,8 @@ if(stoneshape)
 }
 if(style)
 {
+  seofilterattribute.push('Style')
+  seofilterattributevalue.push(style)
   whereclause['$product_styles.style_name$'] = {
     [Op.eq]:style
     }
@@ -92,6 +108,8 @@ if(style)
 }
 if(theme)
 {
+  seofilterattribute.push('Theme')
+  seofilterattributevalue.push(theme)
   whereclause['$product_themes.theme_name$'] = {
     [Op.eq]:theme
     }
@@ -102,6 +120,8 @@ if(theme)
 
 if(stonecolor)
 {
+  seofilterattribute.push('Stone Color')
+  seofilterattributevalue.push(stonecolor)
   whereclause['$product_stonecolor.stonecolor$'] = {
     [Op.eq]:stonecolor
     }
@@ -112,6 +132,9 @@ if(stonecolor)
 
 if(stonecount)
 {
+  
+  seofilterattribute.push('No Of Stones')
+  seofilterattributevalue.push(stonecount)
   whereclause['$product_stonecount.stonecount$'] = {
     [Op.eq]:stonecount
     }
@@ -121,6 +144,9 @@ if(stonecount)
 }
 if(producttype)
 {
+  seofilterattribute.push('Product Type')
+  seofilterattributevalue.push(producttype)
+  
   whereclause['product_type']= {
     [Op.eq]:producttype
     }
@@ -139,6 +165,10 @@ if(metalpurity)
 }
 if(gender)
 {
+
+  
+  seofilterattribute.push('Gender')
+  seofilterattributevalue.push(gender)
   whereclause['$product_genders.gender_name$'] = {
     [Op.eq]:gender
     }
@@ -312,8 +342,8 @@ let prod_type_where = {}
 
     }
   }
-  var seo_url = 'white+gold-drops-earrings-jewellery'
-  var seo_text = 'For casual, formal and everything in between. Stylori\'s range of earrings suits every style and occasion. Choose from our collections of gold earrings and diamond earrings with a diverse range of drops, ear studs and many more styles. Shop online for the latest trends in fashion jewellery or plan for a wedding with the bridal jewellery collection. Crafted using the finest jewellery design and jewellery making principles, buy our jewellery online for fast deliveries and an easy returns policy.For every occasion and non-occasion. Shop our range of everyday fashion jewellery featuring gold, silver and stone rings and earrings, for work, play and everything in between. Give special occasions a little extra glimmer with our range of bridal jewellery ranging from engagement rings to wedding rings to classic party wear. Crafted using the finest jewellery design and jewellery making principles, buy our jewellery online for fast deliveries and an easy returns policy.'
+  var seo_url = ''
+  var seo_text = ''
   var master_colors = await models.trans_sku_lists.findAll({
     attributes: ['metal_color'],
     group: ['metal_color'],
@@ -325,6 +355,31 @@ let prod_type_where = {}
     where: metalcolor_where
   })
 
+  var seooptions = await models.seo_url_priorities.findAll({
+  
+    where: {
+      attribute_name : {
+        [Op.in]: seofilterattribute
+      },
+      attribute_value:
+      {
+        [Op.in]: seofilterattributevalue
+      }
+    },
+    order: [
+      ['priority', 'ASC']
+  ],
+
+  })
+   var seourls_arr= []
+   var seotexts_arr= []
+
+    seooptions.forEach(element =>{
+      seourls_arr.push(element.seo_url);
+      seotexts_arr.push(element.seo_text)
+    })
+    seo_url = seourls_arr.join(' ')
+    seo_text = seotexts_arr.join(' ')
     res.send(200,{master_category,master_product_type,master_styles,master_themes,
         master_occassion,
         master_material,
@@ -338,5 +393,5 @@ let prod_type_where = {}
         price_range,
         seo_url,
         seo_text
-        })
+              })
 }
