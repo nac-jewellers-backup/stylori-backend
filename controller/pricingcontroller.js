@@ -779,7 +779,10 @@ exports.priceupdate = (req, res) => {
           var stoneweight = gemstoneobj.stone_weight/ gemstoneobj.stone_count
           whereclause['weight_start'] = { [Op.lte]: stoneweight }
           whereclause['weight_end'] = { [Op.gte]: stoneweight }
-        }
+        }else
+        {
+          whereclause['rate_type'] = 2
+         }
         
         models.gemstone_price_settings.findAll({
               where: whereclause

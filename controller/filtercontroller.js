@@ -170,12 +170,12 @@ if(gender)
   
   seofilterattribute.push('Gender')
   seofilterattributevalue.push(gender)
-  whereclause['$product_genders.gender_name$'] = {
-    [Op.eq]:gender
-    }
-    includeclause.push({
-           model : models.product_genders
-    })
+  // whereclause['$product_genders.gender_name$'] = {
+  //   [Op.eq]:gender
+  //   }
+  //   includeclause.push({
+  //          model : models.product_genders
+  //   })
 
 }
 var products = await models.product_lists.findAll({

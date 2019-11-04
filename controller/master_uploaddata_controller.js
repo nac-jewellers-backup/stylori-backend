@@ -102,7 +102,70 @@ exports.updateproduct_color = async (req, res) => {
             }
       }
 }
+exports.updategemstonepricemaster = async (req, res) => {
+    console.log("iamhere")
+    var stonelist_str = req.body.gemstone;
+    var stonelist_obj = JSON.parse(stonelist_str)
+    var stones_arr = []
+    stonelist_obj.forEach(stoneobj => {
+                const occassion = {
+                    id:uuidv1(),
+                    gemstone_type: stoneobj.gemstone_type,
+                    vendor_code: stoneobj.vendor_code,
+                    weight_start: 0,
+                    weight_end: 0,
+                    rate_type: stoneobj.rate_type,
+                    price_type: stoneobj.price_type,
+                    selling_price_type: stoneobj.selling_price_type,
+                    price: stoneobj.price,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                }
+                stones_arr.push(occassion);
 
+            })
+            console.log(stones_arr.length)
+            await models.gemstone_price_settings.bulkCreate(
+                stones_arr, {individualHooks: true})
+        
+    }
+exports.updateproductcreatedate = async (req, res) => {
+    var product_count = 0   
+    var stonecolor_str = req.body.skuinfo;
+    var stonecolor_obj = JSON.parse(stonecolor_str)
+
+    res.send(200,{"message":0})
+
+  
+
+    stonecolor_obj.forEach(async product_obj => {
+        var product_sku = product_obj.sku
+        var sku_url = product_obj.sku_url
+        var sold_out = product_obj.sold_out
+        var issold = false ;
+        if(sold_out === 'Y')
+        {
+            issold = true
+        }
+        var isactive = product_obj.isactive
+        var is_active = false
+        if(isactive === 'Y')
+        {
+            is_active = true
+        }
+        var sku_id = product_obj.skuid
+
+        var query = "UPDATE trans_sku_lists SET is_active = "+is_active+", is_soldout = "+issold+", sku_id = '"+sku_id+"', sku_url = '"+sku_url+"' where generated_sku ='"+product_sku+"'" ;
+        console.log(query) 
+
+        await models.sequelize.query(query).then(([results, metadata]) => {
+      // Results will be an empty array and metadata will contain the number of affected rows.
+    })
+
+    })
+    console.log("finished")
+    
+}
 exports.updatedefaultimage = async (req, res) => {
     var product_count = 0
     var product_msters = await models.product_lists.findAll({

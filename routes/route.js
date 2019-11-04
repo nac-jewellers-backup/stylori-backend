@@ -43,6 +43,8 @@ module.exports = function(app) {
 	app.post('/updatecodpincodes', master_uploaddata_controller.updatecodpincodes);
 	app.post('/updatedefaultimage', master_uploaddata_controller.updatedefaultimage);
 	app.get('/viewskupricesummary/:skuid', master_uploaddata_controller.viewskupricesummary);
+	app.post('/updateproductcreatedate', master_uploaddata_controller.updateproductcreatedate);
+	app.post('/updategemstonepricemaster', master_uploaddata_controller.updategemstonepricemaster);
 
 	
 	
