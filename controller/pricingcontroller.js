@@ -771,7 +771,9 @@ exports.priceupdate = (req, res) => {
        
         var whereclause = {
           vendor_code: vendorcode,
-          gemstone_type: gemstoneobj.gemstone_type,
+          gemstone_type: {
+            [Op.iLike]: gemstoneobj.gemstone_type
+          }
         }
      
         if(gemstoneobj.stone_weight)
@@ -784,6 +786,8 @@ exports.priceupdate = (req, res) => {
           whereclause['rate_type'] = 2
          }
         
+         console.log(JSON.stringify(whereclause))
+         console.log(stoneweight)
         models.gemstone_price_settings.findAll({
               where: whereclause
           }).then(async gemstonecharge=> {
