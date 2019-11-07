@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material, theme,collection, occassion, style, metalpurity, producttype, stoneshape, gender, stonecolor, stonecount } = req.body
+const {material, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor, stonecount } = req.body
 var product_list = [];
 var whereclause = {};
 var includeclause = [];
@@ -73,12 +73,12 @@ if(collection)
       model : models.product_collections
      })
 }
-if(occassion)
+if(occasion)
 {
   seofilterattribute.push('Occasion')
-  seofilterattributevalue.push(occassion)
+  seofilterattributevalue.push(occasion)
   whereclause['$product_occassions.occassion_name$'] = {
-    [Op.eq]:occassion
+    [Op.eq]:occasion
     }
     includeclause.push({
       model : models.product_occassions

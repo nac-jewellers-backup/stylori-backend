@@ -96,7 +96,7 @@ exports.signup = (req, res) => {
                 user_id: user.id,
                 token: verifytoken
             })
-            await models.user_profiles.create(
+         let user_profile =   await models.user_profiles.create(
               {
                 id:uuidv1(),
                 user_id: user.id,
@@ -105,7 +105,7 @@ exports.signup = (req, res) => {
               }
 
             )
-          res.send(200,user);
+          res.send(200,{user,user_profile});
 
         }
 
