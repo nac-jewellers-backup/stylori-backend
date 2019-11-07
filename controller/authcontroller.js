@@ -105,7 +105,7 @@ exports.signup = (req, res) => {
               }
 
             )
-          res.send(200,{user,user_profile});
+          res.send(200,{user,user_profile_id: user_profile.id});
 
         }
 
