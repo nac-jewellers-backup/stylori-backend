@@ -100,7 +100,7 @@ const returnData = {
   });
 }
 exports.addaddress = async (req, res) => {
-    let {user_id, address,cart_id} = req.body
+    let {user_id, address,cart_id,isguestlogin} = req.body
     
     let address_arr = [];
     let add_user_address = [];
@@ -124,7 +124,7 @@ exports.addaddress = async (req, res) => {
             address_type:element.addresstype
         }
         address_arr.push(address_obj)
-        if(!element.address_id)
+        if(!element.address_id && !isguestlogin)
         {
           const user_address_obj = {
             id:uuidv1(),
