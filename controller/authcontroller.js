@@ -30,8 +30,8 @@ exports.signin = (req, res) => {
         var token = jwt.sign({ id: user.email }, process.env.SECRET, {
           expiresIn: '1d' // expires in 24 hours
         });
-        models.User.findOne({
-          where: {userName:  user.email},
+        models.user_profiles.findOne({
+          where: {email:  user.email},
           attributes: ['id','email']
       }).then(userprofile => {
         res.status(200).send({  accessToken: token, userprofile });
