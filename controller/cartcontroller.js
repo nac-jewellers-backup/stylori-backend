@@ -108,6 +108,7 @@ exports.addaddress = async (req, res) => {
     address.forEach(element => {
 
         const address_obj = {
+          id:uuidv1(),
             cart_id:cart_id,
             userprofile_id:user_id,
             firstname:element.firstname,
@@ -126,6 +127,7 @@ exports.addaddress = async (req, res) => {
         if(!element.address_id)
         {
           const user_address_obj = {
+            id:uuidv1(),
             userprofile_id:user_id,
             firstname:element.firstname,
             lastname:element.lastname,
@@ -151,7 +153,7 @@ exports.addaddress = async (req, res) => {
           , {individualHooks: true}).then(function(response){
     })
     }
-    models.cart_addresses.bulkCreate(
+    models.cart_address.bulkCreate(
         address_arr
           , {individualHooks: true}).then(function(response){
       res.send(200,{"message":"updated successfully"})        
