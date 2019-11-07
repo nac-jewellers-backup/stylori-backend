@@ -10,10 +10,11 @@ exports.updateproduct = (req, res) => {
     req.setTimeout(50000000);
 
 
-       var gemstoneobj = req.body.Images;
+       var gemstoneobj = req.body.gs1;
+       console.log(JSON.stringify(gemstoneobj))
      var gemstones_obj = JSON.parse(gemstoneobj)
-     update_product_images(gemstones_obj)
-  // update_diamondpricesettings(gemstones_obj);
+     update_gemstonesetup(gemstones_obj);
+       // update_diamondpricesettings(gemstones_obj);
 //update_gemstonesetup(gemstones_obj);
     //  update_makingcharge(gemstones_obj);
       // update_markup(gemstones_obj);
@@ -237,66 +238,66 @@ function update_gemstonesetup(gsprice)
             console.log(JSON.stringify(vendors))
             vendors.forEach(vendorobj => {
                 var vendorid = vendorobj.short_code
-                gsprice.forEach(goldobj => {
-                    var goldobj_val = {
-                        id: uuidv1(),
-                        material: 'Gold',
-                        purity: goldobj.purity,
-                        cost_price: goldobj.cost_price,
-                        vendor_code: vendorid,
-                        selling_price_type: 1,
-                        selling_price: goldobj.selling_price,
-                        createdAt: new Date(),
-                        updatedAt: new Date()
-                    }
-                    insertgemstonearr.push(goldobj_val)
+                // gsprice.forEach(goldobj => {
+                //     var goldobj_val = {
+                //         id: uuidv1(),
+                //         material: 'Gold',
+                //         purity: goldobj.purity,
+                //         cost_price: goldobj.cost_price,
+                //         vendor_code: vendorid,
+                //         selling_price_type: 1,
+                //         selling_price: goldobj.selling_price,
+                //         createdAt: new Date(),
+                //         updatedAt: new Date()
+                //     }
+                //     insertgemstonearr.push(goldobj_val)
 
-                });
+                // });
 
-            // gsprice.forEach(gemstone => {
-            //     var gemstonobj = {
-            //         id: uuidv1(),
-            //         gemstone_type: gemstone['Gemstone Name'],
-            //         vendor_code: vendorid,
-            //         weight_start: gemstone.weight_from,
-            //         weight_end: gemstone.weight_to,
-            //         selling_price_type:1,
-            //         price: gemstone.price,
-            //         rate_type: gemstone.rate_type,
-            //         price_type:gemstone.price_type,
-            //         createdAt: new Date(),
-            //         updatedAt: new Date()
+            gsprice.forEach(gemstone => {
+                var gemstonobj = {
+                    id: uuidv1(),
+                    gemstone_type: gemstone.name,
+                    vendor_code: vendorid,
+                    weight_start: gemstone.weight_from,
+                    weight_end: gemstone.weight_to,
+                    selling_price_type:1,
+                    price: gemstone.price,
+                    rate_type: gemstone.rate_type,
+                    price_type:gemstone.price_type,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
 
-            //     }
-            //    insertgemstonearr.push(gemstonobj)
-           // }) 
+                }
+               insertgemstonearr.push(gemstonobj)
+           }) 
         })
-        // models.gemstone_price_settings.bulkCreate(
-        //         insertgemstonearr
-        //           , {individualHooks: true}).then(function(response){
-        //             console.log("porductskudescsuccess" )
+        models.gemstone_price_settings.bulkCreate(
+                insertgemstonearr
+                  , {individualHooks: true}).then(function(response){
+                    console.log("porductskudescsuccess" )
                    
-        //             res.send(200,{message: 'success'})
+                    res.send(200,{message: 'success'})
     
-        //         })  .catch((error) => {
-        //                  console.log("errorresponse"+error.message)
-        //          });
+                })  .catch((error) => {
+                         console.log("errorresponse"+error.message)
+                 });
                  console.log("porductskudescsuccess"+JSON.stringify(insertgemstonearr[1]) )
-                  var goldarr = [];
-                  goldarr.push(insertgemstonearr[2])
-                  goldarr.push(insertgemstonearr[3])
+                //   var goldarr = [];
+                //   goldarr.push(insertgemstonearr[2])
+                //   goldarr.push(insertgemstonearr[3])
 
 
               
-              models.gold_price_settings.bulkCreate(
-                insertgemstonearr, {individualHooks: true}).then(function(response){
-                         console.log("porductskudescsuccess" )
+            //   models.gold_price_settings.bulkCreate(
+            //     insertgemstonearr, {individualHooks: true}).then(function(response){
+            //              console.log("porductskudescsuccess" )
                        
-                         res.send(200,{message: 'success'})
+            //              res.send(200,{message: 'success'})
         
-                    })  .catch((error) => {
-                              console.log("errorresponse"+error.message)
-                  });
+            //         })  .catch((error) => {
+            //                   console.log("errorresponse"+error.message)
+            //       });
       });
 }
 function creategemstone(gemstonearr)

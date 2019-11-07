@@ -91,6 +91,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'product_id',
       targetKey: 'product_id'
     });
+    models.product_lists.hasMany(models.product_gender,{
+      foreignKey: 'product_id',
+      targetKey: 'product_id'
+    });
   };
   return product_lists;
 };

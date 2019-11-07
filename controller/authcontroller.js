@@ -27,11 +27,21 @@ exports.signin = (req, res) => {
             return res.status(401).send({ auth: false, accessToken: null, message: "Invalid Password!" });
         }
         
-        var token = jwt.sign({ id: user.username }, process.env.SECRET, {
+        var token = jwt.sign({ id: user.email }, process.env.SECRET, {
           expiresIn: '1d' // expires in 24 hours
         });
-        
-        res.status(200).send({  accessToken: token });
+        models.User.findOne({
+          where: {userName:  user.email},
+          attributes: ['id','email']
+      }).then(userprofile => {
+        res.status(200).send({  accessToken: token, userprofile });
+
+      }).catch(err => {
+          res.status(500).json({
+              "description": "Can not access User Page",
+              "error": err
+          });
+      })
     }).catch(err => {
         res.status(500).send('Error -> ' + err);
     });
