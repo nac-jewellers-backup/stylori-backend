@@ -1501,7 +1501,6 @@ exports.priceupdate = (req, res) => {
                 markup_price: skumarkup  + markuppricetax,
                 markup_price_tax :  markuppricetax,
                 margin_on_sale_percentage : sku_margin
-  
               } 
              // res.send(200,{"material":materialsum,"metal":matalsum});
              models.trans_sku_lists.update(transskuobj,{

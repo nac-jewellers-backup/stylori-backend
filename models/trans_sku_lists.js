@@ -72,7 +72,7 @@ module.exports = (sequelize, DataTypes) => {
     margin_on_sale_percentage:{
       type: DataTypes.DOUBLE
     } }, {
-        timestamps: false,
+        timestamps: true,
         freezeTableName: true
     });
   trans_sku_lists.associate = function(models) {
