@@ -30,6 +30,7 @@ module.exports = function(app) {
 	app.post('/api/auth/verifyotp', authcontroller.verifyotp);
 	
 	
+	app.post('/applyvoucher', cartcontroller.applyvoucher);
 	app.post('/addgiftwrap', cartcontroller.addgiftwrap);
 	app.post('/addtocart', cartcontroller.addtocart);
 	app.post('/addaddress', cartcontroller.addaddress);

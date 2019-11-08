@@ -33,10 +33,27 @@ models.giftwrap.create(giftwrapobj).then(giftwrapobj=> {
 }).catch(reason => {
   res.send(500,{message: "Failed"})
 });
+}
 
-
+exports.applyvoucher = async (req, res) => {
+  const {vouchercode, cart_id,user_profile_id} = req.body
+//   const giftwrapobj = {
+//     id:uuidv1(),
+//     cart_id,
+//     gift_from,
+//     gift_to,
+//     message,
+//     is_active : true
+// }
+// models.giftwrap.create(giftwrapobj).then(giftwrapobj=> { 
+//   res.send(200,{message: "Success"})
+// }).catch(reason => {
+//   res.send(500,{message: "Failed"})
+// });
+  res.send(200,{message:"Applied Succesfully","discounted_price":4000,"tax_price":320})
 
 }
+
 exports.addtocart = async (req, res) => {
  let {user_id, products,cart_id} = req.body
  console.log(JSON.stringify(req.body));
