@@ -123,7 +123,7 @@ if(stonecolor)
 {
   seofilterattribute.push('Stone Color')
   seofilterattributevalue.push(stonecolor)
-  whereclause['$product_stonecolor.stonecolor$'] = {
+  whereclause['$product_stonecolors.stonecolor$'] = {
     [Op.eq]:stonecolor
     }
     includeclause.push({
@@ -170,7 +170,7 @@ if(gender)
   
   seofilterattribute.push('Gender')
   seofilterattributevalue.push(gender)
-  whereclause['$product_gender.gender_name$'] = {
+  whereclause['$product_genders.gender_name$'] = {
     [Op.eq]:gender
     }
     includeclause.push({
