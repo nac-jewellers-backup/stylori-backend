@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     product_sizes: DataTypes.STRING,
     size_varient: DataTypes.STRING,
     colour_varient: DataTypes.STRING,
+    selling_qty: DataTypes.INTEGER,
     isreorderable: DataTypes.BOOLEAN,
 
   }, {timestamps:false,freezeTableName: true});

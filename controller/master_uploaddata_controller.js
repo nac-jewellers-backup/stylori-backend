@@ -454,6 +454,55 @@ exports.updatepincode = async (req, res) => {
 }
 
 
+
+exports.updatereadytoship = async (req, res) => {
+    var product_count = 0   
+    var stonecolor_str = req.body.readytoship;
+    var stonecolor_obj = JSON.parse(stonecolor_str)
+
+    res.send(200,{"message":0})
+
+  
+
+    stonecolor_obj.forEach(async product_obj => {
+       
+        const product_sku = product_obj.SKU
+        var query = "UPDATE trans_sku_lists SET  is_ready_to_ship = true where generated_sku ='"+product_sku+"'" ;
+        console.log(query) 
+
+        await models.sequelize.query(query).then(([results, metadata]) => {
+      // Results will be an empty array and metadata will contain the number of affected rows.
+    })
+
+    })
+    console.log("finished")
+    
+}
+
+exports.updatebestseller = async (req, res) => {
+    var product_count = 0   
+    var stonecolor_str = req.body.bestseller;
+    var stonecolor_obj = JSON.parse(stonecolor_str)
+
+    res.send(200,{"message":0})
+
+  
+
+    stonecolor_obj.forEach(async product_obj => {
+       
+        const product_sku = product_obj.SKU
+        var query = "UPDATE product_lists SET  selling_qty = "+product_obj.qty+" where product_id ='"+product_sku+"'" ;
+        console.log(query) 
+
+        await models.sequelize.query(query).then(([results, metadata]) => {
+      // Results will be an empty array and metadata will contain the number of affected rows.
+    })
+
+    })
+    console.log("finished")
+    
+}
+
 exports.updatecustomerreviews = async (req, res) => {
     const {reviews} = req.body;
     var reviews_array = JSON.parse(reviews)

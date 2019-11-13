@@ -38,6 +38,8 @@ module.exports = function(app) {
 	app.post('/uploadimage', cartcontroller.uploadimage);
 	app.post('/filterlist', filtercontroller.filteroptions);
 
+	app.post('/updatebestseller', master_uploaddata_controller.updatebestseller);
+	app.post('/updatereadytoship', master_uploaddata_controller.updatereadytoship);
 	app.post('/pincodemaster', master_uploaddata_controller.updatepincode);
 	app.post('/updateproduct_color', master_uploaddata_controller.updateproduct_color);
 	app.post('/updateproduct_gender', master_uploaddata_controller.updateproduct_gender);

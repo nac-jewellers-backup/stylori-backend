@@ -64,6 +64,9 @@ module.exports = {
       earring_backing:{
         type: Sequelize.STRING
       },
+      selling_qty: {
+        type: Sequelize.INTEGER
+      },
       isreorderable: {
         type: Sequelize.BOOLEAN
       },
