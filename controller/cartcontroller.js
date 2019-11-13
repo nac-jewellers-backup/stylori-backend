@@ -202,3 +202,35 @@ exports.addaddress = async (req, res) => {
    
    
    }
+
+exports.addproductreview = async (req, res) => {
+    let {user_id, username, rate,product_id,product_sku, title, message} = req.body
+    
+    const review_content = {
+      id: uuidv1(),
+      product_id: product_id,
+      product_sku: product_sku,
+      customer_name: username,
+      userprofile_id: user_id,
+      title: title,
+      message: message,
+      rating: rate,
+      is_publish: false,
+      is_active: true
+  }
+
+
+  models.customer_reviews.create(review_content,{
+    returning: true
+  }).then(function(response){
+    res.send(200,{"message":"updated successfully"})        
+  }).catch(reason => {
+      res.send(500,{"message":"Error Please try again"}) 
+      console.log(reason)
+    });
+  
+   
+   
+   
+   }
+

@@ -452,3 +452,34 @@ exports.updatepincode = async (req, res) => {
 }
 
 }
+
+
+exports.updatecustomerreviews = async (req, res) => {
+    const {reviews} = req.body;
+    var reviews_array = JSON.parse(reviews)
+    var review_arr = []
+    reviews_array.forEach( reviewobj => {
+        
+        console.log(reviewobj.product_code)
+
+        const review_content = {
+            id: uuidv1(),
+            product_id: reviewobj.product_code,
+            product_sku: reviewobj.sku_code,
+            customer_name: reviewobj.customer_name,
+            userprofile_id: null,
+            title: "",
+            message: reviewobj.description,
+            rating: 5,
+            is_publish: true,
+            is_active: true
+        }
+        review_arr.push(review_content)
+        
+
+    })
+    await models.customer_reviews.bulkCreate(
+        review_arr, {individualHooks: true})
+
+    res.send(200,{message: "success"});
+}

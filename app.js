@@ -7,6 +7,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const env = process.env.NODE_ENV || 'staging';
 const ConnectionFilterPlugin = require("postgraphile-plugin-connection-filter");
+const PgOrderByRelatedPlugin = require("@graphile-contrib/pg-order-by-related");
 
 const app = express();
 app.use(express.json({limit: '50mb'}));
@@ -69,9 +70,10 @@ app.use(postgraphile(connString,{
     live: true,
     subscriptions: true,
     simpleSubscriptions: true,
-    appendPlugins: [ConnectionFilterPlugin],
+    appendPlugins: [ConnectionFilterPlugin, PgOrderByRelatedPlugin],
     graphileBuildOptions: {
-      connectionFilterRelations: true, // default: false
+      connectionFilterRelations: true,
+       // default: false
     },
     // ownerConnectionString: `postgres://${connString.user}:${connString.password}@${connString.host}/${connString.database}`,
      

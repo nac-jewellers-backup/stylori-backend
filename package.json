@@ -8,6 +8,7 @@
   "author": "sandeep",
   "license": "ISC",
   "dependencies": {
+    "@graphile-contrib/pg-order-by-related": "^1.0.0-beta.6",
     "@sendgrid/mail": "^6.4.0",
     "aws-sdk": "^2.548.0",
     "bcryptjs": "^2.4.3",

@@ -13,7 +13,7 @@ exports.priceupdate = (req, res) => {
     var responseobj = {};
     var pricesplitup = []
     var products = []
-    var processed_product_count = 0;
+    var processed_product_count = 171;
     res.send(200,{message:"success"})
     const {req_product_id} = req.body
     var whereclause1 = {
@@ -90,6 +90,7 @@ exports.priceupdate = (req, res) => {
          start = new Date()
 
         let currentproduct = products[processed_product_count]
+       console.log(currentproduct.product_id)
         product_obj =   await  models.product_lists.findOne({
           include: [{
             model: models.trans_sku_lists,
@@ -957,7 +958,6 @@ exports.priceupdate = (req, res) => {
               purity: parseInt(purityval.replace('K',''))
             }
         }).then(async gold_price=> {
-          console.log(gold_price.selling_price)
            if(gold_price)
            {
             console.log(skuobj.generated_sku)

@@ -30,6 +30,7 @@ module.exports = function(app) {
 	app.post('/api/auth/verifyotp', authcontroller.verifyotp);
 	
 	
+	app.post('/addproductreview', cartcontroller.addproductreview);
 	app.post('/applyvoucher', cartcontroller.applyvoucher);
 	app.post('/addgiftwrap', cartcontroller.addgiftwrap);
 	app.post('/addtocart', cartcontroller.addtocart);
@@ -48,6 +49,7 @@ module.exports = function(app) {
 	app.get('/viewskupricesummary/:skuid', master_uploaddata_controller.viewskupricesummary);
 	app.post('/updateproductcreatedate', master_uploaddata_controller.updateproductcreatedate);
 	app.post('/updategemstonepricemaster', master_uploaddata_controller.updategemstonepricemaster);
+	app.post('/updatecustomerreviews', master_uploaddata_controller.updatecustomerreviews);
 
 	
 	
