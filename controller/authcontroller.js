@@ -66,7 +66,7 @@ exports.signup = (req, res) => {
     .spread(async (user, created) => {
         if(!created)
         {
-              res.send(409,{message:"Email ID Already Exist"});
+              res.send(409,{message:"Email ID Already Exist",user});
 
         }else{
           let user_roles  =  await  models.master_roles.findAll({

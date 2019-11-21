@@ -29,7 +29,9 @@ module.exports = function(app) {
 	app.post('/api/auth/guestlogin', authcontroller.guestlogin);
 	app.post('/api/auth/verifyotp', authcontroller.verifyotp);
 	
-	
+	app.post('/addwishlist', cartcontroller.addwishlist);
+	app.post('/removewishlist', cartcontroller.removewishlist);
+
 	app.post('/addproductreview', cartcontroller.addproductreview);
 	app.post('/applyvoucher', cartcontroller.applyvoucher);
 	app.post('/addgiftwrap', cartcontroller.addgiftwrap);
