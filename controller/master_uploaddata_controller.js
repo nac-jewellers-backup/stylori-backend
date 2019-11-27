@@ -131,7 +131,8 @@ exports.updategemstonepricemaster = async (req, res) => {
     }
 exports.updateproductcreatedate = async (req, res) => {
     var product_count = 0   
-    var stonecolor_str = req.body.skuinfo;
+
+    var stonecolor_str = req.body.Sheet3;
     var stonecolor_obj = JSON.parse(stonecolor_str)
 
     res.send(200,{"message":0})
@@ -267,6 +268,9 @@ exports.viewskupricesummary = async (req, res) => {
         }
     }).then(accs => {
         response['skuprice'] = accs
+        var discount_percentage = ((accs.discount_price - accs.markup_price)/accs.discount_price)*100;
+        response['discount_percentage'] = discount_percentage
+
         models.pricing_sku_materials.findAll({
             where:{
                 product_sku: req.params.skuid
