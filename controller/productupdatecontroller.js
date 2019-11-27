@@ -10,12 +10,13 @@ exports.updateproduct = (req, res) => {
     req.setTimeout(50000000);
 
 
-       var gemstoneobj = req.body.gs1;
-       console.log(JSON.stringify(gemstoneobj))
+       var gemstoneobj = req.body.silver_material;
      var gemstones_obj = JSON.parse(gemstoneobj)
-     update_gemstonesetup(gemstones_obj);
+     console.log(JSON.stringify(gemstones_obj))
+     update_product_materials(gemstones_obj)
+    // update_gemstonesetup(gemstones_obj);
        // update_diamondpricesettings(gemstones_obj);
-//update_gemstonesetup(gemstones_obj);
+        //update_gemstonesetup(gemstones_obj);
     //  update_makingcharge(gemstones_obj);
       // update_markup(gemstones_obj);
 
@@ -394,7 +395,7 @@ function updateproduct()
             models.product_materials.bulkCreate(
                 product_material_array
                   , {individualHooks: true}).then(function(response){
-                     update_product_diamonds(product_diamonds_obj)
+                  //   update_product_diamonds(product_diamonds_obj)
 
                 })
 
