@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor, stonecount } = req.body
+const {material, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones} = req.body
 var product_list = [];
 var whereclause = {};
 var includeclause = [];
@@ -84,6 +84,8 @@ if(occasion)
       model : models.product_occassions
      })
 }
+console.log("><><<><><")
+console.log(stoneshape)
 if(stoneshape)
 {
   seofilterattribute.push('Stone Shape')
@@ -131,18 +133,17 @@ if(stonecolor)
     })
 }
 
-if(stonecount)
-{
-  
-  seofilterattribute.push('No Of Stones')
-  seofilterattributevalue.push(stonecount)
-  whereclause['$product_stonecount.stonecount$'] = {
-    [Op.eq]:stonecount
-    }
-    includeclause.push({
-           model : models.product_stonecount
-    })
-}
+ if(noofstones)
+ {
+     seofilterattribute.push('No Of Stones')
+   seofilterattributevalue.push(noofstones)
+  // whereclause['$product_stonecount.stonecount$'] = {
+  //   [Op.eq]:noofstones
+  //   }
+  //   includeclause.push({
+  //          model : models.product_stonecount
+  //   })
+ }
 if(producttype)
 {
   seofilterattribute.push('Product Type')
@@ -155,6 +156,8 @@ if(producttype)
 
 if(metalpurity)
 {
+  seofilterattribute.push('Metal Purity')
+  seofilterattributevalue.push(metalpurity)
   whereclause['$product_purities.purity$'] = {
     [Op.eq]:metalpurity
     }
@@ -314,6 +317,7 @@ let prod_type_where = {}
       }
     }
   }
+  
   var master_purity = await models.product_purities.findAll({
     attributes: ['purity'],
     group: ['purity'],
@@ -333,15 +337,28 @@ let prod_type_where = {}
       [Op.ne]: null
     }
   }
+  
 
   if(product_list.length > 0)
   {
+    
     metalcolor_where = {
       metal_color : {
         [Op.ne]: null
       }
 
     }
+  }
+  if(metalcolor)
+  {
+    metalcolor_where = {
+      metal_color : metalcolor
+
+    }
+
+    seofilterattribute.push('Metal Color')
+  seofilterattributevalue.push(metalcolor)
+    
   }
   var seo_url = ''
   var seo_text = ''

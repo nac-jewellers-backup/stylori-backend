@@ -109,7 +109,6 @@ exports.priceupdate = (req, res) => {
 
             }
            },
-           
            {
             model: models.product_diamonds,
     
@@ -117,18 +116,7 @@ exports.priceupdate = (req, res) => {
            {
             model: models.product_gemstones,
            }
-          //  },
-          //  {
-          //   model: models.product_occassions,
-    
-          //  },{
-          //   model: models.product_styles,
-    
-          //  },
-          //  {
-          //   model: models.product_themes,
-    
-          //  }
+         
           ],
           where: {
             product_id: currentproduct.product_id

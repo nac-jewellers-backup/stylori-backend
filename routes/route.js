@@ -1,4 +1,5 @@
 const authJwt = require('./verifyJwtToken');
+const productPricing = require('../controller/productMasters');
 
 module.exports = function(app) {
 
@@ -11,6 +12,7 @@ module.exports = function(app) {
     const cartcontroller = require('../controller/cartcontroller.js');
     const filtercontroller = require('../controller/filtercontroller.js');
     const master_uploaddata_controller = require('../controller/master_uploaddata_controller.js');
+    const pricesplitup_controller = require('../controller/pricesplitupcontroller.js');
 
 	app.post('/api/auth/signin', authcontroller.signin);
 	app.post('/api/auth/signup', authcontroller.signup);	
@@ -21,6 +23,7 @@ module.exports = function(app) {
 	app.post('/productupload', productcontroller.productupload);
 	app.post('/productupdate', productupdatecontroller.updateproduct);
 	app.post('/priceupdate', productcontroller.priceupdate);
+	app.post('/splitpriceupdate',[productPricing.productList], pricesplitup_controller.splitdiamondpriceupdate);
 
 	app.get('/api/userprofile', [authJwt.verifyToken], authcontroller.userContent);
 	app.post('/updatepricelist', pricingontroller.priceupdate);
