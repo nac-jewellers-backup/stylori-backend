@@ -101,7 +101,7 @@ exports.priceupdate = (req, res) => {
               // product_id: {
               //   [Op.iLike]: '%SR%'
               // }
-                 generated_sku: 'SB0027-18110000-2.4',
+               //  generated_sku: 'SB0027-18110000-2.4',
               //  cost_price: {
               //   // "$eq" changes to "[Op.eq]"
               //     [Op.eq]: null
