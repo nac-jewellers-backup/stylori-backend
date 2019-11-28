@@ -34,6 +34,7 @@ module.exports = function(app) {
 	
 	app.post('/addwishlist', cartcontroller.addwishlist);
 	app.post('/removewishlist', cartcontroller.removewishlist);
+	app.post('/createorder', cartcontroller.addorder);
 
 	app.post('/addproductreview', cartcontroller.addproductreview);
 	app.post('/applyvoucher', cartcontroller.applyvoucher);

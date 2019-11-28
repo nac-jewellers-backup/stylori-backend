@@ -9,10 +9,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       cart_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'shopping_carts', // name of Source model
+          key: 'id',
+        }
       },
       user_profile_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'user_profiles', // name of Source model
+          key: 'id',
+        }
       },
       payment_mode: {
         type: Sequelize.INTEGER

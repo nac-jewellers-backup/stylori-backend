@@ -241,6 +241,28 @@ exports.addwishlist = async (req, res) => {
     
  
   }
+  exports.addorder = async (req, res) => {
+    let {user_id, cart_id, payment_mode,} = req.body
+
+   const order_bj = {
+    cart_id: cart_id,
+    user_profile_id: user_id,
+    payment_mode:1,
+    payment_status:1,
+    order_status: 1
+   } 
+
+   models.orders.create(order_bj,{
+    returning: true
+  }).then(function(response){
+    res.send(200,{"message":"updated successfully"})        
+  }).catch(reason => {
+      res.send(500,{"message":"Error Please try again"}) 
+      console.log(reason)
+    });
+  
+
+  }
 exports.addproductreview = async (req, res) => {
     let {user_id, username, rate,product_id,product_sku, title, message} = req.body
     

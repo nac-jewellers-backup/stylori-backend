@@ -31,28 +31,24 @@ const productList = (req, res, next) => {
 
 }
 
-const product = (productid) => {
-	const {req_product_id} = req.body
+const producttransskus = (productid) => {
     var whereclause1 = {
         
     }
-    if(req_product_id)
-    {
-      var product_id_arr1 = req_product_id.split(',');
+    
       whereclause1 = {
-        product_id : {
-          [Op.in]: product_id_arr1
-        }
+        product_id :  productid
+        
       }
 
 
-	}
+	
 	
 	models.product_lists.findAll({
 		attributes:['product_id'],
 		where: whereclause1
 	  }).then(product=> {
-		req.products = product 
+		req.product_skus = product 
 		next();
 	  })
 
