@@ -40,6 +40,9 @@ module.exports = {
       expires_at: {
         type: Sequelize.DATE
       },
+      attributes: {
+        type: Sequelize.ARRAY(Sequelize.INTEGER)
+      },
       is_active: {
         type: Sequelize.BOOLEAN
       },

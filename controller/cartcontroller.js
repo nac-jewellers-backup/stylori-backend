@@ -242,9 +242,10 @@ exports.addwishlist = async (req, res) => {
  
   }
   exports.addorder = async (req, res) => {
-    let {user_id, cart_id, payment_mode,} = req.body
+    let {user_id, cart_id, payment_mode} = req.body
 
    const order_bj = {
+     id : uuidv1(),
     cart_id: cart_id,
     user_profile_id: user_id,
     payment_mode:1,
@@ -260,9 +261,7 @@ exports.addwishlist = async (req, res) => {
       res.send(500,{"message":"Error Please try again"}) 
       console.log(reason)
     });
-  
-
-  }
+ }
 exports.addproductreview = async (req, res) => {
     let {user_id, username, rate,product_id,product_sku, title, message} = req.body
     

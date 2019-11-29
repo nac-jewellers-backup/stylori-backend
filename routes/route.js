@@ -23,7 +23,9 @@ module.exports = function(app) {
 	app.post('/productupload', productcontroller.productupload);
 	app.post('/productupdate', productupdatecontroller.updateproduct);
 	app.post('/priceupdate', productcontroller.priceupdate);
-	app.post('/splitpriceupdate',[productPricing.productList], pricesplitup_controller.splitdiamondpriceupdate);
+	app.post('/splitdiamondpriceupdate',[productPricing.productList], pricesplitup_controller.splitdiamondpriceupdate);
+	app.post('/splitgoldpriceupdate',[productPricing.productList], pricesplitup_controller.splitgoldpriceupdate);
+	app.post('/splitmarkuppriceupdate',[productPricing.productList], pricesplitup_controller.splitmakingchargeupdate);
 
 	app.get('/api/userprofile', [authJwt.verifyToken], authcontroller.userContent);
 	app.post('/updatepricelist', pricingontroller.priceupdate);
