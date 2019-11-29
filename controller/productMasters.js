@@ -21,7 +21,7 @@ const productList = (req, res, next) => {
 	}
 	
 	models.product_lists.findAll({
-		attributes:['product_id'],
+		attributes:['product_id','vendor_code'],
 		where: whereclause1
 	  }).then(product=> {
 		req.products = product 

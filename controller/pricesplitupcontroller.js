@@ -34,6 +34,7 @@ exports.splitdiamondpriceupdate = (req, res) => {
                 product_skus = prod_trans.trans_sku_lists;
                 if(product_skus.length > 0)
                 {
+                    console.log(JSON.stringify(prod_trans.product_id))
                     diamondpricesetup(product_skus[processed_sku_count],prod_trans)
                 }else
                 {
@@ -43,6 +44,7 @@ exports.splitdiamondpriceupdate = (req, res) => {
 
            async function diamondpricesetup(skuobj, product_obj)
             {
+                console.log(JSON.stringify(product_obj))
                 var diamondsetups = []
                 if(skuobj)
                 {
@@ -56,7 +58,8 @@ exports.splitdiamondpriceupdate = (req, res) => {
                     if(sku_diamonds.length > process_diamond_count)
                     {
                         let diamondobj =  sku_diamonds[process_diamond_count]
-                         var conditionobj = {
+                        console.log(JSON.stringify(product_obj))
+                        var conditionobj = {
                             vendor_code: product_obj.vendor_code,
                           diamond_colour: diamondobj.diamond_clarity,
                           diamond_clarity: diamondobj.diamond_colour
@@ -138,7 +141,7 @@ exports.splitdiamondpriceupdate = (req, res) => {
                 processed_sku_count = processed_sku_count + 1;
                 if(product_skus.length > processed_product_count)
                 {
-                    diamondpricesetup(product_skus[processed_sku_count])
+                    diamondpricesetup(product_skus[processed_sku_count],prod_trans)
                 }else{
                     processed_product_count = processed_product_count+1
                     processproduct(processed_product_count)
@@ -168,7 +171,7 @@ exports.splitgoldpriceupdate = (req, res) => {
     var products = []
     var processed_product_count = 0;
     var processed_sku_count = 0;
-    res.send(200,{message:"Update Successfully"})
+    res.send(200,{message:"Update Successfully1"})
 
     products = req.products
     processproduct(processed_product_count)
@@ -179,6 +182,7 @@ exports.splitgoldpriceupdate = (req, res) => {
         {
             let product_id = products[processed_product_count]
             let prod_trans =  await splitprice.producttransskus(product_id)
+            console.log(JSON.stringify(prod_trans))
             if(prod_trans)
             {
                 product_skus = prod_trans.trans_sku_lists;
@@ -227,7 +231,7 @@ exports.splitgoldpriceupdate = (req, res) => {
                       createdAt: new Date(),
                       modifiedAt: new Date()
                     }  
-                    pricesplitup.push(goldpriceobj);
+                    pricesplitup.push(goldprice);
 
                     models.pricing_sku_metals.findOne({
                         where: {product_sku: skuobj.generated_sku, material_name: 'goldprice'}
@@ -265,7 +269,7 @@ exports.splitgoldpriceupdate = (req, res) => {
                 processed_sku_count = processed_sku_count + 1;
                 if(product_skus.length > processed_product_count)
                 {
-                    diamondpricesetup(product_skus[processed_sku_count])
+                    goldpricesetup(product_skus[processed_sku_count],prod_trans)
                 }else{
                     processed_product_count = processed_product_count+1
                     processproduct(processed_product_count)
