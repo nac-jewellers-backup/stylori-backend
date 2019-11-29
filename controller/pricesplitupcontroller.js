@@ -20,6 +20,8 @@ exports.splitdiamondpriceupdate = (req, res) => {
 
     products = req.products
     processproduct(processed_product_count)
+    res.send(200,{message:"Update Successfully"})
+
    async function processproduct(processed_product_count)
     {
         var product_skus = []
@@ -145,7 +147,6 @@ exports.splitdiamondpriceupdate = (req, res) => {
 
 
         }else{
-            res.send(200,{message:"Update Successfully"})
 
         }
         
@@ -167,6 +168,7 @@ exports.splitgoldpriceupdate = (req, res) => {
     var products = []
     var processed_product_count = 0;
     var processed_sku_count = 0;
+    res.send(200,{message:"Update Successfully"})
 
     products = req.products
     processproduct(processed_product_count)
@@ -293,6 +295,7 @@ exports.splitmakingchargeupdate = (req, res) => {
     var products = []
     var processed_product_count = 0;
     var processed_sku_count = 0;
+    res.send(200,{message:"Update Successfully"})
 
     products = req.products
     processproduct(processed_product_count)
