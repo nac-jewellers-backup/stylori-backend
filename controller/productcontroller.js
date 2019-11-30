@@ -22,15 +22,21 @@ exports.priceupdate =  async (req, res) => {
 
 exports.productupload =  async (req, res) => {
     var apidata = req.body;
-    console.log(JSON.stringify(apidata));
     var product_skus = [];
+    console.log(JSON.stringify(apidata))
     var categoryobj = apidata.product_categoy;
-    var categoryval = categoryobj.name.charAt(0)
+    var categoryval = categoryobj.charAt(0)
     var producttypeobj = apidata.product_type;
     var producttypeval = producttypeobj.shortCode;
     var seriesvalue = apidata.startcode + 1;
-     
+    console.log("i am here")
+    console.log(seriesvalue)
 
+    if(Number.isNaN(seriesvalue))
+    {
+        console.log("i am here")
+        seriesvalue = 3000
+    }
    
 
   let final_series = await models.product_lists.findOne({
@@ -48,37 +54,57 @@ exports.productupload =  async (req, res) => {
     var product_id = "S"+producttypeval+(product_series);
 
     var skuprefix = "S"+producttypeval+product_series+"-";
-    var vendorname = apidata.vendor.name;
-    var vendor_code = apidata.vendor.shortCode;
-    var product_series = product_series;
+
     var product_name = apidata.productname;
-    var default_weight = apidata.metal_weight;
+    var product_category = apidata.product_categoy;
+    var product_type = apidata.product_type.name;
+    var gender = apidata.selectedgender;
+    var vendorname = apidata.vendorcode.name;
+    var vendor_code = apidata.vendorcode.shortCode;
+    var product_series = product_series;
     var height = apidata.metal_height;
     var width = apidata.metal_width;
     var length = apidata.metal_length;
-    var gender = apidata.gender.name;
-    var product_type = apidata.product_type.name;
-    var productsizes = apidata.size;
-    var productcolors = apidata.metal_color;
-    var productpurity = apidata.purity;
+    var productsizes = apidata.selected_sizes;
+    var productcolors = apidata.metalcolour;
+    var productpurity = apidata.metalpurity;
     var isreorderable = apidata.isreorderable;
     var product_vendor_code = apidata.productvendorcode;
-    var default_size = apidata.defaultsize;
-    var default_metal_size = apidata.defaultmetalsize.value;
-    var default_metal_color = apidata.default_metal_color.name;
-    var default_metal_purity = apidata.default_metal_purity.name
+    var default_size = apidata.default_size;
+    var default_metal_color = apidata.default_metal_colour;
+    var default_metal_purity = apidata.default_metal_purity
+    var materials = apidata.materials;
+    var default_metal_size = apidata.default_size;
+
+    
+    var product_images = apidata.product_images;
     var size_varient = '';
+
+    if(productsizes)
+    {
+      
+        size_varient = productsizes.join(',');
+    }
+
+   // var default_weight = apidata.metal_weight;
+   var default_weight = 4;
+
+
+    var isreorderable = false;
+    if(apidata.isreorderable === 'Yes')
+    {
+        isreorderable = true
+    }
     var colour_varient = '';
     var diamondlist = [];
     var gemstonelist = [];
-    var metals = apidata.metals;
-    var materials = apidata.materials.material;
     var product_collections = apidata.collections;
     var product_occassions = apidata.occassions;
     var product_themes = apidata.themes;
-    var product_styles = apidata.style;
+    var product_styles = apidata.prod_styles;
 
-    
+    var metals = apidata.metals;
+
     metals.forEach(element => {
         if(element.metalname === 'Diamond')
         {
@@ -91,20 +117,13 @@ exports.productupload =  async (req, res) => {
     });
     
 
-    if(productsizes)
-    {
-        var sizearr = [];
-        productsizes.forEach(element => {
-            sizearr.push(element.value);
-        });
-        size_varient = sizearr.join(',');
-    }
+    
     if(productcolors && productpurity)
     {
         var colorarr = [];
         productpurity.forEach(purityelement => {
             productcolors.forEach(colorelement => {
-                colorarr.push(purityelement.name+' '+colorelement.name);
+                colorarr.push(purityelement+' '+colorelement);
             });
         });
         colour_varient = colorarr.join(',');
@@ -117,6 +136,7 @@ exports.productupload =  async (req, res) => {
         product_series,
         vendor_code,
         product_name,
+        product_category,
         isactive: true,
         default_weight,
         gender,
@@ -128,16 +148,54 @@ exports.productupload =  async (req, res) => {
         default_size,
         size_varient,
         colour_varient,
-        isreorderable
+        isreorderable,
+        createdAt:new Date(),
+        updatedAt: new Date()
 
     }
 
-   
 
     let successmessage = await models.product_lists.create(product_obj)
-    /*************** purity list ********************/
-        var puritylist = apidata.purity;
-        puritylist.forEach(purity => {
+  /*************** images list ********************/
+   var prod_images = [];
+    if(Object.keys(product_images))
+    {
+        Object.keys(product_images).forEach(key => {
+           let images_arr = product_images[key]
+           images_arr.forEach(element => {
+            let ishover = false
+           let isdefault = false
+        
+           if(default_metal_color === element.color && element.position == 1)
+           {
+            ishover = true
+           }
+           if(default_metal_color === element.color && element.position == 1)
+           {
+            isdefault = true
+           }
+            var image_obj = {
+                id: uuidv1(),
+                product_id : successmessage.product_id,
+                product_color:element.color,
+                image_url: element.image_url,
+                image_position: element.position,
+                ishover,
+                isdefault
+
+            }
+            prod_images.push(image_obj)
+           })
+            
+        })
+        console.log(JSON.stringify(prod_images))
+        await models.product_images.bulkCreate(
+            prod_images, {individualHooks: true})
+    }
+  
+  /*************** purity list ********************/
+    var puritylist = apidata.metalpurity;
+      puritylist.forEach(purity => {
             var sku = skuprefix + purity.shortCode 
             var skuobj = {
                 product_id: successmessage.product_id,
@@ -156,7 +214,7 @@ exports.productupload =  async (req, res) => {
             product_collections.forEach(collectonobj => {
                 const collection = {
                     id:uuidv1(),
-                    collection_name: collectonobj.name,
+                    collection_name: collectonobj,
                     product_id: product_obj.product_id
                 }
                 collection_arr.push(collection);
@@ -172,14 +230,14 @@ exports.productupload =  async (req, res) => {
             product_occassions.forEach(occassionsobj => {
                 const occassion = {
                     id:uuidv1(),
-                    occassion_name: occassionsobj.name,
+                    occassion_name: occassionsobj,
                     product_id: product_obj.product_id
                 }
                 occassions_arr.push(occassion);
 
             })
             await models.product_occassions.bulkCreate(
-                occassions_arr, {individualHooks: true})
+               occassions_arr, {individualHooks: true})
         }
 
         var styles_arr = [];
@@ -188,7 +246,7 @@ exports.productupload =  async (req, res) => {
             product_styles.forEach(styleobj => {
                 const style = {
                     id:uuidv1(),
-                    style_name: styleobj.name,
+                    style_name: styleobj,
                     product_id: product_obj.product_id
                 }
                 styles_arr.push(style);
@@ -198,13 +256,14 @@ exports.productupload =  async (req, res) => {
                 styles_arr, {individualHooks: true})
         }
 
+
         var themes_arr = [];
         if(product_themes)
         {
             product_themes.forEach(themeobj => {
                 const style = {
                     id:uuidv1(),
-                    style_name: themeobj.name,
+                    style_name: themeobj,
                     product_id: product_obj.product_id
                 }
                 themes_arr.push(style);
@@ -220,7 +279,7 @@ exports.productupload =  async (req, res) => {
         materials.forEach(materialobj => {
             const metal_obj = {
                 id: uuidv1(),
-                material_name: materialobj.name,
+                material_name: materialobj,
                 product_sku: product_obj.product_id
             }
             material_arr.push(metal_obj)
@@ -229,9 +288,10 @@ exports.productupload =  async (req, res) => {
             material_arr, {individualHooks: true})
         }
 
-        var skus = product_skus;
+      var skus = product_skus;
+
         product_skus = [];
-        var metalcolorlist = apidata.metal_color;
+      var metalcolorlist = apidata.metalcolour;
 
         skus.forEach(skuvalue => {
             var  skuval = skuvalue.generated_sku
@@ -254,7 +314,7 @@ exports.productupload =  async (req, res) => {
 
 
 /*************** Diamond Lists ********************/
-        var skus = product_skus;
+       var skus = product_skus;
 
         product_skus = [];
         var diamond_sku_clarity = {}
@@ -300,8 +360,8 @@ exports.productupload =  async (req, res) => {
             });
         });
 
-       await models.product_diamonds.bulkCreate(
-                diamondsarr, {individualHooks: true})
+      await models.product_diamonds.bulkCreate(
+               diamondsarr, {individualHooks: true})
 
 /*************** gemstone Lists ********************/
 
@@ -327,9 +387,12 @@ exports.productupload =  async (req, res) => {
 
             gemstonearr.push(gemstone_obj)
         })
+        console.log(JSON.stringify(gemstonearr.length))
+
+        console.log(JSON.stringify(gemstonearr))
 
         await models.product_gemstones.bulkCreate(
-            gemstonearr, {individualHooks: true})
+        gemstonearr, {individualHooks: true})
         if(gemstonelist.length > 0)
         {
             var firstgemobj = gemstonelist[0];
@@ -358,22 +421,22 @@ exports.productupload =  async (req, res) => {
 
            // product_skus.push(sku)
             }); 
-        
+
     /*************** Size Lists ********************/
    
        skus = product_skus;
         product_skus = [];
-        var sizelist = apidata.size;
+        var sizelist = apidata.selected_sizes;
         console.log(sizelist.length)
         skus.forEach(skuvalue => {
             sizelist.forEach(sizevalue => {
-                var sku = skuvalue.generated_sku+"_"+ sizevalue.value
+                var sku = skuvalue.generated_sku+"_"+ sizevalue
                
                  var skuobj = 
                  {
                  ...skuvalue,
                  generated_sku: sku,
-                 sku_size: sizevalue.value
+                 sku_size: sizevalue
                  } 
                 product_skus.push(skuobj)
             });
@@ -382,7 +445,7 @@ exports.productupload =  async (req, res) => {
         console.log("size"+product_skus.length)
        var  uploadskus = []
        var uploaddescriptions = []
-        product_skus.forEach(prodkt => {
+       product_skus.forEach(prodkt => {
                 var isdefault = false
                 var sku_weight = default_weight;
 
@@ -397,6 +460,7 @@ exports.productupload =  async (req, res) => {
                 sku_weight =  parseFloat(sku_weight) + parseFloat((sizedifferent * 0.1))
                 
                 const sku_desc = {
+                    id: uuidv1(),
                     sku_id: prodkt.generated_sku,
                     vendor_code: vendor_code,
                     sku_description : "Earrings set in 18 Kt Yellow Gold 3.45 gm with Diamonds (0.19 ct, IJ - SI )"
@@ -407,7 +471,7 @@ exports.productupload =  async (req, res) => {
                     isdefault,
                     sku_weight
                 }
-                     uploaddescriptions(sku_desc)
+                     uploaddescriptions.push(sku_desc)
                     uploadskus.push(prod_obj)
 
                 
@@ -428,14 +492,16 @@ exports.productupload =  async (req, res) => {
                 models.trans_sku_descriptions.bulkCreate(
                     uploaddescriptions
                       , {individualHooks: true}).then(function(response){ // Notice: There are no arguments here, as of right now you'll have to...
-                      request({
-                        url: '/updatepricelist',
-                        method: "POST",
-                        headers: {"Content-Type": "application/json"},
-                        body: JSON.stringify({req_product_id : 'SR3261'})
-                    }, function(error, response, body) {
-                       console.log(body)
-                    });
+                    //   request({
+                    //     url: 'htts://api.stylori.net/updatepricelist',
+                    //     method: "POST",
+                    //     headers: {"Content-Type": "application/json"},
+                    //     body: JSON.stringify({req_product_id : product_id})
+                    // }, function(error, response, body) {
+                    //    console.log(body)
+                    //    console.log(response)
+
+                    // });
                     res.json(uploadskus);
 
                     })

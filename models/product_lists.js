@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     vendor_code: DataTypes.STRING,
     product_name: DataTypes.STRING,
-    
+    product_category: DataTypes.STRING,
     product_series: DataTypes.INTEGER,
     isactive: DataTypes.BOOLEAN,
     default_size: DataTypes.DOUBLE,
@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     selling_qty: DataTypes.INTEGER,
     isreorderable: DataTypes.BOOLEAN,
 
-  }, {timestamps:false,freezeTableName: true});
+  }, {});
   product_lists.associate = function(models) {
     // associations can be defined here
      // models.trans_sku_lists.hasMany(models.product_diamonds,{

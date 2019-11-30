@@ -7,6 +7,7 @@ const uuidv1 = require('uuid/v1');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey('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');
 exports.priceupdate = (req, res) => {
+  console.log("test")
     var costprice = 0;
     var sellingprice = 0;
     var product_obj = {}
@@ -764,6 +765,7 @@ exports.priceupdate = (req, res) => {
 
           sku_component_count++;
           gemstone_process(product_gemstones[0],vendor_code);
+          
         }else
         {
           updategoldprice(product_obj.vendor_code, productsku)
@@ -790,8 +792,11 @@ exports.priceupdate = (req, res) => {
         {
           whereclause['rate_type'] = 2
          }
+        console.log(JSON.stringify(whereclause))
+        console.log(JSON.stringify(gemstoneobj.gemstone_type))
+        console.log(JSON.stringify(stoneweight))
+
         
-   
         models.gemstone_price_settings.findAll({
               where: whereclause
           }).then(async gemstonecharge=> {
@@ -872,7 +877,8 @@ exports.priceupdate = (req, res) => {
             }
             gemstone_whereclause['price_min'] = { [Op.lte]: gemstonesell }
             gemstone_whereclause['price_max'] = { [Op.gte]: gemstonesell }
-          let gemstone_markup =  await models.material_markups.findOne({
+          
+            let gemstone_markup =  await models.material_markups.findOne({
               where: gemstone_whereclause
             })
             if(gemstone_markup)
@@ -934,7 +940,7 @@ exports.priceupdate = (req, res) => {
             {
               gemstone_process(product_gemstones[gemstone_count],product_obj.vendor_code)
             }else{
-              
+
                   updategoldprice(product_obj.vendor_code, productsku)
             }
         }
@@ -953,6 +959,9 @@ exports.priceupdate = (req, res) => {
 
 
         var purityval = skuobj.purity;
+        console.log(JSON.stringify("dasd12"))
+        console.log(JSON.stringify(purityval))
+        console.log(JSON.stringify(skuobj.sku_weight))
         models.gold_price_settings.findOne({
             where: {
               vendor_code: product_obj.vendor_code,
@@ -961,7 +970,8 @@ exports.priceupdate = (req, res) => {
         }).then(async gold_price=> {
            if(gold_price)
            {
-
+           
+    
             costprice = gold_price.cost_price * skuobj.sku_weight
             if(gold_price.selling_price_type == 2)
             {
@@ -1059,6 +1069,7 @@ exports.priceupdate = (req, res) => {
         var mkcostprice = 0;
         var mksellingprice = 0;
         var skupurity = productskus[skucount].purity;
+
           models.making_charge_settings.findAll({
               where: {
                 vendor_code: vendorcode,
