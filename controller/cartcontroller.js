@@ -265,7 +265,15 @@ exports.addwishlist = async (req, res) => {
  }
 exports.addproductreview = async (req, res) => {
     let {user_id, username, rate,product_id,product_sku, title, message} = req.body
-    
+     let userreviews = await models.customer_reviews.findAll({
+       where: {
+        product_sku 
+       }
+     })
+     if(!userreviews && userreviews.length === 0)
+     {
+
+     
     const review_content = {
       id: uuidv1(),
       product_id: product_id,
@@ -288,7 +296,9 @@ exports.addproductreview = async (req, res) => {
       res.send(500,{"message":"Error Please try again"}) 
       console.log(reason)
     });
-  
+     }else{
+      res.send(409,{"message":"Already added review for this product"})        
+     }
    
    
    
