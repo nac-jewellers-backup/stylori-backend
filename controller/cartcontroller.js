@@ -271,7 +271,7 @@ exports.addproductreview = async (req, res) => {
         userprofile_id: user_id 
        }
      })
-     if(!userreviews && userreviews.length === 0)
+     if(!userreviews || userreviews.length === 0)
      {
 
      
