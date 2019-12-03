@@ -267,7 +267,8 @@ exports.addproductreview = async (req, res) => {
     let {user_id, username, rate,product_id,product_sku, title, message} = req.body
      let userreviews = await models.customer_reviews.findAll({
        where: {
-        product_sku 
+        product_sku,
+        userprofile_id: user_id 
        }
      })
      if(!userreviews && userreviews.length === 0)
