@@ -234,7 +234,7 @@ let prod_type_where = {}
       product_id : {
         [Op.in]: product_list
       },
-      name: {
+      product_type: {
         [Op.notILike] : 'Gold Coins'
       }
     }
