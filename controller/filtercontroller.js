@@ -260,13 +260,19 @@ let prod_type_where = {}
   var master_themes = await models.product_themes.findAll({
     attributes: ['theme_name'],
     group: ['theme_name'],
-    where: theme_whereclause
+    where: theme_whereclause,
+    order: [
+      ['theme_name', 'ASC']
+    ]
   })
 
   var master_occassion = await models.product_occassions.findAll({
     attributes: ['occassion_name'],
     group: ['occassion_name'],
-    where: prod_type_where
+    where: prod_type_where,
+    order: [
+      ['occassion_name', 'ASC']
+    ]
   })
   
   let material_whereclause = {}
@@ -282,7 +288,10 @@ let prod_type_where = {}
   var master_material = await models.product_materials.findAll({
     attributes: ['material_name'],
     group: ['material_name'],
-    where: material_whereclause
+    where: material_whereclause,
+    order: [
+      ['material_name', 'ASC']
+    ]
   })
 
 
@@ -291,7 +300,10 @@ let prod_type_where = {}
   var gemstone_shape = await models.product_gemstones.findAll({
     attributes: ['gemstone_shape'],
     group: ['gemstone_shape'],
-    where: material_whereclause
+    where: material_whereclause,
+    order: [
+      ['gemstone_shape', 'ASC']
+    ]
   })
 
   let collection_whereclause = {}
@@ -306,7 +318,10 @@ let prod_type_where = {}
   var master_collection = await models.product_collections.findAll({
     attributes: ['collection_name'],
     group: ['collection_name'],
-    where: collection_whereclause
+    where: collection_whereclause,
+    order: [
+      ['collection_name', 'ASC']
+    ]
   })
 
   
@@ -323,14 +338,20 @@ let prod_type_where = {}
   var master_purity = await models.product_purities.findAll({
     attributes: ['purity'],
     group: ['purity'],
-    where:purity_where
+    where:purity_where,
+    order: [
+      ['purity', 'ASC']
+    ]
   })
 
 
   var master_gender = await models.product_gender.findAll({
     attributes: ['gender_name'],
     group: ['gender_name'],
-    where:purity_where
+    where:purity_where,
+    order: [
+      ['gender_name', 'ASC']
+    ]
   })
 
 
@@ -367,7 +388,10 @@ let prod_type_where = {}
   var master_colors = await models.trans_sku_lists.findAll({
     attributes: ['metal_color'],
     group: ['metal_color'],
-    where: metalcolor_where
+    where: metalcolor_where,
+    order: [
+      ['metal_color', 'ASC']
+    ]
   })
   var price_range = await models.trans_sku_lists.findAll({
     attributes:[[sequelize.fn('max', sequelize.col('selling_price_tax')),'max'],[sequelize.fn('min', sequelize.col('selling_price_tax')),'min']]
