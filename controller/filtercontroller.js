@@ -403,8 +403,9 @@ let prod_type_where = {}
       ['metal_color', 'ASC']
     ]
   })
+
   var price_range = await models.trans_sku_lists.findAll({
-    attributes:[[sequelize.fn('max', sequelize.col('selling_price_tax')),'max'],[sequelize.fn('min', sequelize.col('selling_price_tax')),'min']]
+    attributes:[[sequelize.fn('max', sequelize.col('selling_price')),'max'],[sequelize.fn('min', sequelize.col('selling_price')),'min']]
   ,
     where: {
       product_id : {

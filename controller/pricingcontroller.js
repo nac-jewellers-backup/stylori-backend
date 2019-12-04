@@ -23,6 +23,8 @@ exports.priceupdate = (req, res) => {
       //   [Op.iLike]: '%SR%'
       // }
     }
+    console.log(":>>>>>>>>>")
+    console.log(JSON.stringify(req.body))
     if(req_product_id)
     {
       var product_id_arr1 = req_product_id.split(',');
@@ -90,7 +92,7 @@ exports.priceupdate = (req, res) => {
     }).then(product=> {
      
       products = product;
-      console.log(">>>>>>>"+JSON.stringify(whereclause1))
+      console.log(">>>>>>>"+JSON.stringify(products.length))
    // pricingresult()
    //res.send(200, products[0]);
         // processproduct()
