@@ -10,14 +10,20 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones} = req.body
+const {material, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability} = req.body
 var product_list = [];
 var whereclause = {};
 var includeclause = [];
 var seofilterattribute = []
 var seofilterattributevalue = []
-seofilterattribute.push('Category')
+  seofilterattribute.push('Category')
   seofilterattributevalue.push('jewellery')
+
+  if(availability)
+  {
+    seofilterattribute.push('Availability')
+    seofilterattributevalue.push(availability)
+  }
 // [
 //   {
 //    model : models.product_materials
@@ -400,7 +406,11 @@ let prod_type_where = {}
   var price_range = await models.trans_sku_lists.findAll({
     attributes:[[sequelize.fn('max', sequelize.col('selling_price_tax')),'max'],[sequelize.fn('min', sequelize.col('selling_price_tax')),'min']]
   ,
-    where: metalcolor_where
+    where: {
+      product_id : {
+        [Op.in] : product_list
+      }
+    }
   })
 
   var seooptions = await models.seo_url_priorities.findAll({

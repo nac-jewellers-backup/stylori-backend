@@ -16,7 +16,7 @@ exports.priceupdate = (req, res) => {
     var products = []
     var processed_product_count = 0;
     res.send(200,{message:"success"})
-    const {req_product_id} = req.body
+    const {req_product_id, vendor_code} = req.body
     var whereclause1 = {
       isactive : true,
       // product_id: {
@@ -39,6 +39,14 @@ exports.priceupdate = (req, res) => {
 
 
     }
+    if(vendor_code)
+    {
+      whereclause1['vendor_code'] = {
+        [Op.in] : vendor_code
+      }
+    }
+
+
 
     const msg = {
       to: "manokarantk@gmail.com",
@@ -82,7 +90,7 @@ exports.priceupdate = (req, res) => {
       console.log(">>>>>>>"+JSON.stringify(whereclause1))
    // pricingresult()
    //res.send(200, products[0]);
-         processproduct()
+        // processproduct()
     });
     var start = 0;
     async function processproduct(){
