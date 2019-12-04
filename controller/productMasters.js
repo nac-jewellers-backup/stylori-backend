@@ -51,6 +51,22 @@ const producttransskus = async (productinfo, req, res, next ) => {
 }
 
 
+
+	const skugemstone = async (product_id, req, res, next ) => {
+		var whereclause1 = {
+				
+		}
+		
+			whereclause1 = {
+				product_sku: product_id
+				
+			}
+		let prod_sku_gemstones = await	models.product_gemstones.findAll({
+	
+			where: whereclause1
+			})
+		return prod_sku_gemstones;
+	}
 const skudiamond = async (product_id, diamondtype, req, res, next ) => {
 	var whereclause1 = {
 			
@@ -73,5 +89,6 @@ const productPricing = {};
 productPricing.productList = productList;
 productPricing.producttransskus = producttransskus;
 productPricing.skudiamond = skudiamond;
+productPricing.skugemstone = skugemstone;
 
 module.exports = productPricing;

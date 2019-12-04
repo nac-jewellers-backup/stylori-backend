@@ -6,6 +6,37 @@ import apidata from './apidata.json';
 const uuidv1 = require('uuid/v1');
 var splitArray = require('split-array');
 
+
+exports.updateattributes = async (req, res) => {
+    models.master_product_types.findAll({
+          
+      where: {
+       
+      },
+      order: [
+        ['id', 'DESC']
+    ],
+    }).then(async categories => {
+      var attributes_arr = []
+      categories.forEach(element => {
+        let atr_obj = {
+          attribute_name : 'ProductType' ,
+          attribute_value: element.name
+        }
+        attributes_arr.push(atr_obj)
+      });
+      console.log(JSON.stringify(attributes_arr))
+
+     await  models.attribute_mapping.bulkCreate(
+        attributes_arr
+        , {individualHooks: true})
+        res.status(200).send({message:"success"});
+
+    }).catch(err => {
+        console.log(JSON.stringify(err))
+      res.status(500).send({message:"something went wring"});
+    });
+  }
 exports.updateproduct = (req, res) => {
     req.setTimeout(50000000);
 

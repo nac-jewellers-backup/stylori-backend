@@ -234,8 +234,10 @@ let prod_type_where = {}
   var master_styles = await models.product_styles.findAll({
     attributes: ['style_name'],
     group: ['style_name'],
-    where: prod_type_where
-    
+    where: prod_type_where,
+    order: [
+      ['style_name', 'ASC']
+    ]
   })
 
   var theme_whereclause = {

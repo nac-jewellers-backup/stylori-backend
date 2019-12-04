@@ -37,6 +37,59 @@ models.giftwrap.create(giftwrapobj).then(giftwrapobj=> {
 
 exports.applyvoucher = async (req, res) => {
   const {vouchercode, cart_id,user_profile_id} = req.body
+  let shopping_cart_skus = [];
+  let products_arr = await models.shopping_cart_item.findAll({
+    where:{
+      shopping_cart_id:cart_id
+    }
+  })
+
+  products_arr.forEach(element => {
+    shopping_cart_skus.push(element.product_sku)
+  })
+  var attribute_names = [];
+  var attribute_values = [];
+  let product_sku_info = await models.trans_sku_lists.findAll({
+    include:[
+      {
+        model : models.product_lists
+      }
+    ],
+    where:{
+     
+      generated_sku:{
+        [Op.in] : shopping_cart_skus
+      }
+    }
+  })
+  var condition_arr = []
+  if(product_sku_info)
+  {
+    product_sku_info.forEach(product_element => {
+    
+      if(product_element.product_list.product_category)
+      {
+        let category_obj ={
+          attribute_name : "Category",
+          attribute_value : product_element.product_list.product_category
+        }
+        condition_arr.push(category_obj)
+        attribute_names.push("Category")
+        attribute_values.push(product_element.product_list.product_category)
+      }
+    })
+  }
+
+  let voucher_attribute = await models.attribute_mapping.findAll({
+    where: {
+      [Op.or]: condition_arr
+    }
+  })
+  
+
+  console.log(">>>>>>>>>>>>>")
+      console.log(JSON.stringify(voucher_attribute))
+      console.log(">>>>>>>>>>>>>")
 //   const giftwrapobj = {
 //     id:uuidv1(),
 //     cart_id,
@@ -50,7 +103,7 @@ exports.applyvoucher = async (req, res) => {
 // }).catch(reason => {
 //   res.send(500,{message: "Failed"})
 // });
-  res.send(200,{message:"Applied Succesfully","discounted_price":4000,"tax_price":320})
+  res.send(200,{message:"Applied Succesfully","discounted_price":1000,"tax_price":320})
 
 }
 
