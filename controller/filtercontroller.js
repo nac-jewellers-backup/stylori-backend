@@ -209,6 +209,7 @@ let prod_type_where = {}
         [Op.in]: product_list
       }
     }
+    
   }
 
   var master_stonecolor = await models.product_stonecolor.findAll({
@@ -224,10 +225,26 @@ let prod_type_where = {}
     where:prod_type_where
   })
 
+
+  let prod_type_whereclause = {} 
+
+  if(product_list.length)
+  {
+    prod_type_whereclause =  {
+      product_id : {
+        [Op.in]: product_list
+      },
+      name: {
+        [Op.notILike] : 'Gold Coins'
+      }
+    }
+    
+  }
  var master_product_type = await models.product_lists.findAll({
     attributes: ['product_type'],
     group: ['product_type'],
-    where:prod_type_where
+    where:prod_type_whereclause
+
   })
 
 
