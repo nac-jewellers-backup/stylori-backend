@@ -41,10 +41,13 @@ exports.priceupdate = (req, res) => {
     }
     if(vendor_code)
     {
+      let vendor_arr = vendor_code.split(',');
       whereclause1['vendor_code'] = {
-        [Op.in] : vendor_code
+        [Op.in] : vendor_arr
       }
     }
+
+    
 
 
 
