@@ -106,7 +106,22 @@ exports.applyvoucher = async (req, res) => {
   res.send(200,{message:"Applied Succesfully","discounted_price":1000,"tax_price":320})
 
 }
-
+exports.getsizes = async (req, res) => {
+  var prooduct_sizes = await models.trans_sku_lists.findAll({
+    attributes: ['sku_size'],
+    group: ['sku_size'],
+    where: {
+      sku_size: {
+        [Op.ne]: null
+      }
+    },
+    order: [
+      ['sku_size', 'ASC']
+    ]
+  })
+  
+  res.send(200,{status:200,sizes:prooduct_sizes})
+}
 exports.addtocart = async (req, res) => {
  let {user_id, products,cart_id} = req.body
  console.log(JSON.stringify(req.body));

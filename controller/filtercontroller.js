@@ -378,6 +378,9 @@ let prod_type_where = {}
     metalcolor_where = {
       metal_color : {
         [Op.ne]: null
+      },
+      product_id : {
+        [Op.in]: product_list
       }
 
     }

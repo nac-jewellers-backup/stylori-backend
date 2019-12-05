@@ -49,7 +49,9 @@ module.exports = function(app) {
 	app.post('/addaddress', cartcontroller.addaddress);
 	app.post('/uploadimage', cartcontroller.uploadimage);
 	app.post('/filterlist', filtercontroller.filteroptions);
+	app.post('/getsizes', cartcontroller.getsizes);
 
+	
 	app.post('/updatebestseller', master_uploaddata_controller.updatebestseller);
 	app.post('/updatereadytoship', master_uploaddata_controller.updatereadytoship);
 	app.post('/pincodemaster', master_uploaddata_controller.updatepincode);

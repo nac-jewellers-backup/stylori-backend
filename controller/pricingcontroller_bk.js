@@ -710,25 +710,25 @@ exports.priceupdate = (req, res) => {
       console.log("processlength"+product_obj.trans_sku_lists.length)
 
    // updategoldprice(productobj.vendor_code, productskus[0])
-   function checkisinclude(currentsku)
+   function checkisinclude()
    {
       if(pricing_comp.indexOf("Diamond") > -1)
       {
-        updatediamondprice(productobj.vendor_code, productskus[currentsku])
+        updatediamondprice(productobj.vendor_code, productskus[0])
 
       }
       if(pricing_comp.indexOf("Gemstone") > -1)
       {
-        updategemstone_price(product_obj.vendor_code, productskus[currentsku])
+        updategemstone_price(product_obj.vendor_code, productsku)
 
       }
       if(pricing_comp.indexOf("Gold") > -1)
       {
-        updategoldprice(product_obj.vendor_code, productskus[currentsku])
+        updategoldprice(product_obj.vendor_code, productsku)
       }
       if(pricing_comp.indexOf("Making Charge") > -1)
       {
-        makingcharge(vendorcode,productskus[currentsku])
+        
       }
     }
 
@@ -1164,7 +1164,7 @@ exports.priceupdate = (req, res) => {
 
       }
 
-      function makingcharge(vendorcode,productsku)
+      function makingcharge(vendorcode)
       {
         var mkcostprice = 0;
         var mksellingprice = 0;
@@ -1632,8 +1632,8 @@ exports.priceupdate = (req, res) => {
           {
             console.log(product_obj.trans_sku_lists[skucount].generated_sku)
 
-              checkisinclude(skucount)
-             // updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
+        
+              updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
 
           }else{
 
