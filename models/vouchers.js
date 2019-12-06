@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     description: DataTypes.STRING,
     uses: DataTypes.INTEGER,
+    min_cart_value: DataTypes.DOUBLE,
     max_uses: DataTypes.INTEGER,
     max_uses_user: DataTypes.INTEGER,
     type: DataTypes.INTEGER,

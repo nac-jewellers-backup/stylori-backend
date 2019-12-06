@@ -27,9 +27,10 @@ module.exports = function(app) {
 	app.post('/splitgoldpriceupdate',[productPricing.productList], pricesplitup_controller.splitgoldpriceupdate);
 	app.post('/splitmarkuppriceupdate',[productPricing.productList], pricesplitup_controller.splitmakingchargeupdate);
 	app.post('/splitgemstonepriceupdate',[productPricing.productList], pricesplitup_controller.splitgemstonepriceupdate);
+	app.post('/generatepaymenturl', cartcontroller.generatepaymenturl);
 
 	app.post('/updateattributes', productupdatecontroller.updateattributes);
-
+	
 
 	app.get('/api/userprofile', [authJwt.verifyToken], authcontroller.userContent);
 	app.post('/updatepricelist', pricingontroller.priceupdate);

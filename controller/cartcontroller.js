@@ -8,6 +8,8 @@ const Op= require('sequelize').Op;
 const uuidv1 = require('uuid/v1');
 import aws from 'aws-sdk'; 
 import dotenv from 'dotenv';
+import { sequelize } from '../models';
+var request = require('request');
 
 dotenv.config();
 aws.config.update({
@@ -20,6 +22,7 @@ aws.config.update({
 
 exports.addgiftwrap = async (req, res) => {
   const {cart_id, gift_from, gift_to, message} = req.body
+  var isvalid = true;
   const giftwrapobj = {
     id:uuidv1(),
     cart_id,
@@ -37,75 +40,162 @@ models.giftwrap.create(giftwrapobj).then(giftwrapobj=> {
 
 exports.applyvoucher = async (req, res) => {
   const {vouchercode, cart_id,user_profile_id} = req.body
-  let shopping_cart_skus = [];
-  let products_arr = await models.shopping_cart_item.findAll({
-    where:{
-      shopping_cart_id:cart_id
-    }
-  })
-
-  products_arr.forEach(element => {
-    shopping_cart_skus.push(element.product_sku)
-  })
-  var attribute_names = [];
-  var attribute_values = [];
-  let product_sku_info = await models.trans_sku_lists.findAll({
+ let shoppingcart = await models.shopping_cart_item.findAll({
     include:[
       {
-        model : models.product_lists
+        model: models.trans_sku_lists,
+        attributes: ['generated_sku',"markup_price"],
+        include: [
+          {
+            model: models.product_lists,
+            attributes: ['product_category'],
+            where: {
+              product_category : 'Jewellery'
+            }
+          }
+        ]
       }
     ],
     where:{
-     
-      generated_sku:{
-        [Op.in] : shopping_cart_skus
-      }
+      shopping_cart_id: cart_id
     }
+
   })
-  var condition_arr = []
-  if(product_sku_info)
+var eligible_amount = 0;
+shoppingcart.forEach(element => {
+    eligible_amount = eligible_amount + element.trans_sku_list.markup_price; 
+})
+
+
+models.vouchers.findOne({
+  where:{
+    is_active: true,
+    min_cart_value: {
+      [Op.lte]: eligible_amount
+    },
+    code:{
+      [Op.iLike]:vouchercode
+    } 
+  }
+}).then(async giftwrapobj=> {
+ var message_response = ""
+
+  if(giftwrapobj &&  giftwrapobj.discount_amount)
   {
-    product_sku_info.forEach(product_element => {
-    
-      if(product_element.product_list.product_category)
-      {
-        let category_obj ={
-          attribute_name : "Category",
-          attribute_value : product_element.product_list.product_category
-        }
-        condition_arr.push(category_obj)
-        attribute_names.push("Category")
-        attribute_values.push(product_element.product_list.product_category)
+    let discountvalue = giftwrapobj.discount_amount
+
+    message_response = "Applied Successfully"
+   // isvalid = true
+   // message_response = "Applied Successfully"
+    var query = "UPDATE shopping_carts SET discount = "+discountvalue+" , discounted_price = (gross_amount -"+discountvalue+") where id ='a18260f0-ec17-11e9-85a8-fdf47b1fdaf5'" ;
+
+    await models.sequelize.query(query).then(([results, metadata]) => {
+      // Results will be an empty array and metadata will contain the number of affected rows.
+          console.log(JSON.stringify(metadata))
+          models.shopping_cart.findOne({
+            where:
+            {
+              id : cart_id
+            }
+          }).then(price_response =>{
+            res.send(200,{message: message_response,price_response})
+
+          })
+
+    })
+  }else{
+ let vouchers =   await models.vouchers.findAll({
+      where:{
+        is_active: true,
+        min_cart_value: {
+          [Op.lte]: eligible_amount
+        },
+        code:{
+          [Op.iLike]: vouchercode
+        } 
       }
     })
-  }
+    if(vouchers.length > 0)
+    {
 
-  let voucher_attribute = await models.attribute_mapping.findAll({
-    where: {
-      [Op.or]: condition_arr
+      res.send(409,{message: "Promo Code is invalid for this Order"})
+
+    }else
+    {
+      res.send(409,{message: "Enter Valid Coupon"})
+
     }
-  })
-  
 
-  console.log(">>>>>>>>>>>>>")
-      console.log(JSON.stringify(voucher_attribute))
-      console.log(">>>>>>>>>>>>>")
-//   const giftwrapobj = {
-//     id:uuidv1(),
-//     cart_id,
-//     gift_from,
-//     gift_to,
-//     message,
-//     is_active : true
-// }
-// models.giftwrap.create(giftwrapobj).then(giftwrapobj=> { 
-//   res.send(200,{message: "Success"})
-// }).catch(reason => {
-//   res.send(500,{message: "Failed"})
-// });
-  res.send(200,{message:"Applied Succesfully","discounted_price":1000,"tax_price":320})
+  }
+    
+}).catch(reason => {
+  res.send(409,{message: "Enter Valid Coupon"})
+});
+ // res.send(200,{message:"Applied Succesfully","discounted_price":1000,"tax_price":320})
 
 }
+
+exports.generatepaymenturl = async (req, res) => {
+
+    var timezone = "IST";
+    var authenticateTransaction = true;
+    var txntype = "sale";
+    var txndatetime = "";
+    var currency =356;
+    var mode = "payonly";
+    var storename= "33995001";
+    var chargetotal=1;
+    var paymentMethod="";
+    var full_bypass = false;
+    var sharedsecret = "sharedsecret";
+    var responseSuccessURL = "http://127.0.0.1/PHP/response_success.php"
+    
+    var responseFailURL = "http://127.0.0.1/PHP/response_fail.php"
+    var binarystring = storename+new Date()+chargetotal+currency+sharedsecret;
+  let hash =    bin2hex(binarystring)
+    function bin2hex(s){  
+    
+      var v,i, f = 0, a = [];  
+      s += '';  
+      f = s.length;  
+        
+      for (i = 0; i<f; i++) {  
+          a[i] = s.charCodeAt(i).toString(16).replace(/^([\da-f])$/,"0$1");  
+      }  
+        
+      return a.join('');  
+  }  
+  let bodyparams = {
+    timezone,
+    authenticateTransaction,
+    txntype,
+    txndatetime,
+    currency,
+    mode,
+    hash,
+    storename,
+    chargetotal,
+    paymentMethod,
+    full_bypass,
+    sharedsecret,
+    responseSuccessURL,
+    responseFailURL
+  }
+  console.log(JSON.stringify(bodyparams))
+  request({
+    url: 'https://test.ipg-online.com/connect/gateway/processing',
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(bodyparams)
+}, function(error, response, body) {
+   res.send(200,response,body);
+
+});
+
+
+}
+
+
 exports.getsizes = async (req, res) => {
   var prooduct_sizes = await models.trans_sku_lists.findAll({
     attributes: ['sku_size'],

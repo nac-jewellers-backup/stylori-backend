@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   shopping_cart_item.associate = function(models) {
     // associations can be defined here
+    models.shopping_cart_item.belongsTo(models.trans_sku_lists,{
+      foreignKey: 'product_sku',
+      targetKey: 'generated_sku'
+    });
   };
   return shopping_cart_item;
 };
