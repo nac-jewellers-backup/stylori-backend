@@ -118,18 +118,18 @@ models.vouchers.findOne({
     if(vouchers.length > 0)
     {
 
-      res.send(409,{message: "Promo Code is invalid for this Order"})
+      res.send(409,{message: "Promo code is invalid for this order"})
 
     }else
     {
-      res.send(409,{message: "Enter Valid Coupon"})
+      res.send(409,{message: "Enter valid coupon"})
 
     }
 
   }
     
 }).catch(reason => {
-  res.send(409,{message: "Enter Valid Coupon"})
+  res.send(409,{message: "Enter valid coupon"})
 });
  // res.send(200,{message:"Applied Succesfully","discounted_price":1000,"tax_price":320})
 
