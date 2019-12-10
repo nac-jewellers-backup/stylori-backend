@@ -83,11 +83,12 @@ models.vouchers.findOne({
   if(giftwrapobj &&  giftwrapobj.discount_amount)
   {
     let discountvalue = giftwrapobj.discount_amount
-
+    console.log("wqwqwqwqwqw")
     message_response = "Applied Successfully"
    // isvalid = true
    // message_response = "Applied Successfully"
-    var query = "UPDATE shopping_carts SET discount = "+discountvalue+" , discounted_price = (gross_amount -"+discountvalue+") where id ='a18260f0-ec17-11e9-85a8-fdf47b1fdaf5'" ;
+    var query = "UPDATE shopping_carts SET discount = "+discountvalue+" , discounted_price = (gross_amount -"+discountvalue+") where id ='"+cart_id+"'" ;
+    console.log(JSON.stringify(query))
 
     await models.sequelize.query(query).then(([results, metadata]) => {
       // Results will be an empty array and metadata will contain the number of affected rows.
