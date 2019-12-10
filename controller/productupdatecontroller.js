@@ -683,3 +683,110 @@ function updateproduct()
 
         }
 }
+
+exports.getpriceupdatestatus = (req, res) => {
+    const {req_product_id, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
+    var skuwhereclause = {}
+    var isfirstime = false;
+    var whereclause1 = {
+        isactive : true,
+      }
+      if(req_product_id)
+      {
+        isfirstime = true
+        var product_id_arr1 = req_product_id.split(',')
+        whereclause1 = {
+          product_id : {
+            [Op.in]: product_id_arr1
+          }
+        }
+  
+  
+      }
+
+
+      let vendor_arr = []
+
+      if(vendorcode)
+      {
+        isfirstime = true
+        vendorcode.forEach(element => {
+          vendor_arr.push(element.shortCode)
+        })
+       
+        whereclause1['vendor_code'] = {
+          [Op.in] : vendor_arr
+        }
+      }
+
+
+      if(pricingcomponent)
+      {
+        isfirstime = true
+        pricingcomponent.forEach(element => {
+            pricing_comp.push(element)
+        })
+      }
+  
+      let purity_arr = [];
+
+    if(purity)
+    {
+        isfirstime = true
+      metalpurity.forEach(element => {
+        purity_arr.push(element.alias)
+      })
+      skuwhereclause['purity'] = {
+        [Op.in] : purity_arr
+      }
+    }
+    let sku_size_arr = []
+    if(sizes)
+    {
+        isfirstime = true
+      sizes.forEach(elemet => {
+        sku_size_arr.push(elemet.sku_size)
+      })
+      skuwhereclause['sku_size'] = {
+        [Op.in] : sku_size_arr
+      }
+    }
+    let diamond_type_arr = []
+    if(diamondtypes)
+    {
+        isfirstime = true
+      diamondtypes.forEach(element => {
+        diamond_type_arr.push(element.label)
+      })
+     
+      skuwhereclause['diamond_type'] = {
+        [Op.in] : diamond_type_arr
+      }
+    }
+    let product_category_arr = [];
+
+    if(category)
+    {
+        isfirstime = true
+       category.forEach(element => {
+        product_category_arr.push(element.name)
+      })
+      whereclause1['product_category'] = {
+        [Op.in] : product_category_arr
+      }
+    }
+   
+    let product_type_arr = []
+    if(product_type)
+    {
+        isfirstime = true
+       product_type.forEach(element => {
+        product_type_arr.push(element.name)
+      })
+      whereclause1['product_type'] = {
+        [Op.in] : product_type_arr
+      }
+    }
+
+    res.status(200).send({message:"products"})
+}

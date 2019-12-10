@@ -31,6 +31,7 @@ module.exports = function(app) {
 
 	app.post('/updateattributes', productupdatecontroller.updateattributes);
 	
+	app.post('/getpriceupdatestatus', productupdatecontroller.getpriceupdatestatus);
 
 	app.get('/api/userprofile', [authJwt.verifyToken], authcontroller.userContent);
 	app.post('/updatepricelist', pricingontroller.priceupdate);

@@ -402,24 +402,24 @@ let prod_type_where = {}
   }
   var seo_url = ''
   var seo_text = ''
-  var master_colors = await models.trans_sku_lists.findAll({
-    attributes: ['metal_color'],
-    group: ['metal_color'],
-    where: metalcolor_where,
-    order: [
-      ['metal_color', 'ASC']
-    ]
-  })
+  // var master_colors = await models.trans_sku_lists.findAll({
+  //   attributes: ['metal_color'],
+  //   group: ['metal_color'],
+  //   where: metalcolor_where,
+  //   order: [
+  //     ['metal_color', 'ASC']
+  //   ]
+  // })
 
-  var price_range = await models.trans_sku_lists.findAll({
-    attributes:[[sequelize.fn('max', sequelize.col('selling_price')),'max'],[sequelize.fn('min', sequelize.col('selling_price')),'min']]
-  ,
-    where: {
-      product_id : {
-        [Op.in] : product_list
-      }
-    }
-  })
+  // var price_range = await models.trans_sku_lists.findAll({
+  //   attributes:[[sequelize.fn('max', sequelize.col('selling_price')),'max'],[sequelize.fn('min', sequelize.col('selling_price')),'min']]
+  // ,
+  //   where: {
+  //     product_id : {
+  //       [Op.in] : product_list
+  //     }
+  //   }
+  // })
 
   var seooptions = await models.seo_url_priorities.findAll({
   
@@ -451,12 +451,12 @@ let prod_type_where = {}
         master_material,
         master_collection,
         master_purity,
-        master_colors,
+       // master_colors,
         gemstone_shape,
         master_gender,
         master_stonecolor,
         master_stonecount,
-        price_range,
+       // price_range,
         seo_url,
         seo_text
               })
