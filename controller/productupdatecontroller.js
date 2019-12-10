@@ -5,7 +5,7 @@ const Op= require('sequelize').Op;
 import apidata from './apidata.json';
 const uuidv1 = require('uuid/v1');
 var splitArray = require('split-array');
-
+const sequelize = require('sequelize');
 
 exports.updateattributes = async (req, res) => {
     models.master_product_types.findAll({
@@ -684,13 +684,19 @@ function updateproduct()
         }
 }
 
-exports.getpriceupdatestatus = (req, res) => {
-    const {req_product_id, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
+exports.getpriceupdatestatus = async (req, res) => {
     var skuwhereclause = {}
     var isfirstime = false;
+    var response_message =  ""
+
     var whereclause1 = {
         isactive : true,
       }
+      getwhereclause(req.body)
+      function getwhereclause(bodycontent)
+      {
+        const {req_product_id, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = bodycontent
+        
       if(req_product_id)
       {
         isfirstime = true
@@ -707,8 +713,10 @@ exports.getpriceupdatestatus = (req, res) => {
 
       let vendor_arr = []
 
-      if(vendorcode)
+      if(vendorcode && vendorcode.length > 0)
       {
+        console.log(JSON.stringify(vendorcode))
+
         isfirstime = true
         vendorcode.forEach(element => {
           vendor_arr.push(element.shortCode)
@@ -719,7 +727,7 @@ exports.getpriceupdatestatus = (req, res) => {
         }
       }
 
-
+    var pricing_comp = []
       if(pricingcomponent)
       {
         isfirstime = true
@@ -730,7 +738,7 @@ exports.getpriceupdatestatus = (req, res) => {
   
       let purity_arr = [];
 
-    if(purity)
+    if(purity && purity.length  > 0)
     {
         isfirstime = true
       metalpurity.forEach(element => {
@@ -765,8 +773,11 @@ exports.getpriceupdatestatus = (req, res) => {
     }
     let product_category_arr = [];
 
-    if(category)
+    if(category && category.length > 0)
     {
+
+       console.log(">>>>>>")
+        console.log(JSON.stringify(gemstones_obj))
         isfirstime = true
        category.forEach(element => {
         product_category_arr.push(element.name)
@@ -777,7 +788,7 @@ exports.getpriceupdatestatus = (req, res) => {
     }
    
     let product_type_arr = []
-    if(product_type)
+    if(product_type && product_type.length > 0)
     {
         isfirstime = true
        product_type.forEach(element => {
@@ -787,6 +798,56 @@ exports.getpriceupdatestatus = (req, res) => {
         [Op.in] : product_type_arr
       }
     }
+  }
 
-    res.status(200).send({message:"products"})
+    if(isfirstime)
+    {
+        
+        let table_content = {
+          "params": JSON.stringify(req.body)
+        }
+        await models.price_update_log.create(table_content);
+        
+    }else
+    {
+        let lastsearchcontent = await models.price_update_log.findOne({
+                                  order: [
+                                    ['id', 'DESC'],
+                                    
+                                   
+                                ],
+                                limit: 1
+                              })
+
+            let products_list=  await models.trans_sku_lists.findAll({
+                      attributes: [
+   
+                           [sequelize.literal('DISTINCT(product_id)'), 'products']
+                      ], where: {
+                        updatedAt : {
+                          [Op.gt] : lastsearchcontent.createdAt
+                        }
+                      }
+                    })
+                              console.log(">>>>>>")
+        console.log(products_list.length)
+         response_message =  products_list.length + " /"
+
+             var gemstones_obj = JSON.parse(lastsearchcontent.params)
+             getwhereclause(gemstones_obj)
+       
+
+    }
+
+    let products = await models.product_lists.findAll({
+       where: whereclause1
+
+    })
+    if(response_message.length > 0)
+    {
+      response_message = response_message +  products.length + " Products"
+
+    }
+    res.status(200).send({status: 200,message:response_message})
+
 }
