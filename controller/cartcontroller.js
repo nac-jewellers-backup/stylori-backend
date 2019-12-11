@@ -296,6 +296,64 @@ const returnData = {
     res.json({success:true, data:{returnData}});
   });
 }
+exports.adduseraddress = async (req, res) => {
+  let {user_id, address,id} = req.body
+  address.forEach(async element => {
+    var  address_obj = {}
+    if(!id){
+     address_obj = {
+      id:uuidv1(),
+      userprofile_id:user_id,
+      firstname:element.firstname,
+      lastname:element.lastname,
+      pincode:element.pincode,
+      addressline1:element.addressline1,
+      addressline2:element.addressline2,
+      city:element.city,
+      state:element.state,
+      country:element.country,
+      country_code:element.country_code,
+      contact_number:element.contactno,
+      address_type:element.addresstype,
+      default_billing:false,
+      default_shipping:false
+    }
+  }else
+  {
+    address_obj = {
+      userprofile_id:user_id,
+      firstname:element.firstname,
+      lastname:element.lastname,
+      pincode:element.pincode,
+      addressline1:element.addressline1,
+      addressline2:element.addressline2,
+      city:element.city,
+      state:element.state,
+      country:element.country,
+      country_code:element.country_code,
+      contact_number:element.contactno,
+      address_type:element.addresstype,
+      default_billing:false,
+      default_shipping:false
+    }
+  }
+  if(id)
+  {
+    let branchobj =  await models.user_address.update(address_obj, {returning: true, 
+      where : {
+        id 
+      }})
+  }else{
+    let response =  await models.user_address.create(
+      address_obj)
+      res.send(200,{"message":"added successfully"})
+  }
+  
+})
+}
+
+
+
 exports.addaddress = async (req, res) => {
     let {user_id, address,cart_id,isguestlogin} = req.body
     
