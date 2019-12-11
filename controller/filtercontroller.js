@@ -380,7 +380,7 @@ let prod_type_where = {}
   {
     
     metalcolor_where = {
-      metal_color : {
+      product_color : {
         [Op.ne]: null
       },
       product_id : {
@@ -392,7 +392,7 @@ let prod_type_where = {}
   if(metalcolor)
   {
     metalcolor_where = {
-      metal_color : metalcolor
+      product_color : metalcolor
 
     }
 
@@ -403,11 +403,11 @@ let prod_type_where = {}
   var seo_url = ''
   var seo_text = ''
   var master_colors = await models.product_metalcolours.findAll({
-    attributes: ['metal_color'],
-    group: ['metal_color'],
+    attributes: ['product_color'],
+    group: ['product_color'],
     where: metalcolor_where,
     order: [
-      ['metal_color', 'ASC']
+      ['product_color', 'ASC']
     ]
   })
 
