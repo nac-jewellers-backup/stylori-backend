@@ -24,11 +24,10 @@ exports.priceupdate = (req, res) => {
     var whereclause1 = {
       isactive : true,
       // product_id: {
-      //   [Op.iLike]: '%SR%'
+      //   [Op.eq]: 'SR0524'
       // }
     }
-    console.log(":>>>>>>>>>1212")
-    console.log(JSON.stringify(req.body))
+
     if(req_product_id)
     {
       var product_id_arr1 = req_product_id.split(',');
@@ -77,6 +76,10 @@ exports.priceupdate = (req, res) => {
         [Op.in] : purity_arr
       }
     }
+
+    // skuwhereclause['generated_sku'] = {
+    //   [Op.eq] : 'SR0524-14110000-12'
+    // }
     let sku_size_arr = []
     if(sizes)
     {
@@ -618,9 +621,9 @@ exports.priceupdate = (req, res) => {
 
 
   /********** Material Markup calculation */
- function materialmarkupval( sellingprice_val)
+ async function materialmarkupval( sellingprice_val)
   {
-      const priceMarkup =  models.pricing_markup.findAll({
+      const priceMarkup = await models.pricing_markup.findAll({
           where: {
             selling_price_min:{
               [Op.lte]: sellingprice_val
@@ -630,6 +633,8 @@ exports.priceupdate = (req, res) => {
             }
           }
         });
+        console.log("getmarkupvalue")
+        console.log(JSON.stringify(priceMarkup))
         return priceMarkup;
   }
 
@@ -741,6 +746,13 @@ exports.priceupdate = (req, res) => {
       {
         makingcharge(productobj.vendor_code,transskus[currentsku])
       }
+      if(pricing_comp.indexOf("price update") > -1)
+      {
+        updateskuprice()
+       // makingcharge(productobj.vendor_code,transskus[currentsku])
+      }
+
+      
     }
 
     async  function updatediamondprice(vendor_code,productsku)
@@ -1371,20 +1383,21 @@ exports.priceupdate = (req, res) => {
                                 group: ['material_name'],
                                 where: {
                                 product_sku: productskus[skucount].generated_sku,
-                                  
                                 }})
-
+         
         let material_price_obj = await  models.pricing_sku_materials.findAll({
-          attributes: [
-            'component',
-            [squelize.literal('SUM(cost_price)'), 'cost_price'],
-            [squelize.literal('SUM(selling_price)'), 'selling_price']
-          ],
-          group:'component',
-          where: {
-          product_sku: productskus[skucount].generated_sku,
+                                    attributes: [
+                                      'component',
+                                      [squelize.literal('SUM(cost_price)'), 'cost_price'],
+                                      [squelize.literal('SUM(selling_price)'), 'selling_price']
+                                    ],
+                                    group:'component',
+                                    where: {
+                                    product_sku: productskus[skucount].generated_sku,
           
-          }})   
+                                 }}) 
+                                 
+            
           var goldsellingprice = 0;   
           var makingsellingprice = 0;
           var diamondsellingprice = 0;  
@@ -1402,6 +1415,7 @@ exports.priceupdate = (req, res) => {
             }
             if(metal_name.includes('makingcharge'))
             {
+              sku_component_count++;
               makingsellingprice = metal_price.selling_price
 
             }
@@ -1412,10 +1426,13 @@ exports.priceupdate = (req, res) => {
             let metal_name = metal_price.component;
             if(metal_name.includes('diamond'))
             {
+              diamond_component_count++;
+              sku_component_count++;
               diamondsellingprice = metal_price.selling_price
             }
             if(metal_name.includes('gemstone'))
             {
+              sku_component_count++;
               gemstonesellingprice = metal_price.selling_price
 
             }
@@ -1444,10 +1461,11 @@ exports.priceupdate = (req, res) => {
                   }
                 if(markup.material == 'Making Charge')
                   {
+                    
 
                     makingchargemarkupvalue = (makingsellingprice + (makingsellingprice * (markup.markup_value/100)))
                     makingchargediscountvalue = ((makingchargemarkupvalue * 100) /(100 - 25));
-
+                    console.log(JSON.stringify(markup))
                     var query = "UPDATE pricing_sku_metals SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'makingcharge'" ;
                     await models.sequelize.query(query).then(([results, metadata]) => {
                       // Results will be an empty array and metadata will contain the number of affected rows.
@@ -1467,7 +1485,13 @@ exports.priceupdate = (req, res) => {
                   {
                     diamondmarkupvalue = (diamondsellingprice + (diamondsellingprice * (markup.markup_value/100)))
                     diamonddiscountvalue = ((diamondmarkupvalue * 100) /(100 - 25));
+                    console.log(">>>>>>")
+                    console.log(JSON.stringify(diamonddiscountvalue))
+                    console.log(">>>>>>")
                     var query = "UPDATE pricing_sku_materials SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name ='"+productskus[skucount].diamond_type+"'" ;
+                    console.log(">>>>>>")
+                    console.log(JSON.stringify(query))
+                    console.log(">>>>>>")
                     await models.sequelize.query(query).then(([results, metadata]) => {
                       // Results will be an empty array and metadata will contain the number of affected rows.
                     })
@@ -1490,7 +1514,7 @@ exports.priceupdate = (req, res) => {
         console.log("golddiscount_percentage"+golddiscount_percentage)
         console.log("makingcharge_percentage"+makingcharge_percentage)
         console.log("diamond_percentage"+diamond_percentage)
-        console.log("gemstone_percentage"+gemstone_percentage)
+        console.log("gemstone_percentage12"+gemstone_percentage)
 
 
         var discount_price_distribute_percentage = golddiscount_percentage/sku_component_count;
@@ -1516,6 +1540,9 @@ exports.priceupdate = (req, res) => {
           await models.sequelize.query(mkquery).then(([results, metadata]) => {
              // Results will be an empty array and metadata will contain the number of affected rows.
            })
+           console.log("diamondcpinfdadiaosd")
+           console.log(diamond_component_count)
+           console.log("))))))))))))))))")
            if(diamond_component_count > 0)
                  {
            var materialquery = "UPDATE pricing_sku_materials SET discount_price = ((markup * 100) /(100 - 25) + ("+golddiscount_different+" * (("+discount_price_distribute_percentage+" + "+diamond_percentage+" )/"+diamond_component_count+"))) where product_sku ='"+productskus[skucount].generated_sku+"' and component ilike '%diamond%'" ;
@@ -1530,11 +1557,7 @@ exports.priceupdate = (req, res) => {
                    // Results will be an empty array and metadata will contain the number of affected rows.
                  })
                 }
-                console.log("dasdasdasdsa")
-                 console.log(golddiscount_different)
-                console.log(discount_price_distribute_percentage)
-                console.log(diamond_percentage)
-                console.log("======")
+                
 
            /* let total_costprice = accs.cost_price + product_splitup.cost_price;
             let total_sellingprice = accs.selling_price + product_splitup.selling_price;

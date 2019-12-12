@@ -13,6 +13,7 @@ module.exports = function(app) {
     const filtercontroller = require('../controller/filtercontroller.js');
     const master_uploaddata_controller = require('../controller/master_uploaddata_controller.js');
     const pricesplitup_controller = require('../controller/pricesplitupcontroller.js');
+    const single_product_pricecontroller = require('../controller/pricingcontroller_whole.js');
 
 	app.post('/api/auth/signin', authcontroller.signin);
 	app.post('/api/auth/signup', authcontroller.signup);	
@@ -23,6 +24,9 @@ module.exports = function(app) {
 	app.post('/productupload', productcontroller.productupload);
 	app.post('/productupdate', productupdatecontroller.updateproduct);
 	app.post('/priceupdate', productcontroller.priceupdate);
+
+	app.post('/productpriceupdate',single_product_pricecontroller.priceupdate)
+
 	app.post('/splitdiamondpriceupdate',[productPricing.productList], pricesplitup_controller.splitdiamondpriceupdate);
 	app.post('/splitgoldpriceupdate',[productPricing.productList], pricesplitup_controller.splitgoldpriceupdate);
 	app.post('/splitmarkuppriceupdate',[productPricing.productList], pricesplitup_controller.splitmakingchargeupdate);
@@ -42,6 +46,9 @@ module.exports = function(app) {
 	
 	app.post('/addwishlist', cartcontroller.addwishlist);
 	app.post('/removewishlist', cartcontroller.removewishlist);
+	app.post('/removeaddress', cartcontroller.removeaddress);
+
+	
 	app.post('/createorder', cartcontroller.addorder);
 
 	app.post('/addproductreview', cartcontroller.addproductreview);
