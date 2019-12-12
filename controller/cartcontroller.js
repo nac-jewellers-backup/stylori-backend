@@ -352,7 +352,25 @@ exports.adduseraddress = async (req, res) => {
 })
 }
 
-
+exports.removeaddress = async (req, res) => {
+    let {address_id } = req.body
+    const add_wishlist = {
+      is_active: false
+    }
+     models.user_address.update(add_wishlist, {returning: true, 
+      where : {
+        id :address_id
+      }}).then(function(response){
+        res.send(200,{"message":"updated successfully"})        
+      }).catch(reason => {
+          res.send(500,{"message":"Error Please try again"}) 
+          console.log(reason)
+        });
+    
+ 
+  
+  
+}
 
 exports.addaddress = async (req, res) => {
     let {user_id, address,cart_id,isguestlogin} = req.body
@@ -431,7 +449,7 @@ exports.addwishlist = async (req, res) => {
        sku_id: product_sku,
        is_active: true
      }
-    models.user_wishlists.create(add_wishlist,{
+    models.user_whislists.create(add_wishlist,{
       returning: true
     }).then(function(response){
       res.send(200,{"message":"updated successfully"})        
@@ -445,9 +463,9 @@ exports.addwishlist = async (req, res) => {
     let {wishlist_id } = req.body
     const add_wishlist = {
   
-      is_active: true
+      is_active: false
     }
-    let branchobj =  await models.user_wishlists.update(add_wishlist, {returning: true, 
+    let branchobj =  await models.user_whislists.update(add_wishlist, {returning: true, 
       where : {
         id :wishlist_id
       }}).then(function(response){

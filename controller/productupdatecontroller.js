@@ -696,7 +696,8 @@ exports.getpriceupdatestatus = async (req, res) => {
       function getwhereclause(bodycontent)
       {
         const {req_product_id, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = bodycontent
-        
+       console.log("MMMMM")
+        console.log(JSON.stringify(bodycontent))
       if(req_product_id)
       {
         isfirstime = true
@@ -776,8 +777,7 @@ exports.getpriceupdatestatus = async (req, res) => {
     if(category && category.length > 0)
     {
 
-       console.log(">>>>>>")
-        console.log(JSON.stringify(gemstones_obj))
+       
         isfirstime = true
        category.forEach(element => {
         product_category_arr.push(element.name)
@@ -843,9 +843,14 @@ exports.getpriceupdatestatus = async (req, res) => {
        where: whereclause1
 
     })
+
     if(response_message.length > 0)
     {
       response_message = response_message +  products.length + " Products"
+
+    }else
+    {
+      response_message =    products.length + " Products"
 
     }
     res.status(200).send({status: 200,message:response_message})
