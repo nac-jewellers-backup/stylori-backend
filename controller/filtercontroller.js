@@ -17,7 +17,7 @@ var includeclause = [];
 var seofilterattribute = []
 var seofilterattributevalue = []
   seofilterattribute.push('Category')
-  seofilterattributevalue.push('jewellery')
+  seofilterattributevalue.push('Jewellery')
   if(product_category)
   {
   seofilterattribute.push('Category')
