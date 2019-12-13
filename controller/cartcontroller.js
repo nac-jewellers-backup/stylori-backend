@@ -460,14 +460,16 @@ exports.addwishlist = async (req, res) => {
    }
 
    exports.removewishlist = async (req, res) => {
-    let {wishlist_id } = req.body
+    let {user_id , product_id , product_sku } = req.body
     const add_wishlist = {
   
       is_active: false
     }
     let branchobj =  await models.user_whislists.update(add_wishlist, {returning: true, 
       where : {
-        id :wishlist_id
+        product_id: product_id,
+       userprofile_id: user_id,
+       sku_id: product_sku
       }}).then(function(response){
         res.send(200,{"message":"updated successfully"})        
       }).catch(reason => {
