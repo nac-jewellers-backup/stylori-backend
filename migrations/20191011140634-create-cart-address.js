@@ -8,10 +8,18 @@ module.exports = {
         type: Sequelize.UUID
       },
       cart_id: {
-        type: Sequelize.STRING
+        type: Sequelize.UUID,
+        references: {
+          model: 'shopping_carts', 
+          key: 'id',
+        }
       },
       userprofile_id: {
-        type: Sequelize.STRING
+        type: Sequelize.UUID,
+        references: {
+          model: 'user_profiles', // name of Source model
+          key: 'id',
+        }
       },
       firstname: {
         type: Sequelize.STRING

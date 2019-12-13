@@ -8,8 +8,11 @@ module.exports = {
         type: Sequelize.UUID
       },
       userprofile_id: {
-        type: Sequelize.STRING,
-       
+        type: Sequelize.UUID,
+        references: {
+          model: 'user_profiles', // name of Source model
+          key: 'id',
+        }
       },
       gross_amount: {
         type: Sequelize.DOUBLE

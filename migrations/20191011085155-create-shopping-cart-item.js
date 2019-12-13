@@ -8,8 +8,11 @@ module.exports = {
         type: Sequelize.UUID
       },
       shopping_cart_id: {
-        type: Sequelize.STRING,
-       
+        type: Sequelize.UUID,
+        references: {
+          model: 'shopping_carts', 
+          key: 'id',
+        }
       },
       product_sku: {
         type: Sequelize.STRING,
