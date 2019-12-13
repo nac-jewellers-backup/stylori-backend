@@ -79,9 +79,6 @@ console.log(process.env.LOCAL_DB_PORT)
 
 app.use(postgraphile(connString,{
   graphiql:true,  
-    live: true,
-    subscriptions: true,
-    simpleSubscriptions: true,
     appendPlugins: [ConnectionFilterPlugin, PgOrderByRelatedPlugin],
     graphileBuildOptions: {
       connectionFilterRelations: true,

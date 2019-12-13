@@ -27,7 +27,7 @@ exports.priceupdate = (req, res) => {
     var whereclause1 = {
       isactive : true,
       product_id: {
-        [Op.eq]: 'SR0010'
+        [Op.iLike]: '%SR%'
       }
     }
 
@@ -80,8 +80,8 @@ exports.priceupdate = (req, res) => {
       }
     }
 
-    // skuwhereclause['generated_sku'] = {
-    //   [Op.eq] : 'SR0010-18110000-12'
+    // skuwhereclause['isdefault'] = {
+    //   [Op.eq] : true
     // }
     let sku_size_arr = []
     if(sizes)
@@ -166,6 +166,7 @@ exports.priceupdate = (req, res) => {
     });
     var start = 0;
     async function processproduct(){
+      console.log(">>>>>>>>>>>"+processed_product_count)
       if(products.length > processed_product_count)
       {
          start = new Date()
@@ -218,8 +219,11 @@ exports.priceupdate = (req, res) => {
        // res.send(200,{message: "succes1s"})
       //  processed_product_count = processed_product_count  + 1;
       //  processproduct();
-
-      
+            var endDate   = new Date();
+            var seconds = (endDate.getTime() - startDate.getTime()) / 1000;
+            
+              console.log("totaltime ")
+              console.log(seconds)
       }
     }
 
@@ -751,7 +755,7 @@ exports.priceupdate = (req, res) => {
           diamond_process(product_diamonds[0],vendor_code);
         }else
         {
-          checkisinclude()
+          isskuexist()
 
        }
 
@@ -836,8 +840,6 @@ exports.priceupdate = (req, res) => {
                   console.log(new Date())
                     isskuexist()
                   // updategemstone_price(product_obj.vendor_code, productsku)
-
-  
                   }
                 }
                 
@@ -1661,16 +1663,13 @@ exports.priceupdate = (req, res) => {
           {
             console.log(product_obj.trans_sku_lists[skucount].generated_sku)
 
-              checkisinclude(skucount,product_obj,product_obj.trans_sku_lists)
-             // updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
+           //   checkisinclude(skucount,product_obj,product_obj.trans_sku_lists)
+              updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
 
           }else{
 
               // Do your operations
-              var endDate   = new Date();
-              var seconds = (endDate.getTime() - startDate.getTime()) / 1000;
-              console.log("totaltime ")
-              console.log(seconds)
+            
             processed_product_count = processed_product_count  + 1;
             processproduct();
           }
