@@ -10,7 +10,7 @@ module.exports = {
       cart_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'shopping_carts', // name of Source model
+          model: 'shopping_carts', // name  Source model
           key: 'id',
         }
       },
