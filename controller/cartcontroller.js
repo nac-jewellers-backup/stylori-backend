@@ -449,14 +449,37 @@ exports.addwishlist = async (req, res) => {
        sku_id: product_sku,
        is_active: true
      }
+     let wishlistobj =    await models.user_whislists.findAll({
+      where : {
+        product_id: product_id,
+       userprofile_id: user_id,
+       sku_id: product_sku
+      }
+     })
+if(wishlistobj && wishlistobj.length > 0)
+{
+    let branchobj =  await models.user_whislists.update({is_active: true}, {returning: true, 
+      where : {
+        product_id: product_id,
+       userprofile_id: user_id,
+       sku_id: product_sku
+      }}).then(function(response){
+        res.send(200,{"message":"updated successfully"})        
+      }).catch(reason => {
+          res.send(500,{"message":"Error Please try again"}) 
+          console.log(reason)
+        });
+      }else
+      {
     models.user_whislists.create(add_wishlist,{
       returning: true
     }).then(function(response){
-      res.send(200,{"message":"updated successfully"})        
+      res.send(200,{"message":"added successfully"})        
     }).catch(reason => {
         res.send(500,{"message":"Error Please try again"}) 
         console.log(reason)
       });
+    }
    }
 
    exports.removewishlist = async (req, res) => {
