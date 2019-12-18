@@ -315,6 +315,7 @@ exports.adduseraddress = async (req, res) => {
       country_code:element.country_code,
       contact_number:element.contactno,
       address_type:element.addresstype,
+      is_active:true,
       default_billing:false,
       default_shipping:false
     }
@@ -334,6 +335,7 @@ exports.adduseraddress = async (req, res) => {
       contact_number:element.contactno,
       address_type:element.addresstype,
       default_billing:false,
+      is_active:true,
       default_shipping:false
     }
   }
@@ -343,6 +345,8 @@ exports.adduseraddress = async (req, res) => {
       where : {
         id 
       }})
+      res.send(200,{"message":"updated successfully"})
+
   }else{
     let response =  await models.user_address.create(
       address_obj)
