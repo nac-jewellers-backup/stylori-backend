@@ -411,17 +411,19 @@ let prod_type_where = {}
     ]
   })
 
-  var price_range = await models.trans_sku_lists.findAll({
-    attributes:[[sequelize.fn('max', sequelize.col('selling_price')),'max'],[sequelize.fn('min', sequelize.col('selling_price')),'min']]
-  ,
-    include:[
-      {
-        model : models.product_lists,
-        require : true,
-        where : whereclause
-      }
-    ]
-  })
+  // var price_range = await models.trans_sku_lists.findAll({
+  //   attributes:["id"]
+  // ,
+  //   include:[
+  //     {
+  //       model : models.product_lists,
+  //       require : true,
+  //       where : whereclause
+  //     }
+  //   ],
+  //   group: ['generated_sku'],
+
+  // })
 
   var seooptions = await models.seo_url_priorities.findAll({
   
