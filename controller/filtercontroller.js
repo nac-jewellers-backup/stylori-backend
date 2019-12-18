@@ -411,15 +411,17 @@ let prod_type_where = {}
     ]
   })
 
-  // var price_range = await models.trans_sku_lists.findAll({
-  //   attributes:[[sequelize.fn('max', sequelize.col('selling_price')),'max'],[sequelize.fn('min', sequelize.col('selling_price')),'min']]
-  // ,
-  //   where: {
-  //     product_id : {
-  //       [Op.in] : product_list
-  //     }
-  //   }
-  // })
+  var price_range = await models.trans_sku_lists.findAll({
+    attributes:[[sequelize.fn('max', sequelize.col('selling_price')),'max'],[sequelize.fn('min', sequelize.col('selling_price')),'min']]
+  ,
+    include:[
+      {
+        model : models.product_lists,
+        require : true,
+        where : whereclause
+      }
+    ]
+  })
 
   var seooptions = await models.seo_url_priorities.findAll({
   
@@ -456,7 +458,7 @@ let prod_type_where = {}
         master_gender,
         master_stonecolor,
         master_stonecount,
-       // price_range,
+        price_range,
         seo_url,
         seo_text
               })
