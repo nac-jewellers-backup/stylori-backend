@@ -412,12 +412,11 @@ let prod_type_where = {}
   })
 
   // var price_range = await models.trans_sku_lists.findAll({
-  //   attributes:["id"]
+  //   attributes:["generated_sku"]
   // ,
   //   include:[
   //     {
   //       model : models.product_lists,
-  //       require : true,
   //       where : whereclause
   //     }
   //   ],
@@ -460,7 +459,7 @@ let prod_type_where = {}
         master_gender,
         master_stonecolor,
         master_stonecount,
-        price_range,
+     //   price_range,
         seo_url,
         seo_text
               })
