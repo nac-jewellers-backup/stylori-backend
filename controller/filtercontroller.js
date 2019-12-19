@@ -414,7 +414,6 @@ let prod_type_where = {}
   })
 
 
-  console.log(JSON.stringify(includeclause))
   // var price_range2 = await models.trans_sku_lists.findOne({
   //   attributes:["selling_price"]
   // ,
