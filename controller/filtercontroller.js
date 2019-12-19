@@ -166,6 +166,8 @@ if(producttype)
 
 if(metalpurity)
 {
+
+  console.log("metalpurity class set")
   seofilterattribute.push('Metal Purity')
   seofilterattributevalue.push(metalpurity)
   whereclause['$product_purities.purity$'] = {
@@ -411,18 +413,16 @@ let prod_type_where = {}
     ]
   })
 
+
+  console.log(JSON.stringify(includeclause))
   // var price_range2 = await models.trans_sku_lists.findOne({
   //   attributes:["selling_price"]
   // ,
-  //   include:[
-  //     {
-        
-  //       require: true,
-  //       model : models.product_lists,
-  //       include:includeclause,
-  //       where: whereclause,
-  //     }
-  //   ],
+  //  where: {
+  //    "product_id":{
+  //      [Op.in] : product_list
+  //    }
+  //  },
   //   order: [
   //     ['selling_price', 'ASC']
   //   ]
@@ -487,7 +487,7 @@ let prod_type_where = {}
         master_gender,
         master_stonecolor,
         master_stonecount,
-    //    price_range,
+        price_range,
         seo_url,
         seo_text
               })
