@@ -17,6 +17,12 @@ module.exports = {
       gross_amount: {
         type: Sequelize.DOUBLE
       },
+      discount: {
+        type: Sequelize.DOUBLE
+      },
+      discounted_price: {
+        type: Sequelize.DOUBLE
+      },
       tax_amount: {
         type: Sequelize.DOUBLE
       },

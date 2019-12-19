@@ -105,6 +105,7 @@ models.vouchers.findOne({
 
     })
   }else{
+    console.log("voucher invalid")
  let vouchers =   await models.vouchers.findAll({
       where:{
         is_active: true,
@@ -130,7 +131,7 @@ models.vouchers.findOne({
   }
     
 }).catch(reason => {
-  res.send(409,{message: "Enter valid coupon"})
+  res.send(409,{message: "Enter valid coupon", reason})
 });
  // res.send(200,{message:"Applied Succesfully","discounted_price":1000,"tax_price":320})
 
