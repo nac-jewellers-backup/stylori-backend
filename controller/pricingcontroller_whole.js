@@ -167,7 +167,7 @@ exports.priceupdate = (req, res) => {
       //  }
       // ],
       where: whereclause1,
-      
+      offset: 368
     }).then(product=> {
      
       products = product;
