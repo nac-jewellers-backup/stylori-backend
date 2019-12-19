@@ -450,7 +450,7 @@ let prod_type_where = {}
   //   "min":price_range2.selling_price,
   //   "max":price_range1.selling_price
   // }
-
+  console.log("test yeyysasdsa")
   var seooptions = await models.seo_url_priorities.findAll({
   
     where: {

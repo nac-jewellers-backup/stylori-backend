@@ -15,6 +15,7 @@ exports.priceupdate = (req, res) => {
     var responseobj = {};
     var pricesplitup = []
     var products = []
+    var product_ids = []
     var pricing_comp = []
     var processed_product_count = 0;
     res.send(200,{message:"success"})
@@ -184,6 +185,7 @@ exports.priceupdate = (req, res) => {
          start = new Date()
 
         let currentproduct = products[processed_product_count]
+        product_ids.push(currentproduct.product_id)
         product_obj =   await  models.product_lists.findOne({
           include: [{
             model: models.trans_sku_lists,
@@ -1597,6 +1599,7 @@ exports.priceupdate = (req, res) => {
                 markup_price_tax :  markuppricetax,
                 margin_on_sale_percentage : sku_margin
               } 
+              
              // res.send(200,{"material":materialsum,"metal":matalsum});
               models.trans_sku_lists.update(transskuobj,{
               where: {generated_sku: productskus[skucount].generated_sku}
@@ -1641,10 +1644,20 @@ exports.priceupdate = (req, res) => {
             console.log(seconds)
 
             processed_product_count = processed_product_count  + 1;
-           await sleep(60000)
-
+          //  await sleep(60000)
+            if(processed_product_count > 0 && processed_product_count%50 == 0)
+            {
+              const msg = {
+                to: "manokarantk@gmail.com",
+                subject: 'Pricing update started',
+                from: 'info@ustimeapp.com',
+                html: "<b>started</>"
+                };
+                sgMail.send(msg);
+            }
             processproduct()
-            ;
+              ;
+            
           }
       }
     }
