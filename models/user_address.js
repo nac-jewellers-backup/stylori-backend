@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
     country_code: DataTypes.STRING,
     contact_number: DataTypes.STRING,
     default_billing: DataTypes.BOOLEAN,
-    default_shipping: DataTypes.BOOLEAN
+    default_shipping: DataTypes.BOOLEAN,
+    is_active: DataTypes.BOOLEAN
   }, {});
   user_address.associate = function(models) {
     // associations can be defined here

@@ -339,13 +339,14 @@ exports.adduseraddress = async (req, res) => {
       default_shipping:false
     }
   }
+    console.log(JSON.stringify(address_obj))
   if(id)
   {
     let branchobj =  await models.user_address.update(address_obj, {returning: true, 
       where : {
         id 
       }})
-      res.send(200,{"message":"updated successfully"})
+      res.send(200,{"message":"updated successfully",branchobj})
 
   }else{
     let response =  await models.user_address.create(
