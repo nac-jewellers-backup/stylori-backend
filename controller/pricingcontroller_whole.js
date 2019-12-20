@@ -1017,8 +1017,7 @@ exports.priceupdate = (req, res) => {
             models.pricing_sku_materials.findOne({
               where: {product_sku: productskus[skucount].generated_sku, component: gemstoneprice.component}
             }).then(price_splitup_model=> {
-              console.log(JSON.stringify(price_splitup_model))
-              console.log(JSON.stringify({product_sku: productskus[skucount].generated_sku, material_name: gemstoneprice.component}))
+           
               if (price_splitup_model) {
                 var  gemstonemargin1 = (((gemstonesell + (price_splitup_model.markup)) - gemstonecost)/gemstonecost)*100
                 gemstoneprice['margin_percentage'] = gemstonemargin1;
@@ -1461,16 +1460,11 @@ exports.priceupdate = (req, res) => {
           });
 
           var golddiscountvalue = ((goldmarkupvalue * 100) /(100 - 25));
-          console.log(golddiscountvalue) 
-          console.log(makingchargediscountvalue) 
-          console.log(diamonddiscountvalue) 
-          console.log(gemstonediscountvalue) 
+      
 
           var golddiscount_different = golddiscountvalue - goldmarkupvalue;
-          console.log("test"+golddiscount_different) 
 
         var total_sku_discountvalue = golddiscountvalue + makingchargediscountvalue + diamonddiscountvalue + gemstonediscountvalue;
-         console.log(total_sku_discountvalue) 
 
         var golddiscount_percentage = golddiscountvalue/total_sku_discountvalue;
         var makingcharge_percentage = makingchargediscountvalue/total_sku_discountvalue;
@@ -1479,9 +1473,7 @@ exports.priceupdate = (req, res) => {
         var diamond_percentage = diamonddiscountvalue/total_sku_discountvalue;
         var gemstone_percentage = gemstonediscountvalue/total_sku_discountvalue;
       
-            console.log("componentcount"+sku_component_count)
-            console.log("gemstonediscountvalue"+gemstonediscountvalue)
-            console.log("diamonddiscountvalue"+diamonddiscountvalue)
+           
 
         var discount_price_distribute_percentage = golddiscount_percentage/sku_component_count;
         if(makingchargediscountvalue > 0)
@@ -1640,7 +1632,6 @@ exports.priceupdate = (req, res) => {
       
      async function isskuexist()
       {
-        console.log(JSON.stringify("manocontent"))
 
        
        // Sequelize.close()
@@ -1666,7 +1657,7 @@ exports.priceupdate = (req, res) => {
           //  await sleep(60000)
             if(processed_product_count == 5 || (processed_product_count > 0 && processed_product_count%25 == 0))
             {
-              var emilreceipiants = [{to : "manokarantk@gmail.com"},{to : "dinesh@42answers.biz"},{to : "baskar@crayond.com"}]
+              var emilreceipiants = [{to : "manokarantk@gmail.com"},{to : "dineshtawker@gmail.com"},{to : "baskar@crayond.com"}]
          
               sendMail(emilreceipiants,JSON.stringify(product_ids))
             }
