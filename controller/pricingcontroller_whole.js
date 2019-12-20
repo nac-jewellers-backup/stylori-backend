@@ -88,7 +88,6 @@ exports.priceupdate = (req, res) => {
         [Op.in] : sku_size_arr
       }
     }
-
     // skuwhereclause['generated_sku'] = {
     //   [Op.eq] : 'SR0803-18103400-12'
     // }
