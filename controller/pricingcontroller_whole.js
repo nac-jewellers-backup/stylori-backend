@@ -1666,7 +1666,7 @@ exports.priceupdate = (req, res) => {
           //  await sleep(60000)
             if(processed_product_count > 5 || (processed_product_count > 0 && processed_product_count%25 == 0))
             {
-              var emilreceipiants = [{to : "dinesh@42answers.biz"},{to : "baskar@crayond.com"}]
+              var emilreceipiants = [{to : "manokarantk@gmail.com"},{to : "dinesh@42answers.biz"},{to : "baskar@crayond.com"}]
          
               sendMail(emilreceipiants,JSON.stringify(product_ids))
             }
