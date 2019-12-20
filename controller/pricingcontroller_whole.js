@@ -1664,7 +1664,7 @@ exports.priceupdate = (req, res) => {
             
             processed_product_count = processed_product_count  + 1;
           //  await sleep(60000)
-            if(processed_product_count > 5 || (processed_product_count > 0 && processed_product_count%25 == 0))
+            if(processed_product_count == 5 || (processed_product_count > 0 && processed_product_count%25 == 0))
             {
               var emilreceipiants = [{to : "manokarantk@gmail.com"},{to : "dinesh@42answers.biz"},{to : "baskar@crayond.com"}]
          
