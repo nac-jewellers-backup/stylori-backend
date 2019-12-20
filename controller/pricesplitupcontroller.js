@@ -7,6 +7,7 @@ const Op= require('sequelize').Op;
 const squelize= require('sequelize');
 const uuidv1 = require('uuid/v1');
 const sgMail = require('@sendgrid/mail');
+var product_id_val = ""
 sgMail.setApiKey('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');
 exports.splitdiamondpriceupdate = (req, res) => {
     var costprice = 0;
@@ -442,6 +443,13 @@ exports.splitmakingchargeupdate = (req, res) => {
                 {
                     diamondpricesetup(product_skus[processed_sku_count])
                 }else{
+                   const msg = {
+                    to: "manokarantk@gmail.com",
+                    subject: 'Pricing update started',
+                    from: 'info@ustimeapp.com',
+                    html: "<b>started</>"
+                    };
+                    sgMail.send(msg);
                     processed_product_count = processed_product_count+1
                     processproduct(processed_product_count)
                 }

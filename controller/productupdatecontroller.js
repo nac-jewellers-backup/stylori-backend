@@ -417,6 +417,7 @@ function updateproduct()
             var materials_arr = materialobj;
             materials_arr.forEach( async metal => {
               
+              console.log("update")
                 let response = await models.product_materials.findOne({
                   where:{
                     material_name: metal.Material,
