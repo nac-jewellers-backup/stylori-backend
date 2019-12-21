@@ -167,7 +167,7 @@ exports.priceupdate = (req, res) => {
       //  }
       // ],
       where: whereclause1,
-      offset: 0
+      offset: 55
     }).then(product=> {
      
       products = product;
@@ -1654,10 +1654,10 @@ exports.priceupdate = (req, res) => {
             console.log(seconds)
             
             processed_product_count = processed_product_count  + 1;
-          //  await sleep(60000)
+            await sleep(60000)
             if(processed_product_count == 5 || (processed_product_count > 0 && processed_product_count%25 == 0))
             {
-              var emilreceipiants = [{to : "manokarantk@gmail.com"},{to : "dineshtawker@gmail.com"},{to : "baskar@crayond.com"}]
+              var emilreceipiants = [{to : "manokarantk@gmail.com"}]
          
               sendMail(emilreceipiants,JSON.stringify(product_ids))
             }
