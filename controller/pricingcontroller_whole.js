@@ -5,6 +5,7 @@ import {sendMail} from "./notify/user_notify"
 const Op= require('sequelize').Op;
 var Sequelize = require('sequelize');
 const uuidv1 = require('uuid/v1');
+
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey('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');
 exports.priceupdate = (req, res) => {
