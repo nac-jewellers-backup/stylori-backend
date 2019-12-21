@@ -24,9 +24,9 @@ exports.priceupdate = (req, res) => {
     const {req_product_id, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
     var whereclause1 = {
       isactive : true,
-      product_id: {
-        [Op.iLike]: '%SR%'
-      }
+      // product_id: {
+      //   [Op.in]: ['SR0348']
+      // }
     }
     console.log(":>>>>>>>>>1212")
    var  startDate = new Date()
@@ -90,7 +90,7 @@ exports.priceupdate = (req, res) => {
       }
     }
     // skuwhereclause['generated_sku'] = {
-    //   [Op.eq] : 'SR0803-18103400-12'
+    //   [Op.eq] : 'SR0348-18110000-14'
     // }
     let diamond_type_arr = []
     if(diamondtypes)
@@ -168,7 +168,7 @@ exports.priceupdate = (req, res) => {
       //  }
       // ],
       where: whereclause1,
-      offset: 55
+      offset: 0
     }).then(product=> {
      
       products = product;
@@ -180,7 +180,7 @@ exports.priceupdate = (req, res) => {
     var start = 0;
     async function processproduct(){
       console.log(">>>><<<<<<>>>>><<<<<<"+processed_product_count)
-      
+
       if(products.length > processed_product_count)
       {
          start = new Date()
@@ -1655,13 +1655,14 @@ exports.priceupdate = (req, res) => {
             console.log(seconds)
             
             processed_product_count = processed_product_count  + 1;
-            await sleep(60000)
-            if(processed_product_count == 5 || (processed_product_count > 0 && processed_product_count%25 == 0))
+            await sleep(10000)
+            if((processed_product_count > 0 && processed_product_count%25 == 0))
             {
-              var emilreceipiants = [{to : "manokarantk@gmail.com"}]
+              var emilreceipiants = [{to : "manokarantk@gmail.com"},{to : "dineshtawker@gmail.com"}]
          
               sendMail(emilreceipiants,JSON.stringify(product_ids))
             }
+            console.log(JSON.stringify(product_ids))
             
             processproduct()
               ;
