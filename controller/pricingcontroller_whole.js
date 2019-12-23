@@ -37,13 +37,10 @@ exports.priceupdate = (req, res) => {
     var whereclause1 = {
       isactive : true,
       product_id: {
-        [Op.notIn]:['SR0505']
-
-      },
-      product_id: {
+        [Op.ne]:'SR0505',
         [Op.iLike]:'%SR%'
-        
       }
+      
     }
     console.log(":>>>>>>>>>1212")
    var  startDate = new Date()
@@ -190,7 +187,7 @@ exports.priceupdate = (req, res) => {
     }).then(product=> {
      
       products = product;
-      console.log(">>>>>>>"+JSON.stringify(products.length))
+      console.log(">>>>>>>"+JSON.stringify(product.length))
    // pricingresult()
    //res.send(200, products[0]);
        processproduct()
