@@ -14,6 +14,10 @@ module.exports = function(app) {
     const master_uploaddata_controller = require('../controller/master_uploaddata_controller.js');
     const pricesplitup_controller = require('../controller/pricesplitupcontroller.js');
     const single_product_pricecontroller = require('../controller/pricingcontroller_whole.js');
+    const component_price_update = require('../controller/priceupdateController.js');
+
+
+	app.post('/componentpriceupdate',component_price_update.priceupdate)
 
 	app.post('/api/auth/signin', authcontroller.signin);
 	app.post('/api/auth/signup', authcontroller.signup);	

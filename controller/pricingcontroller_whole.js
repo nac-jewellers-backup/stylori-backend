@@ -2,14 +2,26 @@
 const models=require('./../models');
 import 'dotenv/config';
 import {sendMail} from "./notify/user_notify"
+import { write } from 'fs';
 const Op= require('sequelize').Op;
 var Sequelize = require('sequelize');
 const uuidv1 = require('uuid/v1');
+var fs = require("fs");
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey('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');
 exports.priceupdate = (req, res) => {
   console.log("test")
+  function writelog(message)
+  {
+    message = message + '\n'
+    fs.appendFile("./price_update.txt", message, (err) => {
+      if (err) console.log(err);
+    //  console.log("Successfully Written to File.");
+     
+    });
+    
+  }
   var skuwhereclause = {}
     var costprice = 0;
     var sellingprice = 0;
@@ -24,9 +36,10 @@ exports.priceupdate = (req, res) => {
     const {req_product_id, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
     var whereclause1 = {
       isactive : true,
-      // product_id: {
-      //   [Op.in]: ['SR0348']
-      // }
+      product_id: {
+        [Op.notIn]:['SR0505']
+
+      }
     }
     console.log(":>>>>>>>>>1212")
    var  startDate = new Date()
@@ -168,7 +181,8 @@ exports.priceupdate = (req, res) => {
       //  }
       // ],
       where: whereclause1,
-      offset: 0
+      offset: 0, 
+      limit: 50
     }).then(product=> {
      
       products = product;
@@ -440,7 +454,8 @@ exports.priceupdate = (req, res) => {
                     costprice_diamond,
                     sellingprice_diamond
                   }
-                  product_gemstone(product_obj.vendor_code, product_obj.product_gemstones)
+                //  isskuexist()
+                 product_gemstone(product_obj.vendor_code, product_obj.product_gemstones)
 
                 }
               }
@@ -719,8 +734,8 @@ exports.priceupdate = (req, res) => {
       var gemstone_component_count = 0
 
       console.log("processlength"+product_obj.trans_sku_lists.length)
-     // updatediamondprice(productobj.vendor_code, productskus[0])
-   updateskuprice()
+      updatediamondprice(productobj.vendor_code, productskus[0])
+  // updateskuprice()
    // updategoldprice(productobj.vendor_code, productskus[0])
    function checkisinclude()
    {
@@ -745,7 +760,8 @@ exports.priceupdate = (req, res) => {
 
     async  function updatediamondprice(vendor_code,productsku)
      {
-      
+      console.log("log diamond update")
+
       var costprice_diamond = 0;
       var sellingprice_diamond = 0;
       var processcount = 0;
@@ -755,12 +771,12 @@ exports.priceupdate = (req, res) => {
         diamond_component_count = product_diamonds.length
         if(product_diamonds.length > 0)
         {
-          sku_component_count++;
+        //  sku_component_count++;
           diamond_process(product_diamonds[0],vendor_code);
         }else
         {
          // checkisinclude()
-         updategemstone_price(product_obj.vendor_code, productsku)
+        updategemstone_price(product_obj.vendor_code, productsku)
 
        }
 
@@ -772,7 +788,8 @@ exports.priceupdate = (req, res) => {
                diamond_clarity: diamondobj.diamond_colour
           }
           
-  
+          writelog("diamondpriceseeting")
+          writelog(JSON.stringify(conditionobj))
           
           models.diamond_price_settings.findOne({
   
@@ -792,9 +809,13 @@ exports.priceupdate = (req, res) => {
   
               processcount++;
             
-            
+              writelog(product_obj.product_id)
+              writelog("diamond cost price")
+              writelog(diamondcost)
+
                var  diamondmargin = ((diamondsellingprice - diamondcost)/diamondcost)*100
-                var diamondprice = {
+              
+               var diamondprice = {
                   component: "diamond"+processcount+"_"+product_obj.product_id,
                   material_name: diamondobj.diamond_clarity+""+diamondobj.diamond_colour,
                   id: uuidv1(),
@@ -811,8 +832,9 @@ exports.priceupdate = (req, res) => {
                   where: {product_sku: productsku.generated_sku, component: diamondprice.component}
                 }).then(price_splitup_model=> {
                   if (price_splitup_model) {
-                    price_splitup_model.update(diamondprice)
-                    .then(updatedmakingchargeprice => {
+                      writelog("diamondexist")
+                      price_splitup_model.update(diamondprice)
+                        .then(updatedmakingchargeprice => {
                       isdiamondexist()
                     })
                     .catch(reason => {
@@ -820,6 +842,7 @@ exports.priceupdate = (req, res) => {
                     });
                   }else{
                     models.pricing_sku_materials.create(diamondprice).then((result) => {
+                      writelog("newdiamond")
                       isdiamondexist()
                     })
                     .catch((error) => {
@@ -829,7 +852,6 @@ exports.priceupdate = (req, res) => {
                 })
               }else{
                 processcount++;
-
                 isdiamondexist()
               }
                 function isdiamondexist()
@@ -842,7 +864,7 @@ exports.priceupdate = (req, res) => {
                   //  updateskuprice() 
                  // updateskuprice()
                    updategemstone_price(product_obj.vendor_code, productsku)
-
+                  //  isskuexist()
   
                   }
                 }
@@ -857,6 +879,8 @@ exports.priceupdate = (req, res) => {
 
     async  function updategemstone_price(vendor_code,productsku)
       {
+        console.log("log gemstone update")
+
         var  gemstonemargin = 0;
         var  gemstonecost = 0;
         var  gemstonesell = 0;
@@ -959,26 +983,7 @@ exports.priceupdate = (req, res) => {
                   }
                 }
     
-           /* if(gemstonecharge.selling_price_type == 3)
-            {
-               gemstonecost = gemstonecharge.cost_price;
-               gemstonesell = gemstonecharge.selling_price;
-              gemstone_costprice = gemstone_costprice +  ( gemstoneobj.stone_count * gemstonecharge.cost_price);
-              gemstone_sellingprice = gemstone_sellingprice + ( gemstoneobj.stone_count * gemstonecharge.selling_price);
-    
-            }else{
-               gemstonecost = gemstonecharge.cost_price;
-               gemstonesell = gemstonecharge.selling_price;
-              gemstone_costprice = gemstone_costprice + gemstonecharge.cost_price;
-              gemstone_sellingprice = gemstone_sellingprice + gemstonecharge.selling_price;
-    
-            }
-            let gemstonemarkup = await materialmarkupval('Gem Stone',gemstonesell)
-            gemstonesell = calculatesellingmarkup(gemstonemarkup, gemstonesell)
-            */
-            // let gemstonediscount =  await materialdiscountval('Gem Stone',gemstonesell)  
-            // gemstonesell = calculatediscountmarkup(gemstonediscount, gemstonesell)
-            var gemstone_whereclause ={
+                var gemstone_whereclause ={
                 material_name : 'gemstone'
             }
             gemstone_whereclause['price_min'] = { [Op.lte]: gemstonesell }
@@ -1001,7 +1006,6 @@ exports.priceupdate = (req, res) => {
             pricesplitup.push(gemstoneobj);
 
 
-
     
             var gemstoneprice ={
               component: 'gemstone'+gemstone_count,
@@ -1012,11 +1016,11 @@ exports.priceupdate = (req, res) => {
               selling_price:gemstonesell,
               markup:gemstonesell,
               discount_price:gemstonesell,
-              product_sku: productskus[skucount].generated_sku,
+              product_sku: productsku.generated_sku,
               product_id: product_obj.product_id
             }  
             models.pricing_sku_materials.findOne({
-              where: {product_sku: productskus[skucount].generated_sku, component: gemstoneprice.component}
+              where: {product_sku: productsku.generated_sku, component: gemstoneprice.component}
             }).then(price_splitup_model=> {
            
               if (price_splitup_model) {
@@ -1065,6 +1069,7 @@ exports.priceupdate = (req, res) => {
       function updategoldprice(vendorcode, skuobj )
     {
 
+      console.log("log gold update")
 
         var purityval = skuobj.purity;
         
@@ -1178,18 +1183,20 @@ exports.priceupdate = (req, res) => {
       {
         var mkcostprice = 0;
         var mksellingprice = 0;
-        var skupurity = productskus[skucount].purity;
+        let skuobj = product_obj.trans_sku_lists[skucount]
 
+        var skupurity = skuobj.purity;
+        console.log("log mkcharge update")
           models.making_charge_settings.findAll({
               where: {
                 vendor_code: vendorcode,
                 purity: parseInt(skupurity.replace('K','')),
                 material: 'Gold',
                 weight_start:{
-                  [Op.lte]: productskus[skucount].sku_weight
+                  [Op.lte]: skuobj.sku_weight
                 },
                 weight_end:{
-                  [Op.gte]: productskus[skucount].sku_weight
+                  [Op.gte]: skuobj.sku_weight
                 }
                
               }
@@ -1206,7 +1213,7 @@ exports.priceupdate = (req, res) => {
       
                     }else 
                     {
-                      mkcostprice =   (productskus[skucount].sku_weight * makingcharge_obj.price)
+                      mkcostprice =   (skuobj.sku_weight * makingcharge_obj.price)
                     }
                 }
 
@@ -1231,7 +1238,7 @@ exports.priceupdate = (req, res) => {
                     {
                       mksellingprice =   makingcharge_obj.price
                     }else{
-                      mksellingprice =    (productskus[skucount].sku_weight * makingcharge_obj.price)
+                      mksellingprice =    (skuobj.sku_weight * makingcharge_obj.price)
       
                     }
                   }
@@ -1259,42 +1266,56 @@ exports.priceupdate = (req, res) => {
                 markup:mksellingprice,
                 discount_price: mksellingprice,
                 margin_percentage: makingmargin,
-                product_sku: productskus[skucount].generated_sku
+                product_sku: skuobj.generated_sku
               }  
+              
               models.pricing_sku_metals.findOne({
-                where: {product_sku: productskus[skucount].generated_sku, material_name: 'makingcharge'}
+                where: {product_sku: skuobj.generated_sku, material_name: 'makingcharge'}
               }).then(price_splitup_model=> {
                 if (price_splitup_model) {
                   price_splitup_model.update(makingprice)
                   .then(async updatedmakingchargeprice => {
-                   
-                   // isskuexist()
-                     updateskuprice();
+                   console.log("log1")
+                      // if(product_obj.trans_sku_lists.length > skucount)
+                      // {
+                      //   isskuexist()
+
+                      // }else{
+                      //   processproduct()
+                      // }
+                     isskuexist()
+                    // updateskuprice();
                   })
                   .catch(reason => {
                          //  res.send(200,{"message":reason.message,price_splitup_model});
-                     //    isskuexist()
-                    updateskuprice();
+                         console.log("log2")
+
+                         isskuexist()
+                    //updateskuprice();
                   });
                 }else{
                   models.pricing_sku_metals.create(makingprice).then(async (result) => {
-                   
-                  //  isskuexist()
+                    console.log("log3")
+
+                    isskuexist()
                     // gemstonesell = calculatesellingmarkup(gemstonemarkup, gemstonesell)
-                   updateskuprice();
+                  // updateskuprice();
                     
 
                   })
                   .catch((error) => {
-                    
-                   // isskuexist()
-                    updateskuprice();
+                    console.log("log4")
+                    isskuexist()
+                  //  updateskuprice();
                   });
                 }
               })
             }else{
-              updateskuprice()
+              console.log("log5")
+
+              isskuexist()
             }
+            
           });
       }
       function getmaterialmarkupsum(skuvalue)
@@ -1612,7 +1633,7 @@ exports.priceupdate = (req, res) => {
               models.trans_sku_lists.update(transskuobj,{
               where: {generated_sku: productskus[skucount].generated_sku}
               }).then(price_splitup_model=> {
-                isskuexist()
+               // isskuexist()
               
             }).catch(reason => {
               console.log(reason)
@@ -1631,31 +1652,33 @@ exports.priceupdate = (req, res) => {
         return new Promise(resolve => setTimeout(resolve, millis));
       }
       
-     async function isskuexist()
+    async function isskuexist()
       {
 
        
        // Sequelize.close()
           skucount = skucount + 1;
           console.log("processsku"+skucount)
+          console.log("processsku"+product_obj.trans_sku_lists.length)
+
           if(product_obj.trans_sku_lists.length > skucount)
           {
 
-            updateskuprice()
-           // Sequelize = require('sequelize')
+          //  updateskuprice()
+          // Sequelize = require('sequelize')
 
-            //  updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
+             updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
 
           }else{
-
-            console.log("i am here1")
+            //skucount = 0
+            console.log("i am here12")
             var endDate   = new Date();
             var seconds = (endDate.getTime() - startDate.getTime()) / 1000;
             startDate = new Date()
-            console.log(seconds)
+            console.log("prcesstime"+seconds)
             
             processed_product_count = processed_product_count  + 1;
-            await sleep(10000)
+            
             if((processed_product_count > 0 && processed_product_count%25 == 0))
             {
               var emilreceipiants = [{to : "manokarantk@gmail.com"},{to : "dineshtawker@gmail.com"}]
@@ -1663,7 +1686,7 @@ exports.priceupdate = (req, res) => {
               sendMail(emilreceipiants,JSON.stringify(product_ids))
             }
             console.log(JSON.stringify(product_ids))
-            
+            await sleep(10000)
             processproduct()
               ;
             
