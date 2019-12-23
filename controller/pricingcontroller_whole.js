@@ -39,6 +39,10 @@ exports.priceupdate = (req, res) => {
       product_id: {
         [Op.notIn]:['SR0505']
 
+      },
+      product_id: {
+        [Op.iLike]:'%SR%'
+        
       }
     }
     console.log(":>>>>>>>>>1212")
