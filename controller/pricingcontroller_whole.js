@@ -37,10 +37,11 @@ exports.priceupdate = (req, res) => {
     var whereclause1 = {
       isactive : true,
       product_id: {
-        [Op.ne]:'SR0505',
         [Op.iLike]:'%SR%'
       }
-      
+      // product_id: {
+      //   [Op.eq]:'SR0458'
+      // }
     }
     console.log(":>>>>>>>>>1212")
    var  startDate = new Date()
@@ -104,7 +105,10 @@ exports.priceupdate = (req, res) => {
       }
     }
     // skuwhereclause['generated_sku'] = {
-    //   [Op.eq] : 'SR0348-18110000-14'
+    //   [Op.eq] : 'SR0458-18113200-18'
+    // }
+    // skuwhereclause['is_active'] = {
+    //   [Op.eq] : true
     // }
     let diamond_type_arr = []
     if(diamondtypes)
@@ -182,9 +186,8 @@ exports.priceupdate = (req, res) => {
       //  }
       // ],
       where: whereclause1,
-      offset: 0, 
-      limit: 50
-    }).then(product=> {
+      offset: 25
+        }).then(product=> {
      
       products = product;
       console.log(">>>>>>>"+JSON.stringify(product.length))
@@ -221,6 +224,7 @@ exports.priceupdate = (req, res) => {
          
           ],
           where: {
+           
             product_id: currentproduct.product_id
           }
         })
@@ -776,7 +780,7 @@ exports.priceupdate = (req, res) => {
           diamond_process(product_diamonds[0],vendor_code);
         }else
         {
-         // checkisinclude()
+        
         updategemstone_price(product_obj.vendor_code, productsku)
 
        }
@@ -900,7 +904,7 @@ exports.priceupdate = (req, res) => {
         }else
         {
           //checkisinclude()
-          
+         // isskuexist()
           updategoldprice(product_obj.vendor_code, productsku)
 
         } 
@@ -1025,16 +1029,23 @@ exports.priceupdate = (req, res) => {
             }).then(price_splitup_model=> {
            
               if (price_splitup_model) {
+                console.log("i am model data")
+
                 var  gemstonemargin1 = (((gemstonesell + (price_splitup_model.markup)) - gemstonecost)/gemstonecost)*100
                 gemstoneprice['margin_percentage'] = gemstonemargin1;
                 price_splitup_model.update(gemstoneprice)
                 .then(updatedmakingchargeprice => {
+                  console.log("i am here")
                   isgemstoneexist()
                 })
                 .catch(reason => {
+                  console.log("i am here for error")
+
                   isgemstoneexist()
                 });
               }else{
+                console.log("i am non model data")
+
                 models.pricing_sku_materials.create(gemstoneprice).then((result) => {
                   isgemstoneexist()
                 })
@@ -1043,18 +1054,21 @@ exports.priceupdate = (req, res) => {
                   isgemstoneexist()
                 });
               }
-              isgemstoneexist()
+             // isgemstoneexist()
             })
           })
         function isgemstoneexist()
         {
-  
+          console.log("gem count")
+          console.log(gemstone_count)
+          console.log(product_gemstones.length)
             if(product_gemstones.length > gemstone_count)
             {
               gemstone_process(product_gemstones[gemstone_count],product_obj.vendor_code)
             }else{
-                  //  checkisinclude();
-                  updategoldprice(product_obj.vendor_code, productsku)
+              // isskuexist()  
+              //  checkisinclude();
+               updategoldprice(product_obj.vendor_code, productsku)
             }
         }
         
