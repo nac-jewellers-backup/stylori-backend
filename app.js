@@ -3,6 +3,8 @@ import cors from 'cors';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import {postgraphile, makePluginHook} from 'postgraphile';
+const { makeExtendSchemaPlugin, gql } = require("graphile-utils");
+
 const dotenv = require('dotenv');
 dotenv.config();
 const env = process.env.NODE_ENV || 'staging';
@@ -16,6 +18,9 @@ app.use(express.urlencoded({limit: '50mb'}));
 //   res.header("Access-Control-Allow-Origin", "*");
 //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 //   next();
+// });
+// const Myusers = makeExtendSchemaPlugin(build => {
+//   const { pgSql: sql } = build;
 // });
 
  app.use(function (req, res, next) {
