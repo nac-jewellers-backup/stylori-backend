@@ -12,29 +12,30 @@ exports.priceupdate = (req, res) => {
   function writelog(message)
   {
     message = message + '\n'
-    fs.appendFile("./price_update.txt", message, (err) => {
-      if (err) console.log(err);
-    //  console.log("Successfully Written to File.");
+    // fs.appendFile("./price_update.txt", message, (err) => {
+    //   if (err) console.log(err);
+    // //  console.log("Successfully Written to File.");
      
-    });
+    // });
     
   }
 
     var products = []
     var product_ids = []
     var product_obj = {}
+    var pricing_comp = []
     var processed_product_count = 0;
     const {req_product_id, vendorcode,category,product_type,metalpurity,pricingcomponent,purity,sizes,diamondtypes} = req.body
     /******* whereclause to filter  product */
     var product_whereclause = {
         isactive : true,
-        // product_id : {
-        //     [Op.iLike]:'%SR%'
-        // }
-        product_id: {
-          [Op.in]:['SR0505']
-  
+        product_id : {
+            [Op.iLike]:'%SR%'
         }
+        // product_id: {
+        //   [Op.in]:['SR0505']
+  
+        // }
       }
     /******* whereclause to filter  skus */
     var skuwhereclause = {}
@@ -139,9 +140,8 @@ exports.priceupdate = (req, res) => {
     /************query to find all product list to run price update */
     models.product_lists.findAll({
         where: product_whereclause,
-        offset: 0,
-        limit : 25
-      }).then(product=> {
+        offset: 0
+            }).then(product=> {
        console.log("total product ------- "+ product.length)
        writelog("total product ------- "+ product.length) 
        products = product;
