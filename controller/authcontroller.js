@@ -6,6 +6,7 @@ import 'dotenv/config';
 const Op= require('sequelize').Op;
 const uuidv1 = require('uuid/v1');
 const emailTemp = require('./notify/Emailtemplate');
+import {sendMail} from "./notify/user_notify"
 
 exports.signin = (req, res) => {
  

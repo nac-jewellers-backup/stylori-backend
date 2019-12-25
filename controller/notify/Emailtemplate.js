@@ -6,7 +6,7 @@ const getName = (username) => {
     </head>
     <body>
         <p>
-            <span >"${'Welcome ' + username}</span>
+            <span >${'Welcome ' + username}</span>
         </p>
         <br />
         <ul style="width: 600px; list-style-type: none; list-style: none;padding-left: 0px;">

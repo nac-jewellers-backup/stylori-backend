@@ -30,7 +30,7 @@ exports.priceupdate = (req, res) => {
     var product_whereclause = {
         isactive : true,
         product_id : {
-            [Op.iLike]:'%SR%'
+            [Op.iLike]:'%SR0985%'
         }
         // product_id: {
         //   [Op.in]:['SR0505']
@@ -140,7 +140,7 @@ exports.priceupdate = (req, res) => {
     /************query to find all product list to run price update */
     models.product_lists.findAll({
         where: product_whereclause,
-        offset: 360
+        
             }).then(product=> {
        console.log("total product ------- "+ product.length)
        writelog("total product ------- "+ product.length) 
