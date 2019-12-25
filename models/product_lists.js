@@ -55,13 +55,13 @@ module.exports = (sequelize, DataTypes) => {
     
     models.product_lists.hasMany(models.product_diamonds,{
       foreignKey: 'product_sku',
-      targetKey: 'product_id'
+      targetKey: 'product_id',
+      as : 'productDiamondsByProductSku'
     });
 
     models.product_lists.hasMany(models.product_diamonds,{
       foreignKey: 'product_sku',
       targetKey: 'product_id',
-      as : 'productDiamondsByProductSku'
     });
     models.product_lists.hasMany(models.product_gemstones,{
       foreignKey: 'product_sku',

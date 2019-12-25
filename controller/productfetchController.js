@@ -10,13 +10,15 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material,product_category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability} = req.body
+const {material,product_category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability,sortBy} = req.body
 var product_list = [];
 var whereclause = {
   isactive: true
 };
+var sortelement = []
 var skuwhereclause = {}
 var includeclause = [];
+skuwhereclause['isdefault']  = true
 // var seofilterattribute = []
 // var seofilterattributevalue = []
 //   seofilterattribute.push('Category')
@@ -27,9 +29,39 @@ var includeclause = [];
       product_category : product_category
     }
   }
+  if(sortBy)
+  {
+    if(sortBy === 'Featured')
+    {
+      sortelement['order']  = [
+        ['is_featured', 'ASC'],
+    ]
+    }
+    if(sortBy === 'New To Stylori')
+    {
+      sortelement['order']  = [
+        ['createdAt', 'DESC'],
+    ]
+    }
+    if(sortBy === 'Ready To Ship')
+    {
+      sortelement['order']  = [
+        ['$trans_sku_lists.is_ready_to_ship$', 'DESC' ]
+    ]
 
+
+    }
+
+    console.log("updatedatavalue")
+    console.log(JSON.stringify(sortBy))
+
+    console.log(JSON.stringify(sortelement))
+
+  }
   if(metalcolor)
   {
+    console.log("metal colur image")
+    console.log(JSON.stringify(metalcolor))
     skuwhereclause['metal_color'] = metalcolor
   }
 //   if(availability)
@@ -87,11 +119,14 @@ if(collection)
 if(occasion)
 {
 
-  whereclause['$product_occassions.occassion_name$'] = {
-    [Op.eq]:occasion
-    }
+  // whereclause['$product_occassions.occassion_name$'] = {
+  //   [Op.eq]:occasion
+  //   }
     includeclause.push({
-      model : models.product_occassions
+      model : models.product_occassions,
+      where: {
+        occassion_name : occasion
+      }
      })
 }
 
@@ -99,11 +134,14 @@ if(stoneshape)
 {
  
   
-  whereclause['$product_gemstones.gemstone_shape$'] = {
-    [Op.eq]:stoneshape
-    }
+  // whereclause['$product_gemstones.gemstone_shape$'] = {
+  //   [Op.eq]:stoneshape
+  //   }
     includeclause.push({
-      model : models.product_gemstones
+      model : models.product_gemstones,
+      where:{
+        gemstone_shape : stoneshape
+      }
      })
 }
 if(style)
@@ -136,24 +174,30 @@ if(theme)
 if(stonecolor)
 {
 
-  whereclause['$product_stonecolors.stonecolor$'] = {
-    [Op.eq]:stonecolor
-    }
+  // whereclause['$product_stonecolors.stonecolor$'] = {
+  //   [Op.eq]:stonecolor
+  //   }
     includeclause.push({
-           model : models.product_stonecolor
+           model : models.product_stonecolor,
+           where:{
+            stonecolor : stonecolor
+           }
     })
 }
 
  if(noofstones)
  {
-     seofilterattribute.push('No Of Stones')
-   seofilterattributevalue.push(noofstones)
+   //  seofilterattribute.push('No Of Stones')
+  // seofilterattributevalue.push(noofstones)
   // whereclause['$product_stonecount.stonecount$'] = {
   //   [Op.eq]:noofstones
   //   }
-  //   includeclause.push({
-  //          model : models.product_stonecount
-  //   })
+    includeclause.push({
+           model : models.product_stonecount,
+           where: {
+            stonecount: noofstones
+           }
+    })
  }
 if(producttype)
 {
@@ -182,6 +226,7 @@ if(metalpurity)
     //        model : models.product_purities,
     //        attributes: ['purity']
     // })
+    skuwhereclause = {}
     skuwhereclause['purity'] = metalpurity
     console.log(JSON.stringify(includeclause))
     whereclause['$product_purities.purity$']
@@ -190,18 +235,20 @@ if(metalpurity)
 if(gender)
 {
 
-  whereclause['$product_genders.gender_name$'] = {
-    [Op.eq]:gender
-    }
+  // whereclause['$product_genders.gender_name$'] = {
+  //   [Op.eq]:gender
+  //   }
     includeclause.push({
-           model : models.product_gender
+           model : models.product_gender,
+           where:{
+            gender_name : gender
+           }
     })
 
 }
 
 includeclause.push({
   model : models.trans_sku_lists,
-  as: 'transSkuListsByProductId',
   attributes:[
     ['sku_size','skuSize'],
     'purity',
@@ -262,9 +309,17 @@ includeclause.push({
       })
  }
 console.log(JSON.stringify(includeclause))
-// var total_count = await models.product_lists.findOne({
-//   attributes: [ [sequelize.fn('count', sequelize.col('product_id')), 'count']],
-  
+// var products = await models.product_lists.findAll({
+//   attributes:['product_id'],
+//   include:[
+//     {
+//       model : models.trans_sku_lists,
+//       attributes: ['selling_price']
+//     }
+//   ] , 
+//   order: [
+//     [{ model: models.trans_sku_lists },  'selling_price', 'desc']
+//   ],
 //   where:{
 //     isactive : true
 //   }
@@ -281,8 +336,9 @@ var products = await models.product_lists.findAll ({
     ],
     include:includeclause,
     where:whereclause,
-
-    limit : 24
+    order: [
+      [{ model: models.trans_sku_lists },  'selling_price', 'desc']
+  ]
   })
 
 
