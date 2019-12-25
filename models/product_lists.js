@@ -53,7 +53,10 @@ module.exports = (sequelize, DataTypes) => {
       as : 'productMaterialsByProductSku'
     });
     
-
+    models.product_lists.hasMany(models.product_diamonds,{
+      foreignKey: 'product_sku',
+      targetKey: 'product_id'
+    });
 
     models.product_lists.hasMany(models.product_diamonds,{
       foreignKey: 'product_sku',
