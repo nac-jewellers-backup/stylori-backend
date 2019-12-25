@@ -106,11 +106,14 @@ exports.signup = (req, res) => {
               }
 
             )
+            var token = jwt.sign({ id: user.email }, process.env.SECRET, {
+              expiresIn: '1d' // expires in 24 hours
+            });
             var emilreceipiants = [{to : email,subject:"You have successfully registered!"},{to : "dineshtawker@gmail.com"}]
          
             sendMail(emilreceipiants,emailTemp.getName(username))
 
-          res.send(200,{user,user_profile_id: user_profile.id});
+          res.send(200,{accessToken: token,user,user_profile_id: user_profile.id});
 
         }
 
