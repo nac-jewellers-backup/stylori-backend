@@ -13,6 +13,7 @@ exports.filteroptions = async (req, res) => {
 const {material,product_category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability} = req.body
 var product_list = [];
 var whereclause = {};
+var skuwhereclause = {}
 var includeclause = [];
 // var seofilterattribute = []
 // var seofilterattributevalue = []
@@ -59,56 +60,6 @@ var includeclause = [];
 //           [Op.eq]:style
 //           },
 
-includeclause.push({
-  model : models.trans_sku_lists,
-  as: 'transSkuListsByProductId',
-  attributes:[
-    ['sku_size','skuSize'],
-    'purity',
-    ['diamond_type','diamondType'],
-    ['metal_color','metalColor'],
-    ['markup_price','markupPrice'],
-    ['selling_price','sellingPrice'],
-    ['discount_price','discountPrice'],
-    ['generated_sku','generatedSku'],
-    ['is_ready_to_ship','isReadyToShip'],
-    ['vendor_delivery_time','vendorDeliveryTime']],
-    where:{
-      isdefault : true
-    }
- })
- includeclause.push({
-  model : models.product_diamonds,
-  as : 'productDiamondsByProductSku',
-  attributes : [
-                ['diamond_clarity','diamondClarity'],
-                ['diamond_colour','diamondColour'],
-                ['diamond_type','diamondType'],
-                ['stone_weight','stoneWeight'],
-                ['diamond_shape','diamond_Shape'],
-                ['diamond_settings','diamond_Settings'],
-                ['stone_count','stone_Count']
-                ]
- })
- includeclause.push({
-  model : models.product_images,
-  as : 'productImagesByProductId',
-  attributes : [
-                ['ishover','ishover'],
-                ['image_url','imageUrl'],
-                ['image_position','imagePosition'],
-                ['isdefault','isdefault']
-                ]
- })
-
- includeclause.push({
-  model : models.product_materials,
-  as : 'productMaterialsByProductSku',
-  attributes : [
-                ['material_name','materialName']
-               
-                ]
- })
 
  
 if(material)
@@ -224,6 +175,7 @@ if(metalpurity)
     //        model : models.product_purities,
     //        attributes: ['purity']
     // })
+    skuwhereclause['purity'] = metalpurity
     console.log(JSON.stringify(includeclause))
     whereclause['$product_purities.purity$']
 }
@@ -239,6 +191,56 @@ if(gender)
     })
 
 }
+
+includeclause.push({
+  model : models.trans_sku_lists,
+  as: 'transSkuListsByProductId',
+  attributes:[
+    ['sku_size','skuSize'],
+    'purity',
+    ['diamond_type','diamondType'],
+    ['metal_color','metalColor'],
+    ['markup_price','markupPrice'],
+    ['selling_price','sellingPrice'],
+    ['discount_price','discountPrice'],
+    ['generated_sku','generatedSku'],
+    ['is_ready_to_ship','isReadyToShip'],
+    ['vendor_delivery_time','vendorDeliveryTime']],
+    where:skuwhereclause
+ })
+ includeclause.push({
+  model : models.product_diamonds,
+  as : 'productDiamondsByProductSku',
+  attributes : [
+                ['diamond_clarity','diamondClarity'],
+                ['diamond_colour','diamondColour'],
+                ['diamond_type','diamondType'],
+                ['stone_weight','stoneWeight'],
+                ['diamond_shape','diamond_Shape'],
+                ['diamond_settings','diamond_Settings'],
+                ['stone_count','stone_Count']
+                ]
+ })
+ includeclause.push({
+  model : models.product_images,
+  as : 'productImagesByProductId',
+  attributes : [
+                ['ishover','ishover'],
+                ['image_url','imageUrl'],
+                ['image_position','imagePosition'],
+                ['isdefault','isdefault']
+                ]
+ })
+
+ includeclause.push({
+  model : models.product_materials,
+  as : 'productMaterialsByProductSku',
+  attributes : [
+                ['material_name','materialName']
+               
+                ]
+ })
+
 console.log(JSON.stringify(includeclause))
 var total_count = await models.product_lists.findOne({
   attributes: [ [sequelize.fn('count', sequelize.col('product_id')), 'count']],
