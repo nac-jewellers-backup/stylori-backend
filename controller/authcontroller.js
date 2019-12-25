@@ -218,6 +218,9 @@ exports.forgotpassword = (req, res) => {
                             tokentype: 2,
                             token: crypto({length: 16})
                           }).then((result) => {
+                            var emilreceipiants = [{to : user.email,subject:"Reset password request"}]
+         
+                            sendMail(emilreceipiants,emailTemp.forgotpasswordTemp(user.email,username,user.email, result.token))
                            // sendVerificationEmail(user.email, result.token);
                             return res.status(200).json('Reset Password link sent to your registered Email Id'+result.token);
                           })

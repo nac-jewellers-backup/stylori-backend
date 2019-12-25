@@ -12,18 +12,21 @@ exports.filteroptions = async (req, res) => {
 
 const {material,product_category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability} = req.body
 var product_list = [];
-var whereclause = {};
+var whereclause = {
+  isactive: true
+};
 var skuwhereclause = {}
 var includeclause = [];
 // var seofilterattribute = []
 // var seofilterattributevalue = []
 //   seofilterattribute.push('Category')
 //   seofilterattributevalue.push(product_category)
-//   if(product_category)
-//   {
-//   seofilterattribute.push('Category')
-//   seofilterattributevalue.push(product_category)
-//   }
+  if(product_category)
+  {
+    whereclause = {
+      product_category : product_category
+    }
+  }
 //   if(availability)
 //   {
 //     seofilterattribute.push('Availability')
@@ -62,25 +65,18 @@ var includeclause = [];
 
 
  
-if(material)
-{         
- 
 
-  whereclause['$product_materials.material_name$'] = {
-    [Op.eq]:material
-    }
-    includeclause.push({
-      model : models.product_materials
-     })
-}
 if(collection)
 {
 
-  whereclause['$product_collections.collection_name$'] = {
-    [Op.eq]:collection
-    }
+  // whereclause['$product_collections.collection_name$'] = {
+  //   [Op.eq]:collection
+  //   }
     includeclause.push({
-      model : models.product_collections
+      model : models.product_collections,
+      where: {
+        collection_name : collection
+      }
      })
 }
 if(occasion)
@@ -107,22 +103,28 @@ if(stoneshape)
 }
 if(style)
 {
- 
-  whereclause['$product_styles.style_name$'] = {
-    [Op.eq]:style
+  includeclause.push({
+    model : models.product_styles,
+    where:{
+      style_name: style
     }
-    includeclause.push({
-      model : models.product_styles
-     })
+   })
+  // whereclause['$product_styles.style_name$'] = {
+  //   [Op.eq]:style
+  //   }
+    
 }
 if(theme)
 {
 
-  whereclause['$product_themes.theme_name$'] = {
-    [Op.eq]:theme
-    }
+  // whereclause['$product_themes.theme_name$'] = {
+  //   [Op.eq]:theme
+  //   }
     includeclause.push({
-           model : models.product_themes
+           model : models.product_themes,
+           where:{
+            theme_name : theme
+           }
     })
 }
 
@@ -240,16 +242,29 @@ includeclause.push({
                
                 ]
  })
-
-console.log(JSON.stringify(includeclause))
-var total_count = await models.product_lists.findOne({
-  attributes: [ [sequelize.fn('count', sequelize.col('product_id')), 'count']],
+ if(material)
+ {         
   
-  where:{
-    isactive : true
-  }
+ 
+  //  whereclause['$product_materials.material_name$'] = {
+  //    [Op.eq]:material
+  //    }
+     includeclause.push({
+       model : models.product_materials,
+       where: {
+        material_name: material
+       }
+      })
+ }
+console.log(JSON.stringify(includeclause))
+// var total_count = await models.product_lists.findOne({
+//   attributes: [ [sequelize.fn('count', sequelize.col('product_id')), 'count']],
+  
+//   where:{
+//     isactive : true
+//   }
 
-})
+// })
 
 
 var products = await models.product_lists.findAll ({
@@ -260,15 +275,13 @@ var products = await models.product_lists.findAll ({
     ['product_type','productType']
     ],
     include:includeclause,
-    where:{
-      isactive : true
-    },
+    where:whereclause,
 
     limit : 24
   })
 
 
 
-    res.send(200,{'data':{'totalCount':total_count,'allProductLists':products}}
+    res.send(200,{'data':{'totalCount':200,'allProductLists':products}}
               )
 }

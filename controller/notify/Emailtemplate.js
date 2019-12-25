@@ -99,4 +99,66 @@ const getName = (username) => {
     </html>`;
   };
 
-  exports.getName = getName;
+  const forgotpasswordTemp = (username,email,token) => {
+    return  `<!doctype html>
+    <html>
+    <head>
+    
+    <title>Regiter authentication</title>
+    </head>
+    
+    <body>
+    <div style="width:600px;background:#fff;">
+    <table style="width:600px">
+        <thead>
+            <img src="https://assets-cdn.stylori.com/images/emailTemplate/cash-on-deli-hdr.jpg" />
+        </thead>
+        <tbody>
+            <tr>
+                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: bold;color: rgba(88,89,91,1.00);margin:25px 0px;">
+                <h5>Hello <span >Hello ${username},</span></h5>
+                </p>
+            </tr>
+            <tr>
+                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00); line-height:1.6;float:left;">We received a request to reset the password associated with this 
+                        e-mail address. If you made this request, please follow the instructions below.</p>
+            </tr>
+            
+            <tr>
+                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);line-height:1.6;">
+                Click on the link below to reset your password using our secure server:</p>
+            </tr>
+            <tr>
+                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: #ed1164;">
+                    <span style="color: #ed1164;text-decoration:none;">${token}</span>
+                </p>
+            </tr>
+            <tr>
+                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);line-height:1.6;">If you did not request to have your password reset you can safely ignore this email.</p>
+            </tr>
+            <tr>
+                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);line-height:1.6;">If clicking the link does not seem to work, you can copy and paste the link into your browser's address window, or retype it there. Once you have returned to Stylori, we will give instructions for resetting your password.</p>
+            </tr>
+            <tr>
+                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 11px;font-weight: 400;color: rgba(88,89,91,1.00);line-height:1.6;float: left;margin-bottom: 20px;">Stylori  will never e-mail you and ask you to disclose or verify your Stylori password, credit card, or banking account number. If you receive a suspicious e-mail with a link to update your account information, do not click on the link--instead, report the e-mail to Stylori for investigation. Greetings from Stylori.com</p>
+            </tr>
+           
+        </tbody>
+    
+    </table>
+     <div style="position: relative;min-height: 1px;padding-right: 15px;padding-left: 15px;width: 100%;background: rgba(215,221,249,1.00);padding: 10px 0px 20px 0px;">
+                <p style="padding: 0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);width: 45%;float: left;margin: 0;">Customer Care: 1800-102-0330</p>
+                <p style="padding: 0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);width: 24%;float: left;margin: 0;padding-left:0;position: relative;left: 130px;">
+                Contact: hello@stylori.com</p>
+            </div>
+    </div>
+    
+    
+    </body>
+    </html>
+    `;
+  };
+  const emailTemplate = {};
+  emailTemplate.getName = getName;
+  emailTemplate.forgotpasswordTemp = forgotpasswordTemp;
+module.exports = emailTemplate
