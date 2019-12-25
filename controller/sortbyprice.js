@@ -6,28 +6,17 @@ const {
   const MySchemaExtensionPlugin =
   makeExtendSchemaPlugin(build => ({
     typeDefs: gql`
-      type Random {
-        float: Float!
-        number(min: Int!, max: Int!): Int!
-      }
-      extend type Query {
-        random: Random
-      }
+    extend type Query {
+      allUsers : String
+    }
     `,
     resolvers: {
       Query: {
-        random() {
-          return {};
+        allUsers() {
+          return "mano"
         },
       },
-      Random: {
-        float() {
-          return Math.random();
-        },
-        number(_parent, { min, max }) {
-          return min + Math.floor(Math.random() * (max - min + 1));
-        },
-      },
+      
     },
   }));
 

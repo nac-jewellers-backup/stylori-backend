@@ -15,6 +15,7 @@ module.exports = function(app) {
     const pricesplitup_controller = require('../controller/pricesplitupcontroller.js');
     const single_product_pricecontroller = require('../controller/pricingcontroller_whole.js');
     const component_price_update = require('../controller/priceupdateController.js');
+    const productFetchController = require('../controller/productfetchController.js');
 
 
 	app.post('/componentpriceupdate',component_price_update.priceupdate)
@@ -65,6 +66,7 @@ module.exports = function(app) {
 	app.post('/uploadimage', cartcontroller.uploadimage);
 	app.post('/filterlist', filtercontroller.filteroptions);
 	app.post('/getsizes', cartcontroller.getsizes);
+	app.post('/fetchproducts', productFetchController.filteroptions);
 
 	
 	app.post('/updatebestseller', master_uploaddata_controller.updatebestseller);

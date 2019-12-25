@@ -16,7 +16,7 @@ const sendMail = async (mails,bodycontent) => {
             Promise.all(mails.map(async (mail) => {
                 var ses_mail = "From:manokarantk@gmail.com\n";
                 ses_mail = ses_mail + "To: " + mail.to + "\n";
-                ses_mail = ses_mail + "Subject: price updated  \n";
+                ses_mail = ses_mail + "Subject: "+mail.subject+"  \n";
                 ses_mail = ses_mail + "MIME-Version: 1.0\n";
                 ses_mail = ses_mail + "Content-Type: multipart/mixed; boundary=\"NextPart\"\n\n";
                 ses_mail = ses_mail + "--NextPart\n";

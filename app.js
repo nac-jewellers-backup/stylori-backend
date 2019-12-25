@@ -4,7 +4,8 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import {postgraphile, makePluginHook} from 'postgraphile';
 //import Myusers from '../controller/sortbyprice.js';
-//const MySchemaExtensionPlugin = require('./controller/sortbyprice.js');
+const MySchemaExtensionPlugin = require('./controller/sortbyprice.js');
+const user = require('./controller/notify/Emailtemplate');
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -47,7 +48,7 @@ app.use(express.urlencoded({limit: '50mb'}));
 // });
 
 app.get('/', (req, res) => {
-  res.send('NAC Auth running');
+  res.send('NAC Auth running'+user.getName("mano"));
 });
 app.use(cors())
 app.use(express.json());
@@ -81,13 +82,12 @@ console.log(process.env.LOCAL_DB_PORT)
 
 
 app.use(postgraphile(connString,{
-  graphiql:true,  
+    graphiql:true,  
     live: true,
 
-    appendPlugins: [ConnectionFilterPlugin, PgOrderByRelatedPlugin],
+    appendPlugins: [MySchemaExtensionPlugin, ConnectionFilterPlugin, PgOrderByRelatedPlugin],
     graphileBuildOptions: {
       connectionFilterRelations: true,
-      orderByRelatedColumnAggregates: true,
 
        // default: false
     },

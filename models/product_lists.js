@@ -46,9 +46,19 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'product_sku',
       targetKey: 'product_id'
     });
+
+    models.product_lists.hasMany(models.product_materials,{
+      foreignKey: 'product_sku',
+      targetKey: 'product_id',
+      as : 'productMaterialsByProductSku'
+    });
+    
+
+
     models.product_lists.hasMany(models.product_diamonds,{
       foreignKey: 'product_sku',
-      targetKey: 'product_id'
+      targetKey: 'product_id',
+      as : 'productDiamondsByProductSku'
     });
     models.product_lists.hasMany(models.product_gemstones,{
       foreignKey: 'product_sku',
@@ -62,7 +72,12 @@ module.exports = (sequelize, DataTypes) => {
 
     models.product_lists.hasMany(models.trans_sku_lists,{
       foreignKey: 'product_id',
-      targetKey: 'product_id'
+      targetKey: 'product_id',
+      as: 'transSkuListsByProductId',
+    });
+    models.product_lists.hasMany(models.trans_sku_lists,{
+      foreignKey: 'product_id',
+      targetKey: 'product_id',
     });
     models.product_lists.hasMany(models.product_styles,{
       foreignKey: 'product_id',
@@ -79,6 +94,11 @@ module.exports = (sequelize, DataTypes) => {
     models.product_lists.hasMany(models.product_collections,{
       foreignKey: 'product_id',
       targetKey: 'product_id'
+    });
+    models.product_lists.hasMany(models.product_images,{
+      foreignKey: 'product_id',
+      targetKey: 'product_id',
+      as: 'productImagesByProductId'
     });
     models.product_lists.hasMany(models.product_images,{
       foreignKey: 'product_id',

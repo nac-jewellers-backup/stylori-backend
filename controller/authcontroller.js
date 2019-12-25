@@ -5,6 +5,7 @@ const models=require('./../models');
 import 'dotenv/config';
 const Op= require('sequelize').Op;
 const uuidv1 = require('uuid/v1');
+const emailTemp = require('./notify/Emailtemplate');
 
 exports.signin = (req, res) => {
  
@@ -105,6 +106,10 @@ exports.signup = (req, res) => {
               }
 
             )
+            var emilreceipiants = [{to : email,subject:"You have successfully registered!"},{to : "dineshtawker@gmail.com"}]
+         
+            sendMail(emilreceipiants,emailTemp.getName(username))
+
           res.send(200,{user,user_profile_id: user_profile.id});
 
         }
