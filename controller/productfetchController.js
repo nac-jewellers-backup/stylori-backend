@@ -27,6 +27,11 @@ var includeclause = [];
       product_category : product_category
     }
   }
+
+  if(metalcolor)
+  {
+    skuwhereclause['metal_color'] = metalcolor
+  }
 //   if(availability)
 //   {
 //     seofilterattribute.push('Availability')
