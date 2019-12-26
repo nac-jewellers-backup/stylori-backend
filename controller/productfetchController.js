@@ -23,7 +23,7 @@ skuwhereclause['isdefault']  = true
 var currentpage = 0
 if(offset)
 {
-  currentpage = offset / 24;
+  currentpage = offset ;
 }
 // var seofilterattributevalue = []
 //   seofilterattribute.push('Category')
@@ -51,7 +51,7 @@ if(offset)
     if(sortBy === 'Ready To Ship')
     {
       sortelement  = [
-        [{ model: models.trans_sku_lists },  'is_ready_to_ship', 'desc']
+        [ 'is_ready_to_ship', 'desc']
     ]
 
 
@@ -59,7 +59,7 @@ if(offset)
     if(sortBy === 'Price High to Low')
     {
       sortelement  = [
-        [{ model: models.trans_sku_lists },  'markup_price', 'desc']
+        [  'markup_price', 'desc']
 
     ]
 
@@ -68,12 +68,14 @@ if(offset)
     if(sortBy === 'Price Low to High')
     {
       sortelement  = [
-        [{ model: models.trans_sku_lists },  'markup_price', 'desc']
+        [{ model: models.trans_sku_lists },  'markup_price', 'asc']
 
     ]
 
 
     }
+    console.log("sort issue")
+    console.log(JSON.stringify(sortelement))
   //  [{ model: models.trans_sku_lists },  'selling_price', 'desc']
     console.log("updatedatavalue")
     console.log(JSON.stringify(sortBy))
@@ -142,14 +144,14 @@ if(collection)
 if(occasion)
 {
 
-  whereclause['$product_occassions.occassion_name$'] = {
-    [Op.eq]:occasion
-    }
+  // whereclause['$product_occassions.occassion_name$'] = {
+  //   [Op.eq]:occasion
+  //   }
     includeclause.push({
       model : models.product_occassions,
-      // where: {
-      //   occassion_name : occasion
-      // }
+      where: {
+        occassion_name : occasion
+      }
      })
 }
 
@@ -171,13 +173,13 @@ if(style)
 {
   includeclause.push({
     model : models.product_styles,
-    // where:{
-    //   style_name: style
-    // }
-   })
-  whereclause['$product_styles.style_name$'] = {
-    [Op.eq]:style
+    where:{
+      style_name: style
     }
+   })
+  // whereclause['$product_styles.style_name$'] = {
+  //   [Op.eq]:style
+  //   }
     
 }
 if(theme)
@@ -286,7 +288,10 @@ includeclause.push({
     
     where:{
       isdefault: true
-    }
+    },
+    order:[
+      ['markup_price','DESC']
+    ]
     
  })
 //  var product_details_include = []
@@ -307,7 +312,7 @@ includeclause.push({
 //       isdefault: true
 //     }
 //  })
-//  product_details_include.push({
+// includeclause.push({
 //   model : models.product_diamonds,
 //   as : 'productDiamondsByProductSku',
 //   attributes : [
@@ -318,27 +323,26 @@ includeclause.push({
 //                 ['diamond_shape','diamond_Shape'],
 //                 ['diamond_settings','diamond_Settings'],
 //                 ['stone_count','stone_Count']
-//                 ]
+//                 ],
 //  })
-//  product_details_include.push({
-//   model : models.product_images,
-//   as : 'productImagesByProductId',
-//   attributes : [
-//                 ['ishover','ishover'],
-//                 ['image_url','imageUrl'],
-//                 ['image_position','imagePosition'],
-//                 ['isdefault','isdefault']
-//                 ]
-//  })
+ includeclause.push({
+  model : models.product_images,
+  as : 'productImagesByProductId',
+  attributes : [
+                ['ishover','ishover'],
+                ['image_url','imageUrl'],
+                ['image_position','imagePosition'],
+                ['isdefault','isdefault']
+                ],
+   where:{
+     isdefault : true,
+     image_position:{
+       [Op.in]:[1,2]
+     }
+   }             
+ })
 
-//  product_details_include.push({
-//   model : models.product_materials,
-//   as : 'productMaterialsByProductSku',
-//   attributes : [
-//                 ['material_name','materialName']
-               
-//                 ]
-//  })
+ 
  if(material)
  {         
   
@@ -346,38 +350,63 @@ includeclause.push({
   //  whereclause['$product_materials.material_name$'] = {
   //    [Op.eq]:material
   //    }
-     includeclause.push({
-       model : models.product_materials,
-       where: {
-        material_name: material
-       }
-      })
+  includeclause.push({
+    model : models.product_materials,
+    as : 'productMaterialsByProductSku',
+    attributes : [
+                  ['material_name','materialName']
+                 
+                  ],
+   }) 
  }
 console.log(JSON.stringify(includeclause))
-var products_all = await models.product_lists.findAll({
-  include:[
-    {
-      model: models.trans_sku_lists
-    }
-  ], 
-  where:whereclause,
-  limit:25,
-  subQuery: false,
-  order:sortelement
+// var products_all = await models.product_lists.findAll({
+//       attributes:[['product_name','productName'],
+//     ['product_id','productId'],
+//     ['default_size','defaultSize'],
+//     ['size_varient','sizeVarient'],
+//     ['product_type','productType']
+//     ],
+//   include:includeclause, 
+//   where:whereclause,
+//   limit:24,
   
 
+// })
+
+var products_all = await models.trans_sku_lists.findAll({
+  attributes:[
+    ['sku_size','skuSize'],
+    'purity',
+    ['diamond_type','diamondType'],
+    ['metal_color','metalColor'],
+    ['markup_price','markupPrice'],
+    ['selling_price','sellingPrice'],
+    ['discount_price','discountPrice'],
+    ['generated_sku','generatedSku'],
+    ['is_ready_to_ship','isReadyToShip'],
+    ['vendor_delivery_time','vendorDeliveryTime']],
+        include:[{
+          model : models.product_lists,
+              attributes:[['product_name','productName'],
+            ['product_id','productId'],
+            ['default_size','defaultSize'],
+            ['size_varient','sizeVarient'],
+            ['product_type','productType']
+            ],
+          where : whereclause,
+          include:includeclause,
+          
+        }],
+        limit: 24,
+        offset: currentpage,
+        where:{
+          isdefault: true
+        },
+        order: [
+          ["is_ready_to_ship","DESC"]
+        ]
 })
-products_all.forEach(element => {
-  product_list.push(element.product_id);
-});
-var chunk = [] ;
-while (product_list.length > 0) {
-
-  chunk.push(product_list.splice(0,24))
-
-  console.log(chunk)
-
-}
 
 // var products = await models.product_lists.findAll ({
 //     attributes:[['product_name','productName'],
