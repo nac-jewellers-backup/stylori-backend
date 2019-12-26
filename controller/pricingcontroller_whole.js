@@ -37,7 +37,7 @@ exports.priceupdate = (req, res) => {
     var whereclause1 = {
       isactive : true,
       product_id: {
-        [Op.iLike]:'%SR%'
+        [Op.notILike]:'%SR%'
       }
       // product_id: {
       //   [Op.eq]:'SR0458'
@@ -186,7 +186,7 @@ exports.priceupdate = (req, res) => {
       //  }
       // ],
       where: whereclause1,
-      offset: 25
+      //offset: 2
         }).then(product=> {
      
       products = product;

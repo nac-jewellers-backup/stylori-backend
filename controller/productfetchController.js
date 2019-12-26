@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material,product_category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability,sortBy,offset} = req.body
+const {material,product_category, theme,collection, occasion, style, metalpurity, producttype, stoneshape,price, gender, stonecolor,metalcolor,noofstones,availability,sortBy,offset} = req.body
 var product_list = [];
 var whereclause = {
   isactive: true
@@ -19,7 +19,7 @@ var sortelement = []
 var skuwhereclause = {}
 var includeclause = [];
 skuwhereclause['isdefault']  = true
-// var seofilterattribute = []
+var isproduct_query = false;
 var currentpage = 0
 if(offset)
 {
@@ -38,14 +38,16 @@ if(offset)
   {
     if(sortBy === 'Featured')
     {
+      isproduct_query = true
       sortelement  = [
         ['is_featured', 'ASC'],
     ]
     }
     if(sortBy === 'New To Stylori')
     {
+     // isproduct_query = true
       sortelement  = [
-        ['createdAt', 'DESC'],
+        ['"createdat" DESC'],
     ]
     }
     if(sortBy === 'Ready To Ship')
@@ -59,7 +61,7 @@ if(offset)
     if(sortBy === 'Price High to Low')
     {
       sortelement  = [
-        [  'markup_price', 'desc']
+        ['markup_price', 'desc']
 
     ]
 
@@ -68,7 +70,18 @@ if(offset)
     if(sortBy === 'Price Low to High')
     {
       sortelement  = [
-        [{ model: models.trans_sku_lists },  'markup_price', 'asc']
+        [ 'markup_price', 'asc']
+
+    ]
+
+
+    }
+    if(sortBy === 'Best Seller')
+    {
+      isproduct_query = true
+
+      sortelement  = [
+        [ 'selling_qty', 'desc']
 
     ]
 
@@ -88,6 +101,15 @@ if(offset)
     console.log("metal colur image")
     console.log(JSON.stringify(metalcolor))
     skuwhereclause['metal_color'] = metalcolor
+  }
+  if(price)
+  {
+    if(price.min_price && price.max_price)
+    {
+      skuwhereclause['markup_price'] = {
+        [Op.between] :[price.min_price , price.max_price]
+      }
+    }
   }
 //   if(availability)
 //   {
@@ -199,14 +221,14 @@ if(theme)
 if(stonecolor)
 {
 
-  whereclause['$product_stonecolors.stonecolor$'] = {
-    [Op.eq]:stonecolor
-    }
+  // whereclause['$product_stonecolors.stonecolor$'] = {
+  //   [Op.eq]:stonecolor
+  //   }
     includeclause.push({
            model : models.product_stonecolor,
-          //  where:{
-          //   stonecolor : stonecolor
-          //  }
+           where:{
+            stonecolor : stonecolor
+           }
     })
 }
 
@@ -251,7 +273,6 @@ if(metalpurity)
     //        model : models.product_purities,
     //        attributes: ['purity']
     // })
-    skuwhereclause = {}
     skuwhereclause['purity'] = metalpurity
     console.log(JSON.stringify(includeclause))
     whereclause['$product_purities.purity$']
@@ -272,93 +293,7 @@ if(gender)
 
 }
 
-includeclause.push({
-  model : models.trans_sku_lists,
-  attributes:[
-    ['sku_size','skuSize'],
-    'purity',
-    ['diamond_type','diamondType'],
-    ['metal_color','metalColor'],
-    ['markup_price','markupPrice'],
-    ['selling_price','sellingPrice'],
-    ['discount_price','discountPrice'],
-    ['generated_sku','generatedSku'],
-    ['is_ready_to_ship','isReadyToShip'],
-    ['vendor_delivery_time','vendorDeliveryTime']],
-    
-    where:{
-      isdefault: true
-    },
-    order:[
-      ['markup_price','DESC']
-    ]
-    
- })
-//  var product_details_include = []
-//  product_details_include.push({
-//   model : models.trans_sku_lists,
-//   attributes:[
-//     ['sku_size','skuSize'],
-//     'purity',
-//     ['diamond_type','diamondType'],
-//     ['metal_color','metalColor'],
-//     ['markup_price','markupPrice'],
-//     ['selling_price','sellingPrice'],
-//     ['discount_price','discountPrice'],
-//     ['generated_sku','generatedSku'],
-//     ['is_ready_to_ship','isReadyToShip'],
-//     ['vendor_delivery_time','vendorDeliveryTime']],
-//     where:{
-//       isdefault: true
-//     }
-//  })
-// includeclause.push({
-//   model : models.product_diamonds,
-//   as : 'productDiamondsByProductSku',
-//   attributes : [
-//                 ['diamond_clarity','diamondClarity'],
-//                 ['diamond_colour','diamondColour'],
-//                 ['diamond_type','diamondType'],
-//                 ['stone_weight','stoneWeight'],
-//                 ['diamond_shape','diamond_Shape'],
-//                 ['diamond_settings','diamond_Settings'],
-//                 ['stone_count','stone_Count']
-//                 ],
-//  })
- includeclause.push({
-  model : models.product_images,
-  as : 'productImagesByProductId',
-  attributes : [
-                ['ishover','ishover'],
-                ['image_url','imageUrl'],
-                ['image_position','imagePosition'],
-                ['isdefault','isdefault']
-                ],
-   where:{
-     isdefault : true,
-     image_position:{
-       [Op.in]:[1,2]
-     }
-   }             
- })
 
- 
- if(material)
- {         
-  
- 
-  //  whereclause['$product_materials.material_name$'] = {
-  //    [Op.eq]:material
-  //    }
-  includeclause.push({
-    model : models.product_materials,
-    as : 'productMaterialsByProductSku',
-    attributes : [
-                  ['material_name','materialName']
-                 
-                  ],
-   }) 
- }
 console.log(JSON.stringify(includeclause))
 // var products_all = await models.product_lists.findAll({
 //       attributes:[['product_name','productName'],
@@ -373,57 +308,134 @@ console.log(JSON.stringify(includeclause))
   
 
 // })
-
-var products_all = await models.trans_sku_lists.findAll({
-  attributes:[
-    ['sku_size','skuSize'],
-    'purity',
-    ['diamond_type','diamondType'],
-    ['metal_color','metalColor'],
-    ['markup_price','markupPrice'],
-    ['selling_price','sellingPrice'],
-    ['discount_price','discountPrice'],
-    ['generated_sku','generatedSku'],
-    ['is_ready_to_ship','isReadyToShip'],
-    ['vendor_delivery_time','vendorDeliveryTime']],
-        include:[{
-          model : models.product_lists,
-              attributes:[['product_name','productName'],
-            ['product_id','productId'],
-            ['default_size','defaultSize'],
-            ['size_varient','sizeVarient'],
-            ['product_type','productType']
-            ],
-          where : whereclause,
-          include:includeclause,
-          
-        }],
-        limit: 24,
-        offset: currentpage,
-        where:{
-          isdefault: true
-        },
-        order: [
-          ["is_ready_to_ship","DESC"]
-        ]
-})
-
-// var products = await models.product_lists.findAll ({
-//     attributes:[['product_name','productName'],
-//     ['product_id','productId'],
-//     ['default_size','defaultSize'],
-//     ['size_varient','sizeVarient'],
-//     ['product_type','productType']
-//     ],
-//     include:product_details_include,
-//     where:{
-//       product_id : {
-//         [Op.in] : chunk[currentpage]
-//       }
-//     },
-//     order:sortelement
+var products_all = []
+if(isproduct_query)
+{
+  includeclause.push({
+    model : models.trans_sku_lists,
+    attributes:[
+      ['sku_size','skuSize'],
+      'purity',
+      ['diamond_type','diamondType'],
+      ['metal_color','metalColor'],
+      ['markup_price','markupPrice'],
+      ['selling_price','sellingPrice'],
+      ['discount_price','discountPrice'],
+      ['generated_sku','generatedSku'],
+      ['is_ready_to_ship','isReadyToShip'],
+      ['vendor_delivery_time','vendorDeliveryTime']],
+      
+      where:{
+        isdefault: true
+      },
+      order:[
+        ['markup_price','DESC']
+      ]
+      
+   })
+  
+  includeclause.push({
+    model : models.product_diamonds,
+    as : 'productDiamondsByProductSku',
+    attributes : [
+                  ['diamond_clarity','diamondClarity'],
+                  ['diamond_colour','diamondColour'],
+                  ['diamond_type','diamondType'],
+                  ['stone_weight','stoneWeight'],
+                  ['diamond_shape','diamond_Shape'],
+                  ['diamond_settings','diamond_Settings'],
+                  ['stone_count','stone_Count']
+                  ],
+   })
+   includeclause.push({
+    model : models.product_images,
+    as : 'productImagesByProductId',
+    attributes : [
+                  ['ishover','ishover'],
+                  ['image_url','imageUrl'],
+                  ['image_position','imagePosition'],
+                  ['isdefault','isdefault']
+                  ],
+     where:{
+       isdefault : true,
+       image_position:{
+         [Op.in]:[1,2]
+       }
+     }             
+   })
+  
+   
+   if(material)
+   {         
     
-//   })
+   
+    //  whereclause['$product_materials.material_name$'] = {
+    //    [Op.eq]:material
+    //    }
+    includeclause.push({
+      model : models.product_materials,
+      as : 'productMaterialsByProductSku',
+      attributes : [
+                    ['material_name','materialName']
+                   
+                    ],
+                    where:{
+                      material_name : material
+                     }
+     }) 
+   }
+
+   products_all = await models.product_lists.findAll ({
+    attributes:[['product_name','productName'],
+    ['product_id','productId'],
+    ['default_size','defaultSize'],
+    ['size_varient','sizeVarient'],
+    ['product_type','productType']
+    ],
+    include:includeclause,
+    where:whereclause,
+    order:sortelement,
+    subQuery: false,
+    limit: 24,
+    offset: currentpage,
+  })
+}else{
+   products_all = await models.trans_sku_lists.findAll({
+    attributes:[
+      ['sku_size','skuSize'],
+      'purity',
+      ['diamond_type','diamondType'],
+      ['metal_color','metalColor'],
+      ['markup_price','markupPrice'],
+      ['selling_price','sellingPrice'],
+      ['discount_price','discountPrice'],
+      ['generated_sku','generatedSku'],
+      ['is_ready_to_ship','isReadyToShip'],
+      ['vendor_delivery_time','vendorDeliveryTime']],
+          include:[{
+            model : models.product_lists,
+                attributes:[['product_name','productName'],
+              ['product_id','productId'],
+              ['default_size','defaultSize'],
+              ['size_varient','sizeVarient'],
+              ['product_type','productType'],
+              'selling_qty'
+              ],
+            where : whereclause,
+  
+            include:includeclause,
+             
+          }],
+          limit: 24,
+          offset: currentpage,
+          where:skuwhereclause,
+          order: sortelement
+        
+  })
+}
+
+
+
 
 
 

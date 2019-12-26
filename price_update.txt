@@ -394,3 +394,135 @@ diamondexist
 diamondpriceseeting
 SR0458
 diamond cost price
+diamondpriceseeting
+3093.3330000000005
+diamond cost price
+SP0077
+diamondexist
+{"vendor_code":"STYPA 040","diamond_colour":"SI","diamond_clarity":"IJ"}
+diamondpriceseeting
+{"vendor_code":"STYPA 040","diamond_colour":"SI","diamond_clarity":"IJ"}
+SP0077
+diamond cost price
+3093.3330000000005
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 040","diamond_colour":"SI","diamond_clarity":"IJ"}
+SP0077
+3093.3330000000005
+diamond cost price
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 040","diamond_colour":"SI","diamond_clarity":"IJ"}
+SP0077
+3093.3330000000005
+diamond cost price
+diamondexist
+{"vendor_code":"STYPA 020","diamond_colour":"VVS","diamond_clarity":"EF"}
+diamondpriceseeting
+SE0230
+diamond cost price
+1581.9999
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 020","diamond_colour":"VVS","diamond_clarity":"EF"}
+SE0230
+diamond cost price
+6327.9996
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 020","diamond_colour":"VVS","diamond_clarity":"EF"}
+SE0230
+diamond cost price
+7909.9995
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 020","diamond_colour":"SI","diamond_clarity":"IJ"}
+SE0230
+diamond cost price
+687
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 020","diamond_colour":"SI","diamond_clarity":"IJ"}
+diamond cost price
+SE0230
+2748
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 020","diamond_colour":"SI","diamond_clarity":"IJ"}
+SE0230
+diamond cost price
+3435
+diamondexist
+{"vendor_code":"STYPA 020","diamond_colour":"SI","diamond_clarity":"IJ"}
+diamondpriceseeting
+SE0230
+diamond cost price
+687
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 020","diamond_colour":"SI","diamond_clarity":"IJ"}
+SE0230
+diamond cost price
+2748
+diamondexist
+{"vendor_code":"STYPA 020","diamond_colour":"SI","diamond_clarity":"IJ"}
+3435
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 020","diamond_colour":"VVS","diamond_clarity":"EF"}
+SE0230
+diamond cost price
+1581.9999
+diamondexist
+diamondpriceseeting
+SE0230
+diamond cost price
+diamondpriceseeting
+{"vendor_code":"STYPA 020","diamond_colour":"VVS","diamond_clarity":"EF"}
+diamond cost price
+6327.9996
+SE0230
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 020","diamond_colour":"VVS","diamond_clarity":"EF"}
+SE0230
+7909.9995
+diamond cost price
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 020","diamond_colour":"VS","diamond_clarity":"GH"}
+4308
+diamond cost price
+SE0230
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 020","diamond_colour":"VS","diamond_clarity":"GH"}
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 020","diamond_colour":"VS","diamond_clarity":"GH"}
+SE0230
+diamond cost price
+1077
+diamondexist
+SE0230
+diamond cost price
+5385
+{"vendor_code":"STYPA 020","diamond_colour":"VS","diamond_clarity":"GH"}
+diamondpriceseeting
+4308
+diamondexist
+SE0230
+diamondpriceseeting
+SE0230
+{"vendor_code":"STYPA 020","diamond_colour":"VS","diamond_clarity":"GH"}
+diamondexist
+5385
+diamondpriceseeting
+{"vendor_code":"STYPA 020","diamond_colour":"VS","diamond_clarity":"GH"}
+SE0230
+diamond cost price
+1077
+diamondexist
+diamond cost price
+diamond cost price
