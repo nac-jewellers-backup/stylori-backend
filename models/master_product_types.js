@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
   const master_product_types = sequelize.define('master_product_types', {
     name: DataTypes.STRING,
     alias: DataTypes.STRING,
-    short_code: DataTypes.STRING
+    short_code: DataTypes.STRING,
+    display_order: DataTypes.INTEGER
   }, {});
   master_product_types.associate = function(models) {
     // associations can be defined here

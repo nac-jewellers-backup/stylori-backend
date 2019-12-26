@@ -402,7 +402,7 @@ if(isproduct_query)
     offset: currentpage,
   })
 }else{
-   products_all = await models.trans_sku_lists.findAll({
+  const { count, rows: students }  = await models.trans_sku_lists.findAndCountAll({
     attributes:[
       ['sku_size','skuSize'],
       'purity',
@@ -434,6 +434,9 @@ if(isproduct_query)
           order: sortelement
         
   })
+
+  console.log("totalrowcount"+count)
+  console.log("totalrowcount"+count)
 }
 
 

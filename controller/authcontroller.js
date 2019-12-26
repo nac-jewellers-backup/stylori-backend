@@ -239,28 +239,52 @@ exports.forgotpassword = (req, res) => {
       
 }
 exports.userContent = (req, res) => {
+  console.log(req.userName);
+  models.User.findOne({
+      where: {userName: req.userName},
+      attributes: ['userName'],
+      include: [{
+          model: models.Role,
+          attributes: ['id', 'name'],
+          through: {
+              attributes: ['userId', 'roleId'],
+          }
+      }]
+  }).then(user => {
+      res.status(200).json({
+          "description": "User Content Page",
+          "user": user
+      });
+  }).catch(err => {
+      res.status(500).json({
+          "description": "Can not access User Page",
+          "error": err
+      });
+  })
+}
+exports.updateuserprofile = (req, res) => {
     console.log(req.userName);
-    models.User.findOne({
-        where: {userName: req.userName},
-        attributes: ['userName'],
-        include: [{
-            model: models.Role,
-            attributes: ['id', 'name'],
-            through: {
-                attributes: ['userId', 'roleId'],
-            }
-        }]
-    }).then(user => {
-        res.status(200).json({
-            "description": "User Content Page",
-            "user": user
-        });
-    }).catch(err => {
-        res.status(500).json({
-            "description": "Can not access User Page",
-            "error": err
-        });
-    })
+    // models.User.findOne({
+    //     where: {userName: req.userName},
+    //     attributes: ['userName'],
+    //     include: [{
+    //         model: models.Role,
+    //         attributes: ['id', 'name'],
+    //         through: {
+    //             attributes: ['userId', 'roleId'],
+    //         }
+    //     }]
+    // }).then(user => {
+    //     res.status(200).json({
+    //         "description": "User Content Page",
+    //         "user": user
+    //     });
+    // }).catch(err => {
+    //     res.status(500).json({
+    //         "description": "Can not access User Page",
+    //         "error": err
+    //     });
+    // })
 }
 
 exports.guestlogin = (req, res) => {

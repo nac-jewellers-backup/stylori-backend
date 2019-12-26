@@ -16,6 +16,10 @@ module.exports = {
       short_code: {
         type: Sequelize.STRING
       },
+      display_order: {
+        type: Sequelize.INTEGER
+      },
+      
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

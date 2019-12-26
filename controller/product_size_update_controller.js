@@ -15,8 +15,7 @@ exports.updatesize = async (req, res) => {
 var products =    await models.product_lists.findAll({
       
         where: {
-          isactive : true,
-          product_id: 'SR3265'
+          isactive : false,
         }
       })
       processproduct()
@@ -34,6 +33,7 @@ var products =    await models.product_lists.findAll({
         }
       })  
  
+      console.log(JSON.stringify(uniquecolors))
       var uniquepurity =   await models.trans_sku_lists.findAll({
         attributes: ['purity'],
         group: ['purity'],
@@ -50,7 +50,8 @@ var products =    await models.product_lists.findAll({
                 prod_purity_varient.push(purity_obj.purity+' '+color_obj.metal_color);
             })
           })
-          
+          console.log(JSON.stringify(prod_purity_varient))
+
       
       console.log("completed"+JSON.stringify(prod_purity_varient))
 
