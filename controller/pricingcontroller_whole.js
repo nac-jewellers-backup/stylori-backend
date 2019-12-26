@@ -186,7 +186,7 @@ exports.priceupdate = (req, res) => {
       //  }
       // ],
       where: whereclause1,
-      //offset: 2
+      offset: 325
         }).then(product=> {
      
       products = product;
@@ -1701,7 +1701,7 @@ exports.priceupdate = (req, res) => {
               sendMail(emilreceipiants,JSON.stringify(product_ids))
             }
             console.log(JSON.stringify(product_ids))
-            await sleep(10000)
+            await sleep(1000)
             processproduct()
               ;
             
