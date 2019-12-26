@@ -200,7 +200,7 @@ exports.resetpassword = (req, res) => {
         });
 }
 exports.forgotpassword = (req, res) => {
-    return models.User.findOne({
+    return models.users.findOne({
         where: { email:  req.body.email }
         
       })
@@ -209,32 +209,33 @@ exports.forgotpassword = (req, res) => {
           // if user email already exists
         if(user)
         {  
-        if(!user.isVerified) {
-          return res.status(409).json('Please verify email then try reset password');
-        } else {
+        // if(!user.isVerified) {
+        //   return res.status(409).json('Please verify email then try reset password');
+        // } else {
               
-                        return models.VerificationToken.create({
+                       models.VerificationToken.create({
                             userId: user.id,
                             tokentype: 2,
                             token: crypto({length: 16})
                           }).then((result) => {
+                            console.log("i ma nhere"+result.token)
+
                             var emilreceipiants = [{to : user.email,subject:"Reset password request"}]
          
-                            sendMail(emilreceipiants,emailTemp.forgotpasswordTemp(user.email,username,user.email, result.token))
+                          sendMail(emilreceipiants,emailTemp.forgotpasswordTemp(user.email,username,user.email, result.token))
                            // sendVerificationEmail(user.email, result.token);
-                            return res.status(200).json('Reset Password link sent to your registered Email Id'+result.token);
-                          })
-                          .catch((error) => {
-                            return res.status(500).json(error);
-                          });
-      
-        }
+                             return res.status(200).json('Reset Password link sent to your registered Email Id'+result.token);
+                           })
+                           .catch((error) => {
+                             return res.status(500).json(error);
+                           });
+       // }
     }else{
-        return res.status(404).json("Email ID not Registered with us");
+         res.status(404).json("Email ID not Registered with us");
     }
       })
       .catch((error) => {
-        return res.status(500).json(error);
+         res.status(500).json(error);
       });
       
 }

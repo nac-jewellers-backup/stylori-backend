@@ -30,8 +30,16 @@ exports.priceupdate = (req, res) => {
     var product_whereclause = {
         isactive : true,
         product_id : {
-            [Op.iLike]:'%SR0985%'
-        }
+          [Op.and]: [{
+            [Op.notILike]:'%SR%'
+            
+
+          },{
+            [Op.notILike]:'%SGC%'
+          }]
+            
+        },
+        
         // product_id: {
         //   [Op.in]:['SR0505']
   
@@ -140,11 +148,13 @@ exports.priceupdate = (req, res) => {
     /************query to find all product list to run price update */
     models.product_lists.findAll({
         where: product_whereclause,
-        
+        limit: 2
             }).then(product=> {
        console.log("total product ------- "+ product.length)
-       writelog("total product ------- "+ product.length) 
+   //    writelog("total product ------- "+ product.length) 
        products = product;
+      // console.log("total product ------- "+ JSON.stringify(product))
+
          processproduct()
       });
 
@@ -153,6 +163,8 @@ exports.priceupdate = (req, res) => {
       async function processproduct(){
         if(products.length > processed_product_count)
         {
+          console.log("sku count ------- ") 
+
             start = new Date()
     
         let currentproduct = products[processed_product_count]
@@ -609,7 +621,7 @@ exports.priceupdate = (req, res) => {
           console.log(seconds)
           
           processed_product_count = processed_product_count  + 1;
-          await sleep(10000)
+          await sleep(1000)
           if((processed_product_count > 0 && processed_product_count%25 == 0))
           {
             var emilreceipiants = [{to : "manokarantk@gmail.com"},{to : "dineshtawker@gmail.com"}]

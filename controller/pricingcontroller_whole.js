@@ -37,7 +37,8 @@ exports.priceupdate = (req, res) => {
     var whereclause1 = {
       isactive : true,
       product_id: {
-        [Op.notILike]:'%SR%'
+        [Op.notILike]:'%SR%',
+        [Op.notILike]:'%SGC%'
       }
       // product_id: {
       //   [Op.eq]:'SR0458'
@@ -191,7 +192,8 @@ exports.priceupdate = (req, res) => {
      
       products = product;
       console.log(">>>>>>>"+JSON.stringify(product.length))
-   // pricingresult()
+
+      // pricingresult()
    //res.send(200, products[0]);
        processproduct()
     });

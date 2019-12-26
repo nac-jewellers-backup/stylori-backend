@@ -242,11 +242,11 @@ let prod_type_where = {}
  var master_product_type = await models.product_lists.findAll({
     attributes: ['product_type'],
     group: ['product_type'],
-   
-    where:prod_type_where
-   
+    where:prod_type_where   
 
   })
+
+
 
 
   var master_styles = await models.product_styles.findAll({
