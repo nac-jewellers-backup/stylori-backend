@@ -308,6 +308,56 @@ console.log(JSON.stringify(includeclause))
   
 
 // })
+includeclause.push({
+  model : models.product_diamonds,
+  as : 'productDiamondsByProductSku',
+  attributes : [
+                ['diamond_clarity','diamondClarity'],
+                ['diamond_colour','diamondColour'],
+                ['diamond_type','diamondType'],
+                ['stone_weight','stoneWeight'],
+                ['diamond_shape','diamond_Shape'],
+                ['diamond_settings','diamond_Settings'],
+                ['stone_count','stone_Count']
+                ],
+ })
+ includeclause.push({
+  model : models.product_images,
+  as : 'productImagesByProductId',
+  attributes : [
+                ['ishover','ishover'],
+                ['image_url','imageUrl'],
+                ['image_position','imagePosition'],
+                ['isdefault','isdefault']
+                ],
+   where:{
+     isdefault : true,
+     image_position:{
+       [Op.in]:[1,2]
+     }
+   }             
+ })
+
+ 
+ if(material)
+ {         
+  
+ 
+  //  whereclause['$product_materials.material_name$'] = {
+  //    [Op.eq]:material
+  //    }
+  includeclause.push({
+    model : models.product_materials,
+    as : 'productMaterialsByProductSku',
+    attributes : [
+                  ['material_name','materialName']
+                 
+                  ],
+                  where:{
+                    material_name : material
+                   }
+   }) 
+ }
 var products_all = []
 if(isproduct_query)
 {
@@ -334,56 +384,7 @@ if(isproduct_query)
       
    })
   
-  includeclause.push({
-    model : models.product_diamonds,
-    as : 'productDiamondsByProductSku',
-    attributes : [
-                  ['diamond_clarity','diamondClarity'],
-                  ['diamond_colour','diamondColour'],
-                  ['diamond_type','diamondType'],
-                  ['stone_weight','stoneWeight'],
-                  ['diamond_shape','diamond_Shape'],
-                  ['diamond_settings','diamond_Settings'],
-                  ['stone_count','stone_Count']
-                  ],
-   })
-   includeclause.push({
-    model : models.product_images,
-    as : 'productImagesByProductId',
-    attributes : [
-                  ['ishover','ishover'],
-                  ['image_url','imageUrl'],
-                  ['image_position','imagePosition'],
-                  ['isdefault','isdefault']
-                  ],
-     where:{
-       isdefault : true,
-       image_position:{
-         [Op.in]:[1,2]
-       }
-     }             
-   })
-  
-   
-   if(material)
-   {         
-    
-   
-    //  whereclause['$product_materials.material_name$'] = {
-    //    [Op.eq]:material
-    //    }
-    includeclause.push({
-      model : models.product_materials,
-      as : 'productMaterialsByProductSku',
-      attributes : [
-                    ['material_name','materialName']
-                   
-                    ],
-                    where:{
-                      material_name : material
-                     }
-     }) 
-   }
+ 
 
    products_all = await models.product_lists.findAll ({
     attributes:[['product_name','productName'],
