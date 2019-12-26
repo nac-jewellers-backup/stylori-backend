@@ -15,14 +15,7 @@ exports.updatesize = async (req, res) => {
 var products =    await models.product_lists.findAll({
       
         where: {
-          isactive : true,
-          gender : {
-            [Op.iLike] : '%Female%'
-
-          },
-          product_id: {
-            [Op.iLike] : '%SR%'
-          }
+          isactive : true
         }
       })
       processproduct()
@@ -33,41 +26,34 @@ var products =    await models.product_lists.findAll({
         const prod_id = products[processcount].product_id
 
       var uniquecolors =    await models.trans_sku_lists.findAll({
-        attributes: ['sku_size'],
-        group: ['sku_size'],
+        attributes: ['metal_color'],
+        group: ['metal_color'],
         where: {
             product_id : prod_id
         }
       })  
  
-      // var uniquepurity =   await models.trans_sku_lists.findAll({
-      //   attributes: ['purity'],
-      //   group: ['purity'],
-      //   where: {
-      //       product_id : prod_id
-      //   }
-      // }) 
-       let prod_purity_varient = []
-
-      uniquecolors.forEach(color_obj => {
-        if(color_obj.sku_size)
-        {
-          prod_purity_varient.push(color_obj.sku_size);
-
+      var uniquepurity =   await models.trans_sku_lists.findAll({
+        attributes: ['purity'],
+        group: ['purity'],
+        where: {
+            product_id : prod_id
         }
-    })
+      }) 
+
+
  
-      // let prod_purity_varient = []
-      //     uniquepurity.forEach(purity_obj => {
-      //       uniquecolors.forEach(color_obj => {
-      //           prod_purity_varient.push(purity_obj.purity+' '+color_obj.metal_color);
-      //       })
-      //     })
+      let prod_purity_varient = []
+          uniquepurity.forEach(purity_obj => {
+            uniquecolors.forEach(color_obj => {
+                prod_purity_varient.push(purity_obj.purity+' '+color_obj.metal_color);
+            })
+          })
           
       
       console.log("completed"+JSON.stringify(prod_purity_varient))
 
-      var query = "UPDATE product_lists SET size_varient = '"+prod_purity_varient.join(',')+"' where product_id ='"+prod_id+"'" ;
+      var query = "UPDATE product_lists SET colour_varient = '"+prod_purity_varient.join(',')+"' where product_id ='"+prod_id+"'" ;
            await  models.sequelize.query(query).then(([results, metadata]) => {
                   console.log("completed"+processcount)
                   prod_purity_varient = [];
