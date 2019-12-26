@@ -20,7 +20,9 @@ var products =    await models.product_lists.findAll({
             [Op.iLike] : '%Female%'
 
           },
-          product_id: 'SR0137'
+          product_id: {
+            [Op.iLike] : '%SR%'
+          }
         }
       })
       processproduct()
@@ -45,9 +47,14 @@ var products =    await models.product_lists.findAll({
       //       product_id : prod_id
       //   }
       // }) 
+       let prod_purity_varient = []
 
       uniquecolors.forEach(color_obj => {
-        prod_purity_varient.push(color_obj.sku_size);
+        if(color_obj.sku_size)
+        {
+          prod_purity_varient.push(color_obj.sku_size);
+
+        }
     })
  
       // let prod_purity_varient = []
@@ -60,7 +67,7 @@ var products =    await models.product_lists.findAll({
       
       console.log("completed"+JSON.stringify(prod_purity_varient))
 
-      var query = "UPDATE product_lists SET size_varient = '"+uniquecolors.join(',')+"' where product_id ='"+prod_id+"'" ;
+      var query = "UPDATE product_lists SET size_varient = '"+prod_purity_varient.join(',')+"' where product_id ='"+prod_id+"'" ;
            await  models.sequelize.query(query).then(([results, metadata]) => {
                   console.log("completed"+processcount)
                   prod_purity_varient = [];
