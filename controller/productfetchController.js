@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material,product_category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability,sortBy} = req.body
+const {material,product_category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability,sortBy,offset} = req.body
 var product_list = [];
 var whereclause = {
   isactive: true
@@ -20,6 +20,11 @@ var skuwhereclause = {}
 var includeclause = [];
 skuwhereclause['isdefault']  = true
 // var seofilterattribute = []
+var currentpage = 0
+if(offset)
+{
+  currentpage = offset / 24;
+}
 // var seofilterattributevalue = []
 //   seofilterattribute.push('Category')
 //   seofilterattributevalue.push(product_category)
@@ -33,25 +38,43 @@ skuwhereclause['isdefault']  = true
   {
     if(sortBy === 'Featured')
     {
-      sortelement['order']  = [
+      sortelement  = [
         ['is_featured', 'ASC'],
     ]
     }
     if(sortBy === 'New To Stylori')
     {
-      sortelement['order']  = [
+      sortelement  = [
         ['createdAt', 'DESC'],
     ]
     }
     if(sortBy === 'Ready To Ship')
     {
-      sortelement['order']  = [
-        ['$trans_sku_lists.is_ready_to_ship$', 'DESC' ]
+      sortelement  = [
+        [{ model: models.trans_sku_lists },  'is_ready_to_ship', 'desc']
     ]
 
 
     }
+    if(sortBy === 'Price High to Low')
+    {
+      sortelement  = [
+        [{ model: models.trans_sku_lists },  'markup_price', 'desc']
 
+    ]
+
+
+    }
+    if(sortBy === 'Price Low to High')
+    {
+      sortelement  = [
+        [{ model: models.trans_sku_lists },  'markup_price', 'desc']
+
+    ]
+
+
+    }
+  //  [{ model: models.trans_sku_lists },  'selling_price', 'desc']
     console.log("updatedatavalue")
     console.log(JSON.stringify(sortBy))
 
@@ -119,14 +142,14 @@ if(collection)
 if(occasion)
 {
 
-  // whereclause['$product_occassions.occassion_name$'] = {
-  //   [Op.eq]:occasion
-  //   }
+  whereclause['$product_occassions.occassion_name$'] = {
+    [Op.eq]:occasion
+    }
     includeclause.push({
       model : models.product_occassions,
-      where: {
-        occassion_name : occasion
-      }
+      // where: {
+      //   occassion_name : occasion
+      // }
      })
 }
 
@@ -148,13 +171,13 @@ if(style)
 {
   includeclause.push({
     model : models.product_styles,
-    where:{
-      style_name: style
-    }
+    // where:{
+    //   style_name: style
+    // }
    })
-  // whereclause['$product_styles.style_name$'] = {
-  //   [Op.eq]:style
-  //   }
+  whereclause['$product_styles.style_name$'] = {
+    [Op.eq]:style
+    }
     
 }
 if(theme)
@@ -174,14 +197,14 @@ if(theme)
 if(stonecolor)
 {
 
-  // whereclause['$product_stonecolors.stonecolor$'] = {
-  //   [Op.eq]:stonecolor
-  //   }
+  whereclause['$product_stonecolors.stonecolor$'] = {
+    [Op.eq]:stonecolor
+    }
     includeclause.push({
            model : models.product_stonecolor,
-           where:{
-            stonecolor : stonecolor
-           }
+          //  where:{
+          //   stonecolor : stonecolor
+          //  }
     })
 }
 
@@ -260,40 +283,62 @@ includeclause.push({
     ['generated_sku','generatedSku'],
     ['is_ready_to_ship','isReadyToShip'],
     ['vendor_delivery_time','vendorDeliveryTime']],
-    where:skuwhereclause
+    
+    where:{
+      isdefault: true
+    }
+    
  })
- includeclause.push({
-  model : models.product_diamonds,
-  as : 'productDiamondsByProductSku',
-  attributes : [
-                ['diamond_clarity','diamondClarity'],
-                ['diamond_colour','diamondColour'],
-                ['diamond_type','diamondType'],
-                ['stone_weight','stoneWeight'],
-                ['diamond_shape','diamond_Shape'],
-                ['diamond_settings','diamond_Settings'],
-                ['stone_count','stone_Count']
-                ]
- })
- includeclause.push({
-  model : models.product_images,
-  as : 'productImagesByProductId',
-  attributes : [
-                ['ishover','ishover'],
-                ['image_url','imageUrl'],
-                ['image_position','imagePosition'],
-                ['isdefault','isdefault']
-                ]
- })
+//  var product_details_include = []
+//  product_details_include.push({
+//   model : models.trans_sku_lists,
+//   attributes:[
+//     ['sku_size','skuSize'],
+//     'purity',
+//     ['diamond_type','diamondType'],
+//     ['metal_color','metalColor'],
+//     ['markup_price','markupPrice'],
+//     ['selling_price','sellingPrice'],
+//     ['discount_price','discountPrice'],
+//     ['generated_sku','generatedSku'],
+//     ['is_ready_to_ship','isReadyToShip'],
+//     ['vendor_delivery_time','vendorDeliveryTime']],
+//     where:{
+//       isdefault: true
+//     }
+//  })
+//  product_details_include.push({
+//   model : models.product_diamonds,
+//   as : 'productDiamondsByProductSku',
+//   attributes : [
+//                 ['diamond_clarity','diamondClarity'],
+//                 ['diamond_colour','diamondColour'],
+//                 ['diamond_type','diamondType'],
+//                 ['stone_weight','stoneWeight'],
+//                 ['diamond_shape','diamond_Shape'],
+//                 ['diamond_settings','diamond_Settings'],
+//                 ['stone_count','stone_Count']
+//                 ]
+//  })
+//  product_details_include.push({
+//   model : models.product_images,
+//   as : 'productImagesByProductId',
+//   attributes : [
+//                 ['ishover','ishover'],
+//                 ['image_url','imageUrl'],
+//                 ['image_position','imagePosition'],
+//                 ['isdefault','isdefault']
+//                 ]
+//  })
 
- includeclause.push({
-  model : models.product_materials,
-  as : 'productMaterialsByProductSku',
-  attributes : [
-                ['material_name','materialName']
+//  product_details_include.push({
+//   model : models.product_materials,
+//   as : 'productMaterialsByProductSku',
+//   attributes : [
+//                 ['material_name','materialName']
                
-                ]
- })
+//                 ]
+//  })
  if(material)
  {         
   
@@ -309,40 +354,50 @@ includeclause.push({
       })
  }
 console.log(JSON.stringify(includeclause))
-// var products = await models.product_lists.findAll({
-//   attributes:['product_id'],
-//   include:[
-//     {
-//       model : models.trans_sku_lists,
-//       attributes: ['selling_price']
-//     }
-//   ] , 
-//   order: [
-//     [{ model: models.trans_sku_lists },  'selling_price', 'desc']
-//   ],
-//   where:{
-//     isactive : true
-//   }
+var products_all = await models.product_lists.findAll({
+  include:[
+    {
+      model: models.trans_sku_lists
+    }
+  ], 
+  where:whereclause,
+  limit:25,
+  subQuery: false,
+  order:sortelement
+  
 
-// })
+})
+products_all.forEach(element => {
+  product_list.push(element.product_id);
+});
+var chunk = [] ;
+while (product_list.length > 0) {
+
+  chunk.push(product_list.splice(0,24))
+
+  console.log(chunk)
+
+}
+
+// var products = await models.product_lists.findAll ({
+//     attributes:[['product_name','productName'],
+//     ['product_id','productId'],
+//     ['default_size','defaultSize'],
+//     ['size_varient','sizeVarient'],
+//     ['product_type','productType']
+//     ],
+//     include:product_details_include,
+//     where:{
+//       product_id : {
+//         [Op.in] : chunk[currentpage]
+//       }
+//     },
+//     order:sortelement
+    
+//   })
 
 
-var products = await models.product_lists.findAll ({
-    attributes:[['product_name','productName'],
-    ['product_id','productId'],
-    ['default_size','defaultSize'],
-    ['size_varient','sizeVarient'],
-    ['product_type','productType']
-    ],
-    include:includeclause,
-    where:whereclause,
-    order: [
-      [{ model: models.trans_sku_lists },  'selling_price', 'desc']
-  ]
-  })
 
-
-
-    res.send(200,{'data':{'totalCount':200,'allProductLists':products}}
+    res.send(200,{'data':{'totalCount':products_all.length,'allProductLists':products_all}}
               )
 }
