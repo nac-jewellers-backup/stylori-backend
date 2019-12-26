@@ -21,7 +21,7 @@ var includeclause = [];
 skuwhereclause['isdefault']  = true
 var isproduct_query = false;
 var currentpage = 0
-sortelement = sequelize.random()
+//sortelement = sequelize.random()
 if(offset)
 {
   currentpage = offset ;

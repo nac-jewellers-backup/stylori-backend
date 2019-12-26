@@ -15,7 +15,8 @@ exports.updatesize = async (req, res) => {
 var products =    await models.product_lists.findAll({
       
         where: {
-          isactive : true
+          isactive : true,
+          product_id: 'SR3265'
         }
       })
       processproduct()
