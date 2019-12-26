@@ -148,12 +148,11 @@ exports.priceupdate = (req, res) => {
     /************query to find all product list to run price update */
     models.product_lists.findAll({
         where: product_whereclause,
-        limit: 2
+       
             }).then(product=> {
        console.log("total product ------- "+ product.length)
    //    writelog("total product ------- "+ product.length) 
        products = product;
-      // console.log("total product ------- "+ JSON.stringify(product))
 
          processproduct()
       });
