@@ -41,10 +41,10 @@ exports.updateproduct = (req, res) => {
     req.setTimeout(50000000);
 
 
-       var gemstoneobj = req.body['Best Sellers'];
+       var gemstoneobj = req.body['data-1577447269683'];
      var gemstones_obj = JSON.parse(gemstoneobj)
      console.log(JSON.stringify(gemstones_obj))
-     updatebestsellers(gemstones_obj)
+     update_material_values(gemstones_obj)
    //  update_product_materials(gemstones_obj)
     // update_gemstonesetup(gemstones_obj);
        // update_diamondpricesettings(gemstones_obj);
@@ -471,6 +471,44 @@ function updateproduct()
 
         } 
   
+        async function update_material_values (materialobj)
+        {
+            var product_material_array = []
+            var materials_arr = materialobj;
+           await materials_arr.forEach( async metal => {
+                let response = await models.product_materials.findOne({
+                  where:{
+                    material_name: metal.material_name,
+                    product_sku: metal.product_id
+                  }
+                })
+                if(!response)
+                {
+                var  metalobj = {
+                    id: uuidv1(),
+                    material_name: metal.material_name,
+                    product_sku: metal.product_code
+                }
+                product_material_array.push(metalobj);
+              }else
+              {
+                // await models.product_materials.update({
+                //   material_name : metal.material_name
+                // })
+              }
+            }); 
+            console.log("new product material"+product_material_array.length)
+            // models.product_materials.bulkCreate(
+            //     product_material_array
+            //       , {individualHooks: true}).then(function(response){
+            //       //   update_product_diamonds(product_diamonds_obj)
+
+            //     })
+
+        } 
+
+
+
 
         function update_product_diamonds(diamondobj)
         {

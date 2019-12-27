@@ -410,15 +410,15 @@ var products_all = []
 
       
    })
-  
-  const {count,rows}  = await models.product_lists.findAndCountAll({
-    include:{
-      model : models.trans_sku_lists,
-      where:{
-        isdefault : true
-      },
-     
+   includeclause.push({
+    model : models.trans_sku_lists,
+    where:{
+      isdefault : true
     },
+   
+  })
+  const {count,rows}  = await models.product_lists.findAndCountAll({
+    include:includeclause,
     where:whereclause,
     limit : 24,
     offset : currentpage,
