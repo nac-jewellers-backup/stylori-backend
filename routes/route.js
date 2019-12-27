@@ -21,6 +21,12 @@ module.exports = function(app) {
 	app.post('/componentpriceupdate',component_price_update.priceupdate)
 
 	app.post('/api/auth/signin', authcontroller.signin);
+	app.post('/verifypasswordtoken', [authJwt.verifyToken], authcontroller.verifypasswordtoken);
+	app.post('/changepassword', [authJwt.verifyToken], authcontroller.changepassword);
+
+	
+	
+	
 	app.post('/api/auth/signup', authcontroller.signup);	
 	app.post('/verification/:email/:token', authcontroller.verification);
 	app.post('/forgotpassword', authcontroller.forgotpassword);

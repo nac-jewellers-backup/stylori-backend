@@ -14,6 +14,7 @@ const {material,product_category, theme,collection, occasion, style, metalpurity
 var product_list = [];
 var whereclause = {
   isactive: true
+
 };
 var sortelement = []
 var skuwhereclause = {}
@@ -360,52 +361,53 @@ includeclause.push({
    }) 
  }
 var products_all = []
-if(isproduct_query)
-{
-  includeclause.push({
-    model : models.trans_sku_lists,
-    attributes:[
-      ['sku_size','skuSize'],
-      'purity',
-      ['diamond_type','diamondType'],
-      ['metal_color','metalColor'],
-      ['markup_price','markupPrice'],
-      ['selling_price','sellingPrice'],
-      ['discount_price','discountPrice'],
-      ['generated_sku','generatedSku'],
-      ['is_ready_to_ship','isReadyToShip'],
-      ['vendor_delivery_time','vendorDeliveryTime']],
+// if(isproduct_query)
+// {
+//   includeclause.push({
+//     model : models.trans_sku_lists,
+//     attributes:[
+//       ['sku_size','skuSize'],
+//       'purity',
+//       ['diamond_type','diamondType'],
+//       ['metal_color','metalColor'],
+//       ['markup_price','markupPrice'],
+//       ['selling_price','sellingPrice'],
+//       ['discount_price','discountPrice'],
+//       ['generated_sku','generatedSku'],
+//       ['is_ready_to_ship','isReadyToShip'],
+//       ['vendor_delivery_time','vendorDeliveryTime']],
       
-      where:{
-        isdefault: true
-      },
-      order:[
-        ['markup_price','DESC']
-      ]
+//       where:{
+//         isdefault: true
+//       },
+//       order:[
+//         ['markup_price','DESC']
+//       ]
       
-   })
+//    })
   
  
 
-   products_all = await models.product_lists.findAll ({
-    attributes:[['product_name','productName'],
-    ['product_id','productId'],
-    ['default_size','defaultSize'],
-    ['size_varient','sizeVarient'],
-    ['product_type','productType']
-    ],
-    include:includeclause,
-    where:whereclause,
-    order:sortelement,
-    subQuery: false,
-    limit: 24,
-    offset: currentpage,
-  })
-}else{
+//    products_all = await models.product_lists.findAll ({
+//     attributes:[['product_name','productName'],
+//     ['product_id','productId'],
+//     ['default_size','defaultSize'],
+//     ['size_varient','sizeVarient'],
+//     ['product_type','productType']
+//     ],
+//     include:includeclause,
+//     where:whereclause,
+//     order:sortelement,
+//     subQuery: false,
+//     limit: 24,
+//     offset: currentpage,
+//   })
+// }else{
   products_all  = await models.trans_sku_lists.findAndCountAll({
     attributes:[
       ['sku_size','skuSize'],
       'purity',
+      'product_id',
       ['diamond_type','diamondType'],
       ['metal_color','metalColor'],
       ['markup_price','markupPrice'],
@@ -421,22 +423,29 @@ if(isproduct_query)
               ['default_size','defaultSize'],
               ['size_varient','sizeVarient'],
               ['product_type','productType'],
-              'selling_qty'
+              'selling_qty',
+              'is_featured',
+              'isactive'
               ],
             where : whereclause,
   
             include:includeclause,
+            
              
           }],
           limit: 24,
+          group: ['product_id'],
           offset: currentpage,
           where:skuwhereclause,
-          order: sortelement
+          subQuery : false,
+          order: [
+            [{model : models.product_lists},'selling_qty','ASC']
+          ]
         
   })
 
   
-}
+//}
 
 
 

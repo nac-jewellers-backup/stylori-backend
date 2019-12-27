@@ -35,6 +35,13 @@ module.exports = {
       isemailverified: {
         type: Sequelize.BOOLEAN
       },
+      country_code: {
+        type: Sequelize.STRING
+      },
+      salutation: {
+        type: Sequelize.STRING
+      },
+    
       address: {
         type: Sequelize.STRING
       },

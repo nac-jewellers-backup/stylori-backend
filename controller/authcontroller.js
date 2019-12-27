@@ -120,7 +120,41 @@ exports.signup = (req, res) => {
 
     })
 }
+exports.changepassword = (req, res) => {
+  const {oldpassword, newpassword} = req.body
+  models.users.findOne({
 
+    where: {
+      email: req.body.email
+    },
+    include: [{
+        model: models.user_roles,
+        attributes: ['id']
+    }]
+}).then(user => {
+    if (!user) {
+        return res.status(404).send({"message":"User Does Not Exist"});
+    }
+    var passwordIsValid = bcrypt.compareSync(oldpassword, user.password);
+    if (!passwordIsValid) {
+        return res.status(401).send({ auth: false, accessToken: null, message: "Invalid Password!" });
+    }
+    if(newpassword)
+    {
+                user
+                    .update({ password:bcrypt.hashSync(req.body.password, 8) })
+                    .then(updatedUser => {
+                      return res.status(200).json(`Password Reset Successfully`);
+                    })
+                    .catch(reason => {
+                      return res.status(403).json(`Please Try Again`);
+                    });
+    }
+   
+}).catch(err => {
+    res.status(500).send('Error -> ' + err);
+});
+}
 
 exports.verification = (req, res) => {
     console.log(req.params.email)
@@ -167,37 +201,43 @@ exports.resetpassword = (req, res) => {
         where: { email: req.body.email }
       }).then(user => {
           
-            return models.VerificationToken.findOne({
-              where: { token: req.body.verificationToken,tokentype: 2, userId: user.id,
-                    createdAt: {
-                    [Op.lt]: new Date(),
-                    [Op.gt]: new Date(new Date() - 24 * 60 * 60 * 1000)
-                  } }
-            })
-              .then((foundToken) => {
+            // return models.VerificationToken.findOne({
+            //   where: { token: req.body.verificationToken,tokentype: 2, userId: user.id,
+            //         createdAt: {
+            //         [Op.lt]: new Date(),
+            //         [Op.gt]: new Date(new Date() - 24 * 60 * 60 * 1000)
+            //       } }
+            // })
+            //   .then((foundToken) => {
                 
-                if(foundToken){
+              //  if(foundToken){
 
                   return user
                     .update({ password:bcrypt.hashSync(req.body.password, 8) })
                     .then(updatedUser => {
-                      return res.status(403).json(`Password Reset Successfully`);
+                      return res.status(200).json(`Password Reset Successfully`);
                     })
                     .catch(reason => {
                       return res.status(403).json(`Please Try Again`);
                     });
-                } else {
-                  return res.status(404).json(`Token expired` );
-                }
-              })
-              .catch(reason => {
-                return res.status(404).json(`Token expired`);
-              });
+                // } else {
+                //   return res.status(404).json(`Token expired` );
+                // }
+              // })
+              // .catch(reason => {
+              //   return res.status(404).json(`Token expired`);
+              // });
           
         })
         .catch(reason => {
           return res.status(404).json(`Email not found`);
         });
+}
+exports.verifypasswordtoken = (req, res) => {
+  if(req.userName)
+  {
+    res.send(200,{"message":"token is valid"})
+  }
 }
 exports.forgotpassword = (req, res) => {
     return models.users.findOne({
@@ -213,22 +253,16 @@ exports.forgotpassword = (req, res) => {
         //   return res.status(409).json('Please verify email then try reset password');
         // } else {
               
-                       models.VerificationToken.create({
-                            userId: user.id,
-                            tokentype: 2,
-                            token: crypto({length: 16})
-                          }).then((result) => {
-                            console.log("i ma nhere"+result.token)
-
+                      
+                            var token = jwt.sign({ id: user.email }, process.env.SECRET, {
+                              expiresIn: '1d' // expires in 24 hours
+                            });
                             var emilreceipiants = [{to : user.email,subject:"Reset password request"}]
          
-                          sendMail(emilreceipiants,emailTemp.forgotpasswordTemp(user.email,username,user.email, result.token))
+                          sendMail(emilreceipiants,emailTemp.forgotpasswordTemp("mano","manokarantk@gmail.com", token))
                            // sendVerificationEmail(user.email, result.token);
-                             return res.status(200).json('Reset Password link sent to your registered Email Id'+result.token);
-                           })
-                           .catch((error) => {
-                             return res.status(500).json(error);
-                           });
+                             return res.status(200).json('Reset Password link sent to your registered Email Id'+token);
+                          
        // }
     }else{
          res.status(404).json("Email ID not Registered with us");
@@ -265,27 +299,31 @@ exports.userContent = (req, res) => {
 }
 exports.updateuserprofile = (req, res) => {
     console.log(req.userName);
-    // models.User.findOne({
-    //     where: {userName: req.userName},
-    //     attributes: ['userName'],
-    //     include: [{
-    //         model: models.Role,
-    //         attributes: ['id', 'name'],
-    //         through: {
-    //             attributes: ['userId', 'roleId'],
-    //         }
-    //     }]
-    // }).then(user => {
-    //     res.status(200).json({
-    //         "description": "User Content Page",
-    //         "user": user
-    //     });
-    // }).catch(err => {
-    //     res.status(500).json({
-    //         "description": "Can not access User Page",
-    //         "error": err
-    //     });
-    // })
+    const {contactno,pincode,firstname,lastname,country_code,country,salutation} =req.body
+    models.user_profiles.findOne({
+        where: {email: req.userName},
+        
+    }).then(userprofile => {
+
+
+      userprofile
+      .update({
+        first_name : firstname,
+        last_name : lastname,
+        pincode : pincode,
+        mobile :contactno,
+        country : country,
+        country_code : country_code,
+        salutation:salutation
+
+      })
+      .then(updatedUser => {
+        return res.status(200).json(`Profile Updated Successfully`);
+      })
+      .catch(reason => {
+        return res.status(403).json(`Please Try Again`);
+      });
+    })
 }
 
 exports.guestlogin = (req, res) => {
