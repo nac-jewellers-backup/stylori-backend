@@ -41,10 +41,11 @@ exports.updateproduct = (req, res) => {
     req.setTimeout(50000000);
 
 
-       var gemstoneobj = req.body.Sheet1;
+       var gemstoneobj = req.body['Best Sellers'];
      var gemstones_obj = JSON.parse(gemstoneobj)
      console.log(JSON.stringify(gemstones_obj))
-     update_product_materials(gemstones_obj)
+     updatebestsellers(gemstones_obj)
+   //  update_product_materials(gemstones_obj)
     // update_gemstonesetup(gemstones_obj);
        // update_diamondpricesettings(gemstones_obj);
         //update_gemstonesetup(gemstones_obj);
@@ -75,7 +76,33 @@ exports.updateproduct = (req, res) => {
       // update_product_gemstones(product_gemstones_obj)
    //update_product_diamonds(product_diamonds_obj)
    // update_product_collections(product_collections_obj);
-      
+   
+   function updatebestsellers(bestsellers)
+   {
+    // models .find({ where: { title: 'aProject' } })
+    // .on('success', function (project) {
+    //   // Check if record exists in db
+    //   if (project) {
+    //     project.update({
+    //       title: 'a very different title now'
+    //     })
+    //     .success(function () {})
+    //   }
+    // })
+
+
+    bestsellers.forEach( async imgobj  => {
+      models.product_lists.findOne({
+        where: {
+          product_id : imgobj.product_code
+        }
+      }).then(async product  => {
+        await  product.update({'selling_qty':imgobj.quantity})
+
+      })
+    //  console.log(JSON.stringify(imgobj.product_code))
+    })
+   }
     function update_product_images(product_images)
     {
         var image_count = 0;

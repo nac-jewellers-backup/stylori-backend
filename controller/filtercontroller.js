@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material,Category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability} = req.body
+const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability} = req.body
 var product_list = [];
 var whereclause = {};
 var includeclause = [];
@@ -18,15 +18,37 @@ var seofilterattribute = []
 var seofilterattributevalue = []
   seofilterattribute.push('Category')
   seofilterattributevalue.push('Jewellery')
-  if(Category)
+  if(category)
   {
   seofilterattribute.push('Category')
-  seofilterattributevalue.push(Category)
+  seofilterattributevalue.push(category)
   }
   if(availability)
   {
+    let avail_str = ""
+    if(availability === "1")
+    {
+      avail_str = "1 Day Shipping"
+    }
+    if(availability === "5")
+    {
+      avail_str = "5 Day Shipping"
+    }
+    if(availability === "10")
+    {
+      avail_str = "10 Day Shipping"
+
+    }
+    if(availability === "7")
+    {
+      avail_str = "7 Day Shipping"
+
+    } if(availability === "10+")
+    {
+      avail_str = "10 & Above Days Shipping"
+    }
     seofilterattribute.push('Availability')
-    seofilterattributevalue.push(availability)
+    seofilterattributevalue.push(avail_str)
   }
 // [
 //   {
