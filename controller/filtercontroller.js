@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material,product_category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability} = req.body
+const {material,Category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability} = req.body
 var product_list = [];
 var whereclause = {};
 var includeclause = [];
@@ -18,10 +18,10 @@ var seofilterattribute = []
 var seofilterattributevalue = []
   seofilterattribute.push('Category')
   seofilterattributevalue.push('Jewellery')
-  if(product_category)
+  if(Category)
   {
   seofilterattribute.push('Category')
-  seofilterattributevalue.push(product_category)
+  seofilterattributevalue.push(Category)
   }
   if(availability)
   {
