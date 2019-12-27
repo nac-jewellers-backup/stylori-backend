@@ -49,13 +49,13 @@ if(offset)
     {
      // isproduct_query = true
       sortelement  = [
-        ['"createdat" DESC'],
+        ['"createdAt"','DESC'],
     ]
     }
     if(sortBy === 'Ready To Ship')
     {
       sortelement  = [
-        [ 'is_ready_to_ship', 'desc']
+        [ {model: models.trans_sku_lists},'is_ready_to_ship', 'desc']
     ]
 
 
@@ -63,7 +63,7 @@ if(offset)
     if(sortBy === 'Price High to Low')
     {
       sortelement  = [
-        ['markup_price', 'desc']
+        [ {model: models.trans_sku_lists},'markup_price', 'desc']
 
     ]
 
@@ -72,7 +72,7 @@ if(offset)
     if(sortBy === 'Price Low to High')
     {
       sortelement  = [
-        [ 'markup_price', 'asc']
+        [ {model: models.trans_sku_lists},'markup_price', 'asc']
 
     ]
 
@@ -83,7 +83,7 @@ if(offset)
       isproduct_query = true
 
       sortelement  = [
-        [ 'selling_qty', 'desc']
+        [ 'selling_qty', 'asc']
 
     ]
 
@@ -255,6 +255,33 @@ if(producttype)
     [Op.eq]:producttype
     }
 }
+if(availability)
+{
+  if(availability === '1')
+  {
+    skuwhereclause['is_ready_to_ship'] = true
+
+  }
+  else if(availability === '10+')
+  {
+    skuwhereclause['is_ready_to_ship'] = false
+
+    skuwhereclause['vendor_delivery_time'] = {
+      
+    [Op.gt]: 10
+    }
+  }
+  else{
+    skuwhereclause['is_ready_to_ship'] = false
+
+    skuwhereclause['vendor_delivery_time'] = {
+      [Op.eq] : availability
+    }
+
+
+  }
+  
+}
 console.log("><><<><><")
 console.log(metalpurity)
 if(metalpurity)
@@ -310,7 +337,9 @@ console.log(JSON.stringify(includeclause))
   
 
 // })
-includeclause.push({
+var prod_iclude = []
+
+prod_iclude.push({
   model : models.product_diamonds,
   as : 'productDiamondsByProductSku',
   attributes : [
@@ -323,7 +352,7 @@ includeclause.push({
                 ['stone_count','stone_Count']
                 ],
  })
- includeclause.push({
+ prod_iclude.push({
   model : models.product_images,
   as : 'productImagesByProductId',
   attributes : [
@@ -340,7 +369,6 @@ includeclause.push({
    }             
  })
 
- 
  if(material)
  {         
   
@@ -348,7 +376,7 @@ includeclause.push({
   //  whereclause['$product_materials.material_name$'] = {
   //    [Op.eq]:material
   //    }
-  includeclause.push({
+  prod_iclude.push({
     model : models.product_materials,
     as : 'productMaterialsByProductSku',
     attributes : [
@@ -363,30 +391,47 @@ includeclause.push({
 var products_all = []
 // if(isproduct_query)
 // {
-//   includeclause.push({
-//     model : models.trans_sku_lists,
-//     attributes:[
-//       ['sku_size','skuSize'],
-//       'purity',
-//       ['diamond_type','diamondType'],
-//       ['metal_color','metalColor'],
-//       ['markup_price','markupPrice'],
-//       ['selling_price','sellingPrice'],
-//       ['discount_price','discountPrice'],
-//       ['generated_sku','generatedSku'],
-//       ['is_ready_to_ship','isReadyToShip'],
-//       ['vendor_delivery_time','vendorDeliveryTime']],
+  prod_iclude.push({
+    model : models.trans_sku_lists,
+    attributes:[
+      ['sku_size','skuSize'],
+      'purity',
+      ['diamond_type','diamondType'],
+      ['metal_color','metalColor'],
+      ['markup_price','markupPrice'],
+      ['selling_price','sellingPrice'],
+      ['discount_price','discountPrice'],
+      ['generated_sku','generatedSku'],
+      ['is_ready_to_ship','isReadyToShip'],
+      ['vendor_delivery_time','vendorDeliveryTime']],
       
-//       where:{
-//         isdefault: true
-//       },
-//       order:[
-//         ['markup_price','DESC']
-//       ]
+      where:skuwhereclause,
+      distinct: 'trans_sku_lists.product_id'
+
       
-//    })
+   })
   
- 
+  const {count,rows}  = await models.product_lists.findAndCountAll({
+    include:{
+      model : models.trans_sku_lists,
+      where:{
+        isdefault : true
+      },
+     
+    },
+    where:whereclause,
+    limit : 24,
+    offset : currentpage,
+    order:sortelement,
+    subQuery: false
+    
+  })
+  console.log("count value"+count)
+  var product_ids = []
+  rows.forEach(element => {
+    
+    product_ids.push(element.product_id)
+  });
 
    products_all = await models.product_lists.findAll ({
     attributes:[['product_name','productName'],
@@ -397,25 +442,13 @@ var products_all = []
     'is_featured',
     'selling_qty'
     ],
-    include:[
-      {
-        model:models.trans_sku_lists,
-        where:{
-          isdefault : true
-        },
-        distinct: 'trans_sku_lists.product_id'
-      },
-      {
-        model:models.product_images,
-        require : false
+    include:prod_iclude,
+    where:{
+      product_id : {
+        [Op.in]: product_ids
       }
-    ],
-    where:whereclause,
-    order:[
-      [{model : models.trans_sku_lists},'markup_price','DESC']
-    ],
-    limit: 24,
-    offset: currentpage,
+    },
+    order:sortelement,
   })
 // }else{
   // products_all  = await models.trans_sku_lists.findAndCountAll({
@@ -467,6 +500,6 @@ var products_all = []
 
 
 
-    res.send(200,{'data':{'totalCount':products_all.length,'allProductLists':products_all}}
+    res.send(200,{'data':{'totalCount':count,'allProductLists':products_all}}
               )
 }
