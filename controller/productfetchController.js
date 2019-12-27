@@ -413,6 +413,7 @@ var products_all = []
    includeclause.push({
     model : models.trans_sku_lists,
     where:{
+      is_active: true, 
       isdefault : true
     },
    

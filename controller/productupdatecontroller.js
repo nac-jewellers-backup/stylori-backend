@@ -473,9 +473,11 @@ function updateproduct()
   
         async function update_material_values (materialobj)
         {
+          var processedprod  = []
+
             var product_material_array = []
             var materials_arr = materialobj;
-           await materials_arr.forEach( async metal => {
+            materials_arr.forEach( async metal => {
                 let response = await models.product_materials.findOne({
                   where:{
                     material_name: metal.material_name,
@@ -492,18 +494,28 @@ function updateproduct()
                 product_material_array.push(metalobj);
               }else
               {
+              
                 // await models.product_materials.update({
                 //   material_name : metal.material_name
                 // })
               }
+              processedprod.push(metal.material_name)
+              if(processedprod.length == materials_arr.length)
+              {
+                addproductmaterial()
+              }
             }); 
             console.log("new product material"+product_material_array.length)
-            // models.product_materials.bulkCreate(
-            //     product_material_array
-            //       , {individualHooks: true}).then(function(response){
-            //       //   update_product_diamonds(product_diamonds_obj)
+            function addproductmaterial()
+            {
+              models.product_materials.bulkCreate(
+                product_material_array
+                  , {individualHooks: true}).then(function(response){
+                  //   update_product_diamonds(product_diamonds_obj)
 
-            //     })
+                })
+            }
+            
 
         } 
 
