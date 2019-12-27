@@ -33,7 +33,8 @@ if(offset)
   if(category)
   {
     whereclause = {
-      product_category : category
+      product_category : category,
+      isactive : true
     }
   }
   if(sortBy)
@@ -200,6 +201,8 @@ if(style)
     where:{
       style_name: style
     }
+
+
    })
   // whereclause['$product_styles.style_name$'] = {
   //   [Op.eq]:style
@@ -413,18 +416,20 @@ var products_all = []
    includeclause.push({
     model : models.trans_sku_lists,
     where:{
-      is_active: true, 
-      isdefault : true
+      isdefault : true,
     },
-   
+    distinct: 'trans_sku_lists.product_id'
+
   })
+   console.log("XXXXXXXXX")
+   console.log(JSON.stringify(whereclause))
   const {count,rows}  = await models.product_lists.findAndCountAll({
     include:includeclause,
     where:whereclause,
     limit : 24,
     offset : currentpage,
-    order:sortelement,
-    subQuery: false
+    subQuery : false,
+    distinct: 'product_lists.product_id'
     
   })
   console.log("count value"+count)

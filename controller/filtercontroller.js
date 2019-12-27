@@ -116,8 +116,7 @@ if(occasion)
       model : models.product_occassions
      })
 }
-console.log("><><<><><")
-console.log(stoneshape)
+
 if(stoneshape)
 {
   seofilterattribute.push('Stone Shape')
@@ -189,7 +188,6 @@ if(producttype)
 if(metalpurity)
 {
 
-  console.log("metalpurity class set")
   seofilterattribute.push('Metal Purity')
   seofilterattributevalue.push(metalpurity)
   whereclause['$product_purities.purity$'] = {
@@ -474,7 +472,6 @@ let prod_type_where = {}
   //   "min":price_range2.selling_price,
   //   "max":price_range1.selling_price
   // }
-  console.log("test yeyysasdsa")
   var seooptions = await models.seo_url_priorities.findAll({
   
     where: {

@@ -41,10 +41,13 @@ exports.updateproduct = (req, res) => {
     req.setTimeout(50000000);
 
 
-       var gemstoneobj = req.body['data-1577447269683'];
+       var gemstoneobj = req.body['Product_Collection'];
      var gemstones_obj = JSON.parse(gemstoneobj)
      console.log(JSON.stringify(gemstones_obj))
-     update_material_values(gemstones_obj)
+     update_product_collections(gemstones_obj);
+   //  update_product_styles(gemstones_obj)
+  //   update_product_occassions(gemstones_obj)
+ //    update_material_values(gemstones_obj)
    //  update_product_materials(gemstones_obj)
     // update_gemstonesetup(gemstones_obj);
        // update_diamondpricesettings(gemstones_obj);
@@ -489,7 +492,7 @@ function updateproduct()
                 var  metalobj = {
                     id: uuidv1(),
                     material_name: metal.material_name,
-                    product_sku: metal.product_code
+                    product_sku: metal.product_id
                 }
                 product_material_array.push(metalobj);
               }else
@@ -594,13 +597,13 @@ function updateproduct()
                 }
                 product_occassions.push(occassionobj);
             }); 
-            var product_occ_arr = splitArray(product_occassions, 5000)[1];
+          //  var product_occ_arr = splitArray(product_occassions, 5000)[1];
 
             models.product_occassions.bulkCreate(
-                product_occ_arr
+              product_occassions
                   , {individualHooks: true}).then(function(response){
                       console.log("occassions succes");
-                   update_product_collections(product_collections_obj)
+                 //  update_product_collections(product_collections_obj)
                 })  .catch((error) => {
                          console.log("errorresponse"+error)
                  });
@@ -623,7 +626,7 @@ function updateproduct()
                 product_collections
                   , {individualHooks: true}).then(function(response){
                       console.log('collection success');
-                        update_product_styles(product_style_obj)
+                       // update_product_styles(product_style_obj)
                 })  .catch((error) => {
                          console.log("errorresponse"+error)
                  });
