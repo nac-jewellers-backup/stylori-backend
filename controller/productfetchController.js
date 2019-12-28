@@ -19,7 +19,15 @@ var whereclause = {
 var sortelement = []
 var skuwhereclause = {}
 var includeclause = [];
-skuwhereclause['isdefault']  = true
+var defaultskuwhereclause = {}
+var imagewhereclause = {
+  isdefault : true,
+  image_position:{
+    [Op.in]:[1,2]
+  }
+}    
+
+defaultskuwhereclause['isdefault']  = true
 var isproduct_query = false;
 var currentpage = 0
 //sortelement = sequelize.random()
@@ -103,7 +111,19 @@ if(offset)
   {
     console.log("metal colur image")
     console.log(JSON.stringify(metalcolor))
+    includeclause.push({
+      model : models.product_metalcolours,
+      where: {
+        product_color : metalcolor
+      }
+     })
     skuwhereclause['metal_color'] = metalcolor
+    imagewhereclause = {
+      product_color : metalcolor,
+      image_position:{
+        [Op.in]:[1,2]
+      }
+    }    
   }
   if(price)
   {
@@ -301,13 +321,17 @@ if(metalpurity)
     // whereclause['$product_purities.purity$'] = {
     // [Op.eq]:metalpurity
     // }
-    // includeclause.push({
-    //        model : models.product_purities,
-    //        attributes: ['purity']
-    // })
-    skuwhereclause['purity'] = metalpurity
-    console.log(JSON.stringify(includeclause))
-    whereclause['$product_purities.purity$']
+    includeclause.push({
+           model : models.product_purities,
+           attributes: ['purity'],
+           where:{
+            purity : metalpurity
+           }
+    })
+    skuwhereclause = {}
+     skuwhereclause['purity'] = metalpurity
+    // console.log(JSON.stringify(includeclause))
+    // whereclause['$product_purities.purity$']
 }
 
 if(gender)
@@ -364,12 +388,7 @@ prod_iclude.push({
                 ['image_position','imagePosition'],
                 ['isdefault','isdefault']
                 ],
-   where:{
-     isdefault : true,
-     image_position:{
-       [Op.in]:[1,2]
-     }
-   }             
+   where:imagewhereclause           
  })
 
  if(material)
@@ -379,7 +398,7 @@ prod_iclude.push({
   //  whereclause['$product_materials.material_name$'] = {
   //    [Op.eq]:material
   //    }
-  prod_iclude.push({
+  includeclause.push({
     model : models.product_materials,
     as : 'productMaterialsByProductSku',
     attributes : [
@@ -409,16 +428,19 @@ var products_all = []
       ['vendor_delivery_time','vendorDeliveryTime']],
       
       where:skuwhereclause,
-      distinct: 'trans_sku_lists.product_id'
+      group: 'product_id',
 
       
    })
    includeclause.push({
     model : models.trans_sku_lists,
-    where:{
-      isdefault : true,
-    },
-    distinct: 'trans_sku_lists.product_id'
+    where:defaultskuwhereclause,
+    distinct: 'trans_sku_lists.product_id',
+    // sort:[
+    //   [
+    //     'trans_sku_list.markup','desc'
+    //   ]
+    // ]
 
   })
    console.log("XXXXXXXXX")
@@ -429,8 +451,8 @@ var products_all = []
     limit : 24,
     offset : currentpage,
     subQuery : false,
-    distinct: 'product_lists.product_id'
-    
+    distinct: 'product_lists.product_id',
+    order: sortelement
   })
   console.log("count value"+count)
   var product_ids = []

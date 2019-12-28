@@ -36,13 +36,13 @@ exports.priceupdate = (req, res) => {
     const {req_product_id, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
     var whereclause1 = {
       isactive : true,
-      product_id: {
-        [Op.notILike]:'%SR%',
-        [Op.notILike]:'%SGC%'
-      }
       // product_id: {
-      //   [Op.eq]:'SR0458'
+      //   [Op.notILike]:'%SR%',
+      //   [Op.notILike]:'%SGC%'
       // }
+      product_id: {
+        [Op.eq]:'SR0505'
+      }
     }
     console.log(":>>>>>>>>>1212")
    var  startDate = new Date()
@@ -187,7 +187,7 @@ exports.priceupdate = (req, res) => {
       //  }
       // ],
       where: whereclause1,
-      offset: 325
+      offset: 0
         }).then(product=> {
      
       products = product;
