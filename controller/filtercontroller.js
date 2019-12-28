@@ -20,8 +20,15 @@ var seofilterattributevalue = []
   seofilterattributevalue.push('Jewellery')
   if(category)
   {
-  seofilterattribute.push('Category')
-  seofilterattributevalue.push(category)
+    if(category == 'goldcoins')
+    {
+      seofilterattribute.push('Category')
+      seofilterattributevalue.push("Gold Coins")
+    }else{
+      seofilterattribute.push('Category')
+      seofilterattributevalue.push(category)
+    }
+
   }
   if(availability)
   {
