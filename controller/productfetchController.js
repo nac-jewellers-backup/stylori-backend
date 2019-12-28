@@ -40,9 +40,20 @@ if(offset)
 //   seofilterattributevalue.push(product_category)
   if(category)
   {
-    whereclause = {
-      product_category : category,
-      isactive : true
+    if(category == 'goldcoins')
+    {
+
+      whereclause = {
+        product_category : "Gold Coins",
+        isactive : true
+      }
+    }else 
+    {
+
+      whereclause = {
+        product_category : category,
+        isactive : true
+      }
     }
   }
   if(sortBy)

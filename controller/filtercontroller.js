@@ -13,6 +13,7 @@ exports.filteroptions = async (req, res) => {
 const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability} = req.body
 var product_list = [];
 var whereclause = {};
+var category_filter = {}
 var includeclause = [];
 var seofilterattribute = []
 var seofilterattributevalue = []
@@ -24,9 +25,11 @@ var seofilterattributevalue = []
     {
       seofilterattribute.push('Category')
       seofilterattributevalue.push("Gold Coins")
+      category_filter['name']= "Gold Coins"
     }else{
       seofilterattribute.push('Category')
       seofilterattributevalue.push(category)
+      category_filter['name']= category
     }
 
   }
@@ -234,7 +237,7 @@ products.forEach(element => {
 
 var master_category =    await models.master_product_categories.findAll({
   
-    
+    where: category_filter
 })
 
 
