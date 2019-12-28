@@ -291,12 +291,12 @@ if(producttype)
 }
 if(availability)
 {
-  if(availability === '1')
+  if(availability === '1 Day Shipping')
   {
     skuwhereclause['is_ready_to_ship'] = true
 
   }
-  else if(availability === '10+')
+  else if(availability === '10 & Above Days Shipping')
   {
     skuwhereclause['is_ready_to_ship'] = false
 

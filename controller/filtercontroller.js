@@ -35,30 +35,30 @@ var seofilterattributevalue = []
   }
   if(availability)
   {
-    let avail_str = ""
-    if(availability === "1")
-    {
-      avail_str = "1 Day Shipping"
-    }
-    if(availability === "5")
-    {
-      avail_str = "5 Day Shipping"
-    }
-    if(availability === "10")
-    {
-      avail_str = "10 Day Shipping"
+    // let avail_str = ""
+    // if(availability === "1")
+    // {
+    //   avail_str = "1 Day Shipping"
+    // }
+    // if(availability === "5")
+    // {
+    //   avail_str = "5 Day Shipping"
+    // }
+    // if(availability === "10")
+    // {
+    //   avail_str = "10 Day Shipping"
 
-    }
-    if(availability === "7")
-    {
-      avail_str = "7 Day Shipping"
+    // }
+    // if(availability === "7")
+    // {
+    //   avail_str = "7 Day Shipping"
 
-    } if(availability === "10+")
-    {
-      avail_str = "10 & Above Days Shipping"
-    }
+    // } if(availability === "10+")
+    // {
+    //   avail_str = "10 & Above Days Shipping"
+    // }
     seofilterattribute.push('Availability')
-    seofilterattributevalue.push(avail_str)
+    seofilterattributevalue.push(availability)
   }
 // [
 //   {
