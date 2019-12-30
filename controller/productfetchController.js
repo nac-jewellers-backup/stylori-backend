@@ -28,6 +28,8 @@ var imagewhereclause = {
     [Op.in]:[1,2]
   }
 }    
+skuwhereclause['isdefault']  = true
+
 defaultskuwhereclause['isdefault']  = true
 var isproduct_query = false;
 var currentpage = 0
@@ -81,13 +83,17 @@ if(offset)
     skusort = [
       ['is_ready_to_ship', 'desc']
     ]
-
+   
     }
     if(sortBy === 'Price High to Low')
     {
       sortelement  = [
         [ {model: models.trans_sku_lists},'markup_price', 'desc']
 
+    ]
+
+    skusort = [
+      ['markup_price', 'desc']
     ]
 
 
@@ -99,7 +105,9 @@ if(offset)
 
     ]
 
-
+    skusort = [
+      ['markup_price', 'asc']
+    ]
     }
     if(sortBy === 'Best Seller')
     {
