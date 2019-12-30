@@ -17,6 +17,7 @@ var whereclause = {
 
 };
 var sortelement = []
+var prod_iclude = []
 var skuwhereclause = {}
 var includeclause = [];
 var defaultskuwhereclause = {}
@@ -123,21 +124,32 @@ if(offset)
     console.log(JSON.stringify(metalcolor))
     includeclause.push({
       model : models.product_metalcolours,
+      where: {
+        product_color : metalcolor
+      }
+     })
+
+     prod_iclude.push({
+      model : models.product_metalcolours,
       // where: {
       //   product_color : metalcolor
       // }
      })
 
 
-     whereclause['$product_metalcolours.product_color$'] = {
-      [Op.eq] : metalcolor
-      }
-    skuwhereclause['metal_color'] = metalcolor
+    //  whereclause['$product_metalcolours.product_color$'] = {
+    //   [Op.eq] : metalcolor
+    //   }
+    //skuwhereclause['metal_color'] = metalcolor
+    // skuwhereclause['$trans_sku_lists.metal_color$'] = {
+    //   [Op.eq] : metalcolor
+    //   }
     imagewhereclause = {
       product_color : metalcolor,
       image_position:{
         [Op.in]:[1,2]
       }
+      
     }    
   }
   if(price)
@@ -404,7 +416,7 @@ console.log(JSON.stringify(includeclause))
   
 
 // })
-var prod_iclude = []
+
 
 prod_iclude.push({
   model : models.product_diamonds,
@@ -437,9 +449,9 @@ prod_iclude.push({
  {         
   
  
-  //  whereclause['$product_materials.material_name$'] = {
-  //    [Op.eq]:material
-  //    }
+   whereclause['$product_materials.material_name$'] = {
+     [Op.eq]:material
+     }
   includeclause.push({
     model : models.product_materials,
     as : 'productMaterialsByProductSku',
@@ -447,9 +459,9 @@ prod_iclude.push({
                   ['material_name','materialName']
                  
                   ],
-                  where:{
-                    material_name : material
-                   }
+                  // where:{
+                  //   material_name : material
+                  //  }
    }) 
  }
 var products_all = []
@@ -471,7 +483,6 @@ var products_all = []
       
       where:skuwhereclause,
       require:false,
-      group: 'product_id',
 
       
    })
