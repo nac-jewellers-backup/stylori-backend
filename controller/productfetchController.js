@@ -124,10 +124,15 @@ if(offset)
     console.log(JSON.stringify(metalcolor))
     includeclause.push({
       model : models.product_metalcolours,
-      where: {
-        product_color : metalcolor
-      }
+      // where: {
+      //   product_color : metalcolor
+      // }
      })
+
+
+     whereclause['$product_metalcolours.product_color$'] = {
+      [Op.eq] : metalcolor
+      }
     skuwhereclause['metal_color'] = metalcolor
     imagewhereclause = {
       product_color : metalcolor,
@@ -470,7 +475,7 @@ var products_all = []
    })
    includeclause.push({
     model : models.trans_sku_lists,
-   // where:defaultskuwhereclause,
+    where:defaultskuwhereclause,
     distinct: 'trans_sku_lists.product_id',
     // sort:[
     //   [
