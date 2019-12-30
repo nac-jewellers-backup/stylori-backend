@@ -26,10 +26,12 @@ var seofilterattributevalue = []
       seofilterattribute.push('Category')
       seofilterattributevalue.push("Gold Coins")
       category_filter['name']= "Gold Coins"
+      whereclause['product_category'] = "Gold Coins"
     }else{
       seofilterattribute.push('Category')
       seofilterattributevalue.push(category)
       category_filter['name']= category
+      whereclause['product_category'] = category
     }
 
   }

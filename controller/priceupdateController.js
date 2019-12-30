@@ -36,7 +36,8 @@ exports.priceupdate = (req, res) => {
         
         product_id: 
           {
-          [Op.in]:['SR0323']
+            [Op.in]:['SE0303']
+
           }
       }
     /******* whereclause to filter  skus */

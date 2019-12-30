@@ -41,7 +41,7 @@ exports.priceupdate = (req, res) => {
       //   [Op.notILike]:'%SGC%'
       // }
       product_id: {
-        [Op.in]:['SR0323']
+        [Op.in]:['SE0303']
       }
     }
     console.log(":>>>>>>>>>1212")
