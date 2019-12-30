@@ -26,7 +26,7 @@ var imagewhereclause = {
     [Op.in]:[1,2]
   }
 }    
-
+skuwhereclause['isdefault'] = true
 defaultskuwhereclause['isdefault']  = true
 var isproduct_query = false;
 var currentpage = 0
