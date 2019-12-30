@@ -12,7 +12,9 @@ exports.filteroptions = async (req, res) => {
 
 const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability} = req.body
 var product_list = [];
-var whereclause = {};
+var whereclause = {
+  isactive : true
+};
 var category_filter = {}
 var includeclause = [];
 var seofilterattribute = []
