@@ -61,10 +61,19 @@ module.exports = {
       colour_varient: {
         type: Sequelize.STRING
       },
+      by_design: {
+        type: Sequelize.STRING
+      },
+      by_weight: {
+        type: Sequelize.STRING
+      },
       earring_backing:{
         type: Sequelize.STRING
       },
       selling_qty: {
+        type: Sequelize.INTEGER
+      },
+      max_booking_qty: {
         type: Sequelize.INTEGER
       },
       isreorderable: {

@@ -294,7 +294,9 @@ if(availability)
   if(availability === '1 Day Shipping')
   {
     skuwhereclause['is_ready_to_ship'] = true
-
+    whereclause['$trans_sku_lists.is_ready_to_ship$'] = {
+      [Op.eq]:true
+      }
   }
   else if(availability === '10 & Above Days Shipping')
   {
