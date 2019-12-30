@@ -16,6 +16,7 @@ var whereclause = {
   isactive: true
 
 };
+var skusort = {}
 var sortelement = []
 var prod_iclude = []
 var skuwhereclause = {}
@@ -77,7 +78,9 @@ if(offset)
       sortelement  = [
         [ {model: models.trans_sku_lists},'is_ready_to_ship', 'desc']
     ]
-
+    skusort = [
+      ['is_ready_to_ship', 'desc']
+    ]
 
     }
     if(sortBy === 'Price High to Low')
@@ -106,8 +109,6 @@ if(offset)
         [ 'selling_qty', 'asc']
 
     ]
-
-
     }
     console.log("sort issue")
     console.log(JSON.stringify(sortelement))
@@ -370,16 +371,16 @@ if(metalpurity)
   //       purity : metalpurity
   //     }
   //  })
-    // whereclause['$product_purities.purity$'] = {
-    // [Op.eq]:metalpurity
-    // }
-    includeclause.push({
-           model : models.product_purities,
-           attributes: ['purity'],
-           where:{
-            purity : metalpurity
-           }
-    })
+    whereclause['$trans_sku_lists.purity$'] = {
+    [Op.eq]:metalpurity
+    }
+    // includeclause.push({
+    //        model : models.product_purities,
+    //        attributes: ['purity'],
+    //       //  where:{
+    //       //   purity : metalpurity
+    //       //  }
+    // })
     skuwhereclause = {}
      skuwhereclause['purity'] = metalpurity
     // console.log(JSON.stringify(includeclause))
@@ -483,6 +484,7 @@ var products_all = []
       
       where:skuwhereclause,
       require:false,
+      order: skusort
 
       
    })
@@ -509,9 +511,12 @@ var products_all = []
     order: sortelement
   })
   console.log("count value"+count)
+  console.log("rows value"+rows.length)
+
   var product_ids = []
   rows.forEach(element => {
-    
+    console.log("rows value"+element.product_id)
+
     product_ids.push(element.product_id)
   });
 
