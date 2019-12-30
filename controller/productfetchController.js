@@ -143,6 +143,9 @@ if(offset)
       skuwhereclause['markup_price'] = {
         [Op.between] :[price.min_price , price.max_price]
       }
+      whereclause['$trans_sku_lists.markup_price$'] = {
+        [Op.between] :[price.min_price , price.max_price]
+        }
     }
   }
 //   if(availability)
@@ -297,6 +300,9 @@ if(availability)
     whereclause['$trans_sku_lists.is_ready_to_ship$'] = {
       [Op.eq]:true
       }
+      whereclause['$trans_sku_lists.is_active$'] = {
+        [Op.eq]:true
+        }
   }
   else if(availability === '10 & Above Days Shipping')
   {
@@ -306,6 +312,15 @@ if(availability)
       
     [Op.gt]: 10
     }
+    whereclause['$trans_sku_lists.is_ready_to_ship$'] = {
+      [Op.eq]:false
+      }
+      whereclause['$trans_sku_lists.vendor_delivery_time$'] = {
+        [Op.gt]: 10
+        }
+        whereclause['$trans_sku_lists.is_active$'] = {
+          [Op.eq]:true
+          }
   }
   else{
     skuwhereclause['is_ready_to_ship'] = false
@@ -313,7 +328,15 @@ if(availability)
     skuwhereclause['vendor_delivery_time'] = {
       [Op.eq] : availability
     }
-
+    whereclause['$trans_sku_lists.is_ready_to_ship$'] = {
+      [Op.eq]:false
+      }
+      whereclause['$trans_sku_lists.is_ready_to_ship$'] = {
+        [Op.gt]: availability
+        }
+        whereclause['$trans_sku_lists.is_active$'] = {
+          [Op.eq]:true
+          }
 
   }
   
@@ -447,7 +470,7 @@ var products_all = []
    })
    includeclause.push({
     model : models.trans_sku_lists,
-    where:defaultskuwhereclause,
+   // where:defaultskuwhereclause,
     distinct: 'trans_sku_lists.product_id',
     // sort:[
     //   [

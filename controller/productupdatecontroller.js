@@ -41,14 +41,16 @@ exports.updateproduct = (req, res) => {
     req.setTimeout(50000000);
 
 
-       var gemstoneobj = req.body['data-1577447269683'];
+       var gemstoneobj = req.body['One Day Shipping Flag'];
      var gemstones_obj = JSON.parse(gemstoneobj)
      console.log(JSON.stringify(gemstones_obj))
+    updateonedayshipping(gemstones_obj)
+
   //   update_product_collections(gemstones_obj);
    //  update_product_styles(gemstones_obj)
   //   update_product_occassions(gemstones_obj)
  //    update_material_values(gemstones_obj)
- update_material_values(gemstones_obj)
+ //update_material_values(gemstones_obj)
     // update_gemstonesetup(gemstones_obj);
        // update_diamondpricesettings(gemstones_obj);
         //update_gemstonesetup(gemstones_obj);
@@ -79,7 +81,30 @@ exports.updateproduct = (req, res) => {
       // update_product_gemstones(product_gemstones_obj)
    //update_product_diamonds(product_diamonds_obj)
    // update_product_collections(product_collections_obj);
-   
+  async function updateonedayshipping(skus)
+   {
+   var skus_array = []
+    skus.forEach(sku => {
+      skus_array.push(sku.SKU)
+    })
+await models.trans_sku_lists.update(
+      { is_ready_to_ship: true },
+      { where: {
+        generated_sku : {
+          [Op.in] : skus_array
+        }
+      } }
+    )
+      .success(result =>
+       // handleResult(result)
+       console.log("updated")
+      )
+      .error(err =>
+        console.log("error")
+
+      )
+    console.log("one days shipping sku"+skus_array.length)
+   }
    function updatebestsellers(bestsellers)
    {
     // models .find({ where: { title: 'aProject' } })

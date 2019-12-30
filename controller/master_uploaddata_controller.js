@@ -136,10 +136,12 @@ exports.updateproductcreatedate = async (req, res) => {
     var stonecolor_obj = JSON.parse(stonecolor_str)
 
     res.send(200,{"message":0})
-
+    updateskuattribute(stonecolor_obj[product_count])
   
+    async function updateskuattribute(product_obj)
+    {
 
-    stonecolor_obj.forEach(async product_obj => {
+   // stonecolor_obj.forEach(async product_obj => {
         var product_sku = product_obj.sku
         var sku_url = product_obj.sku_url
         var sold_out = product_obj.sold_out
@@ -162,8 +164,14 @@ exports.updateproductcreatedate = async (req, res) => {
         await models.sequelize.query(query).then(([results, metadata]) => {
       // Results will be an empty array and metadata will contain the number of affected rows.
     })
+    product_count++;
+    if(stonecolor_obj.length > product_count)
+    {
+        updateskuattribute(stonecolor_obj[product_count])
 
-    })
+    }
+    }
+   // })
     console.log("finished")
     
 }
