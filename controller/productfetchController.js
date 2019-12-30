@@ -26,7 +26,6 @@ var imagewhereclause = {
     [Op.in]:[1,2]
   }
 }    
-skuwhereclause['isdefault'] = true
 defaultskuwhereclause['isdefault']  = true
 var isproduct_query = false;
 var currentpage = 0
@@ -419,6 +418,7 @@ prod_iclude.push({
                 ['diamond_settings','diamond_Settings'],
                 ['stone_count','stone_Count']
                 ],
+                require: false 
  })
  prod_iclude.push({
   model : models.product_images,
@@ -429,7 +429,8 @@ prod_iclude.push({
                 ['image_position','imagePosition'],
                 ['isdefault','isdefault']
                 ],
-   where:imagewhereclause           
+   where:imagewhereclause,
+   require: false           
  })
 
  if(material)
@@ -469,6 +470,7 @@ var products_all = []
       ['vendor_delivery_time','vendorDeliveryTime']],
       
       where:skuwhereclause,
+      require:false,
       group: 'product_id',
 
       
