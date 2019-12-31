@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability,bydesign,byweight} = req.body
+const {material,Category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability,bydesign,byweight} = req.body
 var product_list = [];
 var whereclause = {
   isactive : true
@@ -21,9 +21,9 @@ var seofilterattribute = []
 var seofilterattributevalue = []
   seofilterattribute.push('Category')
   seofilterattributevalue.push('Jewellery')
-  if(category)
+  if(Category)
   {
-    if(category == 'goldcoins')
+    if(Category == 'goldcoins')
     {
       seofilterattribute.push('Category')
       seofilterattributevalue.push("goldcoins")
@@ -31,9 +31,9 @@ var seofilterattributevalue = []
       whereclause['product_category'] = "Gold Coins"
     }else{
       seofilterattribute.push('Category')
-      seofilterattributevalue.push(category)
-      category_filter['name']= category
-      whereclause['product_category'] = category
+      seofilterattributevalue.push(Category)
+      category_filter['name']= Category
+      whereclause['product_category'] = Category
     }
 
   }
@@ -500,6 +500,11 @@ let prod_type_where = {}
   //   "min":price_range2.selling_price,
   //   "max":price_range1.selling_price
   // }
+
+  console.log("seoparams")
+  console.log(JSON.stringify(seofilterattribute))
+  console.log(JSON.stringify(seofilterattributevalue))
+  console.log("==========")
   var seooptions = await models.seo_url_priorities.findAll({
   
     where: {
