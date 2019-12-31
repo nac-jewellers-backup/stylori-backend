@@ -26,7 +26,7 @@ var seofilterattributevalue = []
     if(category == 'goldcoins')
     {
       seofilterattribute.push('Category')
-      seofilterattributevalue.push("Gold Coins")
+      seofilterattributevalue.push("goldcoins")
       category_filter['name']= "Gold Coins"
       whereclause['product_category'] = "Gold Coins"
     }else{

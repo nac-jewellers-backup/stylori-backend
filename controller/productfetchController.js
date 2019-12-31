@@ -28,7 +28,7 @@ var imagewhereclause = {
     [Op.in]:[1,2]
   }
 }    
-skuwhereclause['isdefault']  = true
+//skuwhereclause['isdefault']  = true
 
 defaultskuwhereclause['isdefault']  = true
 var isproduct_query = false;
@@ -77,6 +77,8 @@ if(offset)
     }
     if(sortBy === 'Ready To Ship')
     {
+      // defaultskuwhereclause = {}
+      // defaultskuwhereclause['is_ready_to_ship'] = true
       sortelement  = [
         [ {model: models.trans_sku_lists},'is_ready_to_ship', 'desc']
     ]
@@ -92,9 +94,9 @@ if(offset)
 
     ]
 
-    skusort = [
-      ['markup_price', 'desc']
-    ]
+    // skusort = [
+    //   ['markup_price', 'desc']
+    // ]
 
 
     }
@@ -105,9 +107,9 @@ if(offset)
 
     ]
 
-    skusort = [
-      ['markup_price', 'asc']
-    ]
+    // skusort = [
+    //   ['markup_price', 'asc']
+    // ]
     }
     if(sortBy === 'Best Seller')
     {
@@ -131,13 +133,15 @@ if(offset)
   {
     console.log("metal colur image")
     console.log(JSON.stringify(metalcolor))
-    includeclause.push({
-      model : models.product_metalcolours,
-      where: {
-        product_color : metalcolor
+    // includeclause.push({
+    //   model : models.product_metalcolours,
+    //   where: {
+    //     product_color : metalcolor
+    //   }
+    //  })
+    whereclause['$trans_sku_lists.metal_color$'] = {
+      [Op.eq]:metalcolor
       }
-     })
-
      prod_iclude.push({
       model : models.product_metalcolours,
       // where: {
