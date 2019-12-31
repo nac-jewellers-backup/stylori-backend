@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material,Category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability,bydesign,byweight} = req.body
+const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability,bydesign,byweight} = req.body
 var product_list = [];
 var whereclause = {
   isactive : true
@@ -19,11 +19,10 @@ var category_filter = {}
 var includeclause = [];
 var seofilterattribute = []
 var seofilterattributevalue = []
-  seofilterattribute.push('Category')
-  seofilterattributevalue.push('Jewellery')
-  if(Category)
+  
+  if(category)
   {
-    if(Category == 'goldcoins')
+    if(category == 'goldcoins')
     {
       seofilterattribute.push('Category')
       seofilterattributevalue.push("goldcoins")
@@ -31,11 +30,15 @@ var seofilterattributevalue = []
       whereclause['product_category'] = "Gold Coins"
     }else{
       seofilterattribute.push('Category')
-      seofilterattributevalue.push(Category)
-      category_filter['name']= Category
-      whereclause['product_category'] = Category
+      seofilterattributevalue.push(category)
+      category_filter['name']= category
+      whereclause['product_category'] = category
     }
 
+  }else
+  {
+    seofilterattribute.push('Category')
+  seofilterattributevalue.push('Jewellery')
   }
   if(bydesign)
   {
