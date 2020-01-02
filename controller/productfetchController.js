@@ -486,7 +486,7 @@ var products_all = []
       ['sku_size','skuSize'],
       'purity',
       ['diamond_type','diamondType'],
-      ['product_type','productType'],
+      
       ['markup_price','markupPrice'],
       ['markup_price','markupPrice'],
       ['sku_id','skuID'],
@@ -538,6 +538,7 @@ var products_all = []
    products_all = await models.product_lists.findAll ({
     attributes:[['product_name','productName'],
     ['product_id','productId'],
+    ['product_type','productType'],
     ['default_size','defaultSize'],
     ['size_varient','sizeVarient'],
     ['product_type','productType'],
