@@ -488,6 +488,8 @@ var products_all = []
       ['diamond_type','diamondType'],
       ['metal_color','metalColor'],
       ['markup_price','markupPrice'],
+      ['sku_id','skuID'],
+      ['sku_url','skuUrl'],
       ['selling_price','sellingPrice'],
       ['discount_price','discountPrice'],
       ['generated_sku','generatedSku'],

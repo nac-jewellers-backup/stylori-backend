@@ -137,7 +137,7 @@ exports.productupload =  async (req, res) => {
         vendor_code,
         product_name,
         product_category,
-        isactive: true,
+        isactive: false,
         default_weight,
         gender,
         height,

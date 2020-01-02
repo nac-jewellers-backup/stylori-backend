@@ -316,6 +316,7 @@ exports.adduseraddress = async (req, res) => {
       country_code:element.country_code,
       contact_number:element.contactno,
       address_type:element.addresstype,
+      salutation : element.salutation,
       is_active:true,
       default_billing:false,
       default_shipping:false
@@ -330,6 +331,7 @@ exports.adduseraddress = async (req, res) => {
       addressline1:element.addressline1,
       addressline2:element.addressline2,
       city:element.city,
+      salutation : element.salutation,
       state:element.state,
       country:element.country,
       country_code:element.country_code,
@@ -400,7 +402,8 @@ exports.addaddress = async (req, res) => {
             country:element.country,
             country_code:element.country_code,
             contact_number:element.contactno,
-            address_type:element.addresstype
+            address_type:element.addresstype,
+            salutation: element.salutation
         }
         address_arr.push(address_obj)
         if(!element.address_id && !isguestlogin)
@@ -420,7 +423,8 @@ exports.addaddress = async (req, res) => {
             contact_number:element.contactno,
             address_type:element.addresstype,
             default_billing:false,
-            default_shipping:false
+            default_shipping:false,
+            salutation:element.salutation
         }
         add_user_address.push(user_address_obj)
         }
