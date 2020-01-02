@@ -462,7 +462,7 @@ prod_iclude.push({
  {         
   
  
-   whereclause['$product_materials.material_name$'] = {
+   whereclause['$productMaterialsByProductSku.material_name$'] = {
      [Op.eq]:material
      }
   includeclause.push({
