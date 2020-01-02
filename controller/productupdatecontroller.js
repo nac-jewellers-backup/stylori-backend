@@ -41,10 +41,10 @@ exports.updateproduct = (req, res) => {
     req.setTimeout(50000000);
 
 
-       var gemstoneobj = req.body['One Day Shipping Flag'];
+       var gemstoneobj = req.body['data-1577447269683'];
      var gemstones_obj = JSON.parse(gemstoneobj)
      console.log(JSON.stringify(gemstones_obj))
-    updateonedayshipping(gemstones_obj)
+     update_material_values(gemstones_obj)
 
   //   update_product_collections(gemstones_obj);
    //  update_product_styles(gemstones_obj)
