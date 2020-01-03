@@ -443,7 +443,7 @@ prod_iclude.push({
                 ['diamond_settings','diamond_Settings'],
                 ['stone_count','stone_Count']
                 ],
-                require: false 
+                required: false 
  })
  prod_iclude.push({
   model : models.product_images,
@@ -455,7 +455,7 @@ prod_iclude.push({
                 ['isdefault','isdefault']
                 ],
    where:imagewhereclause,
-   require: false           
+   required: false           
  })
 
  if(material)
