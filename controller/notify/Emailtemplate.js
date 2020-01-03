@@ -158,6 +158,11 @@ const getName = (username) => {
     </html>
     `;
   };
+
+  
+  
+
+
   const emailTemplate = {};
   emailTemplate.getName = getName;
   emailTemplate.forgotpasswordTemp = forgotpasswordTemp;
