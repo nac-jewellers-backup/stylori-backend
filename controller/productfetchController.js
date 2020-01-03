@@ -246,7 +246,7 @@ if(occasion)
 if(stoneshape)
 {
  
-  
+  // removed
   // whereclause['$product_gemstones.gemstone_shape$'] = {
   //   [Op.eq]:stoneshape
   //   }
