@@ -183,16 +183,18 @@ exports.generatepaymenturl = async (req, res) => {
     responseSuccessURL,
     responseFailURL
   }
-  console.log(JSON.stringify(bodyparams))
-  request({
-    url: 'https://test.ipg-online.com/connect/gateway/processing',
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(bodyparams)
-}, function(error, response, body) {
-   res.send(200,response,body);
 
-});
+  res.send(200, hash)
+//   console.log(JSON.stringify(bodyparams))
+//   request({
+//     url: 'https://test.ipg-online.com/connect/gateway/processing',
+//     method: "POST",
+//     headers: {"Content-Type": "application/json"},
+//     body: JSON.stringify(bodyparams)
+// }, function(error, response, body) {
+//    res.send(200,response,body);
+
+// });
 
 
 }
