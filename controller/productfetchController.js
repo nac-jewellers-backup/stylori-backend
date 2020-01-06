@@ -246,7 +246,7 @@ if(occasion)
 if(stoneshape)
 {
  
-  
+  // removed
   // whereclause['$product_gemstones.gemstone_shape$'] = {
   //   [Op.eq]:stoneshape
   //   }
@@ -498,7 +498,7 @@ var products_all = []
       ['vendor_delivery_time','vendorDeliveryTime']],
       
       where:skuwhereclause,
-      require:false,
+      required:false,
       order: skusort
 
       
