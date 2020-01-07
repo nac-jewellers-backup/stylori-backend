@@ -145,6 +145,9 @@ exports.changepassword = (req, res) => {
                 user
                     .update({ password:bcrypt.hashSync(req.body.password, 8) })
                     .then(updatedUser => {
+                      var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Password Reset Successfully"}]
+         
+                      sendMail(emilreceipiants,emailTemp.changepasswordTemp(user.username))
                       return res.status(200).json(`Password Reset Successfully`);
                     })
                     .catch(reason => {
