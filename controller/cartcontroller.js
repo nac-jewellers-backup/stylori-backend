@@ -10,6 +10,7 @@ import aws from 'aws-sdk';
 import dotenv from 'dotenv';
 import { sequelize } from '../models';
 var request = require('request');
+var dateFormat = require('dateformat');
 
 dotenv.config();
 aws.config.update({
@@ -136,37 +137,49 @@ models.vouchers.findOne({
  // res.send(200,{message:"Applied Succesfully","discounted_price":1000,"tax_price":320})
 
 }
-
+exports.paymentsuccess = async (req, res) => {
+}
+exports.paymentfailure = async (req, res) => {
+}
 exports.generatepaymenturl = async (req, res) => {
 
     var timezone = "IST";
     var authenticateTransaction = true;
     var txntype = "sale";
     var txndatetime = "";
-    var currency =356;
+    var currency ="356";
     var mode = "payonly";
-    var storename= "33995001";
-    var chargetotal=1;
+    var storename= "3396023678";
+    var chargetotal="1";
     var paymentMethod="";
+    var dateval = new Date()
     var full_bypass = false;
-    var sharedsecret = "sharedsecret";
+    var sharedsecret = "Rx82ezCmTd";
+    var day=dateFormat(new Date(), "yyyy:mm:dd-HH:MM:ss");
+    const crypto = require('crypto')
+    , shasum = crypto.createHash('sha1');
     var responseSuccessURL = "http://127.0.0.1/PHP/response_success.php"
     
     var responseFailURL = "http://127.0.0.1/PHP/response_fail.php"
-    var binarystring = storename+new Date()+chargetotal+currency+sharedsecret;
+    var binarystring = storename+day+chargetotal+currency+sharedsecret;
+
   let hash =    bin2hex(binarystring)
-    function bin2hex(s){  
-    
-      var v,i, f = 0, a = [];  
-      s += '';  
-      f = s.length;  
-        
-      for (i = 0; i<f; i++) {  
-          a[i] = s.charCodeAt(i).toString(16).replace(/^([\da-f])$/,"0$1");  
-      }  
-        
-      return a.join('');  
-  }  
+  shasum.update(hash);
+
+  function bin2hex (s) {
+  
+  
+    var i, l, o = "", n;
+  
+    s += "";
+  
+    for (i = 0, l = s.length; i < l; i++) {
+      n = s.charCodeAt(i).toString(16)
+      o += n.length < 2 ? "0" + n : n;
+    }
+  
+    return o;
+  }
   let bodyparams = {
     timezone,
     authenticateTransaction,
@@ -184,7 +197,7 @@ exports.generatepaymenturl = async (req, res) => {
     responseFailURL
   }
 
-  res.send(200, hash)
+  res.send(200, {hash: shasum.digest('hex'),day,binarystring})
 //   console.log(JSON.stringify(bodyparams))
 //   request({
 //     url: 'https://test.ipg-online.com/connect/gateway/processing',

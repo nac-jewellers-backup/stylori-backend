@@ -43,6 +43,8 @@ module.exports = function(app) {
 	app.post('/splitmarkuppriceupdate',[productPricing.productList], pricesplitup_controller.splitmakingchargeupdate);
 	app.post('/splitgemstonepriceupdate',[productPricing.productList], pricesplitup_controller.splitgemstonepriceupdate);
 	app.post('/generatepaymenturl', cartcontroller.generatepaymenturl);
+	app.post('/paymentsuccess', cartcontroller.paymentsuccess);
+	app.post('/paymentfailure', cartcontroller.paymentfailure);
 
 	app.post('/updateattributes', productupdatecontroller.updateattributes);
 	

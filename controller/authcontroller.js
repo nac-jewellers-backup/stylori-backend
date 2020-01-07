@@ -241,7 +241,8 @@ exports.verifypasswordtoken = (req, res) => {
   }
 }
 exports.forgotpassword = (req, res) => {
-    return models.users.findOne({
+  console.log(JSON.stringify(req.body.email))
+     models.users.findOne({
         where: { email:  req.body.email }
         
       })

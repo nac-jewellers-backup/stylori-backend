@@ -130,7 +130,7 @@ const getName = (username) => {
             </tr>
             <tr>
                 <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: #ed1164;">
-                    <span style="color: #ed1164;text-decoration:none;">${token}</span>
+                    <span style="color: #ed1164;text-decoration:none;">${process.env.baseurl}/resetpassword/${token}</span>
                 </p>
             </tr>
             <tr>
