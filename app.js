@@ -48,7 +48,7 @@ app.use(express.urlencoded({limit: '50mb'}));
 // });
 
 app.get('/', (req, res) => {
-  res.send('NAC Auth running'+user.getName("mano"));
+  res.send('NAC Auth running');
 });
 app.use(cors())
 app.use(express.json());

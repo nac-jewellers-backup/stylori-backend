@@ -198,8 +198,9 @@ exports.verification = (req, res) => {
         });
 }
 exports.resetpassword = (req, res) => {
+  console.log("usertokenval "+req.userName)
     return models.User.findOne({
-        where: { email: req.body.email }
+        where: { email: req.userName }
       }).then(user => {
           
             // return models.VerificationToken.findOne({
@@ -216,6 +217,9 @@ exports.resetpassword = (req, res) => {
                   return user
                     .update({ password:bcrypt.hashSync(req.body.password, 8) })
                     .then(updatedUser => {
+                      var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Password Reset Successfully"}]
+         
+                      sendMail(emilreceipiants,emailTemp.changepasswordTemp(user.username))
                       return res.status(200).json(`Password Reset Successfully`);
                     })
                     .catch(reason => {
@@ -259,9 +263,9 @@ exports.forgotpassword = (req, res) => {
                             var token = jwt.sign({ id: user.email }, process.env.SECRET, {
                               expiresIn: '1d' // expires in 24 hours
                             });
-                            var emilreceipiants = [{to : user.email,subject:"Reset password request"}]
-         
-                          sendMail(emilreceipiants,emailTemp.forgotpasswordTemp("mano","manokarantk@gmail.com", token))
+                            var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Reset password request"}]
+                            var verifyurl = `${process.env.baseurl}/resetpassword/${token}`
+                          sendMail(emilreceipiants,emailTemp.forgotpasswordTemp("mano","manokarantk@gmail.com",verifyurl))
                            // sendVerificationEmail(user.email, result.token);
                              return res.status(200).json('Reset Password link sent to your registered Email Id'+token);
                           
