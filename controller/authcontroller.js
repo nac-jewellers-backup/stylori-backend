@@ -126,7 +126,7 @@ exports.changepassword = (req, res) => {
   models.users.findOne({
 
     where: {
-      email: req.body.email
+      email: req.userName
     },
     include: [{
         model: models.user_roles,
@@ -267,15 +267,15 @@ exports.forgotpassword = (req, res) => {
                             var verifyurl = `${process.env.baseurl}/resetpassword/${token}`
                           sendMail(emilreceipiants,emailTemp.forgotpasswordTemp("mano","manokarantk@gmail.com",verifyurl))
                            // sendVerificationEmail(user.email, result.token);
-                             return res.status(200).json('Reset Password link sent to your registered Email Id'+token);
+                             return res.status(200).send({message:"Email ID not Registered with us",status:"success"});
                           
        // }
     }else{
-         res.status(404).json("Email ID not Registered with us");
+         res.status(404).send({message:"Email ID not Registered with us",status:"failure"});
     }
       })
       .catch((error) => {
-         res.status(500).json("Email ID not Registered with us");
+         res.status(500).send({message:"Email ID not Registered with us",status:"failure"});
       });
       
 }
