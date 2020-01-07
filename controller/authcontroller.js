@@ -199,7 +199,7 @@ exports.verification = (req, res) => {
 }
 exports.resetpassword = (req, res) => {
   console.log("usertokenval "+req.userName)
-    return models.User.findOne({
+    return models.users.findOne({
         where: { email: req.userName }
       }).then(user => {
           
@@ -275,7 +275,7 @@ exports.forgotpassword = (req, res) => {
     }
       })
       .catch((error) => {
-         res.status(500).json(error);
+         res.status(500).json("Email ID not Registered with us");
       });
       
 }

@@ -177,17 +177,18 @@ const getName = (username) => {
         <tbody>
             <tr>
                 <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: bold;color: rgba(88,89,91,1.00);margin:25px 0px;">
-                <h5> Hello ${username},</h5>
+                <h5> Dear ${username},</h5>
                 </p>
             </tr>
             <tr>
-                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00); line-height:1.6;float:left;">We received a request to reset the password associated with this 
-                        e-mail address. If you made this request, please follow the instructions below.</p>
+                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00); line-height:1.6;float:left;">
+                Your password has been successfully changed.
+                </p>
             </tr>
             
             <tr>
                 <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);line-height:1.6;">
-                Click on the link below to reset your password using our secure server:</p>
+                In case you haven't requested for the change of password , please click here to reset your password</p>
             </tr>
             <tr>
                 <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: #ed1164;">
