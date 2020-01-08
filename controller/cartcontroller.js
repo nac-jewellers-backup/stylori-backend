@@ -11,6 +11,7 @@ import dotenv from 'dotenv';
 import { sequelize } from '../models';
 var request = require('request');
 var dateFormat = require('dateformat');
+const moment = require('moment');
 
 dotenv.config();
 aws.config.update({
@@ -155,7 +156,9 @@ exports.generatepaymenturl = async (req, res) => {
     var dateval = new Date()
     var full_bypass = false;
     var sharedsecret = "Rx82ezCmTd";
-    var day=dateFormat(new Date(), "yyyy:mm:dd-HH:MM:ss");
+    var day    = moment.tz(new Date(), "Asia/Kolkata").format("yyyy:mm:dd-HH:MM:ss");
+
+    //var day=dateFormat(new Date(), "yyyy:mm:dd-HH:MM:ss");
     const crypto = require('crypto')
     , shasum = crypto.createHash('sha1');
     var responseSuccessURL = "http://127.0.0.1/PHP/response_success.php"
