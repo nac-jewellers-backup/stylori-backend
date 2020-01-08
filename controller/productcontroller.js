@@ -75,6 +75,8 @@ exports.productupload =  async (req, res) => {
     var default_metal_purity = apidata.default_metal_purity
     var materials = apidata.materials;
     var default_metal_size = apidata.default_size;
+    var stonecolour_lists = apidata.stonecolour;
+    var stonecount_lists = apidata.stonecount;
 
     
     var product_images = apidata.product_images;
@@ -122,8 +124,10 @@ exports.productupload =  async (req, res) => {
     {
         var colorarr = [];
         productpurity.forEach(purityelement => {
+
+           
             productcolors.forEach(colorelement => {
-                colorarr.push(purityelement+' '+colorelement);
+                colorarr.push(purityelement.name+' '+colorelement.name);
             });
         });
         colour_varient = colorarr.join(',');
@@ -192,10 +196,33 @@ exports.productupload =  async (req, res) => {
         await models.product_images.bulkCreate(
             prod_images, {individualHooks: true})
     }
-  
+    /*************** add gender ********************/
+    if(gender)
+    {
+        
+        
+            const genderobj = {
+                id:uuidv1(),
+                gender_name: gender,
+                product_id: product_obj.product_id,
+                is_active: true
+            }
+            await models.product_gender.create(genderobj)
+       
+    }
+
   /*************** purity list ********************/
     var puritylist = apidata.metalpurity;
+    var purityarr = []
       puritylist.forEach(purity => {
+
+            const purityobj = {
+                id: uuidv1(),
+                purity: purity.name,
+                product_id : product_obj.product_id,
+                is_active : true
+            }
+            purityarr.push(purityobj)
             var sku = skuprefix + purity.shortCode 
             var skuobj = {
                 product_id: successmessage.product_id,
@@ -207,7 +234,54 @@ exports.productupload =  async (req, res) => {
             }
             product_skus.push(skuobj)
         });
+        if(puritylist)
+        {
+            await models.product_purities.bulkCreate(
+                purityarr, {individualHooks: true})
+        }
+        
+        /************ product stone colour */
+        var stonecolourarr = []
 
+        if(stonecolour_lists)
+        {
+            stonecolour_lists.forEach(stonecolourobj => {
+                const stone_colour_obj = {
+                    id:uuidv1(),
+                    stonecolor: stonecolourobj,
+                    product_id: product_obj.product_id,
+                    is_active : true
+                }
+                stonecolourarr.push(stone_colour_obj);
+            })
+            
+            await models.product_stonecolor.bulkCreate(
+                stonecolourarr, {individualHooks: true})
+        }
+        /******************************** */
+        
+
+        /************ product stone count */
+        var stonecountsarr = []
+
+        if(stonecount_lists)
+        {
+            stonecount_lists.forEach(stonecountobj => {
+                const stone_count_obj = {
+                    id:uuidv1(),
+                    stonecount: stonecountobj,
+                    product_id: product_obj.product_id,
+                    is_active : true
+                }
+                stonecountsarr.push(stone_count_obj);
+            })
+            
+            await models.product_stonecount.bulkCreate(
+                stonecountsarr, {individualHooks: true})
+        }
+        /******************************** */
+        
+        
         var collection_arr = [];
         if(product_collections)
         {
@@ -292,6 +366,26 @@ exports.productupload =  async (req, res) => {
 
         product_skus = [];
       var metalcolorlist = apidata.metalcolour;
+
+          /*************** add metalcolor ********************/
+
+      var metal_color_arr =[]
+      if(metalcolorlist)  
+      {
+      metalcolorlist.forEach(metalcolorobj => {
+        const colorobj = {
+            id:uuidv1(),
+            product_color: metalcolorobj.name,
+            product_id: product_obj.product_id,
+            is_active: true
+        }
+        metal_color_arr.push(colorobj);
+
+    })
+    await models.product_metalcolours.bulkCreate(
+        metal_color_arr, {individualHooks: true})
+    }
+    /****************** */
 
         skus.forEach(skuvalue => {
             var  skuval = skuvalue.generated_sku
