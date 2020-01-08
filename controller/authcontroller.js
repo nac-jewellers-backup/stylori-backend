@@ -353,9 +353,13 @@ exports.guestlogin = (req, res) => {
           otp:otp,
           isemailverified: false
         }
+        var emilreceipiants = [{to : email,subject:"Verify user"}]
+
         models.user_profiles.create(guest, {
           returning: true
         }).then(guestuser => {
+          sendMail(emilreceipiants,emailTemp.forgotpasswordTemp("","manokarantk@gmail.com",otp))
+
           res.status(200).json({
             "description": "User Content Page",
             "user": guestuser
