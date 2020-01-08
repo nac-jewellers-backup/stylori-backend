@@ -156,6 +156,7 @@ exports.generatepaymenturl = async (req, res) => {
     var dateval = new Date()
     var full_bypass = false;
     var sharedsecret = "Rx82ezCmTd";
+    var currentdate = new Date();
     var day    = moment.tz(new Date(), "Asia/Kolkata").format("YYYY:MM:DD-HH:MM:ss");
 
     //var day=dateFormat(new Date(), "yyyy:mm:dd-HH:MM:ss");
@@ -200,7 +201,7 @@ exports.generatepaymenturl = async (req, res) => {
     responseFailURL
   }
 
-  res.send(200, {hash: shasum.digest('hex'),day,binarystring})
+  res.send(200, {hash: shasum.digest('hex'),day,'currentutc':currentdate,binarystring})
 //   console.log(JSON.stringify(bodyparams))
 //   request({
 //     url: 'https://test.ipg-online.com/connect/gateway/processing',
