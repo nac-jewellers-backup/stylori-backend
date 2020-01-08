@@ -139,8 +139,13 @@ models.vouchers.findOne({
 
 }
 exports.paymentsuccess = async (req, res) => {
+  let redirectionurl = process.env.baseurl+'/paymentsuccess/02192188'
+ return res.redirect(redirectionurl);
 }
 exports.paymentfailure = async (req, res) => {
+  let redirectionurl = process.env.baseurl+'/paymentfail/019210'
+  return res.redirect(redirectionurl);
+
 }
 exports.generatepaymenturl = async (req, res) => {
 
