@@ -201,7 +201,7 @@ exports.generatepaymenturl = async (req, res) => {
     responseFailURL
   }
 
-  res.send(200, {hash: shasum.digest('hex'),day,'currentutc':currentdate,binarystring})
+  res.send(200, {hash: shasum.digest('hex'),day,'currentutc':currentdate})
 //   console.log(JSON.stringify(bodyparams))
 //   request({
 //     url: 'https://test.ipg-online.com/connect/gateway/processing',
