@@ -140,6 +140,7 @@ models.vouchers.findOne({
 }
 exports.paymentsuccess = async (req, res) => {
   let redirectionurl = process.env.baseurl+'/paymentsuccess/02192188'
+
  return res.redirect(redirectionurl);
 }
 exports.paymentfailure = async (req, res) => {
@@ -162,7 +163,7 @@ exports.generatepaymenturl = async (req, res) => {
     var full_bypass = false;
     var sharedsecret = "Rx82ezCmTd";
     var currentdate = new Date();
-    var day    = moment.tz(new Date(), "Asia/Kolkata").format("YYYY:MM:DD-hh:mm:ss");
+    var day    = moment.tz(new Date(), "Asia/Kolkata").format("YYYY:MM:DD-HH:mm:ss");
 
     //var day=dateFormat(new Date(), "yyyy:mm:dd-HH:MM:ss");
     const crypto = require('crypto')

@@ -23,6 +23,7 @@ exports.priceupdate =  async (req, res) => {
 exports.productupload =  async (req, res) => {
     var apidata = req.body;
     var product_skus = [];
+    var skuurl = ""
     console.log(JSON.stringify(apidata))
     var categoryobj = apidata.product_categoy;
     var categoryval = categoryobj.charAt(0)
@@ -31,11 +32,15 @@ exports.productupload =  async (req, res) => {
     var seriesvalue = apidata.startcode + 1;
     console.log("i am here")
     console.log(seriesvalue)
-
+    skuurl = categoryobj;
     if(Number.isNaN(seriesvalue))
     {
         console.log("i am here")
         seriesvalue = 3000
+    }
+    if(categoryobj !== producttypeobj.name)
+    {
+        skuurl = skuurl+"/"+producttypeobj.name
     }
    
 
@@ -360,7 +365,19 @@ exports.productupload =  async (req, res) => {
         })
         await models.product_materials.bulkCreate(
             material_arr, {individualHooks: true})
+
+          if(materials.indexOf('Diamond') > -1)
+          {
+            skuurl = skuurl+'/'+'Diamond'
+          }else  if(materials.indexOf('Gemstone') > -1)
+          {
+            skuurl = skuurl+'/'+'Gemstone'
+          }else{
+            skuurl = skuurl+'/'+materials[0]
+          }
         }
+
+    
 
       var skus = product_skus;
 

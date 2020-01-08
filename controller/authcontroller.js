@@ -127,11 +127,8 @@ exports.changepassword = (req, res) => {
 
     where: {
       email: req.userName
-    },
-    include: [{
-        model: models.user_roles,
-        attributes: ['id']
-    }]
+    }
+   
 }).then(user => {
     if (!user) {
         return res.status(404).send({"message":"User Does Not Exist"});

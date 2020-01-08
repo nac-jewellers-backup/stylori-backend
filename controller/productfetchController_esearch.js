@@ -83,7 +83,7 @@ if(offset)
         [ {model: models.trans_sku_lists},'is_ready_to_ship', 'desc']
     ]
     skusort = [
-      ['is_ready_to_ship', 'DESC']
+      ['is_ready_to_ship', 'desc']
     ]
    
     }
@@ -133,12 +133,9 @@ if(offset)
   {
     console.log("metal colur image")
     console.log(JSON.stringify(metalcolor))
-    // includeclause.push({
-    //   model : models.product_metalcolours,
-    //   where: {
-    //     product_color : metalcolor
-    //   }
-    //  })
+    includeclause.push({
+      model : models.product_metalcolours
+     })
     whereclause['$trans_sku_lists.metal_color$'] = {
       [Op.eq]:metalcolor
       }
@@ -516,43 +513,41 @@ var products_all = []
   })
    console.log("XXXXXXXXX")
    console.log(JSON.stringify(whereclause))
-  const {count,rows}  = await models.product_lists.findAndCountAll({
+   products_all = await models.product_lists.findAll({
     include:includeclause,
     where:whereclause,
-    limit : 24,
-    offset : currentpage,
     subQuery : false,
     distinct: 'product_lists.product_id',
     order: sortelement
   })
-  console.log("count value"+count)
-  console.log("rows value"+rows.length)
+//  console.log("count value"+count)
+//  console.log("rows value"+rows.length)
 
-  var product_ids = []
-  rows.forEach(element => {
-    console.log("rows value"+element.product_id)
+  // var product_ids = []
+  // rows.forEach(element => {
+  //   console.log("rows value"+element.product_id)
 
-    product_ids.push(element.product_id)
-  });
+  //   product_ids.push(element.product_id)
+  // });
 
-   products_all = await models.product_lists.findAll ({
-    attributes:[['product_name','productName'],
-    ['product_id','productId'],
-    ['product_type','productType'],
-    ['default_size','defaultSize'],
-    ['size_varient','sizeVarient'],
-    ['product_type','productType'],
-    'is_featured',
-    'selling_qty'
-    ],
-    include:prod_iclude,
-    where:{
-      product_id : {
-        [Op.in]: product_ids
-      }
-    },
-    order:sortelement,
-  })
+  //  products_all = await models.product_lists.findAll ({
+  //   attributes:[['product_name','productName'],
+  //   ['product_id','productId'],
+  //   ['product_type','productType'],
+  //   ['default_size','defaultSize'],
+  //   ['size_varient','sizeVarient'],
+  //   ['product_type','productType'],
+  //   'is_featured',
+  //   'selling_qty'
+  //   ],
+  //   include:prod_iclude,
+  //   where:{
+  //     product_id : {
+  //       [Op.in]: product_ids
+  //     }
+  //   },
+  //   order:sortelement,
+  // })
 // }else{
   // products_all  = await models.trans_sku_lists.findAndCountAll({
   //   attributes:[
@@ -603,6 +598,6 @@ var products_all = []
 
 
 
-    res.send(200,{'data':{'totalCount':count,'allProductLists':products_all}}
+    res.send(200,{'data':{'totalCount':0,'allProductLists':products_all}}
               )
 }
