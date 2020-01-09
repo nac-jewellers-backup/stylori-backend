@@ -140,18 +140,18 @@ models.vouchers.findOne({
 }
 exports.paymentsuccess = async (req, res) => {
     let paymentcontent = {
-            id : uuidv1(),
+           
             payment_response : JSON.stringify(req.body)
     }
-    let new_cart = await models.payment_response.create(paymentcontent,{
+    let new_cart = await models.payment_details.create(paymentcontent,{
       returning: true
     })
-  let redirectionurl = process.env.baseurl+'/paymentsuccess/02192188'
+  let redirectionurl = process.env.baseurl+'/paymentsuccess/'+req.body.oid
 
  return res.redirect(redirectionurl);
 }
 exports.paymentfailure = async (req, res) => {
-  let redirectionurl = process.env.baseurl+'/paymentfail/019210'
+  let redirectionurl = process.env.baseurl+'/paymentfail/'+req.body.oid
   return res.redirect(redirectionurl);
 
 }
