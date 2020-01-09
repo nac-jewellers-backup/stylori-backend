@@ -134,11 +134,14 @@ if(offset)
     console.log("metal colur image")
     console.log(JSON.stringify(metalcolor))
     includeclause.push({
-      model : models.product_metalcolours
-     })
-    whereclause['$trans_sku_lists.metal_color$'] = {
-      [Op.eq]:metalcolor
+      model : models.product_metalcolours,
+      where: {
+        product_color : metalcolor
       }
+     })
+    // whereclause['$trans_sku_lists.metal_color$'] = {
+    //   [Op.eq]:metalcolor
+    //   }
      prod_iclude.push({
       model : models.product_metalcolours,
       // where: {
@@ -383,13 +386,13 @@ if(metalpurity)
     whereclause['$trans_sku_lists.purity$'] = {
     [Op.eq]:metalpurity
     }
-    // includeclause.push({
-    //        model : models.product_purities,
-    //        attributes: ['purity'],
-    //       //  where:{
-    //       //   purity : metalpurity
-    //       //  }
-    // })
+    includeclause.push({
+           model : models.product_purities,
+           attributes: ['purity'],
+          //  where:{
+          //   purity : metalpurity
+          //  }
+    })
     skuwhereclause = {}
      skuwhereclause['purity'] = metalpurity
     // console.log(JSON.stringify(includeclause))
@@ -516,12 +519,11 @@ var products_all = []
    products_all = await models.product_lists.findAll({
     include:includeclause,
     where:whereclause,
-    subQuery : false,
     distinct: 'product_lists.product_id',
     order: sortelement
   })
-//  console.log("count value"+count)
-//  console.log("rows value"+rows.length)
+  //console.log("count value"+count)
+  //console.log("rows value"+rows.length)
 
   // var product_ids = []
   // rows.forEach(element => {
@@ -598,6 +600,6 @@ var products_all = []
 
 
 
-    res.send(200,{'data':{'totalCount':0,'allProductLists':products_all}}
+    res.send(200,{'data':{'totalCount':products_all.length,'allProductLists':products_all}}
               )
 }

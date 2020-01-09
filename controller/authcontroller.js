@@ -142,10 +142,16 @@ exports.changepassword = (req, res) => {
       console.log(JSON.stringify(user))
                 user
                     .update({ password:bcrypt.hashSync(req.body.newpassword, 8) })
-                    .then(updatedUser => {
-                        var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Password Reset Successfully"}]
-         
-                      sendMail(emilreceipiants,emailTemp.changepasswordTemp(user.username))
+                    .then(async updatedUser => {
+                  let userprofile =    await models.user_profiles.findOne({
+      
+                        where: {
+                          email: req.userName
+                        }
+                       
+                    })
+                        var emilreceipiants = [{to : user.email,subject:"Password Reset Successfully"}]
+                      sendMail(emilreceipiants,emailTemp.changepasswordTemp(userprofile.first_name))
                       return res.status(200).json({"message":`Password Reset Successfully`});
                     })
                     .catch(reason => {
@@ -217,10 +223,17 @@ exports.resetpassword = (req, res) => {
 
                   return user
                     .update({ password:bcrypt.hashSync(req.body.password, 8) })
-                    .then(updatedUser => {
-                      var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Password Reset Successfully"}]
+                    .then(async updatedUser => {
+                      let userprofile =    await models.user_profiles.findOne({
+      
+                        where: {
+                          email: user.email
+                        }
+                       
+                    })
+                      var emilreceipiants = [{to : user.email,subject:"Password Reset Successfully"}]
          
-                      sendMail(emilreceipiants,emailTemp.changepasswordTemp(user.username))
+                      sendMail(emilreceipiants,emailTemp.changepasswordTemp(userprofile.first_name))
                       return res.status(200).json(`Password Reset Successfully`);
                     })
                     .catch(reason => {
@@ -264,7 +277,7 @@ exports.forgotpassword = (req, res) => {
                             var token = jwt.sign({ id: user.email }, process.env.SECRET, {
                               expiresIn: '1d' // expires in 24 hours
                             });
-                            var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Reset password request"}]
+                            var emilreceipiants = [{to : user.email,subject:"Reset password request"}]
                             var verifyurl = `${process.env.baseurl}/resetpassword/${token}`
                           sendMail(emilreceipiants,emailTemp.forgotpasswordTemp("mano","manokarantk@gmail.com",verifyurl))
                            // sendVerificationEmail(user.email, result.token);
