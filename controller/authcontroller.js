@@ -139,16 +139,17 @@ exports.changepassword = (req, res) => {
     }
     if(newpassword)
     {
+      console.log(JSON.stringify(user))
                 user
-                    .update({ password:bcrypt.hashSync(req.body.password, 8) })
+                    .update({ password:bcrypt.hashSync(req.body.newpassword, 8) })
                     .then(updatedUser => {
-                      var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Password Reset Successfully"}]
+                        var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Password Reset Successfully"}]
          
                       sendMail(emilreceipiants,emailTemp.changepasswordTemp(user.username))
-                      return res.status(200).json(`Password Reset Successfully`);
+                      return res.status(200).json({"message":`Password Reset Successfully`});
                     })
                     .catch(reason => {
-                      return res.status(403).json(`Please Try Again`);
+                      return res.status(403).json({"message":`Please Try Again`});
                     });
     }
    
