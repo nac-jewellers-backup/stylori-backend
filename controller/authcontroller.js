@@ -264,7 +264,7 @@ exports.forgotpassword = (req, res) => {
         where: { email:  req.body.email }
         
       })
-      .then(user => {
+      .then(async user => {
         console.log(user.id);
           // if user email already exists
         if(user)
@@ -272,14 +272,20 @@ exports.forgotpassword = (req, res) => {
         // if(!user.isVerified) {
         //   return res.status(409).json('Please verify email then try reset password');
         // } else {
-              
+          let userprofile =    await models.user_profiles.findOne({
+      
+            where: {
+              email: user.email
+            }
+           
+        })
                       
                             var token = jwt.sign({ id: user.email }, process.env.SECRET, {
                               expiresIn: '1d' // expires in 24 hours
                             });
                             var emilreceipiants = [{to : user.email,subject:"Reset password request"}]
                             var verifyurl = `${process.env.baseurl}/resetpassword/${token}`
-                          sendMail(emilreceipiants,emailTemp.forgotpasswordTemp("mano","manokarantk@gmail.com",verifyurl))
+                          sendMail(emilreceipiants,emailTemp.forgotpasswordTemp(userprofile.first_name,"manokarantk@gmail.com",verifyurl))
                            // sendVerificationEmail(user.email, result.token);
                              return res.status(200).send({message:"Email ID not Registered with us",status:"success"});
                           
