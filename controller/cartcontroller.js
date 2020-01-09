@@ -139,6 +139,13 @@ models.vouchers.findOne({
 
 }
 exports.paymentsuccess = async (req, res) => {
+    let paymentcontent = {
+            id : uuidv1(),
+            payment_response : JSON.stringify(req.body)
+    }
+    let new_cart = await models.payment_response.create(paymentcontent,{
+      returning: true
+    })
   let redirectionurl = process.env.baseurl+'/paymentsuccess/02192188'
 
  return res.redirect(redirectionurl);
