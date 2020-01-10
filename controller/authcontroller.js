@@ -51,7 +51,7 @@ exports.signin = (req, res) => {
 
 
 exports.signup = (req, res) => {
-  let {username, password, email,firstname,lastame, roles,salutation} = req.body;
+  let {username, password, email,firstname,lastname, roles,salutation} = req.body;
   var uservalue = {
       id: uuidv1(),
       username: username,
