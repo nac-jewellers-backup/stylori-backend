@@ -44,15 +44,25 @@ var seofilterattributevalue = []
   {
     seofilterattribute.push('By Design')
     seofilterattributevalue.push(bydesign)
-    whereclause['by_design'] = bydesign
-
+    //whereclause['by_design'] = bydesign
+    whereclause['$product_by_designs.design_name$'] = {
+      [Op.eq]:bydesign
+      }
+      includeclause.push({
+        model : models.product_by_designs
+       })
   }
   if(byweight)
   {
     seofilterattribute.push('By Weight')
     seofilterattributevalue.push(byweight)
     whereclause['by_weight'] = byweight
-
+    whereclause['$product_by_weights.weight$'] = {
+      [Op.eq]:byweight
+      }
+      includeclause.push({
+        model : models.product_by_weights
+       })
   }
   if(availability)
   {
