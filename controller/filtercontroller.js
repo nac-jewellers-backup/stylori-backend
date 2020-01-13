@@ -290,7 +290,17 @@ let prod_type_where = {}
     group: ['stonecolor'],
     where:prod_type_where
   })
+  var master_byweight = await models.product_by_weight.findAll({
+    attributes: ['weight'],
+    group: ['weight'],
+    where:prod_type_where
+  })
 
+  var master_bydesign = await models.product_by_design.findAll({
+    attributes: ['design_name'],
+    group: ['design_name'],
+    where:prod_type_where
+  })
 
   var master_stonecount = await models.product_stonecount.findAll({
     attributes: ['stonecount'],
@@ -554,6 +564,8 @@ let prod_type_where = {}
         master_stonecolor,
         master_stonecount,
        // price_range,
+       master_bydesign,
+       master_byweight,
         seo_url,
         seo_text
               })

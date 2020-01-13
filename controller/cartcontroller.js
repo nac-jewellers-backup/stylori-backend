@@ -150,6 +150,17 @@ exports.paymentsuccess = async (req, res) => {
 
  return res.redirect(redirectionurl);
 }
+
+exports.resendorderemail = async (req, res) => {
+  
+  var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"You have successfully registered!"}]
+         
+  sendMail(emilreceipiants,emailTemp.orderConformation(firstname))
+
+return res.send(200,{message:"Confomation mail sent successfully"})
+}
+
+
 exports.paymentfailure = async (req, res) => {
   let redirectionurl = process.env.baseurl+'/paymentfail/'+req.body.oid
   return res.redirect(redirectionurl);

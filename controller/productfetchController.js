@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape,price, gender, stonecolor,metalcolor,noofstones,availability,sortBy,offset} = req.body
+const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape,price, gender, stonecolor,metalcolor,noofstones,availability,sortBy,offset,bydesign,byweight} = req.body
 var product_list = [];
 var whereclause = {
   isactive: true
@@ -128,6 +128,29 @@ if(offset)
 
     console.log(JSON.stringify(sortelement))
 
+  }
+  if(byweight)
+  {
+    includeclause.push({
+      model : models.product_by_weight,
+      where:{
+        design_name: byweight
+      }
+  
+  
+     })
+  }
+
+  if(bydesign)
+  {
+    includeclause.push({
+      model : models.product_by_design,
+      where:{
+        design_name: bydesign
+      }
+  
+  
+     })
   }
   if(metalcolor)
   {

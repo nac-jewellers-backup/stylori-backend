@@ -129,6 +129,7 @@ if(offset)
     console.log(JSON.stringify(sortelement))
 
   }
+  
   if(metalcolor)
   {
     console.log("metal colur image")
@@ -164,6 +165,11 @@ if(offset)
       }
       
     }    
+  }else{
+    includeclause.push({
+      model : models.product_metalcolours,
+    
+     })
   }
   if(price)
   {
@@ -228,6 +234,11 @@ if(collection)
         collection_name : collection
       }
      })
+}else{
+  includeclause.push({
+    model : models.product_collections,
+    
+   })
 }
 if(occasion)
 {
@@ -241,6 +252,11 @@ if(occasion)
         occassion_name : occasion
       }
      })
+}else{
+  includeclause.push({
+    model : models.product_occassions,
+    
+   })
 }
 
 if(stoneshape)
@@ -271,6 +287,13 @@ if(style)
   //   [Op.eq]:style
   //   }
     
+}else{
+  includeclause.push({
+    model : models.product_styles,
+    
+
+
+   })
 }
 if(theme)
 {
@@ -284,6 +307,11 @@ if(theme)
             theme_name : theme
            }
     })
+}else{
+  includeclause.push({
+    model : models.product_themes
+    
+})
 }
 
 if(stonecolor)
@@ -298,6 +326,11 @@ if(stonecolor)
             stonecolor : stonecolor
            }
     })
+}else{
+  includeclause.push({
+    model : models.product_stonecolor,
+    
+})
 }
 
  if(noofstones)
@@ -313,6 +346,11 @@ if(stonecolor)
             stonecount: noofstones
            }
     })
+ }else{
+  includeclause.push({
+    model : models.product_stonecount,
+   
+})
  }
 if(producttype)
 {
@@ -475,6 +513,16 @@ prod_iclude.push({
                   // where:{
                   //   material_name : material
                   //  }
+   }) 
+ }else{
+  includeclause.push({
+    model : models.product_materials,
+    as : 'productMaterialsByProductSku',
+    attributes : [
+                  ['material_name','materialName']
+                 
+                  ],
+                  
    }) 
  }
 var products_all = []

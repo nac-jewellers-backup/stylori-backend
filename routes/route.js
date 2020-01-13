@@ -75,7 +75,8 @@ module.exports = function(app) {
 	app.post('/addtocart', cartcontroller.addtocart);
 	app.post('/addaddress', cartcontroller.addaddress);
 	app.post('/adduseraddress', cartcontroller.adduseraddress);
-	
+	app.post('/resendorderemail', cartcontroller.resendorderemail);
+
 	app.post('/uploadimage', cartcontroller.uploadimage);
 	app.post('/filterlist', filtercontroller.filteroptions);
 	app.post('/getsizes', cartcontroller.getsizes);
