@@ -153,13 +153,28 @@ exports.paymentsuccess = async (req, res) => {
 }
 
 exports.resendorderemail = async (req, res) => {
-  
-  var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"You have successfully registered!"}]
-         
-  sendMail(emilreceipiants,emailTemp.orderConformation("mano","manokarantk@gmail.com",""))
+  const {order_id} = req.body
+  let orderdetails  = await models.orders.findOne({
+    include:[
+     { model : models.user_profiles},
+     {model : models.shopping_cart,
+    include:[{
+      model: models.shopping_cart_item
+    }]}
+    ],
+    where: {
+      id: order_id
+    }
+  })
 
-return res.send(200,{message:"Confomation mail sent successfully"})
+  var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Order Placed Successfully"}]
+         
+ sendMail(emilreceipiants,emailTemp.orderConformation("mano","manokarantk@gmail.com",""))
+ return res.send(200,{orderdetails})
+//return res.send(200,{message:"Confomation mail sent successfully"})
 }
+
+
 
 
 exports.paymentfailure = async (req, res) => {
@@ -558,14 +573,20 @@ if(wishlistobj && wishlistobj.length > 0)
   }
   exports.addorder = async (req, res) => {
     let {user_id, cart_id, payment_mode} = req.body
-
+    var paymentstatus = "Initiated";
+    var orderstatus = "Initiated";
+    if(payment_mode === 'cod')
+    {
+      paymentstatus = "Submited"
+      orderstatus = "Submited"
+    }
    const order_bj = {
      id : uuidv1(),
     cart_id: cart_id,
     user_profile_id: user_id,
-    payment_mode:1,
-    payment_status:1,
-    order_status: 1
+    payment_mode:payment_mode,
+    payment_status:paymentstatus,
+    order_status: orderstatus
    } 
 
    models.orders.create(order_bj,{

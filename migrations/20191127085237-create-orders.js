@@ -23,6 +23,7 @@ module.exports = {
       },
       payment_mode: {
         type: Sequelize.INTEGER
+        
       },
       payment_status: {
         type: Sequelize.INTEGER

@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   shopping_cart.associate = function(models) {
     // associations can be defined here
+    models.shopping_cart.hasMany(models.shopping_cart_item,{
+      foreignKey: 'shopping_cart_id',
+      targetKey: 'id'
+    });
   };
   return shopping_cart;
 };

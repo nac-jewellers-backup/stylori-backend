@@ -100,7 +100,7 @@ const getName = (username) => {
   };
 
   const forgotpasswordTemp = (username,email,token) => {
-    return  `<!doctype html>
+    return `<!doctype html>
     <html>
     <head>
     
@@ -238,21 +238,41 @@ const getName = (username) => {
             <thead>
                 <!-- <img src="http://www.stylori.com/img/emailTemplate/hedear-bg.jpg" /> -->
                 
-                <img src="https://assets-cdn.stylori.com/images/emailTemplate/hedear-bg.jpg" />
+                <img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/cash-on-deli-hdr.jpg" />
             </thead>
             <tbody>
     
-               
-            
-           
-            
-            <tr style="width:100%;">
-                <p style="padding:0px 15px; font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 500; color: rgba(237,18,95,1.00); text-align: right;">Order Number: <span th:text="312sr"></span></p>
+                <tr style="width:100%;">
+                <p style="padding:0px 15px; font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00); text-align: right;" >
+                    Order Placed On: 
+                     <span>24/11/2014 15:47</span>
+                </p>
             </tr>
             
-             
+             <tr style="width:100%;">
+                <p style="padding:0px 15px; font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00); text-align: right;" >
+                    Payment method: 
+                    <span >Cash on Delivery</span>
+                </p>
+            </tr>
             
-          
+            <tr style="width:100%;">
+                <p style="padding:0px 15px; font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 500; color: rgba(237,18,95,1.00); text-align: right;">Order Number: <span ></span></p>
+            </tr>
+            
+             <tr style="width:100%;" >
+                <p style="padding:0px 15px; font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 500; color: rgba(88,89,91,1.00);">
+                <h5>Hello <span ></span>
+                <span ></span>
+                </h5>
+                </p>
+            </tr>
+            
+          <!--  <tr style="width:100%;">
+                <p style="padding:0px 15px; font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 500; color: rgba(88,89,91,1.00);">
+                <h5>Hello <span ></span></h5>
+                </p>
+            </tr> -->
             
              <tr style="width:100%;">
                 <p style="padding:0px 15px; font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 400; color: rgba(88,89,91,1.00); line-height:1.6;">Thank You for placing your order with STYLORI, 
@@ -272,14 +292,53 @@ const getName = (username) => {
                     </tr>
                     </thead>
                     <tbody>
-                        
+                        <tr  >
+                            <td style="vertical-align: top;padding-left:0px;padding-top: 10px;width: 150px;">
+                            <img  width="150px" />	
+                           </td> 
+                            <td>
+                                <p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);line-height: 1.5;margin:0;padding-top: 10px;">
+                                <span >The Lada Pendant</span>
+                                <span>Metal:18Kt Yellow Gold <br />
+                                </span> <span >Metal Weight: 0.75 gms <br />
+                                </span> <br /> <span > <span
+                                        >Stone: Emerald</span> 
+                                        <span >Number Of Stones: 8<br />
+                                    </span> <br />
+                                </span>
+                                </p>
+                                
+                                <p style="border-top: 1px solid rgba(172,172,172,1.00);float: left;padding-top: 5px;margin-bottom: 5px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin-bottom:10px;" >
+                                Expected Ship Date: <span ></span>                      
+                                </p>
+                            </td>
+                           <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;" >1</p></td>
+                            <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;"><!-- <i class="fa fa-inr" aria-hidden="true"></i>--><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span ></span></p>
+                            </td>
+                        </tr>
+                        <tr style="border-top:1px solid #acacac;">
+                            <td></td>
+                            <td></td>
+                            <td><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;margin-top:15px;padding-bottom:10px;">
+                                   Total : <br />
+                                Shipping Charges:<br />
+                                Discount:
+                                </p>
+                            </td>
+                            <td><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;margin-top:15px;padding-bottom:10px;width: 100px;">
+                                <!-- <i class="fa fa-inr" aria-hidden="true"></i> --><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span ></span>/- <br />
+                                Free<br />
+                               <!-- <i class="fa fa-inr" aria-hidden="true"></i> --><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span >0</span>/-
+                               </p>
+                            </td>
+                        </tr>
                         <tr style="border-top:1px solid #acacac;border-bottom:1px solid #acacac;">
                             <td style="vertical-align: top;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding:5px 0 5px 15px;">* Inclusive of all taxes.</p></td>
                             <td></td>
                             <td style="vertical-align: top;"><p style="font-family: 'Arial', sans-serif;font-size: 14px;color: rgba(207,32,72,1.00);
     font-weight: bold;text-align:right;margin:0;padding:5px 0px;">Grand Total :</p></td>
                             <td style="vertical-align: top;"><p style="font-family: 'Arial', sans-serif;font-size: 14px;color: rgba(207,32,72,1.00);
-    font-weight: bold;text-align:right;margin:0;padding:5px 0px;"><!-- <i class="fa fa-inr" aria-hidden="true"></i> --><img src="https://assets-cdn.stylori.com/images/emailTemplate/rupee.png"/><span th:text=2000></span>/-</p>
+    font-weight: bold;text-align:right;margin:0;padding:5px 0px;"><!-- <i class="fa fa-inr" aria-hidden="true"></i> --><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span ></span>/-</p>
     </td>
                         </tr>
                              
@@ -289,21 +348,21 @@ const getName = (username) => {
             </tr>
               <tr>
                 <td>
-                 <p style="font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 400; color: rgba(88,89,91,1.00); width:40%; padding-left: 15px;line-height:1.6;margin: 0;margin-top:15px;" th:if="address">
+                 <p style="font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 400; color: rgba(88,89,91,1.00); width:40%; padding-left: 15px;line-height:1.6;margin: 0;margin-top:15px;">
                     Shipping Address:<br/>
-                        <p th:text="*{firstName+' '+lastName}"></p>
-                        <p th:text="*{addressLine1}">No 17/A Soundarya Nagar
+                        <p ></p>
+                        <p>No 17/A Soundarya Nagar
                             Narayanswamy Gardens, Kodungaiyur,</p>
-                        <p th:text="*{city+', '+state.getName()}">Near Parvathy
+                        <p>Near Parvathy
                             Nagar Bus stand, Chennai, Tamil Nadu,</p>
-                        <p th:text="*{country.getName()+'- '+postalCode}">India - 600118.</p>
+                        <p>India - 600118.</p>
                         </p>
                 </td>
             </tr>
             
             
             <tr>
-                            <p style="padding:0px 15px;line-height:1.5; font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding-top: 15px;"> You can visit <a href="https://www.stylori.com/account/orders">https://www.stylori.com/account/orders</a> to view your order status and to contact us regarding this order.<br />
+                            <p style="padding:0px 15px;line-height:1.5; font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding-top: 15px;"> You can visit <a href="/account/orders">https://www.stylori.com/account/orders</a> to view your order status and to contact us regarding this order.<br />
             Should you find the details of the order incorrect, please feel free to call us at 18001020330 or email us at hello@stylori.com </p>
           <p style="line-height:1.5;padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:15px 0;">Team Stylori <br />
               With Love </p>
@@ -343,7 +402,8 @@ const getName = (username) => {
         
     </div>
     </body>
-    </html>    
+    </html>
+       
     `;
   };
 
