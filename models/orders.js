@@ -3,9 +3,9 @@ module.exports = (sequelize, DataTypes) => {
   const orders = sequelize.define('orders', {
     cart_id: DataTypes.UUID,
     user_profile_id: DataTypes.UUID,
-    payment_mode: DataTypes.INTEGER,
-    payment_status: DataTypes.INTEGER,
-    order_status: DataTypes.INTEGER
+    payment_mode: DataTypes.STRING,
+    payment_status: DataTypes.STRING,
+    order_status: DataTypes.STRING
   }, {});
   orders.associate = function(models) {
     // associations can be defined here
