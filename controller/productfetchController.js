@@ -134,7 +134,7 @@ if(offset)
     includeclause.push({
       model : models.product_by_weight,
       where:{
-        design_name: byweight
+        weight: byweight
       }
   
   
