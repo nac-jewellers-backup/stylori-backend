@@ -12,7 +12,8 @@ import { sequelize } from '../models';
 var request = require('request');
 var dateFormat = require('dateformat');
 const moment = require('moment');
-
+const emailTemp = require('./notify/Emailtemplate');
+import {sendMail} from "./notify/user_notify"
 dotenv.config();
 aws.config.update({
     region: 'ap-south-1', // Put your aws region here
@@ -155,7 +156,7 @@ exports.resendorderemail = async (req, res) => {
   
   var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"You have successfully registered!"}]
          
-  sendMail(emilreceipiants,emailTemp.orderConformation(firstname))
+  sendMail(emilreceipiants,emailTemp.orderConformation("mano","manokarantk@gmail.com",""))
 
 return res.send(200,{message:"Confomation mail sent successfully"})
 }

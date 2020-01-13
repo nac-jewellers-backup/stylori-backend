@@ -49,19 +49,19 @@ var seofilterattributevalue = []
       [Op.eq]:bydesign
       }
       includeclause.push({
-        model : models.product_by_designs
+        model : models.product_by_design
        })
   }
   if(byweight)
   {
     seofilterattribute.push('By Weight')
     seofilterattributevalue.push(byweight)
-    whereclause['by_weight'] = byweight
+   // whereclause['by_weight'] = byweight
     whereclause['$product_by_weights.weight$'] = {
       [Op.eq]:byweight
       }
       includeclause.push({
-        model : models.product_by_weights
+        model : models.product_by_weight
        })
   }
   if(availability)
@@ -477,6 +477,7 @@ let prod_type_where = {}
   }
   var seo_url = ''
   var seo_text = ''
+  //var master_colors = []
   var master_colors = await models.product_metalcolours.findAll({
     attributes: ['product_color'],
     group: ['product_color'],

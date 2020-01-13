@@ -247,7 +247,7 @@ const getName = (username) => {
            
             
             <tr style="width:100%;">
-                <p style="padding:0px 15px; font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 500; color: rgba(237,18,95,1.00); text-align: right;">Order Number: <span th:text="${orderNumber}"></span></p>
+                <p style="padding:0px 15px; font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 500; color: rgba(237,18,95,1.00); text-align: right;">Order Number: <span th:text="312sr"></span></p>
             </tr>
             
              
@@ -279,7 +279,7 @@ const getName = (username) => {
                             <td style="vertical-align: top;"><p style="font-family: 'Arial', sans-serif;font-size: 14px;color: rgba(207,32,72,1.00);
     font-weight: bold;text-align:right;margin:0;padding:5px 0px;">Grand Total :</p></td>
                             <td style="vertical-align: top;"><p style="font-family: 'Arial', sans-serif;font-size: 14px;color: rgba(207,32,72,1.00);
-    font-weight: bold;text-align:right;margin:0;padding:5px 0px;"><!-- <i class="fa fa-inr" aria-hidden="true"></i> --><img src="https://assets-cdn.stylori.com/images/emailTemplate/rupee.png"/><span th:text="${order.total}"></span>/-</p>
+    font-weight: bold;text-align:right;margin:0;padding:5px 0px;"><!-- <i class="fa fa-inr" aria-hidden="true"></i> --><img src="https://assets-cdn.stylori.com/images/emailTemplate/rupee.png"/><span th:text=2000></span>/-</p>
     </td>
                         </tr>
                              
@@ -289,7 +289,7 @@ const getName = (username) => {
             </tr>
               <tr>
                 <td>
-                 <p style="font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 400; color: rgba(88,89,91,1.00); width:40%; padding-left: 15px;line-height:1.6;margin: 0;margin-top:15px;" th:if="${order.fulfillmentGroups[0].address != null}" th:object="${order.fulfillmentGroups[0].address}">
+                 <p style="font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 400; color: rgba(88,89,91,1.00); width:40%; padding-left: 15px;line-height:1.6;margin: 0;margin-top:15px;" th:if="address">
                     Shipping Address:<br/>
                         <p th:text="*{firstName+' '+lastName}"></p>
                         <p th:text="*{addressLine1}">No 17/A Soundarya Nagar
