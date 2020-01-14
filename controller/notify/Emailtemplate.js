@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const getName = (username) => {
     return  `<html>
 
@@ -192,7 +194,7 @@ const getName = (username) => {
             </tr>
             <tr>
                 <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: #ed1164;">
-                    <span style="color: #ed1164;text-decoration:none;">${token}</span>
+                    <span style="color: #ed1164;text-decoration:none;">${process.env.baseurl}</span>
                 </p>
             </tr>
             <tr>
@@ -245,6 +247,17 @@ const getName = (username) => {
     var products = paymentcontent.shopping_cart.shopping_cart_items;
 
     skudetail.forEach(element => {
+        var deliverytime = 0
+        var deliverdate = ""
+        if(element.is_ready_to_ship)
+        {
+            deliverytime = 1;
+        }else{
+            deliverytime = element.vendor_delivery_time
+        }
+        var todayDate = moment();
+
+        deliverdate = todayDate.add(deliverytime, 'days').format("DD MMM YYYY");
 
         prod_content = prod_content + `<tr>
         <td style="vertical-align: top;padding-left:0px;padding-top: 10px;width: 150px;">
@@ -254,7 +267,9 @@ const getName = (username) => {
             <p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);line-height: 1.5;margin:0;padding-top: 10px;">
             <span >${element.product_list.product_name}</span>
             <span>Metal:${element.purity} ${element.metal_color} <br />
-            </span> <span >Metal Weight: ${element.sku_weight} <br />
+            </span> 
+            <span >Quaity: ${element.diamond_type} <br /></span> 
+            <span >Metal Weight: ${element.sku_weight} <br />
             </span> <br /> <span > <span
                     >Stone: Emerald</span> 
                     <span >Number Of Stones: 8<br />
@@ -263,7 +278,7 @@ const getName = (username) => {
             </p>
             
             <p style="border-top: 1px solid rgba(172,172,172,1.00);float: left;padding-top: 5px;margin-bottom: 5px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin-bottom:10px;" >
-            Expected Ship Date: <span ></span>                      
+            Expected Ship Date: <span >${deliverdate}</span>                      
             </p>
         </td>
        <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;" >1</p></td>

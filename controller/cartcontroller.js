@@ -156,14 +156,15 @@ exports.paymentsuccess = async (req, res) => {
 
 exports.resendorderemail = async (req, res) => {
   const {order_id} = req.body
-  sendorderconformationemail(order_id)
-return res.send(200,{message:"Confomation mail sent successfully"})
+  sendorderconformationemail(order_id,res)
+//return res.send(200,{message:"Confomation mail sent successfully"})
 }
 
 
 
 
 exports.paymentfailure = async (req, res) => {
+  console.log(JSON.stringify(req.body))
   let redirectionurl = process.env.baseurl+'/paymentfail/'+req.body.oid
   return res.redirect(redirectionurl);
 
@@ -300,7 +301,7 @@ exports.addtocart = async (req, res) => {
         shopping_cart_id: cart_id
     }
     })
-    models.shopping_cart.update({gross_amount:gross_amount.price},{
+    models.shopping_cart.update({gross_amount:gross_amount.price, discounted_price:gross_amount.price},{
         where: {id: cart_id}
         }).then(price_splitup_model=> { 
         res.send(200,{cart_id})
@@ -585,7 +586,7 @@ if(wishlistobj && wishlistobj.length > 0)
     });
  }
 
-  async function sendorderconformationemail(order_id)
+  async function sendorderconformationemail(order_id,res)
  {
   let orderdetails  = await models.orders.findOne({
     include:[
@@ -651,10 +652,10 @@ if(wishlistobj && wishlistobj.length > 0)
     imagelist[element.product_id] = 'https://styloriimages.s3.ap-south-1.amazonaws.com/'+imagename
   })
 
-  var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Order Placed Successfully"}]
-         
-  sendMail(emilreceipiants,emailTemp.orderConformation("mano","manokarantk@gmail.com",orderdetails,skudetails,imagelist,day))
-// return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
+  var emilreceipiants = [{to :orderdetails.user_profile.email ,subject:"Order Placed Successfully"},{to :process.env.adminemail,subject:"Order Placed Successfully"}]
+     
+  sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skudetails,imagelist,day))
+return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
  }
 
 exports.addproductreview = async (req, res) => {
