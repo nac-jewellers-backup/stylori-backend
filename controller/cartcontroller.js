@@ -579,6 +579,10 @@ if(wishlistobj && wishlistobj.length > 0)
    models.orders.create(order_bj,{
     returning: true
   }).then(function(response){
+    if(payment_mode === 'cod')
+    {
+      sendorderconformationemail(order_bj.id)
+    }
     res.send(200,{"message":"updated successfully", "order":response})        
   }).catch(reason => {
       res.send(500,{"message":"Error Please try again"}) 
