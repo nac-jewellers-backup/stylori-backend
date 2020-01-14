@@ -27,7 +27,7 @@ const getName = (username) => {
             >
               <li style="display: inline; padding: 0px 3px; text-decoration: none;">
                 <a
-                  href="pendants-jewellery"
+                  href=${process.env.baserl+"/pendants-jewellery"}
                   target="_blank"
                   style="text-decoration:none;color:#4F4C4C;"
                   >Pendants</a
@@ -36,7 +36,7 @@ const getName = (username) => {
               <li style="display: inline; padding: 0px 2px;">|</li>
               <li style="display: inline; padding: 0px 2px;">
                 <a
-                  href="/earrings-jewellery"
+                  href=${process.env.baserl+"/earrings-jewellery"}
                   target="_blank"
                   style="text-decoration:none;color:#4F4C4C;"
                   >Earrings</a
@@ -45,7 +45,7 @@ const getName = (username) => {
               <li style="display: inline; padding: 0px 2px;">|</li>
               <li style="display: inline; padding: 0px 2px;">
                 <a
-                  href="/bangles-jewellery"
+                  href=${process.env.baserl+"/bangles-jewellery"}
                   target="_blank"
                   style="text-decoration:none;color:#4F4C4C;"
                   >Bangles</a
@@ -54,7 +54,7 @@ const getName = (username) => {
               <li style="display: inline; padding: 0px 2px;">|</li>
               <li style="display: inline; padding: 0px 2px;">
                 <a
-                  href="/bangles-jewellery"
+                  href=${process.env.baserl+"/bangles-jewellery"}
                   target="_blank"
                   style="text-decoration:none;color:#4F4C4C;"
                   >Bracelets</a
@@ -63,7 +63,7 @@ const getName = (username) => {
               <li style="display: inline; padding: 0px 2px;">|</li>
               <li style="display: inline; padding: 0px 2px;">
                 <a
-                  href="/rings-jewellery"
+                  href=${process.env.baserl+"/rings-jewellery"}
                   target="_blank"
                   style="text-decoration:none;color:#4F4C4C;"
                   >Rings</a
@@ -72,7 +72,7 @@ const getName = (username) => {
               <li style="display: inline; padding: 0px 2px;">|</li>
               <li style="display: inline; padding: 0px 2px;">
                 <a
-                  href="/nose+pin+online-jewellery"
+                  href=${process.env.baserl+"/nose+pin+online-jewellery"}
                   target="_blank"
                   style="text-decoration:none;color:#4F4C4C;"
                   >Nose Pins</a
