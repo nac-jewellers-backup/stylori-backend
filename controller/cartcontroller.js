@@ -156,6 +156,7 @@ exports.paymentsuccess = async (req, res) => {
 
 exports.resendorderemail = async (req, res) => {
   const {order_id} = req.body
+  
   sendorderconformationemail(order_id,res)
 //return res.send(200,{message:"Confomation mail sent successfully"})
 }
@@ -165,6 +166,14 @@ exports.resendorderemail = async (req, res) => {
 
 exports.paymentfailure = async (req, res) => {
   console.log(JSON.stringify(req.body))
+  let paymentcontent = {
+           
+    payment_response : JSON.stringify(req.body)
+}
+
+let new_cart = await models.payment_details.create(paymentcontent,{
+returning: true
+})
   let redirectionurl = process.env.baseurl+'/paymentfail/'+req.body.oid
   return res.redirect(redirectionurl);
 
