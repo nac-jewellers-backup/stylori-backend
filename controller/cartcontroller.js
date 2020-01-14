@@ -144,9 +144,11 @@ exports.paymentsuccess = async (req, res) => {
            
             payment_response : JSON.stringify(req.body)
     }
+    
     let new_cart = await models.payment_details.create(paymentcontent,{
       returning: true
     })
+    sendorderconformationemail(req.body.oid)
   let redirectionurl = process.env.baseurl+'/paymentsuccess/'+req.body.oid
 
  return res.redirect(redirectionurl);
@@ -154,74 +156,7 @@ exports.paymentsuccess = async (req, res) => {
 
 exports.resendorderemail = async (req, res) => {
   const {order_id} = req.body
-  let orderdetails  = await models.orders.findOne({
-    include:[
-     { model : models.user_profiles},
-     {model : models.shopping_cart,
-    include:[
-      {
-        model: models.cart_address,
-
-      },
-      {
-      model: models.shopping_cart_item,
-      include:[{
-        model: models.trans_sku_lists
-      }]
-    }]}
-    ],
-    where: {
-      id: order_id
-    }
-  })
-  var day    = ""
-  if(orderdetails)
-  {
-    day = moment.tz(orderdetails.updatedAt, "Asia/Kolkata").format("DD MMM YYYY HH:mm:ss");
-  }
-  var trans_sku_lists = [];
-  var prod_image_condition = []
-  orderdetails.shopping_cart.shopping_cart_items.forEach(element => {
-    trans_sku_lists.push(element.product_sku)
-    prod_image_condition.push({
-      product_color : element.trans_sku_list.metal_color,
-      product_id : element.trans_sku_list.product_id,
-      image_position: 1
-    })
-   // console.log(element.metal_color)
-  })
-  let skudetails = await models.trans_sku_lists.findAll({
-    include:[
-      {
-        model: models.product_lists
-      }
-    ],
-    where:{
-      generated_sku:{
-        [Op.in]: trans_sku_lists
-      }
-    }
-  })
-  var imagelist = {}
-  let prodimages = await models.product_images.findAll({
-    attributes: ['product_id','product_color','image_url','image_position','isdefault'],
-    where:{
-      [Op.or]:prod_image_condition
-    },
-    order: [
-      ['image_position', 'ASC']
-    ]
-  })
-  prodimages.forEach(element => {
-    var imagename = element.image_url.replace(element.product_id, element.product_id+'/100X100');
-
-    imagelist[element.product_id] = 'https://styloriimages.s3.ap-south-1.amazonaws.com/'+imagename
-  })
-
-  var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Order Placed Successfully"}]
-         
-  sendMail(emilreceipiants,emailTemp.orderConformation("mano","manokarantk@gmail.com",orderdetails,skudetails,imagelist,day))
-// return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
+  sendorderconformationemail(order_id)
 return res.send(200,{message:"Confomation mail sent successfully"})
 }
 
@@ -649,6 +584,79 @@ if(wishlistobj && wishlistobj.length > 0)
       console.log(reason)
     });
  }
+
+  async function sendorderconformationemail(order_id)
+ {
+  let orderdetails  = await models.orders.findOne({
+    include:[
+     { model : models.user_profiles},
+     {model : models.shopping_cart,
+    include:[
+      {
+        model: models.cart_address,
+
+      },
+      {
+      model: models.shopping_cart_item,
+      include:[{
+        model: models.trans_sku_lists
+      }]
+    }]}
+    ],
+    where: {
+      id: order_id
+    }
+  })
+  var day    = ""
+  if(orderdetails)
+  {
+    day = moment.tz(orderdetails.updatedAt, "Asia/Kolkata").format("DD MMM YYYY HH:mm:ss");
+  }
+  var trans_sku_lists = [];
+  var prod_image_condition = []
+  orderdetails.shopping_cart.shopping_cart_items.forEach(element => {
+    trans_sku_lists.push(element.product_sku)
+    prod_image_condition.push({
+      product_color : element.trans_sku_list.metal_color,
+      product_id : element.trans_sku_list.product_id,
+      image_position: 1
+    })
+   // console.log(element.metal_color)
+  })
+  let skudetails = await models.trans_sku_lists.findAll({
+    include:[
+      {
+        model: models.product_lists
+      }
+    ],
+    where:{
+      generated_sku:{
+        [Op.in]: trans_sku_lists
+      }
+    }
+  })
+  var imagelist = {}
+  let prodimages = await models.product_images.findAll({
+    attributes: ['product_id','product_color','image_url','image_position','isdefault'],
+    where:{
+      [Op.or]:prod_image_condition
+    },
+    order: [
+      ['image_position', 'ASC']
+    ]
+  })
+  prodimages.forEach(element => {
+    var imagename = element.image_url.replace(element.product_id, element.product_id+'/100X100');
+
+    imagelist[element.product_id] = 'https://styloriimages.s3.ap-south-1.amazonaws.com/'+imagename
+  })
+
+  var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Order Placed Successfully"}]
+         
+  sendMail(emilreceipiants,emailTemp.orderConformation("mano","manokarantk@gmail.com",orderdetails,skudetails,imagelist,day))
+// return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
+ }
+
 exports.addproductreview = async (req, res) => {
     let {user_id, username, rate,product_id,product_sku, title, message} = req.body
      let userreviews = await models.customer_reviews.findAll({
