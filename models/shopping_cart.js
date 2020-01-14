@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'shopping_cart_id',
       targetKey: 'id'
     });
+    models.shopping_cart.hasMany(models.cart_address,{
+      foreignKey: 'cart_id',
+      targetKey: 'id'
+    });
+    
   };
   return shopping_cart;
 };

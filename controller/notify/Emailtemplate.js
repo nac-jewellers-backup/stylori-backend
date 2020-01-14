@@ -222,7 +222,58 @@ const getName = (username) => {
   };
 
 
-  const orderconformation = (username,email,token) => {
+  const orderconformation = (username,email,paymentcontent,skudetail,imagelist,day) => {
+    var productlist = [];
+    var prod_content = ""
+    var grossamt = 0;
+    var discount  = 0;
+    var discounted_price = 0;
+    if(paymentcontent.shopping_cart.gross_amount)
+    {
+        grossamt = paymentcontent.shopping_cart.gross_amount
+    }
+
+    if(paymentcontent.shopping_cart.discount)
+    {
+        discount = paymentcontent.shopping_cart.discount
+    }
+
+    if(paymentcontent.shopping_cart.discounted_price)
+    {
+        discounted_price = paymentcontent.shopping_cart.discounted_price
+    }
+    var products = paymentcontent.shopping_cart.shopping_cart_items;
+
+    skudetail.forEach(element => {
+
+        prod_content = prod_content + `<tr>
+        <td style="vertical-align: top;padding-left:0px;padding-top: 10px;width: 150px;">
+        <img  src='${imagelist[element.product_id]}' width="150px" />	
+       </td> 
+        <td>
+            <p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);line-height: 1.5;margin:0;padding-top: 10px;">
+            <span >${element.product_list.product_name}</span>
+            <span>Metal:${element.purity} ${element.metal_color} <br />
+            </span> <span >Metal Weight: ${element.sku_weight} <br />
+            </span> <br /> <span > <span
+                    >Stone: Emerald</span> 
+                    <span >Number Of Stones: 8<br />
+                </span> <br />
+            </span>
+            </p>
+            
+            <p style="border-top: 1px solid rgba(172,172,172,1.00);float: left;padding-top: 5px;margin-bottom: 5px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin-bottom:10px;" >
+            Expected Ship Date: <span ></span>                      
+            </p>
+        </td>
+       <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;" >1</p></td>
+        <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;"><!-- <i class="fa fa-inr" aria-hidden="true"></i>--><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span >${element.markup_price}</span></p>
+        </td>
+    </tr>`
+    
+    })
+
+    
     return  `<!doctype html>
     <html>
     <head>
@@ -245,24 +296,24 @@ const getName = (username) => {
                 <tr style="width:100%;">
                 <p style="padding:0px 15px; font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00); text-align: right;" >
                     Order Placed On: 
-                     <span>24/11/2014 15:47</span>
+                     <span>${day}</span>
                 </p>
             </tr>
             
              <tr style="width:100%;">
                 <p style="padding:0px 15px; font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00); text-align: right;" >
                     Payment method: 
-                    <span >Cash on Delivery</span>
+                    <span >${paymentcontent.payment_mode}</span>
                 </p>
             </tr>
             
             <tr style="width:100%;">
-                <p style="padding:0px 15px; font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 500; color: rgba(237,18,95,1.00); text-align: right;">Order Number: <span ></span></p>
+                <p style="padding:0px 15px; font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 500; color: rgba(237,18,95,1.00); text-align: right;">Order Number: <span >${paymentcontent.id}</span></p>
             </tr>
             
              <tr style="width:100%;" >
                 <p style="padding:0px 15px; font-family: 'Arial', sans-serif; font-size: 12px; font-weight: 500; color: rgba(88,89,91,1.00);">
-                <h5>Hello <span ></span>
+                <h5>Hello <span > ${paymentcontent.user_profile.first_name}</span>
                 <span ></span>
                 </h5>
                 </p>
@@ -292,37 +343,14 @@ const getName = (username) => {
                     </tr>
                     </thead>
                     <tbody>
-                        <tr  >
-                            <td style="vertical-align: top;padding-left:0px;padding-top: 10px;width: 150px;">
-                            <img  width="150px" />	
-                           </td> 
-                            <td>
-                                <p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);line-height: 1.5;margin:0;padding-top: 10px;">
-                                <span >The Lada Pendant</span>
-                                <span>Metal:18Kt Yellow Gold <br />
-                                </span> <span >Metal Weight: 0.75 gms <br />
-                                </span> <br /> <span > <span
-                                        >Stone: Emerald</span> 
-                                        <span >Number Of Stones: 8<br />
-                                    </span> <br />
-                                </span>
-                                </p>
-                                
-                                <p style="border-top: 1px solid rgba(172,172,172,1.00);float: left;padding-top: 5px;margin-bottom: 5px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin-bottom:10px;" >
-                                Expected Ship Date: <span ></span>                      
-                                </p>
-                            </td>
-                           <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;" >1</p></td>
-                            <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;"><!-- <i class="fa fa-inr" aria-hidden="true"></i>--><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span ></span></p>
-                            </td>
-                        </tr>
+                        ${prod_content}
                         <tr style="border-top:1px solid #acacac;">
                             <td></td>
                             <td></td>
                             <td><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;margin-top:15px;padding-bottom:10px;">
-                                   Total : <br />
+                                   Total :  ${grossamt}<br />
                                 Shipping Charges:<br />
-                                Discount:
+                                Discount: ${discount}
                                 </p>
                             </td>
                             <td><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;margin-top:15px;padding-bottom:10px;width: 100px;">
@@ -336,7 +364,7 @@ const getName = (username) => {
                             <td style="vertical-align: top;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding:5px 0 5px 15px;">* Inclusive of all taxes.</p></td>
                             <td></td>
                             <td style="vertical-align: top;"><p style="font-family: 'Arial', sans-serif;font-size: 14px;color: rgba(207,32,72,1.00);
-    font-weight: bold;text-align:right;margin:0;padding:5px 0px;">Grand Total :</p></td>
+    font-weight: bold;text-align:right;margin:0;padding:5px 0px;">Grand Total : ${discounted_price}</p></td>
                             <td style="vertical-align: top;"><p style="font-family: 'Arial', sans-serif;font-size: 14px;color: rgba(207,32,72,1.00);
     font-weight: bold;text-align:right;margin:0;padding:5px 0px;"><!-- <i class="fa fa-inr" aria-hidden="true"></i> --><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span ></span>/-</p>
     </td>
