@@ -141,7 +141,7 @@ models.vouchers.findOne({
 }
 exports.paymentsuccess = async (req, res) => {
     let paymentcontent = {
-           
+           order_id : req.body.oid,
             payment_response : JSON.stringify(req.body)
     }
     
@@ -167,7 +167,7 @@ exports.resendorderemail = async (req, res) => {
 exports.paymentfailure = async (req, res) => {
   console.log(JSON.stringify(req.body))
   let paymentcontent = {
-           
+    order_id : req.body.oid,
     payment_response : JSON.stringify(req.body)
 }
 
