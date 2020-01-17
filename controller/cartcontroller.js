@@ -166,6 +166,10 @@ exports.resendorderemail = async (req, res) => {
 
 exports.paymentfailure = async (req, res) => {
   console.log(JSON.stringify(req.body))
+  if(req.body)
+  {
+
+  
   let paymentcontent = {
     order_id : req.body.oid,
     payment_response : JSON.stringify(req.body)
@@ -176,6 +180,10 @@ returning: true
 })
   let redirectionurl = process.env.baseurl+'/paymentfail/'+req.body.oid
   return res.redirect(redirectionurl);
+}else{
+  let redirectionurl = process.env.baseurl+'/paymentfail/'+1
+  return res.redirect(redirectionurl);
+}
 
 }
 exports.generatepaymenturl = async (req, res) => {
