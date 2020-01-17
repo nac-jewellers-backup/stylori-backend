@@ -272,6 +272,11 @@ if(stoneshape)
         gemstone_shape : stoneshape
       }
      })
+}else{
+  includeclause.push({
+    model : models.product_gemstones,
+    
+   })
 }
 if(style)
 {

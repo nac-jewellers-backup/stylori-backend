@@ -372,6 +372,7 @@ Stylori will never e-mail you and ask you to disclose or verify your Stylori pas
     var grossamt = 0;
     var discount  = 0;
     var discounted_price = 0;
+    var  address_obj = {}
     if(paymentcontent.shopping_cart.gross_amount)
     {
         grossamt = paymentcontent.shopping_cart.gross_amount
@@ -381,7 +382,14 @@ Stylori will never e-mail you and ask you to disclose or verify your Stylori pas
     {
         discount = paymentcontent.shopping_cart.discount
     }
+    if(paymentcontent.shopping_cart.cart_addresses)
+    {
+      if(paymentcontent.shopping_cart.cart_addresses.length > 0)
+      {
+         address_obj = paymentcontent.shopping_cart.cart_addresses [0]
 
+      }
+    }
     if(paymentcontent.shopping_cart.discounted_price)
     {
         discounted_price = paymentcontent.shopping_cart.discounted_price
@@ -493,15 +501,15 @@ Stylori will never e-mail you and ask you to disclose or verify your Stylori pas
                             <td></td>
                             <td></td>
                             <td><p style="font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;margin-top:15px;padding-bottom:10px;">
-                                   Total :  ${grossamt}<br />
+                                   Total : <br />
                                 Shipping Charges:<br />
-                                Discount: ${discount}
+                                Discount: 
                                 </p>
                             </td>
                             <td><p style="font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;margin-top:15px;padding-bottom:10px;width: 100px;">
-                                <!-- <i class="fa fa-inr" aria-hidden="true"></i> --><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span ></span>/- <br />
+                                <!-- <i class="fa fa-inr" aria-hidden="true"></i> --><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span > ${grossamt}</span>/- <br />
                                 Free<br />
-                               <!-- <i class="fa fa-inr" aria-hidden="true"></i> --><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span >0</span>/-
+                               <!-- <i class="fa fa-inr" aria-hidden="true"></i> --><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span > ${discount}</span>/-
                                </p>
                             </td>
                         </tr>
@@ -509,9 +517,9 @@ Stylori will never e-mail you and ask you to disclose or verify your Stylori pas
                             <td style="vertical-align: top;"><p style="font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding:5px 0 5px 15px;">* Inclusive of all taxes.</p></td>
                             <td></td>
                             <td style="vertical-align: top;"><p style="font-family: ‘Arial’, sans-serif;font-size: 14px;color: rgba(207,32,72,1.00);
-    font-weight: bold;text-align:right;margin:0;padding:5px 0px;">Grand Total : ${discounted_price}</p></td>
+    font-weight: bold;text-align:right;margin:0;padding:5px 0px;">Grand Total : </p></td>
                             <td style="vertical-align: top;"><p style="font-family: ‘Arial’, sans-serif;font-size: 14px;color: rgba(207,32,72,1.00);
-    font-weight: bold;text-align:right;margin:0;padding:5px 0px;"><!-- <i class="fa fa-inr" aria-hidden="true"></i> --><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span ></span>/-</p>
+    font-weight: bold;text-align:right;margin:0;padding:5px 0px;"><!-- <i class="fa fa-inr" aria-hidden="true"></i> --><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span >${discounted_price}</span>/-</p>
     </td>
                         </tr>
                     </tbody>
@@ -522,11 +530,9 @@ Stylori will never e-mail you and ask you to disclose or verify your Stylori pas
                  <p style="font-family: ‘Arial’, sans-serif; font-size: 13px; font-weight: 600; color: rgba(88,89,91,1.00); width:40%; padding-left: 15px;line-height:1.6;margin: 0;margin-top:15px;">
                     Shipping Address:<br/>
                         <p ></p>
-                        <p style="font-size: 13px; font-weight: 400;padding-left: 15px;color: #767D89;">No 17/A Soundarya Nagar
-                            Narayanswamy Gardens, Kodungaiyur,</p>
-                        <p style="font-size: 13px; font-weight: 400;padding-left: 15px;color: #767D89;">Near Parvathy
-                            Nagar Bus stand, Chennai, Tamil Nadu,</p>
-                        <p style="font-size: 13px; font-weight: 400;padding-left: 15px;color: #767D89;">India - 600118.</p>
+                        <p style="font-size: 13px; font-weight: 400;padding-left: 15px;color: #767D89;">${address_obj.addressline1}</p>
+                        <p style="font-size: 13px; font-weight: 400;padding-left: 15px;color: #767D89;">${address_obj.addressline2}, ${address_obj.city}, ${address_obj.state},</p>
+                        <p style="font-size: 13px; font-weight: 400;padding-left: 15px;color: #767D89;">${address_obj.country} - ${address_obj.pincode}.</p>
                         </p>
                 </td>
             </tr>

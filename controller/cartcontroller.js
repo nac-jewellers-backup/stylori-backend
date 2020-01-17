@@ -668,7 +668,7 @@ if(wishlistobj && wishlistobj.length > 0)
   var emilreceipiants = [{to :orderdetails.user_profile.email ,subject:"Order Placed Successfully"},{to :process.env.adminemail,subject:"Order Placed Successfully"}]
      
   sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skudetails,imagelist,day))
-return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
+//return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
  }
 
 exports.addproductreview = async (req, res) => {
