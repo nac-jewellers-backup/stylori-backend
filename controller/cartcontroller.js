@@ -166,7 +166,7 @@ exports.resendorderemail = async (req, res) => {
 
 exports.paymentfailure = async (req, res) => {
   console.log(JSON.stringify(req.body))
-  if(req.body)
+  if(req.body && req.body.oid)
   {
 
   
