@@ -500,7 +500,18 @@ prod_iclude.push({
    where:imagewhereclause,
    required: false           
  })
-
+ includeclause.push({
+  model : models.product_images,
+  as : 'product_images',
+  attributes : [
+                ['ishover','ishover'],
+                ['image_url','imageUrl'],
+                ['image_position','imagePosition'],
+                ['isdefault','isdefault']
+                ],
+   where:imagewhereclause,
+   required: false           
+ })
  if(material)
  {         
   
@@ -510,7 +521,7 @@ prod_iclude.push({
      }
   includeclause.push({
     model : models.product_materials,
-    as : 'productMaterialsByProductSku',
+    as : 'product_materials',
     attributes : [
                   ['material_name','materialName']
                  
@@ -522,7 +533,7 @@ prod_iclude.push({
  }else{
   includeclause.push({
     model : models.product_materials,
-    as : 'productMaterialsByProductSku',
+    as : 'product_materials',
     attributes : [
                   ['material_name','materialName']
                  

@@ -269,6 +269,19 @@ exports.getsizes = async (req, res) => {
   
   res.send(200,{status:200,sizes:prooduct_sizes})
 }
+exports.removecartitem = async (req, res) => {
+  let {cart_id, product_id } = req.body
+ await models.shopping_cart_item.destroy({
+    where: {
+        shopping_cart_id : cart_id,
+        product_sku : product_id
+    }
+})
+  
+res.send(200,{"message": "Remove Successfully"})
+
+
+}
 exports.addtocart = async (req, res) => {
  let {user_id, products,cart_id} = req.body
  console.log(JSON.stringify(req.body));
