@@ -14,7 +14,6 @@ const {material,category, theme,collection, occasion, style, metalpurity, produc
 var product_list = [];
 var whereclause = {
   isactive: true
-
 };
 var skusort = {}
 var sortelement = []
@@ -273,6 +272,7 @@ if(stoneshape)
       }
      })
 }else{
+  
   includeclause.push({
     model : models.product_gemstones,
     

@@ -317,6 +317,7 @@ exports.addtocart = async (req, res) => {
       }
       cartlines.push(lineobj)
   });
+
   await models.shopping_cart_item.bulkCreate(
       cartlines
         , {individualHooks: true}).then(function(response){
@@ -338,10 +339,6 @@ exports.addtocart = async (req, res) => {
       }).catch(reason => {
         console.log(reason)
       });
-
-
-
-
 }
 exports.uploadimage =  (req, res) => {
     console.log(req.body)

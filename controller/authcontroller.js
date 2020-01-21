@@ -359,7 +359,7 @@ exports.guestlogin = (req, res) => {
 
   models.user_profiles.findOne({
       where: {email},
-      attributes: ['user_id','id']
+      attributes: ['user_id','id','otp']
       
   }).then(user => {
       if(!user)
@@ -385,6 +385,9 @@ exports.guestlogin = (req, res) => {
         });
         });
       }else{
+        var emilreceipiants = [{to : email,subject:"Verify user"}]
+        sendMail(emilreceipiants,emailTemp.forgotpasswordTemp("","manokarantk@gmail.com",user.otp))
+
         res.status(200).json({
           "description": "User Content Page",
           "user": user
