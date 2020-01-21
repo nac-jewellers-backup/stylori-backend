@@ -32,6 +32,9 @@ module.exports = {
       is_active: {
         type: Sequelize.BOOLEAN
       },
+      status: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

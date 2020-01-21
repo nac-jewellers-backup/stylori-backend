@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     net_amount: DataTypes.DOUBLE,
     discount:  DataTypes.DOUBLE,
     discounted_price:  DataTypes.DOUBLE,
-    is_active: DataTypes.BOOLEAN
+    is_active: DataTypes.BOOLEAN,
+    status: DataTypes.STRING
   }, {});
   shopping_cart.associate = function(models) {
     // associations can be defined here
