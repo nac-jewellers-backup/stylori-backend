@@ -324,10 +324,13 @@ exports.addtocart = async (req, res) => {
     let product_in_cart = await models.shopping_cart_item.findAll({
       where:{
         shopping_cart_id: cart_id,
-          product_sku: element.sku_id
+        product_sku: element.sku_id
       }
     })
-    if(product_in_cart.length > 0)
+    console.log("productscart")
+    console.log(product_in_cart.length)
+
+    if(product_in_cart.length == 0)
     {
       const lineobj = {
           id:uuidv1(),
