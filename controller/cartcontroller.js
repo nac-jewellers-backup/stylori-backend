@@ -319,7 +319,16 @@ exports.addtocart = async (req, res) => {
   }
 
   let cartlines = [] 
-  products.forEach(element => {
+  products.forEach(async element => {
+
+    let product_in_cart = await models.shopping_cart_item.findAll({
+      where:{
+        shopping_cart_id: cart_id,
+          product_sku: element.sku_id
+      }
+    })
+    if(product_in_cart.length > 0)
+    {
       const lineobj = {
           id:uuidv1(),
           shopping_cart_id: cart_id,
@@ -328,13 +337,17 @@ exports.addtocart = async (req, res) => {
           price: element.price
       }
       cartlines.push(lineobj)
+    }
   });
-
+if(cartlines.length > 0)
+{
   await models.shopping_cart_item.bulkCreate(
-      cartlines
-        , {individualHooks: true}).then(function(response){
-            
-  })
+    cartlines
+      , {individualHooks: true}).then(function(response){
+          
+})
+}
+  
 
  let gross_amount = await models.shopping_cart_item.findOne({
     attributes: [
