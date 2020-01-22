@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape,price, gender, stonecolor,metalcolor,noofstones,availability,sortBy,offset,bydesign,byweight} = req.body
+const {material,category, offer_min, offer_max, theme,collection, occasion, style, metalpurity, producttype, stoneshape,price, gender, stonecolor,metalcolor,noofstones,availability,sortBy,offset,bydesign,byweight} = req.body
 var product_list = [];
 var whereclause = {
   isactive: true
@@ -140,7 +140,23 @@ if(offset)
   
      })
   }
-
+  if(offer_min && offer_max)
+  {
+    whereclause['$trans_sku_lists.discount$'] = {
+      [Op.between]:[offer_min,offer_max]
+      }
+  }else{
+    if(offer_min)
+    {
+      whereclause['$trans_sku_lists.discount$'] = {
+        [Op.gte]:offer_min
+        }
+    }else if(offer_max){
+      whereclause['$trans_sku_lists.discount$'] = {
+        [Op.lte]:offer_max
+        }
+    }
+  }
   if(bydesign)
   {
     includeclause.push({

@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape,price, gender, stonecolor,metalcolor,noofstones,availability,sortBy,offset} = req.body
+const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape,price, gender, stonecolor,metalcolor,noofstones,availability,sortBy,offset,bydesign,byweight} = req.body
 var product_list = [];
 var whereclause = {
   isactive: true
@@ -264,7 +264,46 @@ if(occasion)
     
    })
 }
+if(bydesign)
+  {
+    includeclause.push({
+      attributes:["product_id","design_name","is_active"],
+      model : models.product_by_design,
+      where:{
+        design_name: bydesign
+      }
+  
+  
+     })
+  }else{
+    includeclause.push({
+      attributes:["product_id","design_name","is_active"],
+      model : models.product_by_design
+  
+  
+     })
+  }
 
+  if(byweight)
+  {
+    includeclause.push({
+      attributes:["product_id","weight","is_active"],
+      model : models.product_by_weight,
+      where:{
+        weight: byweight
+      }
+  
+  
+     })
+  }else{
+    includeclause.push({
+      attributes:["product_id","weight","is_active"],
+      model : models.product_by_weight
+      
+  
+  
+     })
+  }
 if(stoneshape)
 {
  
