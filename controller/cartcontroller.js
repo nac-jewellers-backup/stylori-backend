@@ -317,21 +317,25 @@ exports.addtocart = async (req, res) => {
     cart_id = new_cart.id 
   
   }
-
+  let product_in_cart = await models.shopping_cart_item.findAll({
+    where:{
+      shopping_cart_id: cart_id
+    }
+  })
+  var cartproducts = []
+  product_in_cart.forEach( prod_element => {
+    cartproducts.push(prod_element.product_sku)
+  })
   let cartlines = [] 
-  products.forEach(async element => {
+  products.forEach( element => {
 
-    let product_in_cart = await models.shopping_cart_item.findAll({
-      where:{
-        shopping_cart_id: cart_id,
-        product_sku: element.sku_id
-      }
-    })
+    
     console.log("productscart")
     console.log(product_in_cart.length)
 
-    if(product_in_cart || product_in_cart.length == 0)
+    if(cartproducts.indexOf(element.sku_id) == -1)
     {
+      console.log("updated")
       const lineobj = {
           id:uuidv1(),
           shopping_cart_id: cart_id,
@@ -339,19 +343,24 @@ exports.addtocart = async (req, res) => {
           qty: element.qty,
           price: element.price
       }
+      console.log(JSON.stringify(lineobj))
+
       cartlines.push(lineobj)
     }
-  });
-if(cartlines.length == 0)
-{
-  await models.shopping_cart_item.bulkCreate(
-    cartlines
-      , {individualHooks: true}).then(function(response){
-          
-})
-}
-  
+    console.log("cartline length"+cartlines.length )
 
+  });
+  
+  console.log("cartline length")
+    if(cartlines.length > 0)
+    {
+      await  models.shopping_cart_item.bulkCreate(
+        cartlines
+        , {individualHooks: true})
+    }
+     
+  
+      console.log("cartline length212")
  let gross_amount = await models.shopping_cart_item.findOne({
     attributes: [
       [squelize.literal('SUM(price)'), 'price']
@@ -360,7 +369,9 @@ if(cartlines.length == 0)
         shopping_cart_id: cart_id
     }
     })
-    models.shopping_cart.update({gross_amount:gross_amount.price, discounted_price:gross_amount.price},{
+    console.log("cartline length")
+
+   await models.shopping_cart.update({gross_amount:gross_amount.price, discounted_price:gross_amount.price},{
         where: {id: cart_id}
         }).then(price_splitup_model=> { 
         res.send(200,{cart_id})
