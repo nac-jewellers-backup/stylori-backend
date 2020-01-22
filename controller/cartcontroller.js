@@ -330,7 +330,7 @@ exports.addtocart = async (req, res) => {
     console.log("productscart")
     console.log(product_in_cart.length)
 
-    if(product_in_cart.length == 0)
+    if(product_in_cart || product_in_cart.length == 0)
     {
       const lineobj = {
           id:uuidv1(),
@@ -342,7 +342,7 @@ exports.addtocart = async (req, res) => {
       cartlines.push(lineobj)
     }
   });
-if(cartlines.length > 0)
+if(cartlines.length == 0)
 {
   await models.shopping_cart_item.bulkCreate(
     cartlines
