@@ -144,7 +144,18 @@ exports.paymentsuccess = async (req, res) => {
            order_id : req.body.oid,
             payment_response : JSON.stringify(req.body)
     }
-    
+    let orderobj = await models.orders.findOne({
+      where : {
+          id : order_id
+      }
+    })
+    const update_cartstatus = {
+      status: "paid"
+    }
+    let updatecart = await models.shopping_cart.update(update_cartstatus, {returning: true, 
+      where : {
+        id : orderobj.cart_id
+      }})
     let new_cart = await models.payment_details.create(paymentcontent,{
       returning: true
     })
@@ -297,7 +308,8 @@ exports.addtocart = async (req, res) => {
   {
     const cartobj = {
         id : uuidv1(),
-        userprofile_id: user_id
+        userprofile_id: user_id,
+        status: "pending"
     }
     let new_cart = await models.shopping_cart.create(cartobj,{
         returning: true

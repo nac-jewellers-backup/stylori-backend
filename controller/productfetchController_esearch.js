@@ -134,6 +134,7 @@ if(offset)
     console.log("metal colur image")
     console.log(JSON.stringify(metalcolor))
     includeclause.push({
+      attributes: ["product_color","product_id","is_active"],
       model : models.product_metalcolours,
       where: {
         product_color : metalcolor
@@ -143,6 +144,7 @@ if(offset)
     //   [Op.eq]:metalcolor
     //   }
      prod_iclude.push({
+       
       model : models.product_metalcolours,
       // where: {
       //   product_color : metalcolor
@@ -166,6 +168,7 @@ if(offset)
     }    
   }else{
     includeclause.push({
+      attributes: ["product_color","product_id","is_active"],
       model : models.product_metalcolours,
     
      })
@@ -228,6 +231,7 @@ if(collection)
   //   [Op.eq]:collection
   //   }
     includeclause.push({
+      attributes:["collection_name","product_id","is_active"],
       model : models.product_collections,
       where: {
         collection_name : collection
@@ -235,6 +239,7 @@ if(collection)
      })
 }else{
   includeclause.push({
+    attributes:["collection_name","product_id","is_active"],
     model : models.product_collections,
     
    })
@@ -246,6 +251,7 @@ if(occasion)
   //   [Op.eq]:occasion
   //   }
     includeclause.push({
+      attributes:["occassion_name","product_id","is_active"],
       model : models.product_occassions,
       where: {
         occassion_name : occasion
@@ -253,6 +259,7 @@ if(occasion)
      })
 }else{
   includeclause.push({
+    attributes:["occassion_name","product_id","is_active"],
     model : models.product_occassions,
     
    })
@@ -266,6 +273,7 @@ if(stoneshape)
   //   [Op.eq]:stoneshape
   //   }
     includeclause.push({
+      attributes:["gemstone_type","gemstone_shape","gemstone_setting","gemstone_size","stone_count","stone_weight","product_sku","is_active"],
       model : models.product_gemstones,
       where:{
         gemstone_shape : stoneshape
@@ -274,6 +282,8 @@ if(stoneshape)
 }else{
   
   includeclause.push({
+    attributes:["gemstone_type","gemstone_shape","gemstone_setting","gemstone_size","stone_count","stone_weight","product_sku","is_active"],
+
     model : models.product_gemstones,
     
    })
@@ -281,7 +291,10 @@ if(stoneshape)
 if(style)
 {
   includeclause.push({
+    attributes:["style_name","product_id","is_active"],
     model : models.product_styles,
+    
+
     where:{
       style_name: style
     }
@@ -294,6 +307,7 @@ if(style)
     
 }else{
   includeclause.push({
+    attributes:["style_name","product_id","is_active"],
     model : models.product_styles,
     
 
@@ -307,6 +321,7 @@ if(theme)
   //   [Op.eq]:theme
   //   }
     includeclause.push({
+      attributes: ["theme_name","product_id","is_active"],
            model : models.product_themes,
            where:{
             theme_name : theme
@@ -314,6 +329,7 @@ if(theme)
     })
 }else{
   includeclause.push({
+    attributes: ["theme_name","product_id","is_active"],
     model : models.product_themes
     
 })
@@ -326,6 +342,7 @@ if(stonecolor)
   //   [Op.eq]:stonecolor
   //   }
     includeclause.push({
+      attributes: ["stonecolor","product_id","is_active"],
            model : models.product_stonecolor,
            where:{
             stonecolor : stonecolor
@@ -333,6 +350,7 @@ if(stonecolor)
     })
 }else{
   includeclause.push({
+    attributes: ["stonecolor","product_id","is_active"],
     model : models.product_stonecolor,
     
 })
@@ -346,6 +364,7 @@ if(stonecolor)
   //   [Op.eq]:noofstones
   //   }
     includeclause.push({
+      attributes: ["stonecount","product_id","is_active"],
            model : models.product_stonecount,
            where: {
             stonecount: noofstones
@@ -353,6 +372,7 @@ if(stonecolor)
     })
  }else{
   includeclause.push({
+    attributes: ["stonecount","product_id","is_active"],
     model : models.product_stonecount,
    
 })
@@ -455,6 +475,11 @@ if(gender)
            }
     })
 
+}else{
+  includeclause.push({
+    model : models.product_gender
+   
+})
 }
 
 
@@ -664,6 +689,6 @@ var products_all = []
 
 
 
-    res.send(200,{'data':{'totalCount':products_all.length,'allProductLists':products_all}}
-              )
+res.send(200,{'data':products_all})
+
 }

@@ -25,6 +25,9 @@ module.exports = {
       stone_weight: {
         type: Sequelize.DOUBLE
       },
+      is_active: {
+        type: Sequelize.BOOLEAN
+      },
       gemstone_size:{
         type: Sequelize.STRING
       },

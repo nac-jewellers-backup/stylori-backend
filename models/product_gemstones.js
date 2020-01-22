@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     gemstone_size: DataTypes.STRING,
     stone_count: DataTypes.INTEGER,
     stone_weight: DataTypes.DOUBLE,
-    product_sku: DataTypes.STRING
+    product_sku: DataTypes.STRING,
+    is_active: DataTypes.BOOLEAN
   }, {timestamps: false});
   product_gemstones.associate = function(models) {
     // associations can be defined here

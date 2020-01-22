@@ -17,6 +17,9 @@ module.exports = {
           key: 'product_id',
         }
       },
+      is_active:{
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

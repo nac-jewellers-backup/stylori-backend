@@ -13,6 +13,9 @@ module.exports = {
       product_sku: {
         type: Sequelize.STRING
       },
+      is_active: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

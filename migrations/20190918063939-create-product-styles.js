@@ -10,6 +10,9 @@ module.exports = {
       style_name: {
         type: Sequelize.STRING
       },
+      is_active: {
+        type: Sequelize.BOOLEAN
+      },
       product_id: {
         type: Sequelize.STRING,
         references: {

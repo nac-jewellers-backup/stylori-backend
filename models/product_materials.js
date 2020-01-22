@@ -2,7 +2,8 @@
 module.exports = (sequelize, DataTypes) => {
   const product_materials = sequelize.define('product_materials', {
     material_name: DataTypes.STRING,
-    product_sku: DataTypes.STRING
+    product_sku: DataTypes.STRING,
+    is_active: DataTypes.BOOLEAN
   }, {
     timestamps: false
   });

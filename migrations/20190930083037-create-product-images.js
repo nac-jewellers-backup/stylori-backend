@@ -20,6 +20,9 @@ module.exports = {
       image_url: {
         type: Sequelize.STRING
       },
+      is_active: {
+        type: Sequelize.BOOLEAN
+      },
       image_position: {
         type: Sequelize.INTEGER
       },
