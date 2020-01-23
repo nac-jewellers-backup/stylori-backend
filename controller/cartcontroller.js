@@ -146,7 +146,7 @@ exports.paymentsuccess = async (req, res) => {
     }
     let orderobj = await models.orders.findOne({
       where : {
-          id : order_id
+          id : req.body.oid
       }
     })
     const update_cartstatus = {
