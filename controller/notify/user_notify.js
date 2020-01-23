@@ -14,7 +14,7 @@ const sendMail = async (mails,bodycontent) => {
         if (Array.isArray(mails)) {
             console.log("1");
             Promise.all(mails.map(async (mail) => {
-                var ses_mail = "From:alerts@stylori.net\n";
+                var ses_mail = "From:"+process.env.senderemail+"\n";
                 ses_mail = ses_mail + "To: " + mail.to + "\n";
                 ses_mail = ses_mail + "Subject: "+mail.subject+"  \n";
                 ses_mail = ses_mail + "MIME-Version: 1.0\n";

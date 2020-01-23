@@ -90,7 +90,6 @@ models.vouchers.findOne({
   if(giftwrapobj &&  giftwrapobj.discount_amount)
   {
     let discountvalue = giftwrapobj.discount_amount
-    console.log("wqwqwqwqwqw")
     message_response = "Applied Successfully"
    // isvalid = true
    // message_response = "Applied Successfully"
@@ -106,7 +105,7 @@ models.vouchers.findOne({
               id : cart_id
             }
           }).then(price_response =>{
-            res.send(200,{message: message_response,price_response})
+            res.send(200,{message: message_response,price_response,coupon_type : "Registration"})
 
           })
 

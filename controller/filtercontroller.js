@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability,bydesign,byweight} = req.body
+const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability,bydesign,byweight,offer_min,offer_max} = req.body
 var product_list = [];
 var whereclause = {
   isactive : true
@@ -51,6 +51,12 @@ var seofilterattributevalue = []
       includeclause.push({
         model : models.product_by_design
        })
+  }
+  if(offer_max)
+  {
+    let seoval = "Upto "+offer_max+"%"
+    seofilterattribute.push('Offers')
+    seofilterattributevalue.push(seoval)
   }
   if(byweight)
   {
