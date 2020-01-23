@@ -632,6 +632,7 @@ if(wishlistobj && wishlistobj.length > 0)
     {
       paymentstatus = "Submited"
       orderstatus = "Submited"
+      
     }
    const order_bj = {
      id : uuidv1(),
