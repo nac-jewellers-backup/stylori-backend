@@ -646,11 +646,17 @@ if(wishlistobj && wishlistobj.length > 0)
     payment_status:paymentstatus,
     order_status: orderstatus
    } 
-
+   const update_cartstatus = {
+    status: "submitted"
+  }
+    let updatecart = await models.shopping_cart.update(update_cartstatus, {returning: true, 
+      where : {
+        id : cart_id
+      }})
    models.orders.create(order_bj,{
     returning: true
   }).then(function(response){
-    if(payment_mode === 'cod')
+    if(payment_mode === 'COD')
     {
       sendorderconformationemail(order_bj.id)
     }
