@@ -201,7 +201,7 @@ returning: true
 
 }
 exports.generatepaymenturl = async (req, res) => {
-
+const {chargetotal} = req.body
     var timezone = "IST";
     var authenticateTransaction = true;
     var txntype = "sale";
@@ -209,7 +209,7 @@ exports.generatepaymenturl = async (req, res) => {
     var currency ="356";
     var mode = "payonly";
     var storename= "3396023678";
-    var chargetotal="1";
+    //var chargetotal="1";
     var paymentMethod="";
     var dateval = new Date()
     var full_bypass = false;
