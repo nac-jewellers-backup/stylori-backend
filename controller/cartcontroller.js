@@ -66,7 +66,11 @@ exports.applyvoucher = async (req, res) => {
   })
 var eligible_amount = 0;
 shoppingcart.forEach(element => {
+  if(element.trans_sku_list)
+  {
     eligible_amount = eligible_amount + element.trans_sku_list.markup_price; 
+
+  }
 })
 
 
@@ -628,7 +632,7 @@ if(wishlistobj && wishlistobj.length > 0)
     let {user_id, cart_id, payment_mode} = req.body
     var paymentstatus = "Initiated";
     var orderstatus = "Initiated";
-    if(payment_mode === 'cod')
+    if(payment_mode === 'COD')
     {
       paymentstatus = "Submited"
       orderstatus = "Submited"
