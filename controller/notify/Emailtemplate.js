@@ -382,19 +382,13 @@ const getName = (username) => {
                   </p>
               </tr>
               <br/>
-              <br/>
-        
               <tr>
                   <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: #ed1164;">
                       <span style="color: #ed1164;text-decoration:none;">${process.env.baseurl}</span>
                   </p>
               </tr>
               
-              <tr>
-                  <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);line-height:1.6;">
-                  If clicking the link does not seem to work, you can copy and paste the link into your browser's address window, or retype it there. Once you have returned to Stylori, we will give instructions for resetting your password.
-Stylori will never e-mail you and ask you to disclose or verify your Stylori password, credit card, or banking account number. If you receive a suspicious e-mail with a link to update your account information, do not click on the link--instead, report the e-mail to Stylori for investigation.</p>
-              </tr>
+              
               <tr>
                   <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 11px;font-weight: 400;color: rgba(88,89,91,1.00);line-height:1.6;float: left;margin-bottom: 20px;">Stylori  will never e-mail you and ask you to disclose or verify your Stylori password, credit card, or banking account number. If you receive a suspicious e-mail with a link to update your account information, do not click on the link--instead, report the e-mail to Stylori for investigation. Greetings from Stylori.com</p>
               </tr>
