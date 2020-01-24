@@ -356,6 +356,7 @@ exports.updateuserprofile = (req, res) => {
 
 exports.guestlogin = (req, res) => {
   const {email} = req.body
+  let otp = Math.floor(100000 + Math.random() * 900000)
 
   models.user_profiles.findOne({
       where: {email},
@@ -364,7 +365,6 @@ exports.guestlogin = (req, res) => {
   }).then(user => {
       if(!user)
       {
-        let otp = Math.floor(100000 + Math.random() * 900000)
       //  otp = '000000'
       console.log(otp)
         const guest = {
@@ -416,6 +416,7 @@ exports.verifyotp = (req, res) => {
       if(!user)
       {
         res.status(401).json({
+        
           "message": "Otp wrong"
       });
       }else{
