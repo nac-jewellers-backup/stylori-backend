@@ -377,7 +377,7 @@ exports.guestlogin = (req, res) => {
         models.user_profiles.create(guest, {
           returning: true
         }).then(guestuser => {
-          sendMail(emilreceipiants,emailTemp.forgotpasswordTemp("","manokarantk@gmail.com",otp))
+          sendMail(emilreceipiants,emailTemp.guestloginTemp("","manokarantk@gmail.com",otp))
 
           res.status(200).json({
             "description": "User Content Page",
@@ -386,7 +386,7 @@ exports.guestlogin = (req, res) => {
         });
       }else{
         var emilreceipiants = [{to : email,subject:"Verify user"}]
-        sendMail(emilreceipiants,emailTemp.forgotpasswordTemp("","manokarantk@gmail.com",user.otp))
+        sendMail(emilreceipiants,emailTemp.guestloginTemp("","manokarantk@gmail.com",user.otp))
 
         res.status(200).json({
           "description": "User Content Page",

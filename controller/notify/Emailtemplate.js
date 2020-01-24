@@ -18,7 +18,7 @@ const getName = (username) => {
           style="width: 600px; list-style-type: none; list-style: none;padding-left: 0px;"
         >
           <li>
-            <a href="https://www.stylori.com" target="_blank">
+            <a href=${process.env.baseurl} target="_blank">
               <img
                 src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/registration-emailer-01_01.jpg"
                 alt=""
@@ -136,7 +136,7 @@ const getName = (username) => {
               style="list-style-type: none; list-style: none; padding: 10px 5px; margin: 20px 63px; text-align: center; border-style: solid; border-color: #CC1E53;"
             >
               <li style="display: inline;">
-                <a href="https://www.stylori.com/stories" target="_blank"
+                <a href=${process.env.baseurl+"/stories"} target="_blank"
                   ><img
                     src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/text.png"
                     style="margin-bottom:13px;"
@@ -218,7 +218,7 @@ const getName = (username) => {
               <li style="display: inline;">|</li>
               <li style="display: inline;">
                 <a
-                  href="https://www.stylori.com"
+                  href=${process.env.baseurl}
                   target="_blank"
                   style="text-decoration:none;color:#4F4C4C;"
                   >stylori.com</a
@@ -298,7 +298,60 @@ const getName = (username) => {
       `;
   };
   
-  
+  const guestloginTemp = (username, email, token) => {
+    if(!username)
+      {
+        username = "User"
+      }
+    return `<!doctype html>
+      <html>
+      <head>
+      
+      <title>Register authentication</title>
+      </head>
+      
+      <body>
+      <div style="width:600px;background:#fff;">
+      <table style="width:600px">
+          <thead>
+              <img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/cash-on-deli-hdr.jpg" />
+          </thead>
+          <tbody>
+              <tr>
+                  <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: bold;color: rgba(88,89,91,1.00);margin:25px 0px;">
+                  <h5> Hi User,</h5>
+                  </p>
+              </tr>
+              <tr>
+                  <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00); line-height:1.6;float:left;">Welcome to Stylori !!</p>
+              </tr>
+              
+              <tr>
+                  <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);line-height:1.6;">
+                  Please use the following code to place order on Stylori  ${token}</p>
+              </tr>
+              
+              <tr>
+                  <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 11px;font-weight: 400;color: rgba(88,89,91,1.00);line-height:1.6;float: left;margin-bottom: 20px;">Stylori  will never e-mail you and ask you to disclose or verify your Stylori password, credit card, or banking account number.</p>
+              </tr>
+              <tr>
+              <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 11px;font-weight: 400;color: rgba(88,89,91,1.00);line-height:1.6;float: left;margin-bottom: 20px;">If you receive a suspicious e-mail with a link to update your account information, do not click on the link--instead, report the e-mail to Stylori for investigation. Greetings from Stylori.com</p>
+          </tr>
+          </tbody>
+      
+      </table>
+       <div style="position: relative;min-height: 1px;padding-right: 15px;padding-left: 15px;width: 100%;background: rgba(215,221,249,1.00);padding: 10px 0px 20px 0px;">
+                  <p style="padding: 0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);width: 45%;float: left;margin: 0;">Customer Care: 1800-102-0330</p>
+                  <p style="padding: 0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);width: 24%;float: left;margin: 0;padding-left:0;position: relative;left: 130px;">
+                  Contact: hello@stylori.com</p>
+              </div>
+      </div>
+      
+      
+      </body>
+      </html>
+      `;
+  };
   const changepasswordTemp = (username, email, token) => {
       if(!username)
       {
@@ -534,7 +587,7 @@ Stylori will never e-mail you and ask you to disclose or verify your Stylori pas
                 </td>
             </tr>
             <tr>
-                            <p style="padding:0px 15px;line-height:1.5; font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding-top: 15px;"> You can visit <a href="/account/orders">https://www.stylori.com/account-allorders</a> to view your order status and to contact us regarding this order.<br />
+                            <p style="padding:0px 15px;line-height:1.5; font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding-top: 15px;"> You can visit <a href="/account/orders">${process.env.baseurl+"/account-allorders"}</a> to view your order status and to contact us regarding this order.<br />
             Should you find the details of the order incorrect, please feel free to call us at 18001020330 or email us at hello@stylori.com </p>
           <p style="line-height:1.5;padding:0px 15px;font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:15px 0;">Team Stylori <br />
               With Love </p>
