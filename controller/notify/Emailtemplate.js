@@ -330,13 +330,10 @@ const getName = (username) => {
               </tr>
               <br/>
               <br/>
-            //   <tr>
-            //       <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);line-height:1.6;">
-            //       In case you haven't requested for the change of password , please click here to reset your password</p>
-            //   </tr>
+        
               <tr>
                   <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: #ed1164;">
-                      <span style="color: #ed1164;text-decoration:none;">${process.env.baseurl+'/forgotPassword'}</span>
+                      <span style="color: #ed1164;text-decoration:none;">${process.env.baseurl}</span>
                   </p>
               </tr>
               

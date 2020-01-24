@@ -12,7 +12,6 @@ const sendMail = async (mails,bodycontent) => {
     console.log("i am here for test")
     return new Promise(async (resolve, rejects) => {
         if (Array.isArray(mails)) {
-            console.log("1");
             Promise.all(mails.map(async (mail) => {
                 var ses_mail = "From:"+process.env.senderemail+"\n";
                 ses_mail = ses_mail + "To: " + mail.to + "\n";
