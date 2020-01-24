@@ -465,14 +465,15 @@ Stylori will never e-mail you and ask you to disclose or verify your Stylori pas
        </td> 
         <td>
             <p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);line-height: 1.5;margin:0;padding-top: 10px;">
-            <span >${element.product_list.product_name}</span>
+            <span >${element.product_list.product_name}</span> <br />
             <span>Metal:${element.purity} ${element.metal_color} <br />
             </span> 
-            <span >Quaity: ${element.diamond_type} <br /></span> 
+            <span >Quality: ${element.diamond_type} <br /></span> 
             <span >Metal Weight: ${element.sku_weight} <br />
-            </span> <br /> <span > <span
-                    >Stone: Emerald</span> 
-                    <span >Number Of Stones: 8<br />
+            </span> <br /> 
+            <span
+                    >Stone: ${element.sku_weight}</span> 
+                    <span >Number Of Stones: ${element.sku_weight}<br />
                 </span> <br />
             </span>
             </p>
@@ -500,7 +501,6 @@ Stylori will never e-mail you and ask you to disclose or verify your Stylori pas
     <div style="width:600px;float:left;background:#FFFFFF;">
         <table style="width:600px;border-collapse: collapse;">
             <thead>
-                <!-- <img src="http://www.stylori.com/img/emailTemplate/hedear-bg.jpg" /> -->
                 <img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/cash-on-deli-hdr.jpg" />
             </thead>
             <tbody>
