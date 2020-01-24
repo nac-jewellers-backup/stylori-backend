@@ -366,6 +366,7 @@ exports.guestlogin = (req, res) => {
       {
         let otp = Math.floor(100000 + Math.random() * 900000)
       //  otp = '000000'
+      console.log(otp)
         const guest = {
           id:uuidv1(),
           email:email,
@@ -395,6 +396,7 @@ exports.guestlogin = (req, res) => {
       }
       
   }).catch(err => {
+    console.log(JSON.stringify(err))
       res.status(500).json({
           "description": "Can not access User Page",
           "error": err

@@ -627,5 +627,5 @@ const getName = (username) => {
   emailTemplate.forgotpasswordTemp = forgotpasswordTemp;
   emailTemplate.changepasswordTemp = changepasswordTemp
   emailTemplate.orderConformation = orderconformation
-
+  emailTemplate.guestloginTemp = guestloginTemp
 module.exports = emailTemplate
