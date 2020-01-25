@@ -77,8 +77,8 @@ if(offset)
     }
     if(sortBy === 'Ready To Ship')
     {
-      // defaultskuwhereclause = {}
-      // defaultskuwhereclause['is_ready_to_ship'] = true
+      // skuwhereclause = {}
+      // skuwhereclause['is_ready_to_ship'] = true
       sortelement  = [
         [ {model: models.trans_sku_lists},'is_ready_to_ship', 'desc']
     ]
@@ -364,6 +364,9 @@ if(availability)
 {
   if(availability === '1 Day Shipping')
   {
+    skusort = [
+      ['is_ready_to_ship', 'DESC']
+    ]
     skuwhereclause['is_ready_to_ship'] = true
     whereclause['$trans_sku_lists.is_ready_to_ship$'] = {
       [Op.eq]:true
@@ -432,7 +435,7 @@ if(metalpurity)
     //       //   purity : metalpurity
     //       //  }
     // })
-    skuwhereclause = {}
+    //skuwhereclause = {}
      skuwhereclause['purity'] = metalpurity
     // console.log(JSON.stringify(includeclause))
     // whereclause['$product_purities.purity$']
@@ -517,6 +520,9 @@ prod_iclude.push({
    }) 
  }
 var products_all = []
+console.log("skucontentwhereclause")
+console.log(JSON.stringify(skuwhereclause))
+
 // if(isproduct_query)
 // {
   prod_iclude.push({
@@ -537,7 +543,7 @@ var products_all = []
       ['vendor_delivery_time','vendorDeliveryTime']],
       
       where:skuwhereclause,
-      required:false,
+      required:true,
       order: skusort
 
       

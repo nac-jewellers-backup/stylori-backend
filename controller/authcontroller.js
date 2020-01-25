@@ -289,7 +289,7 @@ exports.forgotpassword = (req, res) => {
                             var verifyurl = `${process.env.baseurl}/resetpassword/${token}`
                           sendMail(emilreceipiants,emailTemp.forgotpasswordTemp(userprofile.first_name,"manokarantk@gmail.com",verifyurl))
                            // sendVerificationEmail(user.email, result.token);
-                             return res.status(200).send({message:"Please check your email id",status:"success"});
+                             return res.status(200).send({message:"Please check your registered email inbox for reset link",status:"success"});
                           
        // }
     }else{
@@ -417,7 +417,7 @@ exports.verifyotp = (req, res) => {
       {
         res.status(401).json({
         
-          "message": "Otp wrong"
+          "message": "Enter valid OTP"
       });
       }else{
         res.status(200).json({
