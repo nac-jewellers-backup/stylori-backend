@@ -28,7 +28,7 @@ var imagewhereclause = {
     [Op.in]:[1,2]
   }
 }    
-//skuwhereclause['isdefault']  = true
+skuwhereclause['isdefault']  = true
 
 defaultskuwhereclause['isdefault']  = true
 var isproduct_query = false;
@@ -208,6 +208,8 @@ if(offset)
   {
     if(price.min_price && price.max_price)
     {
+      delete skuwhereclause['isdefault'];
+
       skuwhereclause['markup_price'] = {
         [Op.between] :[price.min_price , price.max_price]
       }
@@ -367,6 +369,8 @@ if(availability)
     skusort = [
       ['is_ready_to_ship', 'DESC']
     ]
+    delete skuwhereclause['isdefault'];
+
     skuwhereclause['is_ready_to_ship'] = true
     whereclause['$trans_sku_lists.is_ready_to_ship$'] = {
       [Op.eq]:true
@@ -378,6 +382,7 @@ if(availability)
   else if(availability === '10 & Above Days Shipping')
   {
     skuwhereclause['is_ready_to_ship'] = false
+    delete skuwhereclause['isdefault'];
 
     skuwhereclause['vendor_delivery_time'] = {
       
@@ -395,6 +400,7 @@ if(availability)
   }
   else{
     skuwhereclause['is_ready_to_ship'] = false
+    delete skuwhereclause['isdefault'];
 
     skuwhereclause['vendor_delivery_time'] = {
       [Op.eq] : availability
@@ -436,6 +442,8 @@ if(metalpurity)
     //       //  }
     // })
     //skuwhereclause = {}
+    delete skuwhereclause['isdefault'];
+
      skuwhereclause['purity'] = metalpurity
     // console.log(JSON.stringify(includeclause))
     // whereclause['$product_purities.purity$']

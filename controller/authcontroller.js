@@ -387,7 +387,10 @@ exports.guestlogin = (req, res) => {
         });
       }else{
         var emilreceipiants = [{to : email,subject:"Verify user"}]
-        sendMail(emilreceipiants,emailTemp.guestloginTemp("","manokarantk@gmail.com",user.otp))
+        user.update({
+          otp
+        })
+        sendMail(emilreceipiants,emailTemp.guestloginTemp("","manokarantk@gmail.com",otp))
 
         res.status(200).json({
           "description": "User Content Page",
