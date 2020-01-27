@@ -75,7 +75,7 @@ if(offset)
         ['"createdAt"','DESC'],
     ]
     }
-    if(sortBy === 'Ready To Ship')
+    if(sortBy === 'Ready to Ship')
     {
       // skuwhereclause = {}
       // skuwhereclause['is_ready_to_ship'] = true
