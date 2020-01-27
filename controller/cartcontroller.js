@@ -339,6 +339,8 @@ exports.addtocart = async (req, res) => {
     if(cartproducts.indexOf(element.sku_id) == -1)
     {
       console.log("updated")
+      if(element.sku_id)
+      {
       const lineobj = {
           id:uuidv1(),
           shopping_cart_id: cart_id,
@@ -349,6 +351,7 @@ exports.addtocart = async (req, res) => {
       console.log(JSON.stringify(lineobj))
 
       cartlines.push(lineobj)
+      }
     }
     console.log("cartline length"+cartlines.length )
 
