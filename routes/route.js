@@ -64,8 +64,9 @@ module.exports = function(app) {
 	
 	app.post('/api/auth/verifyotp', authcontroller.verifyotp);
 	app.post('/addquestion', authcontroller.addquestion);
+	app.post('/addemailsubscription', authcontroller.addemailsubscription);
 
-
+	
 	app.post('/addwishlist', cartcontroller.addwishlist);
 	app.post('/removewishlist', cartcontroller.removewishlist);
 	app.post('/removeaddress', cartcontroller.removeaddress);
