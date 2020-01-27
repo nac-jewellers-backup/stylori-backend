@@ -469,7 +469,38 @@ exports.addquestion = (req, res) => {
       });
   })
 }
-
+exports.asktoexport = (req, res) => {
+  const {name,email,phone,message,product_sku} = req.body
+  const askexport = {
+    product_sku,
+    name,
+    email,
+    phone,
+    message,
+    is_active : true
+  }
+  models.asktoexport.create(askexport, {
+    returning: true
+  }).then(response => {
+      if(!response)
+      {
+        res.status(401).json({
+        
+          "message": "Please try after sometime"
+      });
+      }else{
+        res.status(200).json({
+          "message": "Submited Successfully"
+      });
+      }
+      
+  }).catch(err => {
+      res.status(500).json({
+          "description": "Can not access User Page",
+          "error": err
+      });
+  })
+}
 
 exports.addemailsubscription = (req, res) => {
   const {email} = req.body
