@@ -546,6 +546,7 @@ console.log(JSON.stringify(skuwhereclause))
       ['sku_url','skuUrl'],
       ['selling_price','sellingPrice'],
       ['discount_price','discountPrice'],
+      ['discount','discount'],
       ['generated_sku','generatedSku'],
       ['is_ready_to_ship','isReadyToShip'],
       ['vendor_delivery_time','vendorDeliveryTime']],
