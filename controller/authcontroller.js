@@ -7,6 +7,7 @@ const Op= require('sequelize').Op;
 const uuidv1 = require('uuid/v1');
 const emailTemp = require('./notify/Emailtemplate');
 import {sendMail} from "./notify/user_notify"
+import { response } from 'express';
 
 exports.signin = (req, res) => {
  
@@ -426,6 +427,68 @@ exports.verifyotp = (req, res) => {
         res.status(200).json({
           "description": "User Content Page",
           "user": user
+      });
+      }
+      
+  }).catch(err => {
+      res.status(500).json({
+          "description": "Can not access User Page",
+          "error": err
+      });
+  })
+}
+
+exports.addquestion = (req, res) => {
+  const {name,email,phone,message} = req.body
+  const askquestion = {
+    name,
+    email,
+    phone,
+    message,
+    is_active : true
+  }
+  models.askus.create(askquestion, {
+    returning: true
+  }).then(response => {
+      if(!response)
+      {
+        res.status(401).json({
+        
+          "message": "Please try after sometime"
+      });
+      }else{
+        res.status(200).json({
+          "message": "Submited Successfully"
+      });
+      }
+      
+  }).catch(err => {
+      res.status(500).json({
+          "description": "Can not access User Page",
+          "error": err
+      });
+  })
+}
+
+
+exports.addemailsubscription = (req, res) => {
+  const {email} = req.body
+  const emailsubscribe = {
+    email,
+    is_active : true
+  }
+  models.email_subscription.create(emailsubscribe, {
+    returning: true
+  }).then(response => {
+      if(!response)
+      {
+        res.status(401).json({
+        
+          "message": "Please try after sometime"
+      });
+      }else{
+        res.status(200).json({
+          "message": "Submited Successfully"
       });
       }
       

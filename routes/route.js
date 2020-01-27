@@ -62,6 +62,10 @@ module.exports = function(app) {
 	app.post('/api/auth/guestlogin', authcontroller.guestlogin);
 	app.post('/api/auth/verifyotp', authcontroller.verifyotp);
 	
+	app.post('/api/auth/verifyotp', authcontroller.verifyotp);
+	app.post('/addquestion', authcontroller.addquestion);
+
+
 	app.post('/addwishlist', cartcontroller.addwishlist);
 	app.post('/removewishlist', cartcontroller.removewishlist);
 	app.post('/removeaddress', cartcontroller.removeaddress);
