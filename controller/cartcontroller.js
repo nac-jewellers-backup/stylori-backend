@@ -183,7 +183,18 @@ exports.paymentfailure = async (req, res) => {
   if(req.body && req.body.oid)
   {
 
-  
+    let orderobj = await models.orders.findOne({
+      where : {
+          id : req.body.oid
+      }
+    })
+    const update_cartstatus = {
+      status: "pending"
+    }
+    let updatecart = await models.shopping_cart.update(update_cartstatus, {returning: true, 
+      where : {
+        id : orderobj.cart_id
+      }})
   let paymentcontent = {
     order_id : req.body.oid,
     payment_response : JSON.stringify(req.body)

@@ -62,7 +62,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     discount_price:{
       type: DataTypes.DOUBLE
-    }, 
+    },
+    sku_url:{
+      type: DataTypes.STRING
+    },  
     vendor_delivery_time:{
       type: DataTypes.INTEGER
     },

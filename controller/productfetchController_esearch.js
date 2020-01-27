@@ -614,7 +614,6 @@ var products_all = []
       ['sku_size','skuSize'],
       'purity',
       ['diamond_type','diamondType'],
-      
       ['markup_price','markupPrice'],
       ['markup_price','markupPrice'],
       ['sku_id','skuID'],
@@ -648,7 +647,8 @@ var products_all = []
     include:includeclause,
     where:whereclause,
     distinct: 'product_lists.product_id',
-    order: sortelement
+    order: sortelement,
+    limit:100
   })
   //console.log("count value"+count)
   //console.log("rows value"+rows.length)
