@@ -63,6 +63,9 @@ module.exports = (sequelize, DataTypes) => {
     discount_price:{
       type: DataTypes.DOUBLE
     },
+    discount:{
+      type: DataTypes.DOUBLE
+    },
     sku_url:{
       type: DataTypes.STRING
     },  
