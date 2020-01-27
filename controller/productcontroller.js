@@ -93,7 +93,6 @@ exports.productupload =  async (req, res) => {
         size_varient = productsizes.join(',');
     }
 
-   // var default_weight = apidata.metal_weight;
    var default_weight = 4;
 
 
