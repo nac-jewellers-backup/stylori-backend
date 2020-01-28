@@ -489,6 +489,10 @@ exports.asktoexport = (req, res) => {
           "message": "Please try after sometime"
       });
       }else{
+
+        var emilreceipiants = [{to : email,subject:"Ask To Expert"}]
+        sendMail(emilreceipiants,emailTemp.asktoexpertTemp(req.body))
+
         res.status(200).json({
           "message": "Submited Successfully"
       });
@@ -508,25 +512,40 @@ exports.addemailsubscription = (req, res) => {
     email,
     is_active : true
   }
-  models.email_subscription.create(emailsubscribe, {
-    returning: true
-  }).then(response => {
-      if(!response)
-      {
-        res.status(401).json({
+
+  models.email_subscription.findOne({
+
+    where: {
+      email: email
+    }
+   
+}).then(subscribe => {
+  if(subscribe)
+  {
+      res.status(200).json({"message":"This Email already Subscribe with us"})
+  }else{
+    models.email_subscription.create(emailsubscribe, {
+      returning: true
+    }).then(response => {
+        if(!response)
+        {
+          res.status(401).json({
+          
+            "message": "Please try after sometime"
+        });
+        }else{
+          res.status(200).json({
+            "message": "Submited Successfully"
+        });
+        }
         
-          "message": "Please try after sometime"
-      });
-      }else{
-        res.status(200).json({
-          "message": "Submited Successfully"
-      });
-      }
-      
-  }).catch(err => {
-      res.status(500).json({
-          "description": "Can not access User Page",
-          "error": err
-      });
-  })
+    }).catch(err => {
+        res.status(500).json({
+            "description": "Can not access User Page",
+            "error": err
+        });
+    })
+  }
+  
+})
 }
