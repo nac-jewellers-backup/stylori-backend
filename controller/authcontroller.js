@@ -541,7 +541,7 @@ exports.addemailsubscription = (req, res) => {
         }else{
           var emilreceipiants = [{to : email,subject:"Subscribe Email"}]
         
-         await sendMail(emilreceipiants,emailTemp.subscribeTemp(""))
+          sendMail(emilreceipiants,emailTemp.subscribeTemp(""))
   
           res.status(200).json({
             "message": "Submited Successfully"
