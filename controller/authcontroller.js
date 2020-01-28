@@ -387,10 +387,11 @@ exports.guestlogin = (req, res) => {
         });
         });
       }else{
-        var emilreceipiants = [{to : email,subject:"Verify user"}]
-        user.update({
+         user.update({
           otp
         })
+        var emilreceipiants = [{to : email,subject:"Verify user"}]
+        
         sendMail(emilreceipiants,emailTemp.guestloginTemp("","manokarantk@gmail.com",otp))
 
         res.status(200).json({
@@ -526,7 +527,7 @@ exports.addemailsubscription = (req, res) => {
 }).then(subscribe => {
   if(subscribe)
   {
-      res.status(200).json({"message":"This Email already Subscribe with us"})
+      res.status(409).json({"message":"This Email already Subscribe with us"})
   }else{
     models.email_subscription.create(emailsubscribe, {
       returning: true
@@ -538,6 +539,10 @@ exports.addemailsubscription = (req, res) => {
             "message": "Please try after sometime"
         });
         }else{
+          var emilreceipiants = [{to : email,subject:"Subscribe Email"}]
+        
+         await sendMail(emilreceipiants,emailTemp.subscribeTemp("","manokarantk@gmail.com",otp))
+  
           res.status(200).json({
             "message": "Submited Successfully"
         });
