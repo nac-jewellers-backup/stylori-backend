@@ -479,7 +479,7 @@ exports.asktoexport = (req, res) => {
     message,
     is_active : true
   }
-  models.asktoexport.create(askexport, {
+  models.asktoexpert.create(askexport, {
     returning: true
   }).then(response => {
       if(!response)
