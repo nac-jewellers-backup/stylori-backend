@@ -74,7 +74,8 @@ module.exports = function(app) {
 	app.post('/removeaddress', cartcontroller.removeaddress);
 	app.post('/testorderconformation', cartcontroller.testorderemail);
 
-	
+	app.post('/productesearch', productfetchController_esearch.productesearch);
+
 	app.post('/createorder', cartcontroller.addorder);
 
 	app.post('/addproductreview', cartcontroller.addproductreview);

@@ -378,7 +378,7 @@ const getName = (username) => {
               </tr>
               <tr>
                   <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00); line-height:1.6;float:left;">
-                  Greetings from Stylori.com.Your password has been changed successfully. In case you haven't requested for the change of password , please click here to reset your password
+                  Greetings from Stylori.com.Your password has been changed successfully. In case you haven't requested for the change of password , please click the following link and try forgot password option
                   </p>
               </tr>
               <tr>

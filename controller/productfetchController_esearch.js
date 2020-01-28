@@ -731,3 +731,15 @@ var products_all = []
 res.send(200,{'data':products_all})
 
 }
+
+
+exports.productesearch = async (req, res) => {
+
+  let product_list = await models.trans_sku_lists.findAll({
+            attributes:["generated_sku","sku_url"],
+           
+  })
+
+  res.send(200,{product_list})
+
+}
