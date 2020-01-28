@@ -607,6 +607,17 @@ const subscribeTemp = (userobj, email, token) => {
     skudetail.forEach(element => {
         var deliverytime = 0
         var deliverdate = ""
+        var gemstones_arr = ""
+        if(element.product_list.product_gemstones)
+        {
+          let gems = element.product_list.product_gemstones
+          gems.forEach(gemelement => {
+            gemstones_arr = gemstones_arr + `<span
+            >Stone: ${gemelement.stone_weight}</span> 
+            <span >Number Of Stones: ${gemelement.stone_count}<br />
+        </span> <br />`
+          })
+        }
         if(element.is_ready_to_ship)
         {
             deliverytime = 1;
@@ -629,10 +640,7 @@ const subscribeTemp = (userobj, email, token) => {
             <span >Quality: ${element.diamond_type} <br /></span> 
             <span >Metal Weight: ${element.sku_weight} <br />
             </span> <br /> 
-            <span
-                    >Stone: ${element.sku_weight}</span> 
-                    <span >Number Of Stones: ${element.sku_weight}<br />
-                </span> <br />
+            ${gemstones_arr}
             </span>
             </p>
             

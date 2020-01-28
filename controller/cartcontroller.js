@@ -680,7 +680,7 @@ if(wishlistobj && wishlistobj.length > 0)
     });
  }
  exports.testorderemail = async (req, res) => {
-  sendorderconformationemail("257f2960-41b8-11ea-8d48-ad47b85a39a4")
+  sendorderconformationemail("257f2960-41b8-11ea-8d48-ad47b85a39a4",res)
 
  }
   async function sendorderconformationemail(order_id,res)
@@ -727,7 +727,13 @@ if(wishlistobj && wishlistobj.length > 0)
   let skudetails = await models.trans_sku_lists.findAll({
     include:[
       {
-        model: models.product_lists
+        model: models.product_lists,
+        include:[
+          {
+            model : models.product_gemstones
+
+          }
+        ]
       }
     ],
     where:{
@@ -755,7 +761,7 @@ if(wishlistobj && wishlistobj.length > 0)
 //  var emilreceipiants = [{to :orderdetails.user_profile.email ,subject:"Order Placed Successfully"},{to :process.env.adminemail,subject:"Order Placed Successfully"}]
 var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
      
-  sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skudetails,imagelist,day))
+ sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skudetails,imagelist,day))
 //return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
  }
 
