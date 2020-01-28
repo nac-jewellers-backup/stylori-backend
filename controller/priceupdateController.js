@@ -36,7 +36,7 @@ exports.priceupdate = (req, res) => {
         
         product_id: 
           {
-            [Op.in]:['SE0303']
+            [Op.in]:['SGC031']
 
           }
       }

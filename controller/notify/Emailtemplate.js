@@ -738,7 +738,7 @@ const subscribeTemp = (userobj, email, token) => {
                 <td>
                  <p style="font-family: ‘Arial’, sans-serif; font-size: 13px; font-weight: 600; color: rgba(88,89,91,1.00); width:40%; padding-left: 15px;line-height:1.6;margin: 0;margin-top:15px;">
                     Shipping Address:<br/>
-                        <p ></p>
+                    <p style="font-size: 13px; font-weight: 400;padding-left: 15px;color: #767D89;">${address_obj.firstname} ${address_obj.lastname}</p>
                         <p style="font-size: 13px; font-weight: 400;padding-left: 15px;color: #767D89;">${address_obj.addressline1}</p>
                         <p style="font-size: 13px; font-weight: 400;padding-left: 15px;color: #767D89;">${address_obj.addressline2}, ${address_obj.city}, ${address_obj.state},</p>
                         <p style="font-size: 13px; font-weight: 400;padding-left: 15px;color: #767D89;">${address_obj.country} - ${address_obj.pincode}.</p>

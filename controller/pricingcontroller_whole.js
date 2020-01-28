@@ -41,7 +41,7 @@ exports.priceupdate = (req, res) => {
       //   [Op.notILike]:'%SGC%'
       // }
       product_id: {
-        [Op.in]:['SGC031']
+        [Op.iLike]:'%SGC%'
       }
     }
     console.log(":>>>>>>>>>1212")
@@ -742,7 +742,7 @@ exports.priceupdate = (req, res) => {
       var gemstone_component_count = 0
 
       console.log("processlength"+product_obj.trans_sku_lists.length)
-     // updatediamondprice(productobj.vendor_code, productskus[0])
+    //  updatediamondprice(productobj.vendor_code, productskus[0])
    updateskuprice()
    // updategoldprice(productobj.vendor_code, productskus[0])
    function checkisinclude()
@@ -1651,7 +1651,7 @@ exports.priceupdate = (req, res) => {
               models.trans_sku_lists.update(transskuobj,{
               where: {generated_sku: productskus[skucount].generated_sku}
               }).then(price_splitup_model=> {
-               // isskuexist()
+                isskuexist()
               
             }).catch(reason => {
               console.log(reason)
