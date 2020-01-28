@@ -381,7 +381,6 @@ const getName = (username) => {
                   Greetings from Stylori.com.Your password has been changed successfully. In case you haven't requested for the change of password , please click here to reset your password
                   </p>
               </tr>
-              <br/>
               <tr>
                   <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: #ed1164;">
                       <span style="color: #ed1164;text-decoration:none;">${process.env.baseurl}</span>
