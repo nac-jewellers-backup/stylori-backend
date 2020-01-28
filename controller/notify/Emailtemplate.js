@@ -427,35 +427,20 @@ const getName = (username) => {
         <tbody>
             <tr>
                 <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: bold;color: rgba(88,89,91,1.00);margin:25px 0px;">
-                <h5> Dear ${userobj.name},</h5>
-                </p>
-            </tr>
-            <tr>
-                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00); line-height:1.6;float:left;">
-                Thanks For yo
-                </p>
-            </tr>
-            <br/>
-            <tr>
-                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: #ed1164;">
-                    <span style="color: #ed1164;text-decoration:none;">${process.env.baseurl}</span>
+                <h6> Name : ${userobj.name},</h6>
+                <h6> Email : ${userobj.email},</h6>
+                <h6> Mobile : ${userobj.phone},</h6>
+                <h6> Message : ${userobj.message},</h6>
+                <h6> Product : ${userobj.sku_url},</h6>
+                <h6> Product SKU : ${userobj.product_sku},</h6>
                 </p>
             </tr>
             
-            
-            <tr>
-                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 11px;font-weight: 400;color: rgba(88,89,91,1.00);line-height:1.6;float: left;margin-bottom: 20px;">Stylori  will never e-mail you and ask you to disclose or verify your Stylori password, credit card, or banking account number. If you receive a suspicious e-mail with a link to update your account information, do not click on the link--instead, report the e-mail to Stylori for investigation. Greetings from Stylori.com</p>
-            </tr>
            
         </tbody>
     
     </table>
-     <div style="position: relative;min-height: 1px;padding-right: 15px;padding-left: 15px;width: 100%;background: rgba(215,221,249,1.00);padding: 10px 0px 20px 0px;">
-                <p style="padding: 0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);width: 45%;float: left;margin: 0;">Customer Care: 1800-102-0330</p>
-                <p style="padding: 0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);width: 24%;float: left;margin: 0;padding-left:0;position: relative;left: 130px;">
-                Contact: hello@stylori.com</p>
-            </div>
-    </div>
+     
     
     
     </body>
@@ -469,7 +454,7 @@ const contactusTemp = (userobj, email, token) => {
     <html>
     <head>
     
-    <title>Contact us</title>
+    <title>Ask To Expert</title>
     </head>
     
     <body>
@@ -481,35 +466,19 @@ const contactusTemp = (userobj, email, token) => {
         <tbody>
             <tr>
                 <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: bold;color: rgba(88,89,91,1.00);margin:25px 0px;">
-                <h5> Dear ${userobj.name},</h5>
-                </p>
-            </tr>
-            <tr>
-                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00); line-height:1.6;float:left;">
-                Thanks For yo
-                </p>
-            </tr>
-            <br/>
-            <tr>
-                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: #ed1164;">
-                    <span style="color: #ed1164;text-decoration:none;">${process.env.baseurl}</span>
+                <h6> Name : ${userobj.name},</h6>
+                <h6> Email : ${userobj.email},</h6>
+                <h6> Mobile : ${userobj.phone},</h6>
+                <h6> Message : ${userobj.message},</h6>
+                
                 </p>
             </tr>
             
-            
-            <tr>
-                <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 11px;font-weight: 400;color: rgba(88,89,91,1.00);line-height:1.6;float: left;margin-bottom: 20px;">Stylori  will never e-mail you and ask you to disclose or verify your Stylori password, credit card, or banking account number. If you receive a suspicious e-mail with a link to update your account information, do not click on the link--instead, report the e-mail to Stylori for investigation. Greetings from Stylori.com</p>
-            </tr>
            
         </tbody>
     
     </table>
-     <div style="position: relative;min-height: 1px;padding-right: 15px;padding-left: 15px;width: 100%;background: rgba(215,221,249,1.00);padding: 10px 0px 20px 0px;">
-                <p style="padding: 0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);width: 45%;float: left;margin: 0;">Customer Care: 1800-102-0330</p>
-                <p style="padding: 0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(88,89,91,1.00);width: 24%;float: left;margin: 0;padding-left:0;position: relative;left: 130px;">
-                Contact: hello@stylori.com</p>
-            </div>
-    </div>
+     
     
     
     </body>

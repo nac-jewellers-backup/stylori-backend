@@ -459,17 +459,17 @@ exports.addquestion = (req, res) => {
       });
       }else{
 
-        var emilreceipiants = [{to : email,subject:"Ask To Expert"}]
+        var emilreceipiants = [{to :  process.env.styloriemail,subject:"Contact us"},{to :  process.env.adminemail,subject:"Contact us"}]
         sendMail(emilreceipiants,emailTemp.contactusTemp(req.body))
 
         res.status(200).json({
-          "message": "Submited Successfully"
+          "message": "Thanks for contacting us. Our Team will reach out you."
       });
       }
       
   }).catch(err => {
       res.status(500).json({
-          "description": "Can not access User Page",
+          "description": "Can't access User Page",
           "error": err
       });
   })
@@ -495,11 +495,12 @@ exports.asktoexport = (req, res) => {
       });
       }else{
 
-        var emilreceipiants = [{to : email,subject:"Ask To Expert"}]
+        var emilreceipiants = [{to : process.env.styloriemail,subject:"Ask our Expert"},{to : process.env.adminemail,subject:"Ask our Expert"}]
         sendMail(emilreceipiants,emailTemp.asktoexpertTemp(req.body))
 
         res.status(200).json({
-          "message": "Submited Successfully"
+          "message": "Thanks for contacting us. Our Expert will reach out you."
+
       });
       }
       
@@ -527,7 +528,7 @@ exports.addemailsubscription = (req, res) => {
 }).then(subscribe => {
   if(subscribe)
   {
-      res.status(409).json({"message":"This Email already Subscribe with us"})
+      res.status(409).json({"message":"Your email ID already subscribed with us"})
   }else{
     models.email_subscription.create(emailsubscribe, {
       returning: true
@@ -539,12 +540,12 @@ exports.addemailsubscription = (req, res) => {
             "message": "Please try after sometime"
         });
         }else{
-          var emilreceipiants = [{to : email,subject:"Subscribe Email"}]
+         // var emilreceipiants = [{to : email,subject:"Subscribe Email"}]
         
-          sendMail(emilreceipiants,emailTemp.subscribeTemp(""))
+         // sendMail(emilreceipiants,emailTemp.subscribeTemp(""))
   
           res.status(200).json({
-            "message": "Submited Successfully"
+            "message": "You have subscribed successfully."
         });
         }
         

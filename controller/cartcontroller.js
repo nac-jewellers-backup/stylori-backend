@@ -673,7 +673,7 @@ if(wishlistobj && wishlistobj.length > 0)
     {
       sendorderconformationemail(order_bj.id)
     }
-    res.send(200,{"message":"updated successfully", "order":response})        
+    res.send(200,{"message":"Order placed successfully", "order":response})        
   }).catch(reason => {
       res.send(500,{"message":"Error Please try again"}) 
       console.log(reason)
