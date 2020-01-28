@@ -457,6 +457,10 @@ exports.addquestion = (req, res) => {
           "message": "Please try after sometime"
       });
       }else{
+
+        var emilreceipiants = [{to : email,subject:"Ask To Expert"}]
+        sendMail(emilreceipiants,emailTemp.contactusTemp(req.body))
+
         res.status(200).json({
           "message": "Submited Successfully"
       });
