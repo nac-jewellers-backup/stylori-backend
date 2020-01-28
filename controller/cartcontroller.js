@@ -680,7 +680,9 @@ if(wishlistobj && wishlistobj.length > 0)
     });
  }
  exports.testorderemail = async (req, res) => {
-  sendorderconformationemail("257f2960-41b8-11ea-8d48-ad47b85a39a4",res)
+  var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Password Reset Successfully"}]
+  sendMail(emilreceipiants,emailTemp.changepasswordTemp("Manokaran"))
+  // sendorderconformationemail("257f2960-41b8-11ea-8d48-ad47b85a39a4",res)
 
  }
   async function sendorderconformationemail(order_id,res)
@@ -758,8 +760,8 @@ if(wishlistobj && wishlistobj.length > 0)
     imagelist[element.product_id] = 'https://styloriimages.s3.ap-south-1.amazonaws.com/'+imagename
   })
 
-//  var emilreceipiants = [{to :orderdetails.user_profile.email ,subject:"Order Placed Successfully"},{to :process.env.adminemail,subject:"Order Placed Successfully"}]
-var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
+  var emilreceipiants = [{to :orderdetails.user_profile.email ,subject:"Order Placed Successfully"},{to :process.env.adminemail,subject:"Order Placed Successfully"}]
+// var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
      
  sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skudetails,imagelist,day))
 //return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
