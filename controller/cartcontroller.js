@@ -741,7 +741,7 @@ if(wishlistobj && wishlistobj.length > 0)
     ]
   })
   prodimages.forEach(element => {
-    var imagename = element.image_url.replace(element.product_id, element.product_id+'/100X100');
+    var imagename = element.image_url.replace(element.product_id, element.product_id+'/1000X1000');
 
     imagelist[element.product_id] = 'https://styloriimages.s3.ap-south-1.amazonaws.com/'+imagename
   })
