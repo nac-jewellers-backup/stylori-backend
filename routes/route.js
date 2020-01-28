@@ -72,6 +72,7 @@ module.exports = function(app) {
 	app.post('/addwishlist', cartcontroller.addwishlist);
 	app.post('/removewishlist', cartcontroller.removewishlist);
 	app.post('/removeaddress', cartcontroller.removeaddress);
+	app.post('/testorderconformation', cartcontroller.testorderemail);
 
 	
 	app.post('/createorder', cartcontroller.addorder);

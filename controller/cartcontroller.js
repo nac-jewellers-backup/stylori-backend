@@ -679,7 +679,10 @@ if(wishlistobj && wishlistobj.length > 0)
       console.log(reason)
     });
  }
+ exports.testorderemail = async (req, res) => {
+  sendorderconformationemail("257f2960-41b8-11ea-8d48-ad47b85a39a4")
 
+ }
   async function sendorderconformationemail(order_id,res)
  {
   let orderdetails  = await models.orders.findOne({
@@ -709,6 +712,9 @@ if(wishlistobj && wishlistobj.length > 0)
   }
   var trans_sku_lists = [];
   var prod_image_condition = []
+  console.log("orderinfodetails")
+  console.log(JSON.stringify(orderdetails))
+  
   orderdetails.shopping_cart.shopping_cart_items.forEach(element => {
     trans_sku_lists.push(element.product_sku)
     prod_image_condition.push({
@@ -746,7 +752,8 @@ if(wishlistobj && wishlistobj.length > 0)
     imagelist[element.product_id] = 'https://styloriimages.s3.ap-south-1.amazonaws.com/'+imagename
   })
 
-  var emilreceipiants = [{to :orderdetails.user_profile.email ,subject:"Order Placed Successfully"},{to :process.env.adminemail,subject:"Order Placed Successfully"}]
+//  var emilreceipiants = [{to :orderdetails.user_profile.email ,subject:"Order Placed Successfully"},{to :process.env.adminemail,subject:"Order Placed Successfully"}]
+var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
      
   sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skudetails,imagelist,day))
 //return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
