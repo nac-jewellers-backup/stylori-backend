@@ -735,11 +735,23 @@ res.send(200,{'data':products_all})
 
 exports.productesearch = async (req, res) => {
 
-  let product_list = await models.trans_sku_lists.findAll({
+  let sku_list = await models.trans_sku_lists.findAll({
             attributes:["generated_sku","sku_url"],
-           
   })
-
-  res.send(200,{product_list})
+  let product_list = await models.product_lists.findAll({
+    attributes:["product_name"],
+    include:[
+      {
+        model: models.trans_sku_lists,
+        attributes:["sku_url"],
+        where:{
+          isdefault: true
+        }
+      }
+    ]
+})
+  res.send(200,{product_list,sku_list})
 
 }
+
+
