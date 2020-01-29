@@ -92,6 +92,9 @@ module.exports = function(app) {
 	app.post('/fetchproducts', productFetchController.filteroptions);
 	app.post('/esearchfetchproducts', productfetchController_esearch.filteroptions);
 
+	app.post('/editproduct', productcontroller.editproduct);
+
+	
 	
 	app.post('/updatebestseller', master_uploaddata_controller.updatebestseller);
 	app.post('/updatereadytoship', master_uploaddata_controller.updatereadytoship);

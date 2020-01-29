@@ -196,6 +196,10 @@ exports.updatedefaultimage = async (req, res) => {
 
          if(product_colors && product_colors.metal_color)
          {
+            var query1 = "UPDATE product_images SET isdefault = false where product_id ='"+product_id+"'" ;
+            await models.sequelize.query(query1).then(([results, metadata]) => {
+              // Results will be an empty array and metadata will contain the number of affected rows.
+            })
           var query = "UPDATE product_images SET isdefault = true where product_id ='"+product_id+"' and product_color = '"+product_colors.metal_color+"'" ;
           await models.sequelize.query(query).then(([results, metadata]) => {
             // Results will be an empty array and metadata will contain the number of affected rows.

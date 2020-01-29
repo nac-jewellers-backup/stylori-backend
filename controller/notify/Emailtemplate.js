@@ -427,12 +427,12 @@ const getName = (username) => {
         <tbody>
             <tr>
                 <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: bold;color: rgba(88,89,91,1.00);margin:25px 0px;">
-                <h6> Name : ${userobj.name},</h6>
-                <h6> Email : ${userobj.email},</h6>
-                <h6> Mobile : ${userobj.phone},</h6>
-                <h6> Message : ${userobj.message},</h6>
-                <h6> Product : ${userobj.sku_url},</h6>
-                <h6> Product SKU : ${userobj.product_sku},</h6>
+                <h3> Name : ${userobj.name},</h3>
+                <h3> Email : ${userobj.email},</h3>
+                <h3> Mobile : ${userobj.phone},</h3>
+                <h3> Message : ${userobj.message},</h3>
+                <h3> Product : ${userobj.sku_url},</h3>
+                <h3> Product SKU : ${userobj.product_sku},</h3>
                 </p>
             </tr>
             
@@ -466,10 +466,10 @@ const contactusTemp = (userobj, email, token) => {
         <tbody>
             <tr>
                 <p style="padding:0px 15px;font-family: 'Arial', sans-serif;font-size: 12px;font-weight: bold;color: rgba(88,89,91,1.00);margin:25px 0px;">
-                <h6> Name : ${userobj.name},</h6>
-                <h6> Email : ${userobj.email},</h6>
-                <h6> Mobile : ${userobj.phone},</h6>
-                <h6> Message : ${userobj.message},</h6>
+                <h3> Name : ${userobj.name},</h3>
+                <h3> Email : ${userobj.email},</h3>
+                <h3> Mobile : ${userobj.phone},</h3>
+                <h3> Message : ${userobj.message},</h3>
                 
                 </p>
             </tr>

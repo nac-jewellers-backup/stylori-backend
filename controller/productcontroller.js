@@ -624,3 +624,19 @@ exports.productupload =  async (req, res) => {
     
 
 }
+
+
+exports.editproduct =  async (req, res) => {
+const {productId,productName} = req.body
+var product_object = await models.product_lists.findOne({
+    where:{
+        product_id : productId
+    }
+})
+//product_object['product_name'] = "testing"
+await product_object.update({
+    product_name : product_object.product_name
+})
+res.status(200).send(product_object)
+
+}
