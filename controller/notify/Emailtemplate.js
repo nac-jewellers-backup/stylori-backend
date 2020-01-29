@@ -722,7 +722,7 @@ const subscribeTemp = (userobj, email, token) => {
                 </td>
             </tr>
             <tr>
-                            <p style="padding:0px 15px;line-height:1.5; font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding-top: 15px;"> You can visit <a href="/account/orders">${process.env.baseurl+"/account-allorders"}</a> to view your order status and to contact us regarding this order.<br />
+                            <p style="padding:0px 15px;line-height:1.5; font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding-top: 15px;"> You can visit <a href=${process.env.baseurl+"/account-allorders"}>${process.env.baseurl+"/account-allorders"}</a> to view your order status and to contact us regarding this order.<br />
             Should you find the details of the order incorrect, please feel free to call us at 18001020330 or email us at hello@stylori.com </p>
           <p style="line-height:1.5;padding:0px 15px;font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:15px 0;">Team Stylori <br />
               With Love </p>
