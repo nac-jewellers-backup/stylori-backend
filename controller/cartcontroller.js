@@ -681,8 +681,8 @@ if(wishlistobj && wishlistobj.length > 0)
  }
  exports.testorderemail = async (req, res) => {
   var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Password Reset Successfully"}]
-  sendMail(emilreceipiants,emailTemp.changepasswordTemp("Manokaran"))
-  // sendorderconformationemail("257f2960-41b8-11ea-8d48-ad47b85a39a4",res)
+ // sendMail(emilreceipiants,emailTemp.changepasswordTemp("Manokaran"))
+   sendorderconformationemail("257f2960-41b8-11ea-8d48-ad47b85a39a4",res)
 
  }
   async function sendorderconformationemail(order_id,res)

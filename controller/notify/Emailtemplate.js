@@ -690,8 +690,8 @@ const subscribeTemp = (userobj, email, token) => {
                         ${prod_content}
                         <tr style="border-top:1px solid #ACACAC;">
                             <td></td>
-                            <td></td>
-                            <td><p style="font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;margin-top:15px;padding-bottom:10px;">
+                            
+                            <td colspan="2"><p style="font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;margin-top:15px;padding-bottom:10px;">
                                    Total : <br />
                                 Shipping Charges:<br />
                                 Discount: 
