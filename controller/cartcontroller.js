@@ -796,13 +796,13 @@ exports.addproductreview = async (req, res) => {
   models.customer_reviews.create(review_content,{
     returning: true
   }).then(function(response){
-    res.send(200,{"message":"updated successfully"})        
+    res.send(200,{"message":"Your review has been sent to our team. Will post it soon. Thanks!"})        
   }).catch(reason => {
       res.send(500,{"message":"Error Please try again"}) 
       console.log(reason)
     });
      }else{
-      res.send(409,{"message":"Already added review for this product"})        
+      res.send(409,{"message":"You have reviewed this product already."})        
      }
    
    

@@ -577,6 +577,12 @@ const subscribeTemp = (userobj, email, token) => {
         var deliverytime = 0
         var deliverdate = ""
         var gemstones_arr = ""
+        var quality_str  =""
+        if(element.diamond_type)
+        {
+          quality_str =  `<span >Quality: ${element.diamond_type} <br /></span>`
+
+        }
         if(element.product_list.product_gemstones)
         {
           let gems = element.product_list.product_gemstones
@@ -606,7 +612,7 @@ const subscribeTemp = (userobj, email, token) => {
             <span >${element.product_list.product_name}</span> <br />
             <span>Metal:${element.purity} ${element.metal_color} <br />
             </span> 
-            <span >Quality: ${element.diamond_type} <br /></span> 
+            ${quality_str}
             <span >Metal Weight: ${element.sku_weight} <br />
             </span> <br /> 
             ${gemstones_arr}
