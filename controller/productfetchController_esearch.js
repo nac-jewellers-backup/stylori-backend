@@ -750,7 +750,10 @@ exports.productesearch = async (req, res) => {
       }
     ]
 })
-  res.send(200,{product_list,sku_list})
+let seo_list = await models.seo_url_priorities.findAll({
+  attributes:["attribute_name","attribute_value","seo_text","seo_url","priority"]
+})
+  res.send(200,{product_list,sku_list,seo_list})
 
 }
 
