@@ -29,8 +29,10 @@ module.exports = function(app) {
 	app.post('/changepassword', [authJwt.verifyToken], authcontroller.changepassword);
 
 	
-	
-	
+		app.post('/fbsignin', authcontroller.fbsignin);
+		app.post('/fbsignup', authcontroller.fbsignup);
+
+		
 	app.post('/api/auth/signup', authcontroller.signup);	
 	app.post('/verification/:email/:token', authcontroller.verification);
 	app.post('/forgotpassword', authcontroller.forgotpassword);

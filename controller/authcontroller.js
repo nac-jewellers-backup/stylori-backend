@@ -51,6 +51,51 @@ exports.signin = (req, res) => {
 }
 
 
+exports.fbsignin = async(req, res) => {
+    const {fbid} = req.body
+    models.user_profiles.findOne({
+
+        where: {
+          facebookid: fbid
+        }
+    }).then(user => {
+          console.log(user)
+          if (!user) {
+              return res.status(404).send({"message":"User Does Not Exist"});
+          }
+          
+        var token = jwt.sign({ id: user.email }, process.env.SECRET, {
+          expiresIn: '1d' // expires in 24 hours
+        });
+       res.status(200).send({  accessToken: token, userprofile });
+    }).catch(err => {
+        res.status(500).send('Error -> ' + err);
+    });
+}
+exports.fbsignup = async(req, res) => {
+    const {fbid,firstname,lastname,email,salutation} = req.body
+     let user_profile =   await models.user_profiles.create(
+              {
+                id:uuidv1(),
+                user_id: null,
+                email: email,
+                first_name : firstname,
+                last_name : lastname,
+                salutation: salutation,
+                isemailverified: false
+              }
+
+            )
+            var token = jwt.sign({ id: email }, process.env.SECRET, {
+              expiresIn: '1d' // expires in 24 hours
+            });
+            var emilreceipiants = [{to : email,subject:"You have successfully registered!"}]
+         
+            sendMail(emilreceipiants,emailTemp.getName(firstname))
+
+          res.send(200,{accessToken: token,user,user_profile_id: user_profile.id});
+
+}
 exports.signup = (req, res) => {
   let {username, password, email,firstname,lastname, roles,salutation} = req.body;
   var uservalue = {
