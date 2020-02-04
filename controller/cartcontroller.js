@@ -310,8 +310,27 @@ exports.removecartitem = async (req, res) => {
         product_sku : product_id
     }
 })
+
+let gross_amount = await models.shopping_cart_item.findOne({
+  attributes: [
+    [squelize.literal('SUM(price)'), 'price']
+  ],
+  where: {
+      shopping_cart_id: cart_id
+  }
+  })
+  console.log("cartline length")
+
+ await models.shopping_cart.update({gross_amount:gross_amount.price, discounted_price:gross_amount.price},{
+      where: {id: cart_id}
+      }).then(price_splitup_model=> { 
+        res.send(200,{"message": "Remove Successfully"})
+
+    }).catch(reason => {
+      console.log(reason)
+    });
+}
   
-res.send(200,{"message": "Remove Successfully"})
 
 
 }
