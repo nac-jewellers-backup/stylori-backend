@@ -90,7 +90,7 @@ models.vouchers.findOne({
   if(giftwrapobj &&  giftwrapobj.discount_amount)
   {
     let discountvalue = giftwrapobj.discount_amount
-    message_response = "Applied Successfully"
+    message_response = "You have applied promo code successfully"
    // isvalid = true
    // message_response = "Applied Successfully"
     var query = "UPDATE shopping_carts SET discount = "+discountvalue+" , discounted_price = (gross_amount -"+discountvalue+") where id ='"+cart_id+"'" ;
