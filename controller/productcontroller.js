@@ -627,7 +627,7 @@ exports.productupload =  async (req, res) => {
 
 
 exports.editproduct =  async (req, res) => {
-const {productId,productName,productDiamondsByProductSku,transSkuListsByProductId} = req.body
+const {createVariants,productId,productName,productDiamondsByProductSku,transSkuListsByProductId} = req.body
 var product_object = await models.product_lists.findOne({
     where:{
         product_id : productId
@@ -637,15 +637,71 @@ var product_object = await models.product_lists.findOne({
 if(productDiamondsByProductSku)
 {
     productDiamondsByProductSku.forEach(diamondobj =>{
-        
+        if(diamondobj.id)
+        {
+
+        }else{
+
+        }
     })
 }
 if(transSkuListsByProductId)
 {
+    var active_skus = []
+    var inactive_skus = []
     transSkuListsByProductId.forEach(trans_sku =>{
-        
+        if(trans_sku.isActive)
+        {
+            active_skus.push(trans_sku.generateSku)
+        }else{
+            inactive_skus.push(trans_sku.generateSku)
+
+        }
+       let updateactiveskus = await models.trans_sku_lists.update(
+            { is_active: true },
+            { where: { generated_sku: {
+                [Op.in]: active_skus
+            } } }
+          )
+
+          let updateactiveskus = await models.trans_sku_lists.update(
+            { is_active: true },
+            { where: { generated_sku: {
+                [Op.in]: active_skus
+            } } }
+          )
+
     })
 }
+
+if(createVariants)
+{
+    let varientobj = createVariants[0]
+    if(varientobj)
+    {
+        let metalcolorsarr = varientobj.productMetalcoloursByProductId
+        if(metalcolorsarr)
+        {
+
+        }
+        let puritiesarr = varientobj.productPuritiesByProductId
+        if(puritiesarr)
+        {
+            
+        }
+
+        let sizesarr = varientobj.productSize
+        if(sizesarr)
+        {
+            
+        }
+    }
+
+}
+
+
+
+
 //product_object['product_name'] = "testing"
 await product_object.update({
     product_name : productName

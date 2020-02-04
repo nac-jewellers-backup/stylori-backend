@@ -324,7 +324,7 @@ let gross_amount = await models.shopping_cart_item.findOne({
  await models.shopping_cart.update({gross_amount:gross_amount.price, discounted_price:gross_amount.price},{
       where: {id: cart_id}
       }).then(price_splitup_model=> { 
-      res.send(200,{cart_id})
+      res.send(200,{message: "You removed this product successfully"})
     }).catch(reason => {
       console.log(reason)
     });
@@ -637,7 +637,7 @@ if(wishlistobj && wishlistobj.length > 0)
     }
    }
 
-   exports.removewishlist = async (req, res) => {
+exports.removewishlist = async (req, res) => {
     let {user_id , product_id , product_sku } = req.body
     const add_wishlist = {
   
@@ -701,7 +701,7 @@ if(wishlistobj && wishlistobj.length > 0)
    sendorderconformationemail("257f2960-41b8-11ea-8d48-ad47b85a39a4",res)
 
  }
-  async function sendorderconformationemail(order_id,res)
+async function sendorderconformationemail(order_id,res)
  {
   let orderdetails  = await models.orders.findOne({
     include:[
