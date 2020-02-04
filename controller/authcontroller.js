@@ -93,7 +93,7 @@ exports.fbsignup = async(req, res) => {
          
             sendMail(emilreceipiants,emailTemp.getName(firstname))
 
-          res.send(200,{accessToken: token,user,user_profile_id: user_profile.id});
+          res.send(200,{accessToken: token,user_profile,user_profile_id: user_profile.id});
 
 }
 exports.signup = (req, res) => {
