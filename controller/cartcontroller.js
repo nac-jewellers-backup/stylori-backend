@@ -324,16 +324,13 @@ let gross_amount = await models.shopping_cart_item.findOne({
  await models.shopping_cart.update({gross_amount:gross_amount.price, discounted_price:gross_amount.price},{
       where: {id: cart_id}
       }).then(price_splitup_model=> { 
-        res.send(200,{"message": "Remove Successfully"})
-
+      res.send(200,{cart_id})
     }).catch(reason => {
       console.log(reason)
     });
 }
   
 
-
-}
 exports.addtocart = async (req, res) => {
  let {user_id, products,cart_id} = req.body
  console.log(JSON.stringify(req.body));
