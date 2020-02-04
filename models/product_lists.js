@@ -15,8 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       primaryKey: true
     },
-    by_design: DataTypes.STRING,
-    by_weight: DataTypes.STRING,
+    
     vendor_code: DataTypes.STRING,
     product_name: DataTypes.STRING,
     product_category: DataTypes.STRING,
