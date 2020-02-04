@@ -31,7 +31,6 @@ module.exports = (sequelize, DataTypes) => {
     product_type: DataTypes.STRING,
     earring_backing: DataTypes.STRING,
     product_vendor_code: DataTypes.STRING,
-    product_sizes: DataTypes.STRING,
     size_varient: DataTypes.STRING,
     colour_varient: DataTypes.STRING,
     selling_qty: DataTypes.INTEGER,
