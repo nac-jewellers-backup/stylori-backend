@@ -649,7 +649,7 @@ if(transSkuListsByProductId)
 {
     var active_skus = []
     var inactive_skus = []
-    transSkuListsByProductId.forEach(trans_sku =>{
+    transSkuListsByProductId.forEach(async trans_sku =>{
         if(trans_sku.isActive)
         {
             active_skus.push(trans_sku.generateSku)
@@ -657,47 +657,24 @@ if(transSkuListsByProductId)
             inactive_skus.push(trans_sku.generateSku)
 
         }
-       let updateactiveskus = await models.trans_sku_lists.update(
-            { is_active: true },
-            { where: { generated_sku: {
-                [Op.in]: active_skus
-            } } }
-          )
+    //    let updateactiveskus = await models.trans_sku_lists.update(
+    //         { is_active: true },
+    //         { where: { generated_sku: {
+    //             [Op.in]: active_skus
+    //         } } }
+    //       )
 
-          let updateactiveskus = await models.trans_sku_lists.update(
-            { is_active: true },
-            { where: { generated_sku: {
-                [Op.in]: active_skus
-            } } }
-          )
+        //   let updateactiveskus = await models.trans_sku_lists.update(
+        //     { is_active: true },
+        //     { where: { generated_sku: {
+        //         [Op.in]: active_skus
+        //     } } }
+        //   )
 
     })
 }
 
-if(createVariants)
-{
-    let varientobj = createVariants[0]
-    if(varientobj)
-    {
-        let metalcolorsarr = varientobj.productMetalcoloursByProductId
-        if(metalcolorsarr)
-        {
 
-        }
-        let puritiesarr = varientobj.productPuritiesByProductId
-        if(puritiesarr)
-        {
-            
-        }
-
-        let sizesarr = varientobj.productSize
-        if(sizesarr)
-        {
-            
-        }
-    }
-
-}
 
 
 
