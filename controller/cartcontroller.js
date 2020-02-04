@@ -25,6 +25,8 @@ aws.config.update({
 
 exports.addgiftwrap = async (req, res) => {
   const {cart_id, gift_from, gift_to, message} = req.body
+  
+
   var isvalid = true;
   const giftwrapobj = {
     id:uuidv1(),
@@ -43,7 +45,18 @@ models.giftwrap.create(giftwrapobj).then(giftwrapobj=> {
 
 exports.applyvoucher = async (req, res) => {
   const {vouchercode, cart_id,user_profile_id} = req.body
- let shoppingcart = await models.shopping_cart_item.findAll({
+  var isloggedin = false
+ let userprofile = await models.user_profiles.findOne({
+                        where: {
+                          id: user_profile_id
+                        }
+                    })
+  if(userprofile.facebookid || userprofile.user_id)
+  {
+    isloggedin = true
+  }
+
+  let shoppingcart = await models.shopping_cart_item.findAll({
     include:[
       {
         model: models.trans_sku_lists,
@@ -87,7 +100,7 @@ models.vouchers.findOne({
 }).then(async giftwrapobj=> {
  var message_response = ""
 
-  if(giftwrapobj &&  giftwrapobj.discount_amount)
+  if(isloggedin && giftwrapobj &&  giftwrapobj.discount_amount )
   {
     let discountvalue = giftwrapobj.discount_amount
     message_response = "You have applied promo code successfully"
@@ -112,27 +125,34 @@ models.vouchers.findOne({
     })
   }else{
     console.log("voucher invalid")
- let vouchers =   await models.vouchers.findAll({
-      where:{
-        is_active: true,
-        min_cart_value: {
-          [Op.lte]: eligible_amount
-        },
-        code:{
-          [Op.iLike]: vouchercode
-        } 
+    if(!isloggedin)
+    {
+      res.send(409,{message: "You should login to apply this voucher"})
+
+    }else{
+      let vouchers =   await models.vouchers.findAll({
+        where:{
+          is_active: true,
+          min_cart_value: {
+            [Op.lte]: eligible_amount
+          },
+          code:{
+            [Op.iLike]: vouchercode
+          } 
+        }
+      })
+      if(vouchers.length > 0)
+      {
+  
+        res.send(409,{message: "Promo code is invalid for this order"})
+  
+      }else
+      {
+        res.send(409,{message: "Enter valid coupon"})
+  
       }
-    })
-    if(vouchers.length > 0)
-    {
-
-      res.send(409,{message: "Promo code is invalid for this order"})
-
-    }else
-    {
-      res.send(409,{message: "Enter valid coupon"})
-
     }
+ 
 
   }
     
