@@ -27,10 +27,11 @@ module.exports = function(app) {
 	app.post('/api/auth/signin', authcontroller.signin);
 	app.post('/verifypasswordtoken', [authJwt.verifyToken], authcontroller.verifypasswordtoken);
 	app.post('/changepassword', [authJwt.verifyToken], authcontroller.changepassword);
-
 	
-		app.post('/fbsignin', authcontroller.fbsignin);
-		app.post('/fbsignup', authcontroller.fbsignup);
+	app.post('/esearchcombination', productfetchController_esearch.esearchcombination);
+
+	app.post('/fbsignin', authcontroller.fbsignin);
+	app.post('/fbsignup', authcontroller.fbsignup);
 
 		
 	app.post('/api/auth/signup', authcontroller.signup);	
@@ -93,9 +94,10 @@ module.exports = function(app) {
 	app.post('/getsizes', cartcontroller.getsizes);
 	app.post('/fetchproducts', productFetchController.filteroptions);
 	app.post('/esearchfetchproducts', productfetchController_esearch.filteroptions);
+	app.post('/getproductvarient', productcontroller.getproductvarient);
 
 	app.post('/editproduct', productcontroller.editproduct);
-
+	
 	
 	
 	app.post('/updatebestseller', master_uploaddata_controller.updatebestseller);

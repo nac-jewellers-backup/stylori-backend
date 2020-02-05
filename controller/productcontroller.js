@@ -624,7 +624,86 @@ exports.productupload =  async (req, res) => {
     
 
 }
+exports.getproductvarient =  async (req, res) => {
+    const {purity_list,productId} = req.body
+  var product_skus = []
+  var prev_skus = [];
+  var skus = product_skus;
+  var skuprefix =  productId+'-';
+     product_skus = [];
+    var product_object = await models.product_lists.findOne({
+        attributes:["product_id","size_varient","product_type","vendor_code"],
+        include:[{
+            model: models.trans_sku_lists,
+            attributes:['generated_sku']
+        },
+        {
+            model:models.product_purities
+        },
+        {
+            model:models.product_diamonds
+        },
+        {
+            model:models.product_metalcolours
+        },
+        {
+            model:models.product_gemstones
+        }],
+        where:{
+            product_id : productId
+        }
+    })
+    product_object.trans_sku_lists.forEach(skuid => {
+        prev_skus.push(skuid)
+    })
 
+    /****************puritylis */
+    var puritylist = product_object.product_purities;
+    var purityarr = []
+    puritylist.forEach(purity => {
+        var sku = skuprefix + purity.purity 
+        var skuobj = {
+            product_id: productId,
+            product_type: product_object.product_type,
+            service_name: product_object.vendor_code,
+            product_series: 0,
+            purity: purity.name,
+            generated_sku: sku
+        }
+        product_skus.push(skuobj)
+    })
+    /************************** */
+    /****************metalcolor list */
+    var skus = product_skus;
+
+    product_skus = [];
+  var metalcolorlist = product_object.product_metalcolours;
+  metalcolorlist.forEach(metalcolor => {
+    skus.forEach(skuvalue => {
+        var  skuval = skuvalue.generated_sku
+
+        metalcolorlist.forEach(metalcolor => {
+
+            var sku = skuval + metalcolor.product_color 
+           
+            var skuobj = 
+            {
+            ...skuvalue,
+            generated_sku: sku,
+            metal_color:metalcolor.product_color 
+            }
+            product_skus.push(skuobj)
+
+
+        });
+    }); 
+
+  })
+    /************************ */
+    res.send(200,{product_skus})
+    // var purityarr = []
+   
+}
 
 exports.editproduct =  async (req, res) => {
 const {createVariants,productId,productName,productDiamondsByProductSku,transSkuListsByProductId} = req.body
@@ -633,20 +712,50 @@ var product_object = await models.product_lists.findOne({
         product_id : productId
     }
 })
-
-if(productDiamondsByProductSku)
+processdiamond(0)
+async function processdiamond(diamondcount)
 {
-    productDiamondsByProductSku.forEach(diamondobj =>{
-        if(diamondobj.id)
-        {
-
-        }else{
-
+    let diamondobj = productDiamondsByProductSku[diamondcount]
+    let diamondval = await models.product_diamonds.findOne({
+        where:{
+            diamond_colour: diamondobj.diamondColour,
+            diamond_clarity: diamondobj.diamondClarity
         }
     })
+    diamondcount = diamondcount + 1
+
+
+    if(productDiamondsByProductSku.length > diamondcount)
+    {
+        console.log(JSON.stringify(diamondcount))
+        processdiamond(diamondcount)
+    }else
+    {
+        processtranssku()
+    }
+
 }
+
+async function processtranssku(skucount)
+{
+    let skuobj  = transSkuListsByProductId[skucount]
+
+    skucount = skucount + 1
+
+    if(productDiamondsByProductSku.length > skucount)
+    {
+        console.log(JSON.stringify(skucount))
+        processtranssku(skucount)
+    }else
+    {
+      //  processtranssku(skucount)
+    }
+}
+
+
 if(transSkuListsByProductId)
 {
+    console.log(JSON.stringify("hello"+transSkuListsByProductId.length))
     var active_skus = []
     var inactive_skus = []
     transSkuListsByProductId.forEach(async trans_sku =>{
@@ -657,32 +766,55 @@ if(transSkuListsByProductId)
             inactive_skus.push(trans_sku.generateSku)
 
         }
-    //    let updateactiveskus = await models.trans_sku_lists.update(
-    //         { is_active: true },
-    //         { where: { generated_sku: {
-    //             [Op.in]: active_skus
-    //         } } }
-    //       )
+   
 
-        //   let updateactiveskus = await models.trans_sku_lists.update(
+    })
+
+        // let updateactiveskus = await models.trans_sku_lists.update(
         //     { is_active: true },
         //     { where: { generated_sku: {
         //         [Op.in]: active_skus
         //     } } }
         //   )
 
-    })
+        //   let updateinactiveskus = await models.trans_sku_lists.update(
+        //     { is_active: false },
+        //     { where: { generated_sku: {
+        //         [Op.in]: inactive_skus
+        //     } } }
+        //   )
+}
+
+if(createVariants)
+{
+    let varientobj = createVariants[0]
+    let metalcolorobj = varientobj.productMetalcoloursByProductId
+    if(metalcolorobj)
+    {
+
+    }
+
+    let productSizearr = varientobj.productSize
+    if(productSizearr)
+    {
+        
+    }
+
+    let purityarr = varientobj.productPuritiesByProductId
+    if(purityarr)
+    {
+        
+    }
+
 }
 
 
 
 
-
-
 //product_object['product_name'] = "testing"
-await product_object.update({
-    product_name : productName
-})
+// await product_object.update({
+//     product_name : productName
+// })
 res.status(200).send(product_object)
 
 }

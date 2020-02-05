@@ -451,7 +451,7 @@ let prod_type_where = {}
 
 
   var metalcolor_where = {
-    metal_color : {
+    product_color : {
       [Op.ne]: null
     }
   }

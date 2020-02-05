@@ -756,5 +756,120 @@ let seo_list = await models.seo_url_priorities.findAll({
   res.send(200,{product_list,sku_list,seo_list})
 
 }
+exports.esearchcombination = async (req, res) => {
+let master_product_types = await models.seo_url_priorities.findAll({
+  where:{
+    attribute_name: "Product Type"
+  }
+})
+var product_list =[]
+//let producttype_obj = master_product_types[0]
+let seotext_arr = [];
+processattrubutes(0)
+async function processattrubutes(indexval)
+{
+  var producttype_obj = master_product_types[indexval]
 
+var products = await models.product_lists.findAll({
+  attributes:['product_id'],
+  where: {
+    product_type : producttype_obj.attribute_value
+  }
+})
+products.forEach(element => {
+  product_list.push(element.product_id);
+});
+
+var master_styles = await models.product_styles.findAll({
+  attributes: ['style_name'],
+  group: ['style_name'],
+  where: {
+    product_id : {
+      [Op.in]: product_list
+    }
+  },
+  order: [
+    ['style_name', 'ASC']
+  ]
+})
+
+var master_themes = await models.product_themes.findAll({
+  attributes: ['theme_name'],
+  group: ['theme_name'],
+  where: {
+    product_id : {
+      [Op.in]: product_list
+    }
+  },
+  order: [
+    ['theme_name', 'ASC']
+  ]
+})
+
+
+var master_occassion = await models.product_occassions.findAll({
+  attributes: ['occassion_name'],
+  group: ['occassion_name'],
+  where: {
+    product_id : {
+      [Op.in]: product_list
+    }
+  },
+  order: [
+    ['occassion_name', 'ASC']
+  ]
+})
+ let styles = []
+ master_styles.forEach(style_name => {
+   styles.push(style_name.style_name)
+ })
+ master_themes.forEach(theme_name => {
+  styles.push(theme_name.theme_name)
+
+ })
+ master_occassion.forEach(occassion_name => {
+  styles.push(occassion_name.occassion_name)
+
+ })
+ let seo_list = await models.seo_url_priorities.findAll({
+   attributes:["attribute_value","seo_url","priority"],
+   where:{
+    
+     attribute_value:{
+       [Op.in]: styles
+     }
+   }
+ })
+ seo_list.forEach(seo_obj => {
+  if(seo_obj.priority < producttype_obj.priority)
+  {
+    let seo_txt = {
+      "seo_url":seo_obj.seo_url+"-"+ producttype_obj.seo_url,
+      "seo_text":seo_obj.attribute_value+" "+ producttype_obj.attribute_value
+
+    }
+
+    seotext_arr.push(seo_txt)
+  }else{
+    let seo_txt = {
+      "seo_url": producttype_obj.seo_url+"-"+ seo_obj.seo_url,
+      "seo_text":producttype_obj.attribute_value+" "+ seo_obj.attribute_value,
+    }
+    seotext_arr.push(seo_txt)
+
+  }
+ })
+ indexval = indexval + 1;
+ if(master_product_types.length  >  indexval)
+ {
+  processattrubutes(indexval)
+
+ }else{
+  res.send(200,{response:seotext_arr})
+
+ }
+}
+
+
+}
 
