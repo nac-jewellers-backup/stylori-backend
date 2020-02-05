@@ -895,11 +895,11 @@ var master_occassion = await models.product_occassions.findAll({
   processattrubutes(indexval)
 
  }else{
-  res.send(200,{response:seotext_arr})
+  res.send(200,{product_list,sku_list,seo_list:seotext_arr})
 
  }
 }
-  res.send(200,{product_list,sku_list,seo_list:seotext_arr})
+//  res.send(200,{product_list,sku_list,seo_list:seotext_arr})
 
 }
 exports.esearchcombination = async (req, res) => {
