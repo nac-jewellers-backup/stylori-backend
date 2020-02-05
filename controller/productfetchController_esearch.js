@@ -793,20 +793,43 @@ var master_styles = await models.product_styles.findAll({
   ]
 })
 
-var master_themes = await models.product_themes.findAll({
-  attributes: ['theme_name'],
-  group: ['theme_name'],
+
+var master_material = await models.product_materials.findAll({
+  attributes: ['material_name'],
+  group: ['material_name'],
+  where: {
+    product_sku : {
+      [Op.in]: product_list
+    }
+  },
+  order: [
+    ['material_name', 'ASC']
+  ]
+})
+var master_purity = await models.product_purities.findAll({
+  attributes: ['purity'],
+  group: ['purity'],
+  where:{
+    product_id : {
+      [Op.in]: product_list
+    }
+  },
+  order: [
+    ['purity', 'ASC']
+  ]
+})
+var master_colors = await models.product_metalcolours.findAll({
+  attributes: ['product_color'],
+  group: ['product_color'],
   where: {
     product_id : {
       [Op.in]: product_list
     }
   },
   order: [
-    ['theme_name', 'ASC']
+    ['product_color', 'ASC']
   ]
 })
-
-
 var master_occassion = await models.product_occassions.findAll({
   attributes: ['occassion_name'],
   group: ['occassion_name'],
@@ -823,8 +846,17 @@ var master_occassion = await models.product_occassions.findAll({
  master_styles.forEach(style_name => {
    styles.push(style_name.style_name)
  })
- master_themes.forEach(theme_name => {
-  styles.push(theme_name.theme_name)
+ master_material.forEach(material_name => {
+  styles.push(material_name.material_name)
+
+ })
+
+ master_purity.forEach(purity_obj => {
+  styles.push(purity_obj.purity)
+
+ })
+ master_colors.forEach(color_obj => {
+  styles.push(color_obj.product_color)
 
  })
  master_occassion.forEach(occassion_name => {
