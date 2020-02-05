@@ -244,17 +244,21 @@ const {chargetotal} = req.body
     var paymentMethod="";
     var dateval = new Date()
     var full_bypass = false;
-    var sharedsecret = "Rx82ezCmTd";
+    var sharedsecret = process.env.PG_SECRET;
     var currentdate = new Date();
     var day    = moment.tz(new Date(), "Asia/Kolkata").format("YYYY:MM:DD-HH:mm:ss");
-
+    var cartval = chargetotal
+    if(process.env.cartvalue)
+    {
+      cartval = process.env.cartvalue
+    }
     //var day=dateFormat(new Date(), "yyyy:mm:dd-HH:MM:ss");
     const crypto = require('crypto')
     , shasum = crypto.createHash('sha1');
     var responseSuccessURL = "http://127.0.0.1/PHP/response_success.php"
     
     var responseFailURL = "http://127.0.0.1/PHP/response_fail.php"
-    var binarystring = storename+day+chargetotal+currency+sharedsecret;
+    var binarystring = storename+day+cartval+currency+sharedsecret;
 
   let hash =    bin2hex(binarystring)
   shasum.update(hash);
