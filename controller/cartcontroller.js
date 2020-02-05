@@ -254,13 +254,13 @@ const {chargetotal} = req.body
     }
     //var day=dateFormat(new Date(), "yyyy:mm:dd-HH:MM:ss");
     const crypto = require('crypto')
-    , shasum = crypto.createHash('sha1');
+    var shasum = crypto.createHash('sha1');
     var responseSuccessURL = "http://127.0.0.1/PHP/response_success.php"
     
     var responseFailURL = "http://127.0.0.1/PHP/response_fail.php"
     var binarystring = storename+day+cartval+currency+sharedsecret;
 
-  let hash =    bin2hex(binarystring)
+  let hash = bin2hex(binarystring)
   shasum.update(hash);
 
   function bin2hex (s) {
