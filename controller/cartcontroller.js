@@ -118,7 +118,7 @@ models.vouchers.findOne({
               id : cart_id
             }
           }).then(price_response =>{
-            res.send(200,{message: message_response,price_response,coupon_type : "Registration"})
+            res.send(200,{status: "200",message: message_response,price_response,coupon_type : "Registration"})
 
           })
 
@@ -127,7 +127,7 @@ models.vouchers.findOne({
     console.log("voucher invalid")
     if(!isloggedin)
     {
-      res.send(409,{message: "You should login to apply this voucher"})
+      res.send(409,{status: "409",message: "You should login to apply this voucher"})
 
     }else{
       let vouchers =   await models.vouchers.findAll({
@@ -144,11 +144,11 @@ models.vouchers.findOne({
       if(vouchers.length > 0)
       {
   
-        res.send(409,{message: "Promo code is invalid for this order"})
+        res.send(409,{status: "409",message: "Promo code is invalid for this order"})
   
       }else
       {
-        res.send(409,{message: "Enter valid coupon"})
+        res.send(409,{status: "409",message: "Enter valid coupon"})
   
       }
     }
@@ -157,7 +157,7 @@ models.vouchers.findOne({
   }
     
 }).catch(reason => {
-  res.send(409,{message: "Enter valid coupon", reason})
+  res.send(409,{status: "409",message: "Enter valid coupon", reason})
 });
  // res.send(200,{message:"Applied Succesfully","discounted_price":1000,"tax_price":320})
 
