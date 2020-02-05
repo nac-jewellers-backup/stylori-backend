@@ -682,8 +682,8 @@ exports.removewishlist = async (req, res) => {
     var orderstatus = "Initiated";
     if(payment_mode === 'COD')
     {
-      paymentstatus = "Submited"
-      orderstatus = "Submited"
+      paymentstatus = "Submitted"
+      orderstatus = "Submitted"
       
     }
    const order_bj = {
