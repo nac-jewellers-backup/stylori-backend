@@ -568,7 +568,7 @@ exports.addaddress = async (req, res) => {
         let cart_address_val = await models.cart_address.findOne({
           where:{
             cart_id: cart_id,
-            address_type: addresstype
+            address_type: element.addresstype
           }
         })
 
