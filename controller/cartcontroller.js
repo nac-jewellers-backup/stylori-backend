@@ -644,6 +644,8 @@ exports.addaddress = async (req, res) => {
         processaddress(addresscount)
         }else{
           console.log(address_arr.length)
+          console.log(JSON.stringify(address_arr))
+
           if(add_user_address.length > 0)
           {
            await models.user_address.bulkCreate(
