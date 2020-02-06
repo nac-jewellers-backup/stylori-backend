@@ -625,7 +625,7 @@ exports.productupload =  async (req, res) => {
 
 }
 exports.getproductvarient =  async (req, res) => {
-    const {purity_list,productId} = req.body
+    const {purity_list,productId,createVariants} = req.body
   var product_skus = []
   var prev_skus = [];
   var skus = product_skus;
@@ -641,7 +641,8 @@ exports.getproductvarient =  async (req, res) => {
             model:models.product_purities
         },
         {
-            model:models.product_diamonds
+            model:models.product_diamonds,
+            group:["diamond_type"]
         },
         {
             model:models.product_metalcolours
@@ -654,14 +655,19 @@ exports.getproductvarient =  async (req, res) => {
         }
     })
     product_object.trans_sku_lists.forEach(skuid => {
-        prev_skus.push(skuid)
+        prev_skus.push(skuid.generated_sku)
     })
-
+    let purityobj = {}
+    let masterpurity = await models.master_metals_purities.findAll()
+    masterpurity.forEach(purity => {
+        purityobj[purity.name] = purity.short_code
+    })
     /****************puritylis */
+    var purities = createVariants[0].productPuritiesByProductId
     var puritylist = product_object.product_purities;
     var purityarr = []
     puritylist.forEach(purity => {
-        var sku = skuprefix + purity.purity 
+        var sku = skuprefix + purityobj[purity.purity]
         var skuobj = {
             product_id: productId,
             product_type: product_object.product_type,
@@ -672,19 +678,39 @@ exports.getproductvarient =  async (req, res) => {
         }
         product_skus.push(skuobj)
     })
+    purities.forEach(purity_obj =>{
+        var sku = skuprefix + purityobj[purity_obj.name]
+        var skuobj = {
+            product_id: productId,
+            product_type: product_object.product_type,
+            service_name: product_object.vendor_code,
+            product_series: 0,
+            purity: purity_obj.name,
+            generated_sku: sku
+        }
+        product_skus.push(skuobj)
+    })
     /************************** */
     /****************metalcolor list */
+
+    var colorlist = createVariants[0].productMetalcoloursByProductId
     var skus = product_skus;
 
     product_skus = [];
+    let colorobj = {}
+    let mastercolors = await models.master_metals_colors.findAll()
+    mastercolors.forEach(color => {
+        colorobj[color.name] = color.short_code
+    })
   var metalcolorlist = product_object.product_metalcolours;
-  metalcolorlist.forEach(metalcolor => {
+  console.log("colorlist"+metalcolorlist.length)
+  
     skus.forEach(skuvalue => {
         var  skuval = skuvalue.generated_sku
 
         metalcolorlist.forEach(metalcolor => {
 
-            var sku = skuval + metalcolor.product_color 
+            var sku = skuval + colorobj[metalcolor.product_color]
            
             var skuobj = 
             {
@@ -696,11 +722,132 @@ exports.getproductvarient =  async (req, res) => {
 
 
         });
+
+        colorlist.forEach(color => {
+
+            var sku = skuval + colorobj[color.name]
+           
+            var skuobj = 
+            {
+            ...skuvalue,
+            generated_sku: sku,
+            metal_color:color.name 
+            }
+            product_skus.push(skuobj)
+
+
+        });
     }); 
 
-  })
-    /************************ */
-    res.send(200,{product_skus})
+     /************************ */
+     /*****************Diamond list */
+     var diamonds_arr = createVariants[0].productDiamondsByProductSku
+    var skus = product_skus;
+    var diamondlist = product_object.product_diamonds
+    product_skus = [];
+    var diamond_sku_clarity = {}
+    let diamondtype = await models.master_diamond_types.findAll({
+     });
+     diamondtype.forEach(diamond_type => {
+        var claritytype = diamond_type.diamond_color+diamond_type.diamond_clarity
+        diamond_sku_clarity[claritytype] = diamond_type.short_code
+    })
+    var diamondsarr = []
+
+    skus.forEach(skuvalue => {
+        var  skuval = skuvalue.generated_sku
+        console.log(JSON.stringify(diamondlist))
+        diamondlist.forEach(diamond => {
+          var clarity = diamond.diamond_type
+          
+          var sku = skuval + diamond_sku_clarity[clarity]
+            
+          var skuobj = 
+            {
+            ...skuvalue,
+            generated_sku: sku,
+            diamond_color:diamond.diamond_type,
+            diamond_type: clarity
+            }
+            product_skus.push(skuobj)
+        });
+
+        diamonds_arr.forEach(diamond => {
+            var clarity = diamond.diamondType
+            
+            var sku = skuval + diamond_sku_clarity[clarity]
+              
+            var skuobj = 
+              {
+              ...skuvalue,
+              generated_sku: sku,
+              diamond_color:diamond.diamondType,
+              diamond_type: clarity
+              }
+              product_skus.push(skuobj)
+          });
+    });
+    /********************* */
+
+//     /**************gemstonelist ***********/
+    var gemstonecolorcode1 = "00"; 
+    var gemstonecolorcode2 = "00"; 
+    /************************************ */
+    skus = product_skus
+    product_skus = [];
+        skus.forEach(skuvalue => {
+            var sku = skuvalue.generated_sku+ gemstonecolorcode1 + gemstonecolorcode2
+           
+            var skuobj = 
+                {
+                ...skuvalue,
+                generated_sku: sku
+                }          
+            product_skus.push(skuobj)
+
+           // product_skus.push(sku)
+            }); 
+            skus = product_skus
+            product_skus = [];
+            var size_arr = createVariants[0].productSize;
+            var sizes = product_object.size_varient.split(',')
+
+            
+                skus.forEach(skuvalue => {
+                    sizes.forEach(sizeval => {
+                    var sku = skuvalue.generated_sku+"-"+sizeval
+                   
+                    var skuobj = 
+                        {
+                        ...skuvalue,
+                        generated_sku: sku
+                        }          
+                    product_skus.push(skuobj)
+        
+                   // product_skus.push(sku)
+                    }); 
+                    size_arr.forEach(sizeval => {
+                        var sku = skuvalue.generated_sku +"-"+sizeval
+                       
+                        var skuobj = 
+                            {
+                            ...skuvalue,
+                            generated_sku: sku
+                            }          
+                        product_skus.push(skuobj)
+            
+                       // product_skus.push(sku)
+                        }); 
+            })
+    var newskus = []
+    product_skus.forEach(sku => {
+        if(prev_skus.indexOf(sku.generated_sku) === -1)
+        {
+            newskus.push(sku)
+        }
+    })
+
+    res.send(200,{product_object})
     // var purityarr = []
    
 }

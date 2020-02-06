@@ -556,24 +556,42 @@ exports.addaddress = async (req, res) => {
 
     address.forEach(element => {
 
+        
+       
+    })
+    processaddress(0)
+    async function processaddress(addresscount)
+    {
+
+        let element = address[addresscount]
+
+        let cart_address_val = await models.cart_address.findOne({
+          where:{
+            cart_id: cart_id,
+            address_type: addresstype
+          }
+        })
+
+        if(!cart_address_val)
+        {
         const address_obj = {
           id:uuidv1(),
-            cart_id:cart_id,
-            userprofile_id:user_id,
-            firstname:element.firstname,
-            lastname:element.lastname,
-            pincode:element.pincode,
-            addressline1:element.addressline1,
-            addressline2:element.addressline2,
-            city:element.city,
-            state:element.state,
-            country:element.country,
-            country_code:element.country_code,
-            contact_number:element.contactno,
-            address_type:element.addresstype,
-            salutation: element.salutation
-        }
-        address_arr.push(address_obj)
+          cart_id:cart_id,
+          userprofile_id:user_id,
+          firstname:element.firstname,
+          lastname:element.lastname,
+          pincode:element.pincode,
+          addressline1:element.addressline1,
+          addressline2:element.addressline2,
+          city:element.city,
+          state:element.state,
+          country:element.country,
+          country_code:element.country_code,
+          contact_number:element.contactno,
+          address_type:element.addresstype,
+          salutation: element.salutation
+      }
+      address_arr.push(address_obj)
         if(!element.address_id && !isguestlogin)
         {
           const user_address_obj = {
@@ -596,7 +614,35 @@ exports.addaddress = async (req, res) => {
         }
         add_user_address.push(user_address_obj)
         }
-    })
+      }else{
+        let updateactiveskus = await models.cart_address.update(
+            { userprofile_id:user_id,
+              firstname:element.firstname,
+              lastname:element.lastname,
+              pincode:element.pincode,
+              addressline1:element.addressline1,
+              addressline2:element.addressline2,
+              city:element.city,
+              state:element.state,
+              country:element.country,
+              country_code:element.country_code,
+              contact_number:element.contactno,
+              address_type:element.addresstype,
+              salutation: element.salutation
+             },
+            { where: { 
+              cart_id : cart_id
+             } }
+          )
+      }
+        addresscount = addresscount+1;
+
+        if(address.length > addresscount)
+        {
+        processaddress(addresscount)
+        }
+    }
+
     if(add_user_address.length > 0)
     {
      await models.user_address.bulkCreate(
