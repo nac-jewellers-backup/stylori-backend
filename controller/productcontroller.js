@@ -642,6 +642,7 @@ exports.getproductvarient =  async (req, res) => {
         },
         {
             model:models.product_diamonds,
+            attributes:["diamond_type"],
             group:["diamond_type"]
         },
         {
@@ -657,6 +658,9 @@ exports.getproductvarient =  async (req, res) => {
     product_object.trans_sku_lists.forEach(skuid => {
         prev_skus.push(skuid.generated_sku)
     })
+
+    let diamonds 
+
     let purityobj = {}
     let masterpurity = await models.master_metals_purities.findAll()
     masterpurity.forEach(purity => {
@@ -847,7 +851,7 @@ exports.getproductvarient =  async (req, res) => {
         }
     })
 
-    res.send(200,{product_object})
+    res.send(200,{newskus})
     // var purityarr = []
    
 }
