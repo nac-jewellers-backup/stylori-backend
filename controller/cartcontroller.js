@@ -639,25 +639,29 @@ exports.addaddress = async (req, res) => {
 
         if(address.length > addresscount)
         {
+
+
         processaddress(addresscount)
+        }else{
+          console.log(address_arr.length)
+          if(add_user_address.length > 0)
+          {
+           await models.user_address.bulkCreate(
+            add_user_address
+                , {individualHooks: true}).then(function(response){
+          })
+          }
+          models.cart_address.bulkCreate(
+              address_arr
+                , {individualHooks: true}).then(function(response){
+            res.send(200,{"message":"updated successfully"})        
+          }).catch(reason => {
+              res.send(500,{"message":"Error Please try again"}) 
+              console.log(reason)
+            });
         }
     }
-
-    if(add_user_address.length > 0)
-    {
-     await models.user_address.bulkCreate(
-      add_user_address
-          , {individualHooks: true}).then(function(response){
-    })
-    }
-    models.cart_address.bulkCreate(
-        address_arr
-          , {individualHooks: true}).then(function(response){
-      res.send(200,{"message":"updated successfully"})        
-    }).catch(reason => {
-        res.send(500,{"message":"Error Please try again"}) 
-        console.log(reason)
-      });
+   
    
    
    

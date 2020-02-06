@@ -78,7 +78,7 @@ exports.productupload =  async (req, res) => {
     var default_size = apidata.default_size;
     var default_metal_color = apidata.default_metal_colour;
     var default_metal_purity = apidata.default_metal_purity
-    var materials = apidata.materials;
+    var materials = apidata.material_names;
     var default_metal_size = apidata.default_size;
     var stonecolour_lists = apidata.stonecolour;
     var stonecount_lists = apidata.stonecount;
@@ -243,7 +243,8 @@ exports.productupload =  async (req, res) => {
             await models.product_purities.bulkCreate(
                 purityarr, {individualHooks: true})
         }
-        
+        console.log("puritylistcount")
+        console.log(product_skus.length)
         /************ product stone colour */
         var stonecolourarr = []
 
@@ -341,8 +342,9 @@ exports.productupload =  async (req, res) => {
             product_themes.forEach(themeobj => {
                 const style = {
                     id:uuidv1(),
-                    style_name: themeobj,
-                    product_id: product_obj.product_id
+                    theme_name: themeobj,
+                    product_id: product_obj.product_id,
+                    is_active: true
                 }
                 themes_arr.push(style);
 
@@ -421,7 +423,8 @@ exports.productupload =  async (req, res) => {
 
             });
         }); 
-
+        console.log("metalcolorlistcount")
+        console.log(product_skus.length)
 
 /*************** Diamond Lists ********************/
        var skus = product_skus;
@@ -472,7 +475,9 @@ exports.productupload =  async (req, res) => {
 
       await models.product_diamonds.bulkCreate(
                diamondsarr, {individualHooks: true})
-
+               console.log("diamndlistcount")
+               console.log(product_skus.length)
+       
 /*************** gemstone Lists ********************/
 
        skus = product_skus;
@@ -497,10 +502,7 @@ exports.productupload =  async (req, res) => {
 
             gemstonearr.push(gemstone_obj)
         })
-        console.log(JSON.stringify(gemstonearr.length))
-
-        console.log(JSON.stringify(gemstonearr))
-
+      
         await models.product_gemstones.bulkCreate(
         gemstonearr, {individualHooks: true})
         if(gemstonelist.length > 0)
@@ -531,7 +533,9 @@ exports.productupload =  async (req, res) => {
 
            // product_skus.push(sku)
             }); 
-
+            console.log("gemslistcount")
+            console.log(product_skus.length)
+    
     /*************** Size Lists ********************/
    
        skus = product_skus;
@@ -553,6 +557,9 @@ exports.productupload =  async (req, res) => {
         });
 
         console.log("size"+product_skus.length)
+        console.log("sizelistcount")
+        console.log(product_skus.length)
+
        var  uploadskus = []
        var uploaddescriptions = []
        product_skus.forEach(prodkt => {
@@ -748,7 +755,12 @@ exports.getproductvarient =  async (req, res) => {
      var diamonds_arr = createVariants[0].productDiamondsByProductSku
     var skus = product_skus;
     var diamondlist = product_object.product_diamonds
-    product_skus = [];
+    if(diamondlist.length > 0)
+    {
+        product_skus = [];
+
+    }
+    console.log("diamondlength"+diamondlist.length)
     var diamond_sku_clarity = {}
     let diamondtype = await models.master_diamond_types.findAll({
      });
