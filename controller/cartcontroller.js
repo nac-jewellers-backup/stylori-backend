@@ -778,6 +778,7 @@ exports.removewishlist = async (req, res) => {
  }
 async function sendorderconformationemail(order_id,res)
  {
+   var addresstypes = [1,3]
   let orderdetails  = await models.orders.findOne({
     include:[
      { model : models.user_profiles},
@@ -785,6 +786,11 @@ async function sendorderconformationemail(order_id,res)
     include:[
       {
         model: models.cart_address,
+        where:{
+          address_type:{
+            [Op.in]:addresstypes
+          }
+        }
 
       },
       {

@@ -472,7 +472,10 @@ exports.productupload =  async (req, res) => {
                 product_skus.push(skuobj)
             });
         });
-
+        if( product_skus.length == 0)
+        {
+            product_skus = skus
+        }
       await models.product_diamonds.bulkCreate(
                diamondsarr, {individualHooks: true})
                console.log("diamndlistcount")
@@ -535,7 +538,10 @@ exports.productupload =  async (req, res) => {
             }); 
             console.log("gemslistcount")
             console.log(product_skus.length)
-    
+            if( product_skus.length == 0)
+            {
+                product_skus = skus
+            }
     /*************** Size Lists ********************/
    
        skus = product_skus;
@@ -555,7 +561,10 @@ exports.productupload =  async (req, res) => {
                 product_skus.push(skuobj)
             });
         });
-
+        if( product_skus.length == 0)
+        {
+            product_skus = skus
+        }
         console.log("size"+product_skus.length)
         console.log("sizelistcount")
         console.log(product_skus.length)
