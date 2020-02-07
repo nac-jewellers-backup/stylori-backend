@@ -68,7 +68,7 @@ if(offset)
         ['is_featured', 'ASC'],
     ]
     }
-    if(sortBy === 'New To Stylori')
+    if(sortBy === 'New to Stylori')
     {
      // isproduct_query = true
       sortelement  = [
