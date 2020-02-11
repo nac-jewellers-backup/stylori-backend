@@ -869,7 +869,8 @@ exports.getproductvarient =  async (req, res) => {
                             {
                             ...skuvalue,
                             is_active: true,
-                            generated_sku: sku
+                            generated_sku: sku,
+                            sku_size:sizevalue
                             }          
                         product_skus.push(skuobj)
             

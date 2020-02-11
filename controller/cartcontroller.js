@@ -129,7 +129,7 @@ models.vouchers.findOne({
               id : cart_id
             }
           }).then(price_response =>{
-            res.send(200,{status: "200",message: message_response,price_response,coupon_type : "Registration"})
+            res.send(200,{status: "200",message: message_response,price_response,coupon_type : giftwrapobj.description})
 
           })
 
