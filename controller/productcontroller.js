@@ -880,7 +880,18 @@ exports.getproductvarient =  async (req, res) => {
     product_skus.forEach(sku => {
         if(prev_skus.indexOf(sku.generated_sku) === -1)
         {
-            newskus.push(sku)
+            var skuobj = 
+            {
+                productId: sku.product_id,
+                productType: sku.product_type,
+                diamondType: sku.dimaond_type,
+                metalColor: sku.metal_color,
+                generatedSku: sku.generated_sku,
+                purity: sku.purity,
+                skuSize: sku.sku_size,
+                isActive: true
+            }          
+            newskus.push(skuobj)
         }
     })
 
