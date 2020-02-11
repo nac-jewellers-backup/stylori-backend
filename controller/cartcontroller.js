@@ -99,7 +99,10 @@ models.vouchers.findOne({
   }
 }).then(async giftwrapobj=> {
  var message_response = ""
-
+  if(!giftwrapobj.isloginneeded)
+  {
+    isloggedin = true
+  }
   if(isloggedin && giftwrapobj &&  giftwrapobj.discount_amount )
   {
     let discountvalue = giftwrapobj.discount_amount

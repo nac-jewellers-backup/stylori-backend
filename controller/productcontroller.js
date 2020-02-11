@@ -694,7 +694,7 @@ exports.getproductvarient =  async (req, res) => {
             product_type: product_object.product_type,
             service_name: product_object.vendor_code,
             product_series: 0,
-            purity: purity.name,
+            purity: purity.purity,
             generated_sku: sku
         }
         product_skus.push(skuobj)
@@ -711,6 +711,8 @@ exports.getproductvarient =  async (req, res) => {
         }
         product_skus.push(skuobj)
     })
+    //res.send(200,{product_skus})
+
     /************************** */
     /****************metalcolor list */
 
@@ -785,8 +787,8 @@ exports.getproductvarient =  async (req, res) => {
         console.log(JSON.stringify(diamondlist))
         //diamond.diamond_type
         diamondlist.forEach(diamond => {
-          var clarity =  diamond.diamondColor+diamond.diamondClarity
-          
+          var clarity =  diamond.diamond_type
+          console.log("claritycolor"+JSON.stringify(diamond))
           var sku = skuval + diamond_sku_clarity[clarity]
             
           var skuobj = 
@@ -800,21 +802,24 @@ exports.getproductvarient =  async (req, res) => {
         });
 
         diamonds_arr.forEach(diamond => {
-            var clarity = diamond.diamondType
-            
+//            var clarity = diamond.diamondType
+            var clarity =  diamond.diamondColor+diamond.diamondClarity
+            console.log("diamondvarient"+clarity)
             var sku = skuval + diamond_sku_clarity[clarity]
-              
+            console.log("diamondvarient"+sku)
+
             var skuobj = 
               {
               ...skuvalue,
               generated_sku: sku,
-              diamond_color:diamond.diamondType,
+              diamond_color:clarity,
               diamond_type: clarity
               }
               product_skus.push(skuobj)
           });
     });
     /********************* */
+    console.log("product_skusvarient"+JSON.stringify(product_skus))
 
 //     /**************gemstonelist ***********/
     var gemstonecolorcode1 = "00"; 
@@ -850,6 +855,7 @@ exports.getproductvarient =  async (req, res) => {
                     var skuobj = 
                         {
                         ...skuvalue,
+                        sku_size:sizeval,
                         generated_sku: sku
                         }          
                     product_skus.push(skuobj)
@@ -862,6 +868,7 @@ exports.getproductvarient =  async (req, res) => {
                         var skuobj = 
                             {
                             ...skuvalue,
+                            is_active: true,
                             generated_sku: sku
                             }          
                         product_skus.push(skuobj)
