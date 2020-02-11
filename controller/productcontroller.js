@@ -671,6 +671,7 @@ exports.getproductvarient =  async (req, res) => {
             product_id : productId
         }
     })
+
     product_object.trans_sku_lists.forEach(skuid => {
         prev_skus.push(skuid.generated_sku)
     })
@@ -836,8 +837,11 @@ exports.getproductvarient =  async (req, res) => {
             skus = product_skus
             product_skus = [];
             var size_arr = productSize;
-            var sizes = product_object.size_varient.split(',')
-
+            var sizes = []
+            if(product_object.size_varient)
+            {
+             sizes = product_object.size_varient.split(',')
+            }
             
                 skus.forEach(skuvalue => {
                     sizes.forEach(sizeval => {
