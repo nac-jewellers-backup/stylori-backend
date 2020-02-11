@@ -46,6 +46,8 @@ models.giftwrap.create(giftwrapobj).then(giftwrapobj=> {
 exports.applyvoucher = async (req, res) => {
   const {vouchercode, cart_id,user_profile_id} = req.body
   var isloggedin = false
+  if(user_profile_id)
+  {
  let userprofile = await models.user_profiles.findOne({
                         where: {
                           id: user_profile_id
@@ -55,7 +57,7 @@ exports.applyvoucher = async (req, res) => {
   {
     isloggedin = true
   }
-
+  }
   let shoppingcart = await models.shopping_cart_item.findAll({
     include:[
       {
@@ -105,11 +107,17 @@ models.vouchers.findOne({
   }
   if(isloggedin && giftwrapobj &&  giftwrapobj.discount_amount )
   {
-    let discountvalue = giftwrapobj.discount_amount
+    var discountvalue = giftwrapobj.discount_amount
     message_response = "You have applied promo code successfully"
-   // isvalid = true
+   var discountpercent = discountvalue/100
+    // isvalid = true
    // message_response = "Applied Successfully"
+   
     var query = "UPDATE shopping_carts SET discount = "+discountvalue+" , discounted_price = (gross_amount -"+discountvalue+") where id ='"+cart_id+"'" ;
+    if(giftwrapobj.type === 2)
+    {
+    query = "UPDATE shopping_carts SET discount = (gross_amount * "+discountpercent+") , discounted_price = (gross_amount * (1 - "+discountpercent+")) where id ='"+cart_id+"'" ;
+    }
     console.log(JSON.stringify(query))
 
     await models.sequelize.query(query).then(([results, metadata]) => {
