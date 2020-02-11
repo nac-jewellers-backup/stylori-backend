@@ -641,7 +641,7 @@ exports.productupload =  async (req, res) => {
 
 }
 exports.getproductvarient =  async (req, res) => {
-    const {purity_list,productId,createVariants} = req.body
+    const {productPuritiesByProductId, productDiamondTypes,productSize,productId,productMetalcoloursByProductId} = req.body
   var product_skus = []
   var prev_skus = [];
   var skus = product_skus;
@@ -683,7 +683,7 @@ exports.getproductvarient =  async (req, res) => {
         purityobj[purity.name] = purity.short_code
     })
     /****************puritylis */
-    var purities = createVariants[0].productPuritiesByProductId
+    var purities = productPuritiesByProductId
     var puritylist = product_object.product_purities;
     var purityarr = []
     puritylist.forEach(purity => {
@@ -713,7 +713,7 @@ exports.getproductvarient =  async (req, res) => {
     /************************** */
     /****************metalcolor list */
 
-    var colorlist = createVariants[0].productMetalcoloursByProductId
+    var colorlist = productMetalcoloursByProductId
     var skus = product_skus;
 
     product_skus = [];
@@ -761,7 +761,7 @@ exports.getproductvarient =  async (req, res) => {
 
      /************************ */
      /*****************Diamond list */
-     var diamonds_arr = createVariants[0].productDiamondsByProductSku
+     var diamonds_arr = productDiamondTypes
     var skus = product_skus;
     var diamondlist = product_object.product_diamonds
     if(diamondlist.length > 0)
@@ -782,8 +782,9 @@ exports.getproductvarient =  async (req, res) => {
     skus.forEach(skuvalue => {
         var  skuval = skuvalue.generated_sku
         console.log(JSON.stringify(diamondlist))
+        //diamond.diamond_type
         diamondlist.forEach(diamond => {
-          var clarity = diamond.diamond_type
+          var clarity =  diamond.diamondColor+diamond.diamondClarity
           
           var sku = skuval + diamond_sku_clarity[clarity]
             
@@ -834,7 +835,7 @@ exports.getproductvarient =  async (req, res) => {
             }); 
             skus = product_skus
             product_skus = [];
-            var size_arr = createVariants[0].productSize;
+            var size_arr = productSize;
             var sizes = product_object.size_varient.split(',')
 
             
