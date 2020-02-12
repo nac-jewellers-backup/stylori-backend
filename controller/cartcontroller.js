@@ -61,7 +61,7 @@ exports.applyvoucher = async (req, res) => {
   var couponwhereclause = {
     product_category : 'Jewellery'
   }
-  if(vouchercode === 'NACCSK2020')
+  if(vouchercode.toUpperCase()  === 'NACCSK2020')
   {
     couponwhereclause['product_type'] = 'Kada'
   }
