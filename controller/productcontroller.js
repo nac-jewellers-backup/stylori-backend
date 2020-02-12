@@ -902,7 +902,7 @@ exports.getproductvarient =  async (req, res) => {
 }
 
 exports.editproduct =  async (req, res) => {
-const {createVariants,productId,productName,productDiamondsByProductSku,transSkuListsByProductId} = req.body
+const {createVariants,productId,productName,productGemstonesByProductSku,productDiamondsByProductSku,transSkuListsByProductId} = req.body
 var product_object = await models.product_lists.findOne({
     where:{
         product_id : productId
