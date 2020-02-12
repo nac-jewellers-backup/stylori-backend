@@ -1,6 +1,6 @@
 const authJwt = require('./verifyJwtToken');
 const productPricing = require('../controller/productMasters');
-
+let {esSearch} = require('../controller/elasticServices');
 module.exports = function(app) {
 
     const authcontroller = require('../controller/authcontroller.js');
@@ -117,4 +117,58 @@ module.exports = function(app) {
 
 	
 	
+	app.post("/auto_complete", async function(req, res) {
+		let { search_text } = req.body;
+		let product_search = {
+		  query: {
+			match: {
+			  autocomplete: {
+				query: search_text,
+				operator: "and",
+				fuzziness: 2
+			  }
+			}
+		  }
+		};
+		let sku_search = {
+		  from: 0,
+		  size: 10,
+		  query: {
+			match_phrase_prefix: {
+			  sku_code_prefix: {
+				query: search_text,
+				max_expansions: 15
+			  }
+			}
+		  }
+		};
+		let seo_search = {
+		  query: {
+			match: {
+			  autocomplete: {
+				query: search_text,
+				operator: "and",
+				fuzziness: 2
+			  }
+			}
+		  }
+		};
+		let p1 = esSearch("product_search", "_doc", product_search);
+		let p2 = esSearch("sku_search", "_doc", sku_search);
+		let p3 = esSearch("seo_search", "_doc", seo_search);
+		Promise.all([p1, p2, p3])
+		  .then(async es_response => {
+			console.log("promises resolved :", es_response.length);
+			return res.json(es_response);
+		  })
+		  .catch(err => {
+			console.log("err", err);
+			return res.json(err);
+		  });
+	  });
+	  
+	  
+
+
+
 }
