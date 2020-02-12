@@ -58,6 +58,13 @@ exports.applyvoucher = async (req, res) => {
     isloggedin = true
   }
   }
+  var couponwhereclause = {
+    product_category : 'Jewellery'
+  }
+  if(vouchercode === 'NACCSK2020')
+  {
+    couponwhereclause['product_type'] = 'Kada'
+  }
   let shoppingcart = await models.shopping_cart_item.findAll({
     include:[
       {
@@ -67,9 +74,7 @@ exports.applyvoucher = async (req, res) => {
           {
             model: models.product_lists,
             attributes: ['product_category'],
-            where: {
-              product_category : 'Jewellery'
-            }
+            where: couponwhereclause
           }
         ]
       }
@@ -112,11 +117,13 @@ models.vouchers.findOne({
    var discountpercent = discountvalue/100
     // isvalid = true
    // message_response = "Applied Successfully"
-   
     var query = "UPDATE shopping_carts SET discount = "+discountvalue+" , discounted_price = (gross_amount -"+discountvalue+") where id ='"+cart_id+"'" ;
     if(giftwrapobj.type === 2)
     {
-    query = "UPDATE shopping_carts SET discount = (gross_amount * "+discountpercent+") , discounted_price = (gross_amount * (1 - "+discountpercent+")) where id ='"+cart_id+"'" ;
+      let discountval  = eligible_amount * discountpercent;
+     // let discountendamount  = eligible_amount * discountpercent;
+
+    query = "UPDATE shopping_carts SET discount = "+discountval+", discounted_price = (gross_amount - "+discountval+") where id ='"+cart_id+"'" ;
     }
     console.log(JSON.stringify(query))
 
@@ -359,7 +366,7 @@ let gross_amount = await models.shopping_cart_item.findOne({
  await models.shopping_cart.update({gross_amount:gross_amount.price, discounted_price:gross_amount.price, discount: 0},{
       where: {id: cart_id}
       }).then(price_splitup_model=> { 
-      res.send(200,{message: "You removed this product successfully"})
+      res.send(200,{message: 'You removed this product successfully'})
     }).catch(reason => {
       console.log(reason)
     });
