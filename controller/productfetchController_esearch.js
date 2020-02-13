@@ -763,6 +763,15 @@ let master_product_types = await models.seo_url_priorities.findAll({
 var product_list_arr =[]
 //let producttype_obj = master_product_types[0]
 let seotext_arr = [];
+let jewel_seo_obj = await models.seo_url_priorities.findOne({
+  attributes:["attribute_value","seo_url","priority"],
+  where:{
+   
+    attribute_value:{
+      [Op.eq]: "Jewellery" 
+    }
+  }
+})
 processattrubutes(0)
 async function processattrubutes(indexval)
 {
@@ -774,6 +783,8 @@ var products = await models.product_lists.findAll({
     product_type : producttype_obj.attribute_value
   }
 })
+
+
 products.forEach(element => {
   product_list_arr.push(element.product_id);
 });
@@ -871,23 +882,76 @@ var master_occassion = await models.product_occassions.findAll({
    }
  })
  seo_list.forEach(seo_obj => {
-  if(seo_obj.priority < producttype_obj.priority)
-  {
-    let seo_txt = {
-      "seo_url":seo_obj.seo_url+"-"+ producttype_obj.seo_url,
-      "seo_text":seo_obj.attribute_value+" "+ producttype_obj.attribute_value
 
-    }
 
-    seotext_arr.push(seo_txt)
-  }else{
-    let seo_txt = {
-      "seo_url": producttype_obj.seo_url+"-"+ seo_obj.seo_url,
-      "seo_text":producttype_obj.attribute_value+" "+ seo_obj.attribute_value,
-    }
-    seotext_arr.push(seo_txt)
+  let response_arr = [];
+  response_arr.push(producttype_obj);
+  response_arr.push(seo_obj);
+  response_arr.push(jewel_seo_obj);
+
+  response_arr.sort(function(a, b) {
+    return a.priority > b.priority;
+  });
+  let seo_text_arr = []
+  let seo_url_arr = []
+
+  response_arr.map((el) => {
+    seo_text_arr.push(el.attribute_value)
+    seo_url_arr.push(el.seo_url) 
+
+  })
+
+
+  let seo_txt = {
+    "seo_url":seo_url_arr.join("-"),
+    "seo_text":seo_text_arr.join(" ")
 
   }
+  seotext_arr.push(seo_txt)
+
+
+  // if(seo_obj.priority < producttype_obj.priority)
+  // {
+  //   var seo_urlval = seo_obj.seo_url+"-"+ producttype_obj.seo_url
+  //   var seo_txtval = seo_obj.attribute_value+"-"+ producttype_obj.attribute_value
+  //   if(jewel_seo_obj.priority < producttype_obj.priority)
+  //   {
+  //      seo_urlval = jewel_seo_obj.seo_url+"-"+ seo_urlval
+  //      seo_txtval = jewel_seo_obj.attribute_value+" "+ seo_txtval
+  
+  //   }else{
+  //     seo_urlval = seo_urlval+"-"+ jewel_seo_obj.seo_url
+  //     seo_txtval = seo_txtval+" "+ jewel_seo_obj.attribute_value
+  //   }
+  //   let seo_txt = {
+  //     "seo_url":seo_urlval,
+  //     "seo_text":seo_txtval
+
+  //   }
+
+  //   seotext_arr.push(seo_txt)
+  // }else{
+
+  //   var seo_urlval = producttype_obj.seo_url+"-"+ seo_obj.seo_url
+  //   var seo_txtval = producttype_obj.attribute_value+" "+ seo_obj.attribute_value
+  //   if(jewel_seo_obj.priority < seo_obj.priority)
+  //   {
+  //      seo_urlval = jewel_seo_obj.seo_url+"-"+ seo_urlval
+  //      seo_txtval = jewel_seo_obj.attribute_value+" "+ seo_txtval
+  
+  //   }else{
+  //     seo_urlval = seo_urlval+"-"+ jewel_seo_obj.seo_url
+  //     seo_txtval = seo_txtval+" "+ jewel_seo_obj.attribute_value
+  //   }
+  //   let seo_txt = {
+  //     "seo_url":seo_urlval,
+  //     "seo_text":seo_txtval
+
+  //   }
+
+  //   seotext_arr.push(seo_txt)
+
+  // }
  })
  indexval = indexval + 1;
  if(master_product_types.length  >  indexval)
