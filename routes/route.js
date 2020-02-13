@@ -119,6 +119,7 @@ module.exports = function(app) {
 	
 	app.post("/auto_complete", async function(req, res) {
 		let { search_text } = req.body;
+		console.log("====", search_text);
 		let product_search = {
 		  query: {
 			match: {
@@ -158,15 +159,29 @@ module.exports = function(app) {
 		let p3 = esSearch("seo_search", "_doc", seo_search);
 		Promise.all([p1, p2, p3])
 		  .then(async es_response => {
-			console.log("promises resolved :", es_response.length);
-			return res.json(es_response);
+			let product_results = es_response[0]["message"]["hits"]["hits"];
+			let sku_results = es_response[1]["message"]["hits"]["hits"];
+			let seo_results = es_response[2]["message"]["hits"]["hits"];
+			product_results = product_results.map(_obj => {
+			  return _obj._source;
+			});
+			sku_results = sku_results.map(_obj => {
+			  return _obj._source;
+			});
+			seo_results = seo_results.map(_obj => {
+			  return _obj._source;
+			});
+			return res.json({
+			  product_results,
+			  sku_results,
+			  seo_results
+			});
 		  })
 		  .catch(err => {
 			console.log("err", err);
 			return res.json(err);
 		  });
 	  });
-	  
 	  
 
 
