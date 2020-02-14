@@ -110,7 +110,7 @@ models.vouchers.findOne({
   {
     isloggedin = true
   }
-  if(isloggedin && giftwrapobj &&  giftwrapobj.discount_amount )
+  if(isloggedin && giftwrapobj &&  giftwrapobj.discount_amount && eligible_amount > 0 )
   {
     var discountvalue = giftwrapobj.discount_amount
     message_response = "You have applied promo code successfully"
