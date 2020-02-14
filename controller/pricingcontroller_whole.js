@@ -39,9 +39,7 @@ exports.priceupdate = (req, res) => {
       product_id: {
         [Op.notILike]:'%SK%'
       },
-      product_id: {
-        [Op.notILike]:'%SR%'
-      },
+      
       product_id: {
         [Op.notILike]:'%SGC%'
       }
@@ -110,6 +108,9 @@ exports.priceupdate = (req, res) => {
     // skuwhereclause['generated_sku'] = {
     //   [Op.eq] : 'SR0771-18140000-13'
     // }
+    skuwhereclause['discount_price'] = {
+      [Op.eq] : 25
+    }
     // skuwhereclause['is_active'] = {
     //   [Op.eq] : true
     // }
