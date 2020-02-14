@@ -25,9 +25,9 @@ exports.priceupdate = (req, res) => {
     const {req_product_id, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
     var whereclause1 = {
       isactive : true,
-      // product_id: {
-      //   [Op.iLike]: '%SGC031%'
-      // }
+      product_id: {
+        [Op.iLike]: '%SR0010%'
+      }
     }
 
     if(req_product_id)

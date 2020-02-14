@@ -41,10 +41,10 @@ exports.updateproduct = (req, res) => {
     req.setTimeout(50000000);
 
 
-       var gemstoneobj = req.body['Sheet1'];
-     var gemstones_obj = JSON.parse(gemstoneobj)
-     console.log(JSON.stringify(gemstones_obj))
-    update_material_values(gemstones_obj)
+      // var gemstoneobj = req.body['Sheet1'];
+     //var gemstones_obj = JSON.parse(gemstoneobj)
+     //console.log(JSON.stringify(req.body))
+   // update_material_values(gemstones_obj)
 
   //   update_product_collections(gemstones_obj);
    //  update_product_styles(gemstones_obj)
@@ -55,7 +55,8 @@ exports.updateproduct = (req, res) => {
        // update_diamondpricesettings(gemstones_obj);
         //update_gemstonesetup(gemstones_obj);
     //  update_makingcharge(gemstones_obj);
-      // update_markup(gemstones_obj);
+    console.log(req.body.length)
+   // update_markup(req.body);
 
    /*  var product_json_obj = req.body.Product
      var product_theme_obj = JSON.parse(req.body.Product_Theme)
@@ -171,6 +172,7 @@ await models.trans_sku_lists.update(
    function update_markup(markups)
         {
             var markup_arr = []
+            
             markups.forEach(mkup => {
                 var mkupobj = {
                     id: uuidv1(),
@@ -185,16 +187,16 @@ await models.trans_sku_lists.update(
                 }
                 markup_arr.push(mkupobj)
             })
-
-            models.pricing_markup.bulkCreate(
-                markup_arr, {individualHooks: true}).then(function(response){
-                         console.log("porductskudescsuccess" )
+ console.log(JSON.stringify(markup_arr))
+            // models.pricing_markup.bulkCreate(
+            //     markup_arr, {individualHooks: true}).then(function(response){
+            //              console.log("porductskudescsuccess" )
                        
-                         res.send(200,{message: 'success'})
+            //              res.send(200,{message: 'success'})
         
-                    })  .catch((error) => {
-                              console.log("errorresponse"+error.message)
-                  });
+            //         })  .catch((error) => {
+            //                   console.log("errorresponse"+error.message)
+            //       });
 
         }
 function update_diamondpricesettings(diamondprice)

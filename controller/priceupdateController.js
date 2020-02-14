@@ -29,17 +29,17 @@ exports.priceupdate = (req, res) => {
     /******* whereclause to filter  product */
     var product_whereclause = {
         isactive : true,
-        // product_id : {
-        //   [Op.iLike]:'%SR0505%'
+        product_id : {
+          [Op.iLike]:'%SR0505%'
             
-        // },
+        },
         
-        product_id: 
-          {
-            [Op.in]:['SGC031']
+      //   product_id: 
+      //     {
+      //       [Op.in]:['SGC031']
 
-          }
-      }
+      //     }
+       }
     /******* whereclause to filter  skus */
     var skuwhereclause = {}
     /******* track execution time */
@@ -225,8 +225,8 @@ exports.priceupdate = (req, res) => {
     {
         var skucount = 0;
         /**** function to update component pricing */
-        updateskuprice()
-       // updatediamondprice(product_obj.trans_sku_lists[0])
+       // updateskuprice()
+        updatediamondprice(product_obj.trans_sku_lists[0])
 
        /*********** Diamond Price update */
         async  function updatediamondprice(productsku)
@@ -244,7 +244,7 @@ exports.priceupdate = (req, res) => {
             {
                 console.log("diamond price complete")
             /*********** update next component */
-            // updategemstone_price(product_obj.vendor_code, productsku)
+             updategemstone_price(product_obj.vendor_code, productsku)
     
             }
 
