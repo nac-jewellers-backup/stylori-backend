@@ -885,8 +885,12 @@ async function sendorderconformationemail(order_id,res)
 
   var emilreceipiants = [{to :orderdetails.user_profile.email ,subject:"Order Placed Successfully"},{to :process.env.adminemail,subject:"Order Placed Successfully"}]
 // var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
-     
- sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skudetails,imagelist,day))
+var isloggedin = false
+if(orderdetails.user_profile.facebookid || orderdetails.user_profile.user_id)
+{
+  isloggedin = true
+}  
+ sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skudetails,imagelist,day,isloggedin))
 //return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
  }
 
