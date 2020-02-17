@@ -572,7 +572,8 @@ const subscribeTemp = (userobj, email, token) => {
         discounted_price = paymentcontent.shopping_cart.discounted_price
     }
     var products = paymentcontent.shopping_cart.shopping_cart_items;
-    var allorders = ""
+    var allorders = `<p style="padding:0px 15px;line-height:1.5; font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding-top: 15px;">
+    Should you find the details of the order incorrect, please feel free to call us at 18001020330 or email us at hello@stylori.com </p>`
     var username_val = "Hello"
     if(isloggedin)
     {
