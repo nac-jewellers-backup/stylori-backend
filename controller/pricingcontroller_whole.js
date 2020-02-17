@@ -37,7 +37,7 @@ exports.priceupdate = (req, res) => {
     var whereclause1 = {
       isactive : true,
       product_id: {
-        [Op.iLike]:'%SR%'
+        [Op.iLike]:'%SE%'
       }
     }
     console.log(":>>>>>>>>>1212")

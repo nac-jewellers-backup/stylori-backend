@@ -39,6 +39,8 @@ module.exports = function(app) {
 	app.post('/forgotpassword', authcontroller.forgotpassword);
 	app.post('/resetpassword',[authJwt.verifyToken], authcontroller.resetpassword);
 
+	app.post('/ringpriceupdate', productcontroller.ringpriceupdate);
+
 	app.post('/productupload', productcontroller.productupload);
 	app.post('/productupdate', productupdatecontroller.updateproduct);
 	app.post('/priceupdate', productcontroller.priceupdate);

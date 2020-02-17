@@ -18,6 +18,30 @@ exports.priceupdate =  async (req, res) => {
 
 }
 
+exports.ringpriceupdate =  async (req, res) => {
+   // const {skuprice} = req.body;
+   let skus_arr = req.body;
+    console.log(JSON.stringify(req.body.length));
+    processskuprice(0)
+   async function processskuprice(indexval)
+    {
+        let processsku = skus_arr[indexval]
+      await  models.trans_sku_lists.update(
+            { discount_price : processsku.discount_price },
+            { where: { generated_sku : processsku.sku } }
+          )
+          indexval = indexval + 1 
+          if(skus_arr.length > indexval)
+          {
+          processskuprice(indexval)
+          }else{
+              res.send(200,{"message":"success"})
+          }
+
+    }
+
+}
+
 
 
 exports.productupload =  async (req, res) => {
