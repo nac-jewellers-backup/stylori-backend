@@ -796,8 +796,9 @@ exports.removewishlist = async (req, res) => {
     {
      // let discountendamount  = eligible_amount * discountpercent;
 
-    var query = "UPDATE vouchers SET uses = (uses + 1) where code ='"+voucher_code.toUpperCase+"'" ;
-    
+    var query = "UPDATE vouchers SET uses = (uses + 1) where code ='"+voucher_code.toUpperCase()+"'" ;
+    console.log("-------")
+    console.log(query)
     await models.sequelize.query(query).then(([results, metadata]) => {
       // Results will be an empty array and metadata will contain the number of affected rows.
     })
@@ -805,7 +806,7 @@ exports.removewishlist = async (req, res) => {
 
     if(payment_mode === 'COD')
     {
-      sendorderconformationemail(order_bj.id)
+      //sendorderconformationemail(order_bj.id)
     }
     res.send(200,{"message":"Order placed successfully", "order":response})        
   }).catch(reason => {
