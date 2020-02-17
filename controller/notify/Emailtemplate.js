@@ -573,8 +573,10 @@ const subscribeTemp = (userobj, email, token) => {
     }
     var products = paymentcontent.shopping_cart.shopping_cart_items;
     var allorders = ""
+    var username_val = "Hello"
     if(isloggedin)
     {
+      username_val = `Hello <span > ${paymentcontent.user_profile.first_name}</span>`
       allorders = `<p style="padding:0px 15px;line-height:1.5; font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding-top: 15px;"> You can visit <a href=${process.env.baseurl+"/account-allorders"}>${process.env.baseurl+"/account-allorders"}</a> to view your order status and to contact us regarding this order.<br />
       Should you find the details of the order incorrect, please feel free to call us at 18001020330 or email us at hello@stylori.com </p>`
     }
@@ -667,7 +669,7 @@ const subscribeTemp = (userobj, email, token) => {
             </tr>
              <tr style="width:100%;" >
                 <p style="padding:0px 15px; font-family: ‘Arial’, sans-serif; font-size: 12px; font-weight: 500; color: rgba(88,89,91,1.00);">
-                <h5>Hello <span > ${paymentcontent.user_profile.first_name}</span>
+                <h5>${username_val}
                 <span ></span>
                 </h5>
                 </p>
