@@ -121,7 +121,7 @@ models.vouchers.findOne({
   if(giftwrapobj.uses >= giftwrapobj.max_uses)
   {
     eligible_amount = 0;
-   return res.send(409,{status: "409",message: "Exceed Coupon usage limit"})
+   return res.send(409,{status: "409",message: "This promocode already used"})
 
   }
   if(isloggedin && giftwrapobj &&  giftwrapobj.discount_amount && eligible_amount > 0 )
