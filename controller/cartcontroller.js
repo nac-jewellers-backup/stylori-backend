@@ -53,6 +53,8 @@ exports.applyvoucher = async (req, res) => {
                           id: user_profile_id
                         }
                     })
+
+    
   if(userprofile.facebookid || userprofile.user_id)
   {
     isloggedin = true
@@ -107,6 +109,11 @@ models.vouchers.findOne({
   }
 }).then(async giftwrapobj=> {
  var message_response = ""
+ console.log("_____userstatus")
+ console.log(isloggedin)
+ console.log(giftwrapobj.isloginneeded)
+
+ console.log("_______________")
   if(!giftwrapobj.isloginneeded)
   {
     isloggedin = true
