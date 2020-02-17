@@ -765,7 +765,7 @@ exports.removewishlist = async (req, res) => {
  
   }
   exports.addorder = async (req, res) => {
-    let {user_id, cart_id, payment_mode, vouchercode} = req.body
+    let {user_id, cart_id, payment_mode, voucher_code} = req.body
     var paymentstatus = "Initiated";
     var orderstatus = "Initiated";
     if(payment_mode === 'COD')
@@ -792,11 +792,11 @@ exports.removewishlist = async (req, res) => {
    models.orders.create(order_bj,{
     returning: true
   }).then(async function(response){
-    if(vouchercode)
+    if(voucher_code)
     {
      // let discountendamount  = eligible_amount * discountpercent;
 
-    var query = "UPDATE shopping_carts SET uses = (uses + 1) where code ='"+vouchercode+"'" ;
+    var query = "UPDATE shopping_carts SET uses = (uses + 1) where code ='"+voucher_code+"'" ;
     
     await models.sequelize.query(query).then(([results, metadata]) => {
       // Results will be an empty array and metadata will contain the number of affected rows.
