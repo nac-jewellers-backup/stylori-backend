@@ -118,6 +118,12 @@ models.vouchers.findOne({
   {
     isloggedin = true
   }
+  if(giftwrapobj.uses >= giftwrapobj.max_uses)
+  {
+    eligible_amount = 0;
+   return res.send(409,{status: "409",message: "Exceed Coupon usage limit"})
+
+  }
   if(isloggedin && giftwrapobj &&  giftwrapobj.discount_amount && eligible_amount > 0 )
   {
     var discountvalue = giftwrapobj.discount_amount
@@ -759,7 +765,7 @@ exports.removewishlist = async (req, res) => {
  
   }
   exports.addorder = async (req, res) => {
-    let {user_id, cart_id, payment_mode} = req.body
+    let {user_id, cart_id, payment_mode, vouchercode} = req.body
     var paymentstatus = "Initiated";
     var orderstatus = "Initiated";
     if(payment_mode === 'COD')
@@ -785,7 +791,18 @@ exports.removewishlist = async (req, res) => {
       }})
    models.orders.create(order_bj,{
     returning: true
-  }).then(function(response){
+  }).then(async function(response){
+    if(vouchercode)
+    {
+     // let discountendamount  = eligible_amount * discountpercent;
+
+    var query = "UPDATE shopping_carts SET uses = (uses + 1) where code ='"+vouchercode+"'" ;
+    
+    await models.sequelize.query(query).then(([results, metadata]) => {
+      // Results will be an empty array and metadata will contain the number of affected rows.
+    })
+  }
+
     if(payment_mode === 'COD')
     {
       sendorderconformationemail(order_bj.id)

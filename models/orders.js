@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     user_profile_id: DataTypes.UUID,
     payment_mode: DataTypes.STRING,
     payment_status: DataTypes.STRING,
-    order_status: DataTypes.STRING
+    order_status: DataTypes.STRING,
+    voucher_code: DataTypes.STRING
+
   }, {});
   orders.associate = function(models) {
     // associations can be defined here
@@ -16,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
     models.orders.belongsTo(models.shopping_cart,{
       foreignKey: 'cart_id',
       targetKey: 'id'
+    });
+    models.orders.belongsTo(models.vouchers,{
+      foreignKey: 'voucher_code',
+      targetKey: 'code'
     });
   };
   return orders;
