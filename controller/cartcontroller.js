@@ -806,7 +806,7 @@ exports.removewishlist = async (req, res) => {
 
     if(payment_mode === 'COD')
     {
-      //sendorderconformationemail(order_bj.id)
+      sendorderconformationemail(order_bj.id)
     }
     res.send(200,{"message":"Order placed successfully", "order":response})        
   }).catch(reason => {
