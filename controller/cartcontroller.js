@@ -796,7 +796,7 @@ exports.removewishlist = async (req, res) => {
     {
      // let discountendamount  = eligible_amount * discountpercent;
 
-    var query = "UPDATE shopping_carts SET uses = (uses + 1) where code ='"+voucher_code+"'" ;
+    var query = "UPDATE vouchers SET uses = (uses + 1) where code ='"+voucher_code+"'" ;
     
     await models.sequelize.query(query).then(([results, metadata]) => {
       // Results will be an empty array and metadata will contain the number of affected rows.
