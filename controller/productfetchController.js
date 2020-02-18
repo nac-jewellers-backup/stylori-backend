@@ -216,6 +216,17 @@ if(offset)
       whereclause['$trans_sku_lists.markup_price$'] = {
         [Op.between] :[price.min_price , price.max_price]
         }
+    }else
+    {
+      if( price.max_price)
+      {
+        skuwhereclause['markup_price'] = {
+          [Op.lte] : price.max_price
+        }
+        whereclause['$trans_sku_lists.markup_price$'] = {
+          [Op.lte] :price.max_price
+          }
+      }
     }
   }
 //   if(availability)
