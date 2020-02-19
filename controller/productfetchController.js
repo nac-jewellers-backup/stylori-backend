@@ -224,7 +224,7 @@ if(offset)
           [Op.lte] : price.max_price
         }
         whereclause['$trans_sku_lists.markup_price$'] = {
-          [Op.lte] :price.max_price
+          [Op.lte] : price.max_price
           }
       }
     }
