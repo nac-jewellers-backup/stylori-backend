@@ -37,7 +37,7 @@ exports.priceupdate = (req, res) => {
     var whereclause1 = {
       isactive : true,
       product_id: {
-        [Op.iLike]:'%SE%'
+        [Op.iLike]:'%SGC%'
       }
     }
     console.log(":>>>>>>>>>1212")
@@ -104,9 +104,9 @@ exports.priceupdate = (req, res) => {
     // skuwhereclause['generated_sku'] = {
     //   [Op.eq] : 'SR0771-18140000-13'
     // }
-    skuwhereclause['discount_price'] = {
-      [Op.eq] : 25
-    }
+    // skuwhereclause['discount_price'] = {
+    //   [Op.eq] : 25
+    // }
     // skuwhereclause['is_active'] = {
     //   [Op.eq] : true
     // }

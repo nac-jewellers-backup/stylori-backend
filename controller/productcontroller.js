@@ -730,14 +730,16 @@ exports.getproductvarient =  async (req, res) => {
             product_type: product_object.product_type,
             service_name: product_object.vendor_code,
             product_series: 0,
+            sku_weight: purity_obj.metal_weight,
             purity: purity_obj.name,
             generated_sku: sku
         }
         product_skus.push(skuobj)
     })
-    //res.send(200,{product_skus})
 
     /************************** */
+
+
     /****************metalcolor list */
 
     var colorlist = productMetalcoloursByProductId
@@ -824,6 +826,7 @@ exports.getproductvarient =  async (req, res) => {
             }
             product_skus.push(skuobj)
         });
+       
 
         diamonds_arr.forEach(diamond => {
 //            var clarity = diamond.diamondType
@@ -924,7 +927,7 @@ exports.getproductvarient =  async (req, res) => {
         }
     })
    
-    res.send(200,{newskus})
+    //res.send(200,{newskus})
     // var purityarr = []
    
 }
