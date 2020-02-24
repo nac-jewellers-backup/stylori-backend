@@ -72,9 +72,9 @@ module.exports = (sequelize, DataTypes) => {
     vendor_delivery_time:{
       type: DataTypes.INTEGER
     },
-    attributes:{
-      type: DataTypes.ARRAY(DataTypes.TEXT)
-    },
+    // attributes:{
+    //   type: DataTypes.ARRAY(DataTypes.TEXT)
+    // },
     is_ready_to_ship:{
       type: DataTypes.BOOLEAN
     },

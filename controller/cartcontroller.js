@@ -60,53 +60,26 @@ exports.applyvoucher = async (req, res) => {
     isloggedin = true
   }
   }
-
-  var attributes_condition = [];
-
- let coupon_info = await models.vouchers.findOne({
-    where:{
-      is_active: true,
-      code:{
-        [Op.eq]:vouchercode
-      },
-      
-    }
-  })
-  if(coupon_info)
+  var couponwhereclause = {
+    product_category : 'Jewellery'
+  }
+  var cskcoupons = ['NACCSK2020','NACCSK100','NACCSK101','NACCSK102','NACCSK103','NACCSK104']
+  if(cskcoupons.indexOf(vouchercode.toUpperCase()) > -1)
   {
-  attributes_condition.push({
-    attributes:{
-      [Op.contains]: coupon_info.attributes
-    }
-  })
-}else{
-  return res.status(200).send({message:"Please Enter Valid Coupon"})
-}
-
-    var  couponwhereclause = {
-      [Op.or]: attributes_condition
-    }
-  // var couponwhereclause = {
-  //   product_category : 'Jewellery'
-  // }
-  // var cskcoupons = ['NACCSK2020','NACCSK100','NACCSK101','NACCSK102','NACCSK103','NACCSK104']
-  // if(cskcoupons.indexOf(vouchercode.toUpperCase()) > -1)
-  // {
-  //   couponwhereclause['product_type'] = 'Kada'
-  // }
+    couponwhereclause['product_type'] = 'Kada'
+  }
   let shoppingcart = await models.shopping_cart_item.findAll({
     include:[
       {
         model: models.trans_sku_lists,
-        attributes: ['generated_sku',"markup_price","attributes"],
+        attributes: ['generated_sku',"markup_price"],
         include: [
           {
             model: models.product_lists,
             attributes: ['product_category'],
-           
+            where: couponwhereclause
           }
-        ],
-        where: couponwhereclause
+        ]
       }
     ],
     where:{
@@ -114,7 +87,6 @@ exports.applyvoucher = async (req, res) => {
     }
 
   })
-  
 var eligible_amount = 0;
 shoppingcart.forEach(element => {
   if(element.trans_sku_list)
@@ -122,10 +94,6 @@ shoppingcart.forEach(element => {
     eligible_amount = eligible_amount + element.trans_sku_list.markup_price; 
 
   }
-
-  
-
- 
 })
 
 
@@ -137,9 +105,7 @@ models.vouchers.findOne({
     },
     code:{
       [Op.iLike]:vouchercode
-    }
-     
-    
+    } 
   }
 }).then(async giftwrapobj=> {
  var message_response = ""
