@@ -901,6 +901,10 @@ exports.getproductvarient =  async (req, res) => {
                        // product_skus.push(sku)
                         }); 
             })
+            if(product_skus.length == 0)
+            {
+               product_skus = skus 
+            }
     var newskus = []
     product_skus.forEach(sku => {
         if(prev_skus.indexOf(sku.generated_sku) === -1)
@@ -919,7 +923,7 @@ exports.getproductvarient =  async (req, res) => {
             newskus.push(skuobj)
         }
     })
-
+   
     res.send(200,{newskus})
     // var purityarr = []
    
