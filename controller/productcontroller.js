@@ -849,6 +849,7 @@ exports.getproductvarient =  async (req, res) => {
     var gemstonecolorcode1 = "00"; 
     var gemstonecolorcode2 = "00"; 
     /************************************ */
+
     skus = product_skus
     product_skus = [];
         skus.forEach(skuvalue => {
@@ -864,14 +865,18 @@ exports.getproductvarient =  async (req, res) => {
            // product_skus.push(sku)
             }); 
             skus = product_skus
-            product_skus = [];
             var size_arr = productSize;
             var sizes = []
             if(product_object.size_varient)
             {
              sizes = product_object.size_varient.split(',')
             }
-            
+            if(sizes.length > 0 || size_arr.length > 0)
+            {
+                product_skus = [];
+
+            }
+
                 skus.forEach(skuvalue => {
                     sizes.forEach(sizeval => {
                     var sku = skuvalue.generated_sku+"-"+sizeval
@@ -919,8 +924,9 @@ exports.getproductvarient =  async (req, res) => {
             newskus.push(skuobj)
         }
     })
-
     res.send(200,{newskus})
+
+    //res.send(200,{newskus})
     // var purityarr = []
    
 }
