@@ -51,8 +51,8 @@ if(offset)
         isactive : true
       }
 
-      whereclause['$trans_sku_lists.is_active$'] = {
-        [Op.eq]:true
+      whereclause['$trans_sku_lists.purity$'] = {
+        [Op.eq]:'24K'
         }
     }else 
     {
