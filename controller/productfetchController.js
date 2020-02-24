@@ -50,6 +50,10 @@ if(offset)
         product_category : "Gold Coins",
         isactive : true
       }
+
+      whereclause['$trans_sku_lists.is_active$'] = {
+        [Op.eq]:true
+        }
     }else 
     {
 
