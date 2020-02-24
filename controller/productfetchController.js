@@ -63,9 +63,9 @@ if(offset)
     }
   }
 
-  whereclause['$trans_sku_lists.is_active$'] = {
-      [Op.eq]:true
-      }
+  // whereclause['$trans_sku_lists.is_active$'] = {
+  //     [Op.eq]:true
+  //     }
   if(sortBy)
   {
     if(sortBy === 'Featured')
