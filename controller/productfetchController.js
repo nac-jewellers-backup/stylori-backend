@@ -29,7 +29,14 @@ var imagewhereclause = {
   }
 }    
 skuwhereclause['isdefault']  = true
-
+// includeclause.push({
+//     model : models.trans_sku_lists,
+//     attributes:[
+//         'purity'],
+//       where:{
+//         is_active : true
+//       }
+//    })
 defaultskuwhereclause['isdefault']  = true
 var isproduct_query = false;
 var currentpage = 0
@@ -52,6 +59,9 @@ if(offset)
       whereclause = {
         product_category : "Gold Coins",
         isactive : true
+      }
+      whereclause['$trans_sku_lists.purity$'] = {
+      [Op.eq]:'24K'
       }
     }else 
     {
