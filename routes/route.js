@@ -99,6 +99,8 @@ module.exports = function(app) {
 	app.post('/getproductvarient', productcontroller.getproductvarient);
 
 	app.post('/editproduct', productcontroller.editproduct);
+	app.post('/editproductdiamond', productcontroller.editproductdiamond);
+
 	
 	
 	

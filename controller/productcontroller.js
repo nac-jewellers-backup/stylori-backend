@@ -826,7 +826,7 @@ exports.getproductvarient =  async (req, res) => {
             }
             product_skus.push(skuobj)
         });
-       
+        res.send(200,{product_skus})
 
         diamonds_arr.forEach(diamond => {
 //            var clarity = diamond.diamondType
@@ -931,109 +931,316 @@ exports.getproductvarient =  async (req, res) => {
     // var purityarr = []
    
 }
+exports.editproductdiamond =  async (req, res) => {
+    const {diamondid,diamondSettings,diamondShape,stoneCount,stoneWeight} = req.body
+    console.log(diamondid)
+    let response_obj1 = await models.product_diamonds.update(
+        // Values to update
+        {
+            diamond_settings: diamondSettings,
+            diamond_shape : diamondShape,
+            stone_count : stoneCount,
+            stone_weight : stoneWeight
+        },
+        { // Clause
+            where: 
+            {
+              id: diamondid
+            }
+        })
+        if(response_obj1[0] > 0)
+        {
+            res.send(200,{"message": "success"})
 
+        }else{
+            res.send(402,{"message": "Try again later"})
+
+        }
+}
 exports.editproduct =  async (req, res) => {
-const {createVariants,productId,productName,productGemstonesByProductSku,productDiamondsByProductSku,transSkuListsByProductId} = req.body
+const {productId,productName,themes,styles,occassions,collections,stonecount,stonecolour,gender} = req.body
+
+
 var product_object = await models.product_lists.findOne({
+    include:[
+        {
+            model: models.product_themes,
+            attributes: ['theme_name'],
+        },
+        {
+            model: models.product_styles,
+            attributes: ['style_name'],
+        },
+        {
+            model: models.product_occassions,
+            attributes: ['occassion_name'],
+        },
+        {
+            model: models.product_collections,
+            attributes: ['collection_name'],
+        },
+        {
+            model: models.product_stonecount,
+            attributes: ['stonecount'],
+        },
+        {
+            model: models.product_stonecolor,
+            attributes: ['stonecolor'],
+        },
+        {
+            model: models.product_gender,
+            attributes: ['gender_name'],
+        }
+
+    ],
     where:{
         product_id : productId
     }
 })
-processdiamond(0)
-async function processdiamond(diamondcount)
-{
-    let diamondobj = productDiamondsByProductSku[diamondcount]
-    let diamondval = await models.product_diamonds.findOne({
-        where:{
-            diamond_colour: diamondobj.diamondColour,
-            diamond_clarity: diamondobj.diamondClarity
-        }
-    })
-    diamondcount = diamondcount + 1
+let product_themes =  product_object.product_themes;
+let product_styles = product_object.product_styles;
+let product_occassions = product_object.product_occassions;
+let product_collections = product_object.product_collections;
+let product_stones = product_object.product_stonecounts;
+let product_stonecolor = product_object.product_stonecolors;
+let product_gender = product_object.product_genders;
 
-
-    if(productDiamondsByProductSku.length > diamondcount)
-    {
-        console.log(JSON.stringify(diamondcount))
-        processdiamond(diamondcount)
-    }else
-    {
-        processtranssku()
-    }
-
-}
-
-async function processtranssku(skucount)
-{
-    let skuobj  = transSkuListsByProductId[skucount]
-
-    skucount = skucount + 1
-
-    if(productDiamondsByProductSku.length > skucount)
-    {
-        console.log(JSON.stringify(skucount))
-        processtranssku(skucount)
-    }else
-    {
-      //  processtranssku(skucount)
-    }
-}
-
-
-if(transSkuListsByProductId)
-{
-    console.log(JSON.stringify("hello"+transSkuListsByProductId.length))
-    var active_skus = []
-    var inactive_skus = []
-    transSkuListsByProductId.forEach(async trans_sku =>{
-        if(trans_sku.isActive)
-        {
-            active_skus.push(trans_sku.generateSku)
-        }else{
-            inactive_skus.push(trans_sku.generateSku)
-
-        }
-   
-
-    })
-
-        // let updateactiveskus = await models.trans_sku_lists.update(
-        //     { is_active: true },
-        //     { where: { generated_sku: {
-        //         [Op.in]: active_skus
-        //     } } }
-        //   )
-
-        //   let updateinactiveskus = await models.trans_sku_lists.update(
-        //     { is_active: false },
-        //     { where: { generated_sku: {
-        //         [Op.in]: inactive_skus
-        //     } } }
-        //   )
-}
-
-if(createVariants)
-{
-    let varientobj = createVariants[0]
-    let metalcolorobj = varientobj.productMetalcoloursByProductId
-    if(metalcolorobj)
-    {
-
-    }
-
-    let productSizearr = varientobj.productSize
-    if(productSizearr)
-    {
         
-    }
 
-    let purityarr = varientobj.productPuritiesByProductId
-    if(purityarr)
-    {
+            await models.product_themes.update(
+            {
+                is_active:  false
+            },
+            { 
+                where: 
+                {
+                  product_id: productId
+                }
+            })
+
+            await models.product_occassions.update(
+                // Values to update
+                {
+                    is_active:  false
+                },
+                { // Clause
+                    where: 
+                    {
+                      product_id: productId
+                    }
+            })
+
+            await models.product_collections.update(
+                // Values to update
+                {
+                    is_active:  false
+                },
+                { // Clause
+                    where: 
+                    {
+                      product_id: productId
+                    }
+            })
+            await models.product_styles.update(
+            // Values to update
+            {
+                is_active:  false
+            },
+            { // Clause
+                where: 
+                {
+                    product_id: productId
+                }
+            })
+
         
-    }
+        
+        
+                let prev_themes = []
+                let prev_styles = []
+                let prev_occassions = []
+                let prev_collections = []
+                let prev_stones = []
+                let prev_stonecolors = []
+                let prev_genders = []
+        product_themes.forEach(element => {
+            prev_themes.push(element.theme_name)
+        })
+        product_occassions.forEach(element => {
+            prev_occassions.push(element.occassion_name)
+        })
+        product_styles.forEach(element => {
+            prev_styles.push(element.style_name)
+        })
 
-}
+        product_collections.forEach(element => {
+            prev_collections.push(element.collection_name)
+        })
+
+        product_stones.forEach(element => {
+            prev_stones.push(element.stonecount)
+        })
+        product_stonecolor.forEach(element => {
+            prev_stonecolors.push(element.stonecolor)
+        })
+
+        product_gender.forEach(element => {
+            prev_genders.push(element.gender_name)
+        })
+        
+        let theme_names = [];
+        themes.forEach(element => {
+            if(prev_themes.indexOf(element.themeName) === -1)
+            {
+                    var goldobj_val = {
+                        id: uuidv1(),
+                        product_id: productId,
+                        theme_name:element.themeName,
+                        is_active: true,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    }
+                    theme_names.push(goldobj_val)
+            }            
+        })
+
+        let occassion_names = [];
+        occassions.forEach(element => {
+            if(prev_occassions.indexOf(element.occassionName) === -1)
+            {
+                    var goldobj_val = {
+                        id: uuidv1(),
+                        product_id: productId,
+                        occassion_name:element.occassionName,
+                        is_active: true,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    }
+                    occassion_names.push(goldobj_val)
+            }            
+        })
+
+        await models.product_occassions.bulkCreate(
+            occassion_names
+              , {individualHooks: true})
+
+
+              let collection_names = [];
+              collections.forEach(element => {
+                  if(prev_collections.indexOf(element.collectionName) === -1)
+                  {
+                          var goldobj_val = {
+                              id: uuidv1(),
+                              product_id: productId,
+                              collection_name:element.collectionName,
+                              is_active: true,
+                              createdAt: new Date(),
+                              updatedAt: new Date()
+                          }
+                          collection_names.push(goldobj_val)
+                  }            
+              })
+      
+              await models.product_collections.bulkCreate(
+                collection_names
+                    , {individualHooks: true})
+
+        let stone_counts = [];
+        stonecount.forEach(element => {
+            if(prev_stones.indexOf(element.stonecount) === -1)
+            {
+                    var goldobj_val = {
+                        id: uuidv1(),
+                        product_id: productId,
+                        stonecount:element.stonecount,
+                        is_active: true,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    }
+                    stone_counts.push(goldobj_val)
+            }            
+        })
+        await models.product_stonecount.bulkCreate(
+            stone_counts
+                , {individualHooks: true})
+      
+      
+                let stone_colors = [];
+                stonecolour.forEach(element => {
+                    if(prev_stonecolors.indexOf(element.stonecolor) === -1)
+                    {
+                            var goldobj_val = {
+                                id: uuidv1(),
+                                product_id: productId,
+                                stonecolor:element.stonecolor,
+                                is_active: true,
+                                createdAt: new Date(),
+                                updatedAt: new Date()
+                            }
+                            stone_colors.push(goldobj_val)
+                    }            
+                })
+
+                await models.product_stonecolor.bulkCreate(
+                    stone_colors
+                        , {individualHooks: true})
+
+        let gender_names = [];    
+        let genders_arr = [] ;
+        gender.forEach(element => {
+            genders_arr.push(element.label)
+            if(prev_genders.indexOf(element.label) === -1)
+            {
+                    var goldobj_val = {
+                        id: uuidv1(),
+                        product_id: productId,
+                        gender_name:element.label,
+                        is_active: true,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    }
+                    gender_names.push(goldobj_val)
+            }            
+        })     
+        
+        await models.product_gender.bulkCreate(
+            gender_names
+              , {individualHooks: true})  
+         let style_names = [];
+        styles.forEach(element => {
+            if(prev_styles.indexOf(element.styleName) === -1)
+            {
+                    var goldobj_val = {
+                        id: uuidv1(),
+                        product_id: productId,
+                        style_name:element.styleName,
+                        is_active: true,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    }
+                    style_names.push(goldobj_val)
+            }            
+        })
+        await models.product_styles.bulkCreate(
+            style_names
+              , {individualHooks: true})
+
+              await models.product_lists.update(
+                // Values to update
+                {
+                    product_name:  productName,
+                    gender : genders_arr.join()
+                },
+                { // Clause
+                    where: 
+                    {
+                      product_id: productId
+                    }
+                })
+        
+
+
+
 
 
 
@@ -1042,6 +1249,6 @@ if(createVariants)
 // await product_object.update({
 //     product_name : productName
 // })
-res.status(200).send(product_object)
+res.status(200).send(prev_genders )
 
 }
