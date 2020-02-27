@@ -984,7 +984,37 @@ exports.updateskuinfo =  async (req, res) => {
 
 
 }
+exports.updateskupriceinfo =  async (req, res) => {
 
+    const {generatedSku, costPrice, costPriceTax, sellingPrice, markupPrice, discountPrice,sellingPriceTax, markupPriceTax, discountPricetax} = req.body
+    let response_obj1 = await models.trans_sku_lists.update(
+        // Values to update
+        {
+            cost_price: costPrice,
+            selling_price : sellingPrice,
+            markup_price : markupPrice,
+            discount_price : discountPrice,
+            cost_price_tax : costPriceTax,
+            selling_price_tax : sellingPriceTax,
+            markup_price_tax  : markupPriceTax,
+            discount_price_tax : discountPriceTax,
+        },
+        { // Clause
+            where: 
+            {
+              generated_sku: generatedSku
+            }
+        })
+        if(response_obj1[0] > 0)
+        {
+            res.send(200,{"message": "success"})
+
+        }else{
+            res.send(402,{"message": "Try again later"})
+
+        }
+
+}
 exports.editproduct =  async (req, res) => {
 const {productId,productName,themes,styles,occassions,collections,stonecount,stonecolour,gender} = req.body
 
