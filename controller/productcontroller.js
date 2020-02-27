@@ -2,7 +2,7 @@
 const models=require('./../models');
 import 'dotenv/config';
 var request = require('request');
-
+const sequelize = require('sequelize');
 const Op= require('sequelize').Op;
 import apidata from './apidata.json';
 const uuidv1 = require('uuid/v1');
@@ -672,10 +672,10 @@ exports.getproductvarient =  async (req, res) => {
   var skuprefix =  productId+'-';
      product_skus = [];
     var product_object = await models.product_lists.findOne({
-        attributes:["product_id","size_varient","product_type","vendor_code"],
+        attributes:["product_id","size_varient","product_type","product_category","product_name","vendor_code"],
         include:[{
             model: models.trans_sku_lists,
-            attributes:['generated_sku']
+            attributes:['generated_sku','sku_id','vendor_delivery_time']
         },
         {
             model:models.product_purities
@@ -696,8 +696,22 @@ exports.getproductvarient =  async (req, res) => {
         }
     })
 
+
+    let lastsku = await models.trans_sku_lists.findOne({
+        attributes:['sku_id'],
+        where:{
+            is_active : true
+        },    
+        order: [
+              //  [ sequelize.cast(sequelize.col('sku_id'), 'BIGINT') , 'ASC' ]
+               [ sequelize.cast(sequelize.col('sku_id'), 'BIGINT') , 'DESC' ]
+            ]
+    })
+    var lastsku_id = parseInt(lastsku.sku_id);
+    var vendor_delivery_time = 17;
     product_object.trans_sku_lists.forEach(skuid => {
         prev_skus.push(skuid.generated_sku)
+        vendor_delivery_time = skuid.vendor_delivery_time
     })
     let diamonds 
 
@@ -927,28 +941,75 @@ exports.getproductvarient =  async (req, res) => {
             }
 
     var newskus = []
+    var product_skus_description = []
+    let prodname = product_object.product_name;
+    let sku_prodname = prodname.replace(/\s/g, '-')
+    var sku_description = ""
+
+    let sku_url = product_object.product_category.toLowerCase() +"/"+ product_object.product_type.toLowerCase()+"/"+sku_prodname+"?sku_id=";
     product_skus.forEach(sku => {
         if(prev_skus.indexOf(sku.generated_sku) === -1)
         {
+            lastsku_id = lastsku_id + 1;
+            let sku_urlval = sku_url + lastsku_id
             var skuobj = 
             {
+                id: uuidv1(),
                 product_id: sku.product_id,
                 product_type: sku.product_type,
                 diamond_type: sku.diamond_type,
                 metal_color: sku.metal_color,
                 generated_sku: sku.generated_sku,
+                sku_id: ""+lastsku_id,
+                sku_url: sku_urlval,
                 purity: sku.purity,
                 sku_size: sku.sku_size,
                 is_ready_to_ship: false,
                 is_soldout: false,
                 isdefault: false,
-                isActive: true
+                vendor_delivery_time: vendor_delivery_time,
+                is_active: true
             }        
-  
+            var  sku_description_obj  = {
+                id: uuidv1(),
+                sku_id: sku.generated_sku,
+                vendor_code: skuobj.metal_color,
+                sku_description:sku_description,
+                vendor_lead_time:skuobj.vendor_leadtime,
+                isactive:true
+            }
+            //  if(skuproceecount >= 4478)
+            //   {
             newskus.push(skuobj)
+            product_skus_description.push(sku_description_obj);
+           
         }
     })
-    res.send(200,{newskus})
+    //res.send(200,{message: newskus})
+    models.trans_sku_lists.bulkCreate(
+        newskus
+          , {individualHooks: true}).then(function(response){
+
+            models.trans_sku_descriptions.bulkCreate(
+                product_skus_description
+                  , {individualHooks: true}).then(function(response){
+                    console.log("porductskudescsuccess" )
+                    // if(product_sku_arr.length > skuproceecount)
+                    // {
+                    //     insertsku(skuproceecount);
+                    // }else{
+                    res.send(200,{message: newskus,product_skus_description})
+
+                    //}
+
+                   
+                })  .catch((error) => {
+                         console.log("errorresponse"+error.message)
+                 });
+        })  .catch((error) => {
+            res.send(200,{message:"Please Try Again"+error,newskus,product_skus_description})
+
+         });
 
     // var purityarr = []
    
@@ -1060,6 +1121,7 @@ var product_object = await models.product_lists.findOne({
             model: models.product_collections,
             attributes: ['collection_name'],
         },
+        
         {
             model: models.product_stonecount,
             attributes: ['stonecount'],
