@@ -986,7 +986,8 @@ exports.updateskuinfo =  async (req, res) => {
 }
 exports.updateskupriceinfo =  async (req, res) => {
 
-    const {generatedSku, costPrice, costPriceTax, sellingPrice, markupPrice, discountPrice,sellingPriceTax, markupPriceTax, discountPricetax} = req.body
+    const {generatedSku, costPrice, costPriceTax, sellingPrice, 
+        markupPrice, discountPrice,sellingPriceTax, markupPriceTax, discountPriceTax} = req.body
     let response_obj1 = await models.trans_sku_lists.update(
         // Values to update
         {
