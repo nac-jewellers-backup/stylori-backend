@@ -100,6 +100,7 @@ module.exports = function(app) {
 
 	app.post('/editproduct', productcontroller.editproduct);
 	app.post('/editproductdiamond', productcontroller.editproductdiamond);
+	app.post('/updateskuinfo', productcontroller.updateskuinfo);
 
 	
 	
