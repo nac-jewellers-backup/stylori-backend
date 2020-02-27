@@ -28,8 +28,8 @@ var seofilterattributevalue = []
       seofilterattributevalue.push("goldcoins")
       category_filter['name']= "Gold Coins"
       whereclause['product_category'] = "Gold Coins"
-      whereclause['$trans_sku_lists.is_active$'] = {
-        [Op.eq]:true
+      whereclause['$trans_sku_lists.purity$'] = {
+        [Op.eq]:'24K'
         }
     }else{
       seofilterattribute.push('Category')
