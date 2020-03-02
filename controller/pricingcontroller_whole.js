@@ -1695,7 +1695,7 @@ exports.priceupdate = (req, res) => {
           await  models.sequelize.query(price_update_query).then(([results, metadata]) => {
               // Results will be an empty array and metadata will contain the number of affected rows.
             })
-           }
+           
              updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
 
           }else{
