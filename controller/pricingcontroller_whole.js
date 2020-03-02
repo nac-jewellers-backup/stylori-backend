@@ -1688,10 +1688,14 @@ exports.priceupdate = (req, res) => {
 
           if(product_obj.trans_sku_lists.length > skucount)
           {
+            let price_update_query = "update trans_sku_lists set discount_price = ROUND(discount_price::numeric,2)   where product_id ='"+product_obj.product_id+"'";
 
          //  updateskuprice()
           // Sequelize = require('sequelize')
-
+          await  models.sequelize.query(price_update_query).then(([results, metadata]) => {
+              // Results will be an empty array and metadata will contain the number of affected rows.
+            })
+           }
              updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
 
           }else{
