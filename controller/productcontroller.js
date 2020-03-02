@@ -1040,6 +1040,34 @@ exports.editproductdiamond =  async (req, res) => {
 
         }
 }
+exports.editproductgemstone =  async (req, res) => {
+    const {id,gemstoneSetting,gemstoneShape,gemstoneSize,stoneCount,stoneWeight} = req.body
+   console.log(id)
+    let response_obj1 = await models.product_gemstones.update(
+        // Values to update
+        {
+            gemstone_setting: gemstoneSetting,
+            gemstone_shape : gemstoneShape,
+            gemstone_size : gemstoneSize,
+            stone_weight : stoneWeight,
+            stone_count : stoneCount
+        },
+        { // Clause
+            where: 
+            {
+              id: id
+            }
+        })
+        if(response_obj1[0] > 0)
+        {
+            res.send(200,{"message": "success"})
+
+        }else{
+            res.send(402,{"message":"Try again later"})
+
+        }
+
+}
 exports.updateskuinfo =  async (req, res) => {
     const {generatedSku, vendorDeliveryTime, isdefault, isActive, isReadyToShip} = req.body
     let response_obj1 = await models.trans_sku_lists.update(
@@ -1424,6 +1452,6 @@ let product_gender = product_object.product_genders;
 // await product_object.update({
 //     product_name : productName
 // })
-res.status(200).send(prev_genders )
+res.status(200).send(prev_genders)
 
 }

@@ -102,6 +102,7 @@ module.exports = function(app) {
 	app.post('/editproductdiamond', productcontroller.editproductdiamond);
 	app.post('/updateskuinfo', productcontroller.updateskuinfo);
 	app.post('/updateskupriceinfo', productcontroller.updateskupriceinfo);
+	app.post('/editproductgemstone', productcontroller.editproductgemstone);
 
 	
 	
