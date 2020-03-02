@@ -1688,15 +1688,9 @@ exports.priceupdate = (req, res) => {
 
           if(product_obj.trans_sku_lists.length > skucount)
           {
-            let price_update_query = "update trans_sku_lists set cost_price = ROUND(cost_price::numeric,2),selling_price = ROUND(selling_price::numeric,2), markup_price = ROUND(markup_price::numeric,2),cost_price_tax = ROUND(cost_price_tax::numeric,2),selling_price_tax = ROUND(selling_price_tax::numeric,2),markup_price_tax = ROUND(markup_price_tax::numeric,2),discount_price_tax = ROUND(discount_price_tax::numeric,2), discount_price = ROUND(discount_price::numeric,2)   where product_id ='"+product_obj.product_id+"'";
+            
+            updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
 
-         //  updateskuprice()
-          // Sequelize = require('sequelize')
-          await  models.sequelize.query(price_update_query).then(([results, metadata]) => {
-              // Results will be an empty array and metadata will contain the number of affected rows.
-            })
-           
-             updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
 
           }else{
             //skucount = 0
@@ -1715,7 +1709,15 @@ exports.priceupdate = (req, res) => {
               sendMail(emilreceipiants,JSON.stringify(product_ids))
             }
             console.log(JSON.stringify(product_ids))
+            let price_update_query = "update trans_sku_lists set cost_price = ROUND(cost_price::numeric,2),selling_price = ROUND(selling_price::numeric,2), markup_price = ROUND(markup_price::numeric,2),cost_price_tax = ROUND(cost_price_tax::numeric,2),selling_price_tax = ROUND(selling_price_tax::numeric,2),markup_price_tax = ROUND(markup_price_tax::numeric,2),discount_price_tax = ROUND(discount_price_tax::numeric,2), discount_price = ROUND(discount_price::numeric,2)   where product_id ='"+product_obj.product_id+"'";
+
+       
+         await models.sequelize.query(price_update_query).then(([results, metadata]) => {
+            
+
+            })
             await sleep(1000)
+
             processproduct()
               ;
             
