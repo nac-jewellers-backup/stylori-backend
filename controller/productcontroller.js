@@ -43,7 +43,49 @@ exports.ringpriceupdate =  async (req, res) => {
 }
 
 
+exports.updateproductattr =  async (req, res) => {
+    var product_object = await models.product_lists.findOne({
+        attributes:[ "product_type",
+            "product_category"],
+        include:[
+            {
+                model: models.product_themes,
+                attributes: ['theme_name'],
+            },
+            {
+                model: models.product_styles,
+                attributes: ['style_name'],
+            },
+            {
+                model: models.product_occassions,
+                attributes: ['occassion_name'],
+            },
+            {
+                model: models.product_collections,
+                attributes: ['collection_name'],
+            },
+            
+            {
+                model: models.product_stonecount,
+                attributes: ['stonecount'],
+            },
+            {
+                model: models.product_stonecolor,
+                attributes: ['stonecolor'],
+            },
+            {
+                model: models.product_gender,
+                attributes: ['gender_name'],
+            }
+    
+        ],
+        where:{
+            product_id : 'SB0010'
+        }
+    })
 
+    res.send(200,{"response":product_object})
+}
 exports.productupload =  async (req, res) => {
     var apidata = req.body;
     var product_skus = [];
@@ -597,17 +639,29 @@ exports.productupload =  async (req, res) => {
        var uploaddescriptions = []
        product_skus.forEach(prodkt => {
                 var isdefault = false
-                var sku_weight = default_weight;
+                var keyvalue = (prodkt.purity)+'_metal_weight'
+                console.log("productweight")
+                console.log(keyvalue)
+
+                var sku_weight = apidata[keyvalue];
+                console.log(sku_weight)
 
                 if(prodkt.metal_color === default_metal_color && prodkt.purity === default_metal_purity && prodkt.sku_size === default_metal_size)
                 {
                     isdefault = true;
                 }
 
-                console
-                const sizedifferent =   prodkt.sku_size - default_metal_size;
-                
-                sku_weight =  parseFloat(sku_weight) + parseFloat((sizedifferent * 0.1))
+                if(apidata.product_type.shortCode.toLowerCase() === 'r' || apidata.product_type.shortCode.toLowerCase() == 'b' )
+                {
+                    const sizedifferent =   parseFloat(prodkt.sku_size) - parseFloat(default_metal_size);
+                    console.log('>sizedifference'+sizedifferent);
+                    console.log('>sku_weight'+parseFloat(sku_weight));
+
+                    sku_weight =  parseFloat(sku_weight) + Math.round( (sizedifferent * 0.1) * 100) / 100;
+                    sku_weight =  Math.round(sku_weight * 100) / 100
+                }else{
+                    sku_weight = Math.round(parseFloat(sku_weight) * 100 ) /100
+                }
                 
                 const sku_desc = {
                     id: uuidv1(),
@@ -627,6 +681,8 @@ exports.productupload =  async (req, res) => {
                 
         });
 
+       // res.send(200,{skus:uploadskus})
+
      //   res.send(200,{count:product_skus.length});
 
     //        var productlist = [
@@ -636,7 +692,7 @@ exports.productupload =  async (req, res) => {
 
 
   //  res.json(product_skus);
-         models.trans_sku_lists.bulkCreate(
+      models.trans_sku_lists.bulkCreate(
             uploadskus
               , {individualHooks: true}).then(function(response){
                 models.trans_sku_descriptions.bulkCreate(
