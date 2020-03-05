@@ -786,11 +786,13 @@ exports.priceupdate = (req, res) => {
         if(product_diamonds.length > 0)
         {
         //  sku_component_count++;
-          diamond_process(product_diamonds[0],vendor_code);
+        console.log("product diamonds")
+        console.log(product_diamonds.length)
+        //  diamond_process(product_diamonds[0],vendor_code);
         }else
         {
         
-        updategemstone_price(product_obj.vendor_code, productsku)
+       // updategemstone_price(product_obj.vendor_code, productsku)
 
        }
 

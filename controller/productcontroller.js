@@ -169,7 +169,7 @@ exports.productupload =  async (req, res) => {
         size_varient = productsizes.join(',');
     }
 
-   var default_weight = 4;
+   var default_weight = apidata[default_metal_purity+'_metal_weight'];
 
 
     var isreorderable = false;
@@ -238,7 +238,7 @@ exports.productupload =  async (req, res) => {
 
     }
 
-    let sku_url = product_obj.product_category.toLowerCase() +"/"+ product_obj.product_type.toLowerCase()+"/"+product_obj.product_name+"?sku_id=";
+    let sku_url = product_obj.product_category.toLowerCase() +"/"+ product_obj.product_type.toLowerCase()+"/"+product_obj.product_name.replace(' ','-')+"?sku_id=";
 
     let successmessage = await models.product_lists.create(product_obj)
   /*************** images list ********************/
@@ -247,15 +247,16 @@ exports.productupload =  async (req, res) => {
     {
         Object.keys(product_images).forEach(key => {
            let images_arr = product_images[key]
+           var imgposition = 1;
            images_arr.forEach(element => {
             let ishover = false
            let isdefault = false
-        
-           if(default_metal_color === element.color && element.position == 1)
+           imgposition = imgposition +1;
+           if(imgposition == 2)
            {
             ishover = true
            }
-           if(default_metal_color === element.color && element.position == 1)
+           if(element.position == 1)
            {
             isdefault = true
            }
@@ -264,7 +265,7 @@ exports.productupload =  async (req, res) => {
                 product_id : successmessage.product_id,
                 product_color:element.color,
                 image_url: element.image_url,
-                image_position: element.position,
+                image_position: imgposition,
                 ishover,
                 isdefault
 
@@ -371,7 +372,9 @@ exports.productupload =  async (req, res) => {
                 const collection = {
                     id:uuidv1(),
                     collection_name: collectonobj,
-                    product_id: product_obj.product_id
+                    product_id: product_obj.product_id,
+                    is_active : true
+
                 }
                 collection_arr.push(collection);
             })
@@ -387,7 +390,9 @@ exports.productupload =  async (req, res) => {
                 const occassion = {
                     id:uuidv1(),
                     occassion_name: occassionsobj,
-                    product_id: product_obj.product_id
+                    product_id: product_obj.product_id,
+                    is_active : true
+
                 }
                 occassions_arr.push(occassion);
 
@@ -403,7 +408,9 @@ exports.productupload =  async (req, res) => {
                 const style = {
                     id:uuidv1(),
                     style_name: styleobj,
-                    product_id: product_obj.product_id
+                    product_id: product_obj.product_id,
+                    is_active : true
+
                 }
                 styles_arr.push(style);
 
@@ -437,7 +444,9 @@ exports.productupload =  async (req, res) => {
             const metal_obj = {
                 id: uuidv1(),
                 material_name: materialobj,
-                product_sku: product_obj.product_id
+                product_sku: product_obj.product_id,
+                is_active : true
+
             }
             material_arr.push(metal_obj)
         })
@@ -511,12 +520,12 @@ exports.productupload =  async (req, res) => {
         let diamondtype = await models.master_diamond_types.findAll({
          });
          diamondtype.forEach(diamond_type => {
-            var claritytype = diamond_type.diamond_color +'-'+diamond_type.diamond_clarity
+            var claritytype = diamond_type.diamond_color +diamond_type.diamond_clarity
             diamond_sku_clarity[claritytype] = diamond_type.short_code
         })
         var diamondsarr = []
         diamondlist.forEach( diamond => {
-            var clarity =  diamond.clarity.name +'-'+diamond.color.shortCode  
+            var clarity =  diamond.clarity.name+diamond.color.shortCode  
 
             const diamonval = {
                 id : uuidv1(),
@@ -535,7 +544,7 @@ exports.productupload =  async (req, res) => {
             var  skuval = skuvalue.generated_sku
 
             diamondlist.forEach(diamond => {
-              var clarity =  diamond.clarity.name +'-'+diamond.color.shortCode  
+              var clarity =  diamond.clarity.name +diamond.color.shortCode  
               
               var sku = skuval + diamond_sku_clarity[clarity]
                 
@@ -675,11 +684,39 @@ exports.productupload =  async (req, res) => {
                 }
                 lastsku_id = lastsku_id + 1;
                 let sku_urlval = sku_url + lastsku_id
+                var sku_description = product_obj.product_type + 'set in '+ prodkt.purity+' '+prodkt.metal_color;
+                if(materials.length > 0)
+                {
+                    sku_description = sku_description + ' '+ materials[0] + ' '+ sku_weight + ' gm'
+                } 
+                if(diamondlist.length > 0)
+                {
+                    sku_description =  sku_description +'with Diamonds ('
+                    diamondlist.forEach(diamondobj=> {
+                        var clarity =  diamondobj.clarity.name +diamondobj.color.shortCode  
+                        var diamondweight = diamondobj.weight;
+                        sku_description = sku_description + diamondweight + 'ct ' + clarity
+                    })
+                    sku_description = sku_description + ' )'
+                } 
+                if(gemstonelist.length > 0)
+                {
+                    if(diamondlist.length == 0 )
+                    {
+                        sku_description =  sku_description +'with Gemstones ('
+                    }
+                    gemstonelist.forEach(gem=> {
+                        var gemname =  gem.clarity.name  
+                        sku_description = sku_description + ' ' + gemname
+                    })
+
+                    sku_description = sku_description + ' )'
+                } 
                 const sku_desc = {
                     id: uuidv1(),
                     sku_id: prodkt.generated_sku,
                     vendor_code: vendor_code,
-                    sku_description : "Earrings set in 18 Kt Yellow Gold 3.45 gm with Diamonds (0.19 ct, IJ - SI )"
+                    sku_description : sku_description
                 }
                 var prod_obj = {
                     ...prodkt,
@@ -688,6 +725,7 @@ exports.productupload =  async (req, res) => {
                     sku_weight,
                     is_ready_to_ship: false,
                     is_soldout: false,
+                    is_active : true,
                     vendor_delivery_time:vendorleadtime,
                     sku_id: lastsku_id,
                     sku_url: sku_urlval
