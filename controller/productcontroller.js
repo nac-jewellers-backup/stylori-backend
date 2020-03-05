@@ -108,7 +108,17 @@ exports.productupload =  async (req, res) => {
     {
         skuurl = skuurl+"/"+producttypeobj.name
     }
-   
+    let lastsku = await models.trans_sku_lists.findOne({
+        attributes:['sku_id'],
+        where:{
+            is_active : true
+        },    
+        order: [
+              //  [ sequelize.cast(sequelize.col('sku_id'), 'BIGINT') , 'ASC' ]
+               [ sequelize.cast(sequelize.col('sku_id'), 'BIGINT') , 'DESC' ]
+            ]
+    })
+    var lastsku_id = parseInt(lastsku.sku_id);
 
   let final_series = await models.product_lists.findOne({
          
@@ -148,7 +158,7 @@ exports.productupload =  async (req, res) => {
     var default_metal_size = apidata.default_size;
     var stonecolour_lists = apidata.stonecolour;
     var stonecount_lists = apidata.stonecount;
-
+    var vendorleadtime = apidata.vendorleadtime;
     
     var product_images = apidata.product_images;
     var size_varient = '';
@@ -228,6 +238,7 @@ exports.productupload =  async (req, res) => {
 
     }
 
+    let sku_url = product_obj.product_category.toLowerCase() +"/"+ product_obj.product_type.toLowerCase()+"/"+product_obj.product_name+"?sku_id=";
 
     let successmessage = await models.product_lists.create(product_obj)
   /*************** images list ********************/
@@ -662,7 +673,8 @@ exports.productupload =  async (req, res) => {
                 }else{
                     sku_weight = Math.round(parseFloat(sku_weight) * 100 ) /100
                 }
-                
+                lastsku_id = lastsku_id + 1;
+                let sku_urlval = sku_url + lastsku_id
                 const sku_desc = {
                     id: uuidv1(),
                     sku_id: prodkt.generated_sku,
@@ -673,7 +685,12 @@ exports.productupload =  async (req, res) => {
                     ...prodkt,
                     id: uuidv1(),
                     isdefault,
-                    sku_weight
+                    sku_weight,
+                    is_ready_to_ship: false,
+                    is_soldout: false,
+                    vendor_delivery_time:vendorleadtime,
+                    sku_id: lastsku_id,
+                    sku_url: sku_urlval
                 }
                      uploaddescriptions.push(sku_desc)
                     uploadskus.push(prod_obj)
@@ -681,7 +698,7 @@ exports.productupload =  async (req, res) => {
                 
         });
 
-       // res.send(200,{skus:uploadskus})
+   // res.send(200,{skus:uploadskus})
 
      //   res.send(200,{count:product_skus.length});
 
@@ -691,7 +708,7 @@ exports.productupload =  async (req, res) => {
     //     ]
 
 
-  //  res.json(product_skus);
+   //res.json(product_skus);
       models.trans_sku_lists.bulkCreate(
             uploadskus
               , {individualHooks: true}).then(function(response){
