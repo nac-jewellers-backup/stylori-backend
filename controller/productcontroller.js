@@ -1594,7 +1594,7 @@ exports.getproductlist =  async (req, res) => {
             whereclause['product_category'] = productcategory
         }
 
-        if(productcategory)
+        if(producttype)
         {
             whereclause['product_type'] = producttype
         }
