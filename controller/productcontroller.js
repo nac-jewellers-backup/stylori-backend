@@ -1566,3 +1566,22 @@ let product_gender = product_object.product_genders;
 res.status(200).send(prev_genders)
 
 }
+
+exports.disableproduct =  async (req, res) => {
+const {productid, isactive} = req.body
+    await models.product_lists.update(
+    // Values to update
+    {
+        isactive:  isactive
+    },
+    { // Clause
+        where: 
+        {
+          product_id: productid
+        }
+    })
+
+    res.send(200,{message: "Updated Successfully"})
+
+
+}
