@@ -45,7 +45,9 @@ module.exports = function(app) {
 	app.post('/productupdate', productupdatecontroller.updateproduct);
 	app.post('/priceupdate', productcontroller.priceupdate);
 	app.post('/disableproduct', productcontroller.disableproduct);
+	app.post('/getproductlist', productcontroller.getproductlist);
 
+	
 	app.post('/productpriceupdate',single_product_pricecontroller.priceupdate)
 
 	app.post('/splitdiamondpriceupdate',[productPricing.productList], pricesplitup_controller.splitdiamondpriceupdate);
