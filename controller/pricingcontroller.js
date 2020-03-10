@@ -1969,3 +1969,75 @@ exports.updatemakingcharge =  async (req, res) => {
 }
 
 
+exports.getdistinctproduct =  async (req, res) => {
+  const {vendorid, product_category,product_type} = req.body
+  let whereclause = {
+    isactive : true
+  }
+
+  if(vendorid)
+  {
+    whereclause['vendor_code'] = vendorid
+  }
+
+  if(product_category)
+  {
+    whereclause['product_category'] = product_category
+  }
+
+  if(product_type)
+  {
+    whereclause['product_type'] = product_type
+  }
+  let productids = [];
+  let products = await models.product_lists.findAll({
+    attributes:['product_id'],
+    where:whereclause
+   
+  })
+  products.forEach(pid=>{
+    productids.push(pid.product_id)
+  })
+  let category = await models.product_lists.findAll({
+    attributes: ['product_category'],
+    group: ['product_category'],
+    where:{
+      product_id : {
+        [Op.in]: productids
+      }
+    }
+   
+  })
+
+  let vendorlist = await models.product_lists.findAll({
+    attributes: ['vendor_code'],
+    group: ['vendor_code'],
+    where:{
+      product_id : {
+        [Op.in]: productids
+      }
+    }
+   
+  })
+  let product_types = await models.product_lists.findAll({
+    attributes: ['product_type'],
+    group: ['product_type'],
+    where:{
+      product_id : {
+        [Op.in]: productids
+      }
+    }
+   
+  })
+      
+  res.send(200,{"products": productids,
+"category": category,
+"vendorlist": vendorlist,
+"product_types": product_types})
+
+     
+
+
+}
+
+
