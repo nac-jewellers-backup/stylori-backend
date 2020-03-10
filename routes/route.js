@@ -75,7 +75,9 @@ module.exports = function(app) {
 	app.post('/updategemstoneprice', pricingontroller.updategemstoneprice);
 	app.post('/updatemakingcharge', pricingontroller.updatemakingcharge);
 	app.post('/getvendorgemprice', pricingontroller.vendorgemprice);
+	app.post('/getvendormakingprice', pricingontroller.vendormakingprice);
 
+	
 	
 
 	app.post('/api/auth/verifyotp', authcontroller.verifyotp);
