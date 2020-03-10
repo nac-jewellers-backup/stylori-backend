@@ -1902,6 +1902,31 @@ exports.vendormakingprice =  async (req, res) => {
 
 }
 
+exports.updatemarkup =  async (req, res) => {
+  const {markupid, sellingPriceMin,sellingPriceMax, markupValue} = req.body
+  let response = await models.pricing_markups.update(
+    {
+        selling_price_min : sellingPriceMin,
+        selling_price_max : sellingPriceMax,
+        markup_value: markupValue,
+        updatedAt : new Date()
+    },
+    { // Clause
+        where: 
+        {
+          id: markupid
+        }
+    })
+    if(response[0] > 0)
+    {
+        res.send(200,{"message": "success"})
+
+    }else{
+        res.send(402,{"message": "Try again later"})
+
+    }
+}
+
 exports.updatemakingcharge =  async (req, res) => {
   const {cost_price_id, selling_price_id,weight_end, weight_start,cost_price, selling_price} = req.body
   let response = await models.making_charge_settings.update(
