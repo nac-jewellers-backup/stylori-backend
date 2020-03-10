@@ -1795,7 +1795,47 @@ exports.updategemstoneprice =  async (req, res) => {
 }
 
 
+exports.vendorgemprice =  async (req, res) => {
+  const {vendorid, ratetype} = req.body
+  let gem_costprice = {}
+  let gem_sellingprice = {}
+  let costprice = await models.gemstone_price_settings.findAll({
+    where:{
+      vendor_code : vendorid,
+      rate_type : ratetype
+    }
+  })
+  costprice.forEach(element =>{
+    let key = element.gemstone_type+'-'+element.weight_start+'-'+element.weight_end
+    gem_costprice[key] =  element
+  })
+  let sellingprice = await models.gemstone_price_settings.findAll({
+    where:{
+      vendor_code : vendorid,
+      rate_type : ratetype
+    }
+  })
+  sellingprice.forEach(element =>{
+    let key = element.gemstone_type+'-'+element.weight_start+'-'+element.weight_end
+    gem_sellingprice[key] =  element
+  })
+  let gems = []
+  Object.keys(gem_costprice).forEach(function(key) {
+    console.log(key)
+    let costcontent = gem_costprice[key]
+    let sellcontent = gem_sellingprice[key]
+    let gemobj = {
+      "costprice":costcontent,
+      "sellprice":sellcontent
+    }
+    gems.push(gemobj)
+  });
+  res.send(200,{"gems": gems})
 
+      
+
+
+}
 exports.updatemakingcharge =  async (req, res) => {
   const {priceid,weight_end, weight_start,price, rate_type, price_type} = req.body
   let response = await models.making_charge_settings.update(

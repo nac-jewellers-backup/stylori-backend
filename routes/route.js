@@ -74,6 +74,7 @@ module.exports = function(app) {
 	app.post('/updatediamondprice', pricingontroller.updatediamondprice);
 	app.post('/updategemstoneprice', pricingontroller.updategemstoneprice);
 	app.post('/updatemakingcharge', pricingontroller.updatemakingcharge);
+	app.post('/getvendorgemprice', pricingontroller.vendorgemprice);
 
 	
 
