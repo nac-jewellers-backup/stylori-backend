@@ -1977,7 +1977,9 @@ exports.getdistinctproduct =  async (req, res) => {
 
   if(vendorid)
   {
-    whereclause['vendor_code'] = vendorid
+    whereclause['vendor_code'] = {
+      [Op.in] : vendorid
+    }
   }
 
   if(product_category)
@@ -2030,7 +2032,8 @@ exports.getdistinctproduct =  async (req, res) => {
    
   })
       
-  res.send(200,{"products": productids,
+  res.send(200,{"products_count": productids.length,
+  "products": productids,
 "category": category,
 "vendorlist": vendorlist,
 "product_types": product_types})
