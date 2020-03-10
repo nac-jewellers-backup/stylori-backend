@@ -1589,6 +1589,26 @@ const {productid, isactive} = req.body
 exports.getproductlist =  async (req, res) => {
     const {size, offset, productcategory, producttype, searchtext} = req.body
        let whereclause = {}
+       if(searchtext)
+       {
+           whereclause= {
+               [Op.or]:[
+                   {
+                       product_id :{
+                        [Op.iLike] : "%"+searchtext+"%"
+
+                       }
+                   },
+                   {
+                    product_name :{
+                     [Op.iLike] : "%"+searchtext+"%"
+
+                    }
+                }
+               ]
+           }
+           
+       }
         if(productcategory)
         {
             whereclause['product_category'] = productcategory
@@ -1600,13 +1620,7 @@ exports.getproductlist =  async (req, res) => {
         }
 
         
-        if(searchtext)
-        {
-            whereclause['product_id'] = {
-                [Op.iLike] : "%"+searchtext+"%"
-            }
-            
-        }
+       
         let products = await models.product_lists.findAll({
             where: whereclause,
             offset: offset, limit: size
