@@ -1846,21 +1846,24 @@ exports.vendormakingprice =  async (req, res) => {
   let costprice = await models.making_charge_settings.findAll({
     where:{
       vendor_code : vendorid,
-      rate_type : ratetype
+      price_type: 1
     }
   })
   costprice.forEach(element =>{
-    let key = element.material+'-'+element.weight_start+'-'+element.weight_end
+    let key = element.material+'-'+element.purity+'-'+element.weight_start+'-'+element.weight_end
+    
     gem_costprice[key] =  element
   })
   let sellingprice = await models.making_charge_settings.findAll({
     where:{
       vendor_code : vendorid,
-      rate_type : ratetype
+      price_type: 2
     }
   })
   sellingprice.forEach(element =>{
-    let key = element.material+'-'+element.weight_start+'-'+element.weight_end
+    let key = element.material+'-'+element.purity+'-'+element.weight_start+'-'+element.weight_end
+    
+
     gem_sellingprice[key] =  element
   })
   let gems = []
@@ -1872,9 +1875,11 @@ exports.vendormakingprice =  async (req, res) => {
       "costprice":costcontent,
       "sellprice":sellcontent
     }
+    console.log(JSON.stringify(gemobj))
+
     gems.push(gemobj)
   });
-  res.send(200,{"gems": gems})
+  res.send(200,{gems})
 
 }
 
