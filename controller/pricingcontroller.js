@@ -1984,12 +1984,16 @@ exports.getdistinctproduct =  async (req, res) => {
 
   if(product_category)
   {
-    whereclause['product_category'] = product_category
+    whereclause['product_category'] ={
+      [Op.in] : product_category
+    } 
   }
 
   if(product_type)
   {
-    whereclause['product_type'] = product_type
+    whereclause['product_type'] = {
+      [Op.in] : product_type
+    }
   }
   let productids = [];
   let products = await models.product_lists.findAll({
