@@ -1819,7 +1819,10 @@ exports.vendorgemprice =  async (req, res) => {
       vendor_code : vendorid,
       rate_type : ratetype,
       price_type : 1
-    }
+    },
+    order: [
+      ['gemstone_type', 'ASC']
+  ],
   })
   costprice.forEach(element =>{
     let key = element.gemstone_type+'-'+element.weight_start+'-'+element.weight_end
