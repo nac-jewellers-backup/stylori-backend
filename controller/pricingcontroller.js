@@ -1706,3 +1706,122 @@ exports.priceupdate = (req, res) => {
   
  
 }
+
+
+exports.updatemetalprice =  async (req, res) => {
+  const {priceid, costprice, sellingprice, pricetype} = req.body
+  let response = await models.gold_price_settings.update(
+      // Values to update
+      {
+          cost_price : costprice,
+          selling_price : sellingprice,
+          selling_price_type: pricetype,
+          updatedAt : new Date()
+      },
+      { // Clause
+          where: 
+          {
+            id: priceid
+          }
+      })
+      if(response[0] > 0)
+      {
+          res.send(200,{"message": "success"})
+
+      }else{
+          res.send(402,{"message": "Try again later"})
+
+      }
+
+
+}
+
+
+exports.updatediamondprice =  async (req, res) => {
+  const {priceid, costprice, sellingprice, pricetype} = req.body
+  let response = await models.diamond_price_settings.update(
+      // Values to update
+      {
+          cost_price : costprice,
+          selling_price : sellingprice,
+          selling_price_type: pricetype,
+          updatedAt : new Date()
+      },
+      { // Clause
+          where: 
+          {
+            id: priceid
+          }
+      })
+      if(response[0] > 0)
+      {
+          res.send(200,{"message": "success"})
+
+      }else{
+          res.send(402,{"message": "Try again later"})
+
+      }
+
+
+}
+
+
+exports.updategemstoneprice =  async (req, res) => {
+  const {priceid,weight_end, weight_start,price, selling_price_type} = req.body
+  let response = await models.gemstone_price_settings.update(
+      // Values to update
+      {
+          cost_price : costprice,
+          selling_price : sellingprice,
+          selling_price_type: pricetype,
+          updatedAt : new Date()
+      },
+      { // Clause
+          where: 
+          {
+            id: priceid
+          }
+      })
+      if(response[0] > 0)
+      {
+          res.send(200,{"message": "success"})
+
+      }else{
+          res.send(402,{"message": "Try again later"})
+
+      }
+
+
+}
+
+
+
+exports.updatemakingcharge =  async (req, res) => {
+  const {priceid,weight_end, weight_start,price, rate_type, price_type} = req.body
+  let response = await models.making_charge_settings.update(
+      // Values to update
+      {
+          weight_start : weight_start,
+          weight_end : weight_end,
+          price: price,
+          rate_type: rate_type,
+          price_type : price_type,
+          updatedAt : new Date()
+      },
+      { // Clause
+          where: 
+          {
+            id: priceid
+          }
+      })
+      if(response[0] > 0)
+      {
+          res.send(200,{"message": "success"})
+
+      }else{
+          res.send(402,{"message": "Try again later"})
+
+      }
+
+
+}

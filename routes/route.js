@@ -70,6 +70,13 @@ module.exports = function(app) {
 	app.post('/api/auth/guestlogin', authcontroller.guestlogin);
 	app.post('/api/auth/verifyotp', authcontroller.verifyotp);
 	
+	app.post('/updatemetalprice', pricingontroller.updatemetalprice);
+	app.post('/updatediamondprice', pricingontroller.updatediamondprice);
+	app.post('/updategemstoneprice', pricingontroller.updategemstoneprice);
+	app.post('/updatemakingcharge', pricingontroller.updatemakingcharge);
+
+	
+
 	app.post('/api/auth/verifyotp', authcontroller.verifyotp);
 	app.post('/addquestion', authcontroller.addquestion);
 	app.post('/addemailsubscription', authcontroller.addemailsubscription);
