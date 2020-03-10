@@ -1903,23 +1903,34 @@ exports.vendormakingprice =  async (req, res) => {
 }
 
 exports.updatemakingcharge =  async (req, res) => {
-  const {priceid,weight_end, weight_start,price, rate_type, price_type} = req.body
+  const {cost_price_id, selling_price_id,weight_end, weight_start,cost_price, selling_price} = req.body
   let response = await models.making_charge_settings.update(
-      // Values to update
       {
           weight_start : weight_start,
           weight_end : weight_end,
-          price: price,
-          rate_type: rate_type,
-          price_type : price_type,
+          price: cost_price,
           updatedAt : new Date()
       },
       { // Clause
           where: 
           {
-            id: priceid
+            id: cost_price_id
           }
       })
+
+      let response1 = await models.making_charge_settings.update(
+        {
+            weight_start : weight_start,
+            weight_end : weight_end,
+            price: selling_price,
+            updatedAt : new Date()
+        },
+        { // Clause
+            where: 
+            {
+              id: selling_price_id
+            }
+        })
       if(response[0] > 0)
       {
           res.send(200,{"message": "success"})
