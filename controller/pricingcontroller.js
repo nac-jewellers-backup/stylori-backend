@@ -1865,7 +1865,10 @@ exports.vendormakingprice =  async (req, res) => {
     where:{
       vendor_code : vendorid,
       price_type: 1
-    }
+    },
+    order: [
+      ['purity', 'ASC']
+  ],
   })
   costprice.forEach(element =>{
     let key = element.material+'-'+element.purity+'-'+element.weight_start+'-'+element.weight_end
