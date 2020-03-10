@@ -1904,7 +1904,7 @@ exports.vendormakingprice =  async (req, res) => {
 
 exports.updatemarkup =  async (req, res) => {
   const {markupid, sellingPriceMin,sellingPriceMax, markupValue} = req.body
-  let response = await models.pricing_markups.update(
+  let response = await models.pricing_markup.update(
     {
         selling_price_min : sellingPriceMin,
         selling_price_max : sellingPriceMax,
