@@ -1767,21 +1767,36 @@ exports.updatediamondprice =  async (req, res) => {
 
 
 exports.updategemstoneprice =  async (req, res) => {
-  const {priceid,weight_end, weight_start,price, selling_price_type} = req.body
+  const {cost_price_id, selling_price_id, selling_price, cost_price,weight_start, weight_end} = req.body
   let response = await models.gemstone_price_settings.update(
       // Values to update
       {
-          cost_price : costprice,
-          selling_price : sellingprice,
-          selling_price_type: pricetype,
+          weight_start : weight_start,
+          weight_end : weight_end,
+          price: cost_price,
           updatedAt : new Date()
       },
       { // Clause
           where: 
           {
-            id: priceid
+            id: cost_price_id
           }
       })
+
+      let response1 = await models.gemstone_price_settings.update(
+        // Values to update
+        {
+            weight_start : weight_start,
+            weight_end : weight_end,
+            price: selling_price,
+            updatedAt : new Date()
+        },
+        { // Clause
+            where: 
+            {
+              id: selling_price_id
+            }
+        })
       if(response[0] > 0)
       {
           res.send(200,{"message": "success"})
@@ -1868,14 +1883,12 @@ exports.vendormakingprice =  async (req, res) => {
   })
   let gems = []
   Object.keys(gem_costprice).forEach(function(key) {
-    console.log(key)
     let costcontent = gem_costprice[key]
     let sellcontent = gem_sellingprice[key]
     let gemobj = {
       "costprice":costcontent,
       "sellprice":sellcontent
     }
-    console.log(JSON.stringify(gemobj))
 
     gems.push(gemobj)
   });
@@ -1912,3 +1925,5 @@ exports.updatemakingcharge =  async (req, res) => {
 
 
 }
+
+
