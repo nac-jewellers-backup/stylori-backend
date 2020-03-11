@@ -33,17 +33,21 @@ exports.priceupdate = (req, res) => {
     var pricing_comp = []
     var discount_percentage = 0
     var processed_product_count = 0;
-    res.send(200,{message:"success"})
     const {req_product_id,generatedSku, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
     var whereclause1 = {
       isactive : true,
-      product_id: {
-        [Op.iLike]:'%SGC%'
-      }
+      // product_id: {
+      //   [Op.iLike]:'%SGC%'
+      // }
     }
     console.log(":>>>>>>>>>1212")
    var  startDate = new Date()
     console.log(new Date())
+    if(!pricingcomponent)
+    {
+      res.send(200,{message:"success"})
+
+    }
     if(req_product_id)
     {
       var product_id_arr1 = req_product_id.split(',');
@@ -73,12 +77,12 @@ exports.priceupdate = (req, res) => {
       }
     }
 
-    if(pricingcomponent)
-    {
-      pricingcomponent.forEach(element => {
-          pricing_comp.push(element)
-      })
-    }
+    // if(pricingcomponent)
+    // {
+    //   pricingcomponent.forEach(element => {
+    //       pricing_comp.push(element)
+    //   })
+    // }
 
    
     let purity_arr = [];
@@ -261,7 +265,11 @@ exports.priceupdate = (req, res) => {
        // res.send(200,{message: "succes1s"})
       //  processed_product_count = processed_product_count  + 1;
       //  processproduct();
-
+      if(pricingcomponent)
+      {
+        res.send(200,{message:"success"})
+  
+      }
         const msg = {
         to: "manokarantk@gmail.com",
         subject: 'Pricing update finished',
@@ -748,28 +756,42 @@ exports.priceupdate = (req, res) => {
       var gemstone_component_count = 0
 
       console.log("processlength"+product_obj.trans_sku_lists.length)
-      updatediamondprice(productobj.vendor_code, productskus[0])
+      if(pricingcomponent)
+      {
+      checkisinclude();
+
+      }else{
+        updatediamondprice(productobj.vendor_code, productskus[0])
+
+      }
    //updateskuprice()
    // updategoldprice(productobj.vendor_code, productskus[0])
    function checkisinclude()
    {
-      if(pricing_comp.indexOf("Diamond") > -1)
-      {
+    if(pricingcomponent === "Diamond")
+    {
+      updatediamondprice(productobj.vendor_code, productskus[0])
 
-      }
-      if(pricing_comp.indexOf("Gemstone") > -1)
-      {
-        updategemstone_price(product_obj.vendor_code, productsku)
+    }
+    if(pricingcomponent === "Gemstone")
+    {
+      updategemstone_price(product_obj.vendor_code, productskus[skucount])
 
-      }
-      if(pricing_comp.indexOf("Gold") > -1)
-      {
-        updategoldprice(product_obj.vendor_code, productsku)
-      }
-      if(pricing_comp.indexOf("Making Charge") > -1)
-      {
-        
-      }
+    }
+    if(pricingcomponent === "Gold")
+    {
+      updategoldprice(product_obj.vendor_code, productskus[skucount])
+
+    }
+    if(pricingcomponent === "Making Charge")
+    {
+     // updategoldprice(product_obj.vendor_code, productsku)
+      makingcharge(product_obj.vendor_code)
+    }
+    if(pricingcomponent === "updateskuprice")
+    {
+      updateskuprice()
+    }
     }
 
     async  function updatediamondprice(vendor_code,productsku)
@@ -791,8 +813,13 @@ exports.priceupdate = (req, res) => {
           diamond_process(product_diamonds[0],vendor_code);
         }else
         {
-        
-        updategemstone_price(product_obj.vendor_code, productsku)
+          if(pricingcomponent === "Diamond")
+          {
+           isskuexist()
+          }else{
+           updategemstone_price(product_obj.vendor_code, productsku)
+
+          }
 
        }
 
@@ -879,7 +906,13 @@ exports.priceupdate = (req, res) => {
                   }else{
                   //  updateskuprice() 
                  // updateskuprice()
-                   updategemstone_price(product_obj.vendor_code, productsku)
+                 if(pricingcomponent === "Diamond")
+                 {
+                  isskuexist()
+                 }else{
+                  updategemstone_price(product_obj.vendor_code, productsku)
+
+                 }
                   //  isskuexist()
   
                   }
@@ -916,7 +949,13 @@ exports.priceupdate = (req, res) => {
         {
           //checkisinclude()
          // isskuexist()
+         if(pricingcomponent === 'Gemstone')
+         {
+          isskuexist()
+         }else{
           updategoldprice(product_obj.vendor_code, productsku)
+
+         }
 
         } 
 
@@ -1079,7 +1118,13 @@ exports.priceupdate = (req, res) => {
             }else{
               // isskuexist()  
               //  checkisinclude();
-               updategoldprice(product_obj.vendor_code, productsku)
+              if(pricingcomponent === 'Gemstone')
+              {
+                isskuexist()
+              }else{
+                updategoldprice(product_obj.vendor_code, productsku)
+
+              }
             }
         }
         
@@ -1170,17 +1215,17 @@ exports.priceupdate = (req, res) => {
                 price_splitup_model.update(goldprice)
                 .then(updatedgoldprice => {
                  // checkisinclude()
-                  makingcharge(vendorcode);
+                 checkpricecomponent()
                 })
                 .catch(reason => {
                  // checkisinclude()
 
-                  makingcharge(vendorcode);
+                 checkpricecomponent()
                 });
               }
               else{
                 models.pricing_sku_metals.create(goldprice).then((result) => {
-                  makingcharge(vendorcode);
+                  checkpricecomponent()
                 //checkisinclude()
 
 
@@ -1188,7 +1233,7 @@ exports.priceupdate = (req, res) => {
                 .catch((error) => {
                   //checkisinclude()
 
-                  makingcharge(vendorcode);
+                  checkpricecomponent()
                 });
 
               }
@@ -1196,12 +1241,21 @@ exports.priceupdate = (req, res) => {
           }else{
          //   checkisinclude()
 
-          makingcharge(vendorcode);
+         checkpricecomponent()
           }
             
 
     
         });
+
+        function checkpricecomponent(){
+          if(pricingcomponent === 'Gold')
+          {
+            isskuexist()
+          }else{
+            makingcharge(vendorcode);
+          }
+        }
 
       }
 
@@ -1310,14 +1364,14 @@ exports.priceupdate = (req, res) => {
                       //   processproduct()
                       // }
                     // isskuexist()
-                     updateskuprice();
+                    checkcomponentmakingcharge();
                   })
                   .catch(reason => {
                          //  res.send(200,{"message":reason.message,price_splitup_model});
                          console.log("log2")
 
                         // isskuexist()
-                    updateskuprice();
+                        checkcomponentmakingcharge();
                   });
                 }else{
                   models.pricing_sku_metals.create(makingprice).then(async (result) => {
@@ -1325,24 +1379,34 @@ exports.priceupdate = (req, res) => {
 
                     //isskuexist()
                     // gemstonesell = calculatesellingmarkup(gemstonemarkup, gemstonesell)
-                   updateskuprice();
+                    checkcomponentmakingcharge();
                     
 
                   })
                   .catch((error) => {
                     console.log("log4")
                    //isskuexist()
-                    updateskuprice();
+                   checkcomponentmakingcharge();
                   });
                 }
               })
             }else{
               console.log("log5")
-
-              isskuexist()
+              checkcomponentmakingcharge();
+              //isskuexist()
             }
             
           });
+
+          function checkcomponentmakingcharge()
+          {
+            if(pricingcomponent === 'Making Charge')
+            {
+              isskuexist();
+            }else{
+              updateskuprice();
+            }
+          }
       }
       function getmaterialmarkupsum(skuvalue)
       {
@@ -1690,8 +1754,8 @@ exports.priceupdate = (req, res) => {
 
           if(product_obj.trans_sku_lists.length > skucount)
           {
-            
-            updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
+            checkisinclude()
+            //updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
 
 
           }else{
