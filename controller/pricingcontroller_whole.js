@@ -47,6 +47,8 @@ exports.priceupdate = (req, res) => {
     {
       res.send(200,{message:"success"})
 
+    }else{
+      res.send(200,{message:"Price Running"})
     }
     if(req_product_id)
     {
@@ -267,7 +269,7 @@ exports.priceupdate = (req, res) => {
       //  processproduct();
       if(pricingcomponent)
       {
-        res.send(200,{message:"success"})
+       // res.send(200,{message:"success"})
   
       }
         const msg = {
