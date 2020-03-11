@@ -31,7 +31,7 @@ exports.priceupdate = (req, res) => {
     var products = []
     var product_ids = []
     var pricing_comp = []
-    var discount_percentage = 0
+    var discount_percentage = 25
     var processed_product_count = 0;
     const {req_product_id,generatedSku, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
     var whereclause1 = {
@@ -673,7 +673,7 @@ exports.priceupdate = (req, res) => {
 
 
   /********** Material Markup calculation */
- function materialmarkupval( sellingprice_val)
+ function materialmarkupval( sellingprice_val, product_category)
   {
       const priceMarkup =  models.pricing_markup.findAll({
           where: {
@@ -682,7 +682,8 @@ exports.priceupdate = (req, res) => {
             },
             selling_price_max:{
               [Op.gte]: sellingprice_val 
-            }
+            },
+            category: product_category
           }
         });
         return priceMarkup;
@@ -1615,7 +1616,7 @@ exports.priceupdate = (req, res) => {
           sku_component_count = coponentarray.length
 
           let sku_margin = ((total_sellingprice - total_costprice)/total_costprice)*100
-          let markupobj =  await materialmarkupval(total_sellingprice)
+          let markupobj =  await materialmarkupval(total_sellingprice,product_obj.product_category)
           var goldmarkupvalue = goldsellingprice;
        
 
@@ -1626,15 +1627,18 @@ exports.priceupdate = (req, res) => {
 
           var gemstonediscountvalue = ((gemstonesellingprice * 100) /(100 - discount_percentage));
           var diamonddiscountvalue = ((diamondsellingprice * 100) /(100 - discount_percentage));
+          if(markupobj)
+          {
 
+          
           markupobj.forEach(async markup => {
                 if(markup.material == 'Gold')
                   {
-                    // goldmarkupvalue = (goldsellingprice + (goldsellingprice * (markup.markup_value/100)))
-                    // var query = "UPDATE pricing_sku_metals SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)), discount_price = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'goldprice'" ;
-                    // await models.sequelize.query(query).then(([results, metadata]) => {
+                    goldmarkupvalue = (goldsellingprice + (goldsellingprice * (markup.markup_value/100)))
+                    var query = "UPDATE pricing_sku_metals SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)), discount_price = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'goldprice'" ;
+                    await models.sequelize.query(query).then(([results, metadata]) => {
                      
-                    // })
+                    })
                   }
                 if(markup.material == 'Making Charge')
                   {
@@ -1669,6 +1673,7 @@ exports.priceupdate = (req, res) => {
 
 
           });
+        }
 
           var golddiscountvalue = ((goldmarkupvalue * 100) /(100 - discount_percentage));
       
