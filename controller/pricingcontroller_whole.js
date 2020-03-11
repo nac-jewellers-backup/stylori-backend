@@ -50,7 +50,7 @@ exports.priceupdate = (req, res) => {
     }
     if(req_product_id)
     {
-      var product_id_arr1 = req_product_id.split(',');
+      //var product_id_arr1 = req_product_id.split(',');
       
       // whereclause1 = {
       //   product_id : req_product_id
@@ -58,7 +58,7 @@ exports.priceupdate = (req, res) => {
       // }
       whereclause1 = {
         product_id : {
-          [Op.in]: product_id_arr1
+          [Op.in]: req_product_id
         }
       }
 
