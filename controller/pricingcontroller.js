@@ -1808,7 +1808,9 @@ exports.updategemstoneprice =  async (req, res) => {
 
 
 }
-
+exports.logfile =  async (req, res) => {
+  res.download('./price_update.txt');
+}
 
 exports.vendorgemprice =  async (req, res) => {
   const {vendorid, ratetype} = req.body
