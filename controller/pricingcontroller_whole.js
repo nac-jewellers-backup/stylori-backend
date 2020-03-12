@@ -12,15 +12,24 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey('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');
 exports.priceupdate = (req, res) => {
   console.log("test")
+  clearlog()
+
   function writelog(message)
   {
+    console.log("test12")
+
     message = message + '\n'
     fs.appendFile("./price_update.txt", message, (err) => {
       if (err) console.log(err);
-    //  console.log("Successfully Written to File.");
+     console.log("Successfully Written to File.");
      
     });
     
+  }
+  function clearlog()
+  {
+    fs.writeFile('./price_update.txt', '', function(){console.log('done')})
+
   }
   var skuwhereclause = {}
     var costprice = 0;

@@ -64,7 +64,14 @@ exports.updateproductattr =  async (req, res) => {
                 model: models.product_collections,
                 attributes: ['collection_name'],
             },
-            
+            {
+                model: models.product_materials,
+                attributes: ['material_name'],
+            },
+            {
+                model: models.product_purities,
+                attributes: ['purity'],
+            },
             {
                 model: models.product_stonecount,
                 attributes: ['stonecount'],
@@ -83,7 +90,106 @@ exports.updateproductattr =  async (req, res) => {
             product_id : 'SB0010'
         }
     })
+    let attributes_array = []
+    let product_category = await  models.master_product_categories.findOne({
+            where: {
+                name : product_object.product_category
+            }
+        })
+    attributes_array.push(product_category.short_code)
+    let product_type = await  models.master_product_types.findOne({
+        where: {
+            name : product_object.product_type
+        }
+    })
+    attributes_array.push(product_type.alias)
 
+    let materialname = []
+    product_object.product_materials.forEach(materialobj => {
+        materialname.push(materialobj.material_name)
+    })
+    let materials_arr = await  models.master_materials.findAll({
+        where: {
+            name : {
+                [Op.in] : materialname
+            }
+        }
+    })
+    materials_arr.forEach(mat_obj => {
+        attributes_array.push(mat_obj.alias)
+    })
+    let collectionname = []
+    product_object.product_collections.forEach(collectionobj => {
+        collectionname.push(collectionobj.collection_name)
+    })
+    let collections_arr = await  models.master_collections.findAll({
+        where: {
+            name : {
+                [Op.in] : collectionname
+            }
+        }
+    })
+    collections_arr.forEach(col_obj => {
+        attributes_array.push(col_obj.alias)
+    })
+
+    let purities = []
+    product_object.product_purities.forEach(purityobj => {
+        purities.push(purityobj.purity)
+    })
+    let purity_arr = await  models.master_metals_purities.findAll({
+        where: {
+            name : {
+                [Op.in] : purities
+            }
+        }
+    })
+    purity_arr.forEach(purity_obj => {
+        attributes_array.push(purity_obj.alias)
+    })
+
+
+    let styles = []
+    product_object.product_styles.forEach(styleobj => {
+        styles.push(styleobj.style_name)
+    })
+    let style_arr = await  models.master_styles.findAll({
+        where: {
+            name : {
+                [Op.in] : styles
+            }
+        }
+    })
+    style_arr.forEach(style_obj => {
+        attributes_array.push(style_obj.alias)
+    })
+
+    let occassions = []
+    product_object.product_occassions.forEach(ocassionobj => {
+        occassions.push(ocassionobj.occassion_name)
+    })
+    let occassion_arr = await  models.master_occasions.findAll({
+        where: {
+            name : {
+                [Op.in] : occassions
+            }
+        }
+    })
+    occassion_arr.forEach(ocassion_obj => {
+        attributes_array.push(ocassion_obj.alias)
+    })
+
+    
+    let updateobj = models.product_lists.update(
+        {"attributes": attributes_array},
+        {
+        where:{
+            product_id : 'SB0010'
+        }
+    }
+        
+    )
+    
     res.send(200,{"response":product_object})
 }
 exports.productupload =  async (req, res) => {
