@@ -44,7 +44,10 @@ module.exports = function(app) {
 	app.post('/productupload', productcontroller.productupload);
 	app.post('/productupdate', productupdatecontroller.updateproduct);
 	app.post('/priceupdate', productcontroller.priceupdate);
+	app.post('/disableproduct', productcontroller.disableproduct);
+	app.post('/getproductlist', productcontroller.getproductlist);
 
+	
 	app.post('/productpriceupdate',single_product_pricecontroller.priceupdate)
 
 	app.post('/splitdiamondpriceupdate',[productPricing.productList], pricesplitup_controller.splitdiamondpriceupdate);
@@ -67,6 +70,21 @@ module.exports = function(app) {
 	app.post('/api/auth/guestlogin', authcontroller.guestlogin);
 	app.post('/api/auth/verifyotp', authcontroller.verifyotp);
 	
+	app.post('/updatemetalprice', pricingontroller.updatemetalprice);
+	app.post('/updatediamondprice', pricingontroller.updatediamondprice);
+	app.post('/updategemstoneprice', pricingontroller.updategemstoneprice);
+	app.post('/updatemakingcharge', pricingontroller.updatemakingcharge);
+	app.post('/getvendorgemprice', pricingontroller.vendorgemprice);
+	app.post('/getvendormakingprice', pricingontroller.vendormakingprice);
+	app.post('/getdistinctproduct', pricingontroller.getdistinctproduct);
+	app.get('/getlogfile', pricingontroller.logfile);
+
+	
+	app.post('/updatemarkup', pricingontroller.updatemarkup);
+
+	
+	
+
 	app.post('/api/auth/verifyotp', authcontroller.verifyotp);
 	app.post('/addquestion', authcontroller.addquestion);
 	app.post('/addemailsubscription', authcontroller.addemailsubscription);
@@ -99,6 +117,12 @@ module.exports = function(app) {
 	app.post('/getproductvarient', productcontroller.getproductvarient);
 
 	app.post('/editproduct', productcontroller.editproduct);
+	app.post('/editproductdiamond', productcontroller.editproductdiamond);
+	app.post('/updateskuinfo', productcontroller.updateskuinfo);
+	app.post('/updateskupriceinfo', productcontroller.updateskupriceinfo);
+	app.post('/editproductgemstone', productcontroller.editproductgemstone);
+	app.post('/updateproductattr', productcontroller.updateproductattr);
+
 	
 	
 	

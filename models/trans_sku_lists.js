@@ -68,7 +68,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     sku_url:{
       type: DataTypes.STRING
-    },  
+    }, 
+    sku_id:{
+      type: DataTypes.STRING
+    },   
     vendor_delivery_time:{
       type: DataTypes.INTEGER
     },
@@ -76,6 +79,12 @@ module.exports = (sequelize, DataTypes) => {
     //   type: DataTypes.ARRAY(DataTypes.TEXT)
     // },
     is_ready_to_ship:{
+      type: DataTypes.BOOLEAN
+    },
+    is_active:{
+      type: DataTypes.BOOLEAN
+    },
+    is_soldout  :{
       type: DataTypes.BOOLEAN
     },
     margin_on_sale_percentage:{

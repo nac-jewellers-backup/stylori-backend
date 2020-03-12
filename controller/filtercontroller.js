@@ -28,6 +28,12 @@ var seofilterattributevalue = []
       seofilterattributevalue.push("goldcoins")
       category_filter['name']= "Gold Coins"
       whereclause['product_category'] = "Gold Coins"
+      includeclause.push({
+        model : models.trans_sku_lists
+       })
+      whereclause['$trans_sku_lists.is_active$'] = {
+      [Op.eq]:true
+      }
     }else{
       seofilterattribute.push('Category')
       seofilterattributevalue.push(category)
