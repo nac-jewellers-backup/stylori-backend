@@ -44,7 +44,20 @@ exports.ringpriceupdate =  async (req, res) => {
 
 
 exports.updateproductattr =  async (req, res) => {
-    var product_object = await models.product_lists.findOne({
+    let products = await models.product_lists.findAll({
+        where:{
+            isactive : true
+        }
+    })
+   var processcount = 0;
+    res.send(200,{"response":products.length})
+
+    productupdate(processcount)
+  async  function productupdate(processcount)
+    {
+        let product_id = products[processcount].product_id
+        console.log(product_id)
+        var product_object = await models.product_lists.findOne({
         attributes:[ "product_type",
             "product_category"],
         include:[
@@ -87,7 +100,7 @@ exports.updateproductattr =  async (req, res) => {
     
         ],
         where:{
-            product_id : 'SB0010'
+            product_id : product_id
         }
     })
     let attributes_array = []
@@ -180,17 +193,26 @@ exports.updateproductattr =  async (req, res) => {
     })
 
     
-    let updateobj = models.product_lists.update(
+    let updateobj = await models.product_lists.update(
         {"attributes": attributes_array},
         {
         where:{
-            product_id : 'SB0010'
+            product_id : product_id
         }
     }
         
     )
-    
-    res.send(200,{"response":product_object})
+
+    if(products.length > processcount)
+    {
+        processcount =processcount +1;
+        productupdate(processcount)
+    }else{
+        console.log("update complete")
+        }
+}
+
+
 }
 exports.productupload =  async (req, res) => {
     var apidata = req.body;
