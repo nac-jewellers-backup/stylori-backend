@@ -62,7 +62,7 @@ exports.priceupdate = (req, res) => {
     if(req_product_id)
     {
       var product_id_arr1 = req_product_id.split(',');
-      if(!Array.isArray(req_product_id))
+      if(Array.isArray(req_product_id))
       {
         product_id_arr1 = req_product_id;
       }
@@ -72,7 +72,7 @@ exports.priceupdate = (req, res) => {
       // }
       whereclause1 = {
         product_id : {
-          [Op.in]: req_product_id
+          [Op.in]: product_id_arr1
         }
       }
 
