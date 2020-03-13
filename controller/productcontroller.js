@@ -1697,11 +1697,11 @@ exports.getproductlist =  async (req, res) => {
        let whereclause = {
          
        }
-       var sort = order
-    //    if(order)
-    //    {
-    //     sort = 'ASC'
-    //    }
+       var sort = 'DESC'
+       if(order)
+       {
+        sort = 'ASC'
+       }
        if(searchtext)
        {
            whereclause= {
