@@ -353,7 +353,7 @@ exports.productupload =  async (req, res) => {
     {
         Object.keys(product_images).forEach(key => {
            let images_arr = product_images[key]
-           var imgposition = 1;
+           var imgposition = 0;
            images_arr.forEach(element => {
             let ishover = false
            let isdefault = false
@@ -373,7 +373,7 @@ exports.productupload =  async (req, res) => {
                 image_url: element.image_url,
                 image_position: imgposition,
                 ishover,
-                isdefault
+                isdefault : isdefault
 
             }
             prod_images.push(image_obj)
