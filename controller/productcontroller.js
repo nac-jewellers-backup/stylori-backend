@@ -1693,8 +1693,15 @@ const {productid, isactive} = req.body
 }
 
 exports.getproductlist =  async (req, res) => {
-    const {size, offset, productcategory, producttype, searchtext} = req.body
-       let whereclause = {}
+    const {size, offset, productcategory, producttype, searchtext, order, orderby} = req.body
+       let whereclause = {
+         
+       }
+       var sort = 'DESC'
+       if(order)
+       {
+        sort = 'ASC'
+       }
        if(searchtext)
        {
            whereclause= {
@@ -1726,10 +1733,13 @@ exports.getproductlist =  async (req, res) => {
         }
 
         
-       
         let products = await models.product_lists.findAndCountAll({
             where: whereclause,
-            offset: offset, limit: size
+            offset: offset, limit: size,
+            order: [
+                [orderby, sort]
+               
+            ],
         })
     
     
