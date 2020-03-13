@@ -640,7 +640,7 @@ exports.productupload =  async (req, res) => {
                 diamond_settings : diamond.settings.name,
                 diamond_shape : diamond.shape.name,
                 stone_count : diamond.count,
-                dimaond_type : clarity,
+                diamond_type : clarity,
                 stone_weight : diamond.weight,
                 product_sku: product_obj.product_id
             }
@@ -1697,7 +1697,16 @@ exports.getproductlist =  async (req, res) => {
        let whereclause = {
          
        }
-       var sort = order.toUpperCase()
+       var sort = "DESC"
+       var orderbycolumn = 'product_id'
+       if(orderby)
+       {
+        orderbycolumn = orderby
+       }
+       if(order)
+       {
+        sort =  order.toUpperCase()
+       }
     //    if(order)
     //    {
     //     sort = 'ASC'
@@ -1737,7 +1746,7 @@ exports.getproductlist =  async (req, res) => {
             where: whereclause,
             offset: offset, limit: size,
             order: [
-                [orderby, sort]
+                [orderbycolumn, sort]
                
             ],
         })
