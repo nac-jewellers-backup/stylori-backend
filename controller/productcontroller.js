@@ -1727,7 +1727,7 @@ exports.getproductlist =  async (req, res) => {
 
         
        
-        let products = await models.product_lists.findAll({
+        let products = await models.product_lists.findAndCountAll({
             where: whereclause,
             offset: offset, limit: size
         })
