@@ -905,12 +905,13 @@ exports.productupload =  async (req, res) => {
 }
 exports.updateproductimage  =  async (req, res) => {
     const {imageobj, isedit} = req.body
+    let imgurl = imageobj.imageUrl;
     if(isedit)
     {
         let response_obj1 = await models.product_images.update(
             // Values to update
             {
-                image_url : imageobj.imageUrl
+                image_url : imgurl.replace('png','jpg')
             },
             { // Clause
                 where: 
