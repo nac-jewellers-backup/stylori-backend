@@ -923,7 +923,7 @@ exports.updateproductimage  =  async (req, res) => {
     }else{
         let newimage = {
             id: uuidv1(),
-            image_url : imageobj.imageUrl,
+            image_url : imgurl.replace('png','jpg'),
             product_id : imageobj.productId,
             product_color: imageobj.productColor,
             image_position : imageobj.imagePosition,
@@ -933,7 +933,7 @@ exports.updateproductimage  =  async (req, res) => {
             updatedAt : new Date(),
 
         }
-        //let successmessage = await models.product_images.create(newimage)
+        let successmessage = await models.product_images.create(newimage)
         res.send(200,{"message":newimage})
 
     }
