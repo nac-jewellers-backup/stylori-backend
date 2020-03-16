@@ -925,15 +925,18 @@ exports.updateproductimage  =  async (req, res) => {
             id: uuidv1(),
             image_url : imageobj.imageUrl,
             product_id : imageobj.productId,
+            product_color: imageobj.productColor,
             image_position : imageobj.imagePosition,
             ishover : imageobj.imagePosition == 2 ? true : false,
-            isdefault : false
+            isdefault : false,
+            createdAt : new Date(),
+            updatedAt : new Date(),
 
         }
-        let successmessage = await models.product_images.create(newimage)
+        //let successmessage = await models.product_images.create(newimage)
+        res.send(200,{"message":newimage})
 
     }
-    res.send(200,{"message":"success"})
 }
 exports.getproductvarient =  async (req, res) => {
     const {productPuritiesByProductId, productDiamondTypes,productSize,productId,productMetalcoloursByProductId} = req.body
