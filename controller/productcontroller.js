@@ -920,6 +920,18 @@ exports.updateproductimage  =  async (req, res) => {
                 }
             })
 
+    }else{
+        let newimage = {
+            id: uuidv1(),
+            image_url : imageobj.imageUrl,
+            product_id : imageobj.productId,
+            image_position : imageobj.imagePosition,
+            ishover : imageobj.imagePosition == 2 ? true : false,
+            isdefault : false
+
+        }
+        let successmessage = await models.product_images.create(newimage)
+
     }
     res.send(200,{"message":"success"})
 }
