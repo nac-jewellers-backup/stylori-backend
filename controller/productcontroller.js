@@ -934,9 +934,10 @@ exports.updateproductimage  =  async (req, res) => {
 
         }
         let successmessage = await models.product_images.create(newimage)
-        res.send(200,{"message":newimage})
 
     }
+    res.send(200,{"message":"Success"})
+
 }
 exports.getproductvarient =  async (req, res) => {
     const {productPuritiesByProductId, productDiamondTypes,productSize,productId,productMetalcoloursByProductId} = req.body
