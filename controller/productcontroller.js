@@ -903,6 +903,25 @@ exports.productupload =  async (req, res) => {
     
 
 }
+exports.updateproductimage  =  async (req, res) => {
+    const {imageobj, isedit} = req.body
+    if(isedit)
+    {
+        let response_obj1 = await models.product_images.update(
+            // Values to update
+            {
+                image_url : imageobj.imageUrl
+            },
+            { // Clause
+                where: 
+                {
+                  id: imageobj.id
+                }
+            })
+
+    }
+    res.send(200,{"message":"success"})
+}
 exports.getproductvarient =  async (req, res) => {
     const {productPuritiesByProductId, productDiamondTypes,productSize,productId,productMetalcoloursByProductId} = req.body
   var product_skus = []
