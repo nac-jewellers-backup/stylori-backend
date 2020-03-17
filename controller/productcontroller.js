@@ -928,7 +928,7 @@ exports.updateproductimage  =  async (req, res) => {
             product_color: imageobj.productColor,
             image_position : imageobj.imagePosition,
             ishover : imageobj.imagePosition == 2 ? true : false,
-            isdefault : false,
+            isdefault : default_metal_color === imageobj.productColor ? true : false,
             createdAt : new Date(),
             updatedAt : new Date(),
 
