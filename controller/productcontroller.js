@@ -1801,6 +1801,14 @@ exports.getproductlist =  async (req, res) => {
 
         
         let products = await models.product_lists.findAndCountAll({
+            include: [
+                {
+                    model:models.trans_sku_lists,
+                    where:{
+                        isdefault : true
+                    }
+                }
+            ],
             where: whereclause,
             offset: offset, limit: size,
             order: [
