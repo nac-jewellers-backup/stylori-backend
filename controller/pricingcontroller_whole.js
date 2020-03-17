@@ -287,7 +287,7 @@ exports.priceupdate = (req, res) => {
               {
 
               }
-           //   sendMail(emilreceipiants,JSON.stringify(product_ids))
+             sendMail(emilreceipiants,JSON.stringify(product_ids))
             
        // res.send(200,{message:"success"})
   
