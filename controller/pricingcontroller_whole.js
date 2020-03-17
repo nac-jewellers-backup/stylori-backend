@@ -50,6 +50,7 @@ exports.priceupdate = (req, res) => {
       // }
     }
     console.log(":>>>>>>>>>1212")
+    var product_id_arr1 = []
    var  startDate = new Date()
     console.log(new Date())
     if(!pricingcomponent)
@@ -57,11 +58,11 @@ exports.priceupdate = (req, res) => {
       res.send(200,{message:"success"})
 
     }else{
-      res.send(200,{message:"Price Running"})
+     // res.send(200,{message:"Price Running"})
     }
     if(req_product_id)
     {
-      var product_id_arr1 = []
+     
       if(Array.isArray(req_product_id))
       {
         product_id_arr1 = req_product_id;
@@ -80,6 +81,25 @@ exports.priceupdate = (req, res) => {
       }
 
 
+    }
+
+    updatehistory()
+    async function updatehistory()
+    {
+
+        await models.price_running_history.create({
+          pricing_component : pricingcomponent,
+          product_ids: product_id_arr1.join(','),
+          total_product : product_id_arr1.length,
+          createdAt : new Date()
+        })
+
+        res.send(200,{
+          pricing_component : pricingcomponent,
+          product_ids: product_id_arr1,
+          total_product : product_id_arr1.length,
+          createdAt : new Date()
+        })
     }
     let vendor_arr = []
 
@@ -100,7 +120,7 @@ exports.priceupdate = (req, res) => {
     //       pricing_comp.push(element)
     //   })
     // }
-
+     
    
     let purity_arr = [];
     
@@ -290,7 +310,7 @@ exports.priceupdate = (req, res) => {
               {
 
               }
-             sendMail(emilreceipiants,JSON.stringify(product_ids))
+          //   sendMail(emilreceipiants,JSON.stringify(product_ids))
             
        // res.send(200,{message:"success"})
   
