@@ -61,10 +61,13 @@ exports.priceupdate = (req, res) => {
     }
     if(req_product_id)
     {
-      var product_id_arr1 = req_product_id.split(',');
+      var product_id_arr1 = []
       if(Array.isArray(req_product_id))
       {
         product_id_arr1 = req_product_id;
+      }else
+      {
+        product_id_arr1 = req_product_id.split(',');
       }
       // whereclause1 = {
       //   product_id : req_product_id
