@@ -78,6 +78,7 @@ module.exports = function(app) {
 	app.post('/getvendormakingprice', pricingontroller.vendormakingprice);
 	app.post('/getdistinctproduct', pricingontroller.getdistinctproduct);
 	app.get('/getlogfile', pricingontroller.logfile);
+	app.post('/getcomponentpricestatus', pricingontroller.priceupdatestatus);
 
 	
 	app.post('/updatemarkup', pricingontroller.updatemarkup);
