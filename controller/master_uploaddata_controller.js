@@ -550,3 +550,24 @@ exports.updatecustomerreviews = async (req, res) => {
 
     res.send(200,{message: "success"});
 }
+
+exports.updatevendor = async (req, res) => {
+   const {shortCode,name, address, city, gstNo, vendorDelivaryDays} = req.body
+    let response = await models.master_vendors.update(
+        {
+            name : name,
+            address: address,
+            city : city,
+            gst_no: gstNo,
+            vendor_delivary_days : vendorDelivaryDays
+        },
+        { // Clause
+            where: 
+            {
+                short_code: shortCode
+            }
+        }
+    )
+
+    res.send(200, {message: response})
+}
