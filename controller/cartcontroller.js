@@ -505,7 +505,7 @@ exports.uploadimage =  (req, res) => {
     console.log(req.body)
     let extension = req.body.image;
     const s3 = new aws.S3();  // Create a new instance of S3
-  const fileName = 'base_images/'+req.body.filename+'.'+extension.replace('jpeg','jpg');
+  const fileName = 'base_images/'+req.body.filename+'.'+extension.replace('jpeg','jpg').toLowerCase();
   const fileType = req.body.image;
   console.log(fileName)
 
