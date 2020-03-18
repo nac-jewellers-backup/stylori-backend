@@ -40,7 +40,7 @@ exports.priceupdate = (req, res) => {
     var products = []
     var product_ids = []
     var pricing_comp = []
-    var discount_percentage = 25
+    var discount_percentage = 0
     var processed_product_count = 0;
     const {req_product_id,generatedSku, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
     var whereclause1 = {
@@ -50,6 +50,7 @@ exports.priceupdate = (req, res) => {
       // }
     }
     console.log(":>>>>>>>>>1212")
+    var product_id_arr1 = []
    var  startDate = new Date()
     console.log(new Date())
     if(!pricingcomponent)
@@ -57,23 +58,48 @@ exports.priceupdate = (req, res) => {
       res.send(200,{message:"success"})
 
     }else{
-      res.send(200,{message:"Price Running"})
+     // res.send(200,{message:"Price Running"})
     }
     if(req_product_id)
     {
-      //var product_id_arr1 = req_product_id.split(',');
-      
+     
+      if(Array.isArray(req_product_id))
+      {
+        product_id_arr1 = req_product_id;
+      }else
+      {
+        product_id_arr1 = req_product_id.split(',');
+      }
       // whereclause1 = {
       //   product_id : req_product_id
 
       // }
       whereclause1 = {
         product_id : {
-          [Op.in]: req_product_id
+          [Op.in]: product_id_arr1
         }
       }
 
 
+    }
+
+    updatehistory()
+    async function updatehistory()
+    {
+
+        await models.price_running_history.create({
+          pricing_component : pricingcomponent,
+          product_ids: product_id_arr1.join(','),
+          total_product : product_id_arr1.length,
+          createdAt : new Date()
+        })
+
+        res.send(200,{
+          pricing_component : pricingcomponent,
+          product_ids: product_id_arr1,
+          total_product : product_id_arr1.length,
+          createdAt : new Date()
+        })
     }
     let vendor_arr = []
 
@@ -94,7 +120,7 @@ exports.priceupdate = (req, res) => {
     //       pricing_comp.push(element)
     //   })
     // }
-
+     
    
     let purity_arr = [];
     
@@ -284,7 +310,7 @@ exports.priceupdate = (req, res) => {
               {
 
               }
-           //   sendMail(emilreceipiants,JSON.stringify(product_ids))
+          //   sendMail(emilreceipiants,JSON.stringify(product_ids))
             
        // res.send(200,{message:"success"})
   
@@ -1184,7 +1210,7 @@ exports.priceupdate = (req, res) => {
                 product_obj.trans_sku_lists.forEach(skuobj =>{
                   
                   
-                  var gemstoneprice ={
+                   gemstoneprice ={
                     component: gemstoneprice.component,
                     material_name: gemstoneprice.material_name,
                     id: uuidv1(),
@@ -1643,11 +1669,11 @@ exports.priceupdate = (req, res) => {
           markupobj.forEach(async markup => {
                 if(markup.material == 'Gold')
                   {
-                    goldmarkupvalue = (goldsellingprice + (goldsellingprice * (markup.markup_value/100)))
-                    var query = "UPDATE pricing_sku_metals SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)), discount_price = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'goldprice'" ;
-                    await models.sequelize.query(query).then(([results, metadata]) => {
+                    // goldmarkupvalue = (goldsellingprice + (goldsellingprice * (markup.markup_value/100)))
+                    // var query = "UPDATE pricing_sku_metals SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)), discount_price = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'goldprice'" ;
+                    // await models.sequelize.query(query).then(([results, metadata]) => {
                      
-                    })
+                    // })
                   }
                 if(markup.material == 'Making Charge')
                   {

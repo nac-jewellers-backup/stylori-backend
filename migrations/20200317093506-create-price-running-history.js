@@ -1,20 +1,21 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('master_tax_settings', {
+    return queryInterface.createTable('price_running_histories', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.INTEGER
       },
-      hsn_number: {
+      pricing_component: {
         type: Sequelize.STRING
       },
-      tax_name: {
-        type: Sequelize.STRING
+      product_ids: {
+        type: Sequelize.TEXT
       },
-      tax_value: {
-        type: Sequelize.DOUBLE
+      total_product: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -27,6 +28,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('master_tax_settings');
+    return queryInterface.dropTable('price_running_histories');
   }
 };

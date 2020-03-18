@@ -44,7 +44,20 @@ exports.ringpriceupdate =  async (req, res) => {
 
 
 exports.updateproductattr =  async (req, res) => {
-    var product_object = await models.product_lists.findOne({
+    let products = await models.product_lists.findAll({
+        where:{
+            isactive : true
+        }
+    })
+   var processcount = 0;
+    res.send(200,{"response":products.length})
+
+    productupdate(processcount)
+  async  function productupdate(processcount)
+    {
+        let product_id = products[processcount].product_id
+        console.log(product_id)
+        var product_object = await models.product_lists.findOne({
         attributes:[ "product_type",
             "product_category"],
         include:[
@@ -87,7 +100,7 @@ exports.updateproductattr =  async (req, res) => {
     
         ],
         where:{
-            product_id : 'SB0010'
+            product_id : product_id
         }
     })
     let attributes_array = []
@@ -180,17 +193,26 @@ exports.updateproductattr =  async (req, res) => {
     })
 
     
-    let updateobj = models.product_lists.update(
+    let updateobj = await models.product_lists.update(
         {"attributes": attributes_array},
         {
         where:{
-            product_id : 'SB0010'
+            product_id : product_id
         }
     }
         
     )
-    
-    res.send(200,{"response":product_object})
+
+    if(products.length > processcount)
+    {
+        processcount =processcount +1;
+        productupdate(processcount)
+    }else{
+        console.log("update complete")
+        }
+}
+
+
 }
 exports.productupload =  async (req, res) => {
     var apidata = req.body;
@@ -353,7 +375,7 @@ exports.productupload =  async (req, res) => {
     {
         Object.keys(product_images).forEach(key => {
            let images_arr = product_images[key]
-           var imgposition = 1;
+           var imgposition = 0;
            images_arr.forEach(element => {
             let ishover = false
            let isdefault = false
@@ -373,7 +395,7 @@ exports.productupload =  async (req, res) => {
                 image_url: element.image_url,
                 image_position: imgposition,
                 ishover,
-                isdefault
+                isdefault : default_metal_color === element.color ? true : false
 
             }
             prod_images.push(image_obj)
@@ -640,7 +662,7 @@ exports.productupload =  async (req, res) => {
                 diamond_settings : diamond.settings.name,
                 diamond_shape : diamond.shape.name,
                 stone_count : diamond.count,
-                dimaond_type : clarity,
+                diamond_type : clarity,
                 stone_weight : diamond.weight,
                 product_sku: product_obj.product_id
             }
@@ -879,6 +901,42 @@ exports.productupload =  async (req, res) => {
             //  res.send(200, { submitted: true })
        
     
+
+}
+exports.updateproductimage  =  async (req, res) => {
+    const {imageobj, isedit} = req.body
+    let imgurl = imageobj.imageUrl;
+    if(isedit)
+    {
+        let response_obj1 = await models.product_images.update(
+            // Values to update
+            {
+                image_url : imgurl.replace('png','jpg')
+            },
+            { // Clause
+                where: 
+                {
+                  id: imageobj.id
+                }
+            })
+
+    }else{
+        let newimage = {
+            id: uuidv1(),
+            image_url : imgurl.replace('png','jpg'),
+            product_id : imageobj.productId,
+            product_color: imageobj.productColor,
+            image_position : imageobj.imagePosition,
+            ishover : imageobj.imagePosition == 2 ? true : false,
+            isdefault : default_metal_color === imageobj.productColor ? true : false,
+            createdAt : new Date(),
+            updatedAt : new Date(),
+
+        }
+        let successmessage = await models.product_images.create(newimage)
+
+    }
+    res.send(200,{"message":"Success"})
 
 }
 exports.getproductvarient =  async (req, res) => {
@@ -1693,8 +1751,24 @@ const {productid, isactive} = req.body
 }
 
 exports.getproductlist =  async (req, res) => {
-    const {size, offset, productcategory, producttype, searchtext} = req.body
-       let whereclause = {}
+    const {size, offset, productcategory, producttype, searchtext, order, orderby} = req.body
+       let whereclause = {
+         
+       }
+       var sort = "DESC"
+       var orderbycolumn = 'product_id'
+       if(orderby)
+       {
+        orderbycolumn = orderby
+       }
+       if(order)
+       {
+        sort =  order.toUpperCase()
+       }
+    //    if(order)
+    //    {
+    //     sort = 'ASC'
+    //    }
        if(searchtext)
        {
            whereclause= {
@@ -1726,10 +1800,21 @@ exports.getproductlist =  async (req, res) => {
         }
 
         
-       
-        let products = await models.product_lists.findAll({
+        let products = await models.product_lists.findAndCountAll({
+            include: [
+                {
+                    model:models.trans_sku_lists,
+                    where:{
+                        isdefault : true
+                    }
+                }
+            ],
             where: whereclause,
-            offset: offset, limit: size
+            offset: offset, limit: size,
+            order: [
+                [orderbycolumn, sort]
+               
+            ],
         })
     
     

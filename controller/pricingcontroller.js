@@ -1735,6 +1735,116 @@ exports.updatemetalprice =  async (req, res) => {
 
 
 }
+exports.priceupdatestatus =  async (req, res) => {
+  const {component} = req.body
+  let component_history = await models.price_running_history.findOne({
+    order: [
+      ['createdAt', 'DESC']
+    ]
+  })
+  let status_message = ""
+  var product_ids = component_history.product_ids;
+  product_ids = product_ids.split(',')
+  if(component === 'Diamond' || component === 'Gemstone')
+  {
+    let updatedskus = await models.pricing_sku_materials.findAll({
+      attributes: [
+        'product_id',
+        [squelize.literal('COUNT(DISTINCT(product_id))'), 'countOfProducts']
+      ],
+      where:{
+        product_id : {
+          [Op.in]: product_ids
+        },
+        updatedAt: {
+          [Op.gt] : component_history.createdAt
+        }
+      },
+      group: 'product_id'
+    })
+    if(updatedskus.length === product_ids.length)
+    {
+      status_message = "Completed"
+  
+    }else{
+      status_message = updatedskus.length +" out of "+ product_ids.length
+  
+    }
+  }
+  if(component === 'updateskuprice')
+  {
+
+  let updatedskus = await models.trans_sku_lists.findAll({
+    attributes: [
+      'product_id',
+      [squelize.literal('COUNT(DISTINCT(product_id))'), 'countOfProducts']
+    ],
+    where:{
+      product_id : {
+        [Op.in]: product_ids
+      },
+      updatedAt: {
+        [Op.gt] : component_history.createdAt
+      }
+    },
+    group: 'product_id'
+  })
+  if(updatedskus.length === product_ids.length)
+  {
+    status_message = "Completed"
+
+  }else{
+    status_message = updatedskus.length +" out of "+ product_ids.length
+
+  }
+}else{
+  let skulists = await models.trans_sku_lists.findAll({
+    attributes: [
+      'generated_sku'
+    ],
+    where:{
+      product_id : {
+        [Op.in]: product_ids
+      }
+    }
+  })
+let skus = []
+skulists.forEach(skuobj => {
+  skus.push(skuobj.generated_sku)
+})
+let updatedskus = await models.pricing_sku_metals.findAll({
+  attributes: [
+    'product_sku'  ],
+  where:{
+    product_sku : {
+      [Op.in]: skus
+    },
+    
+      material_name: {
+        [Op.iLike]: '%goldprice%'
+      },
+    
+    updatedAt: {
+      [Op.gt] : component_history.createdAt
+    }
+  },
+  group: 'product_sku'
+})
+if(updatedskus.length === product_ids.length)
+{
+  status_message = "Completed"
+
+}else{
+  status_message = updatedskus.length +" out of "+ product_ids.length
+
+}
+
+
+}
+res.send(200,{message:status_message})
+
+
+}
 
 
 exports.updatediamondprice =  async (req, res) => {

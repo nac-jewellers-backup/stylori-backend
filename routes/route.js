@@ -78,6 +78,7 @@ module.exports = function(app) {
 	app.post('/getvendormakingprice', pricingontroller.vendormakingprice);
 	app.post('/getdistinctproduct', pricingontroller.getdistinctproduct);
 	app.get('/getlogfile', pricingontroller.logfile);
+	app.post('/getcomponentpricestatus', pricingontroller.priceupdatestatus);
 
 	
 	app.post('/updatemarkup', pricingontroller.updatemarkup);
@@ -122,10 +123,12 @@ module.exports = function(app) {
 	app.post('/updateskupriceinfo', productcontroller.updateskupriceinfo);
 	app.post('/editproductgemstone', productcontroller.editproductgemstone);
 	app.post('/updateproductattr', productcontroller.updateproductattr);
+	app.post('/updateproductimage', productcontroller.updateproductimage);
 
 	
 	
-	
+	app.post('/updatevendor', master_uploaddata_controller.updatevendor);
+
 	app.post('/updatebestseller', master_uploaddata_controller.updatebestseller);
 	app.post('/updatereadytoship', master_uploaddata_controller.updatereadytoship);
 	app.post('/pincodemaster', master_uploaddata_controller.updatepincode);
