@@ -594,7 +594,16 @@ exports.updatetax = async (req, res) => {
             res.send(200, {message: response})
 
         }else{
-            
+            var taxobj = {
+                id:uuidv1(),
+                hasn_number: hsnNumber,
+                tax_value: taxValue,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            }
+           let response = await models.master_tax_settings.create(taxobj)
+            res.send(200, {message: response})
+
         }
   
  
