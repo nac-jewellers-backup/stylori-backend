@@ -1210,7 +1210,7 @@ exports.priceupdate = (req, res) => {
                 product_obj.trans_sku_lists.forEach(skuobj =>{
                   
                   
-                  var gemstoneprice ={
+                   gemstoneprice ={
                     component: gemstoneprice.component,
                     material_name: gemstoneprice.material_name,
                     id: uuidv1(),

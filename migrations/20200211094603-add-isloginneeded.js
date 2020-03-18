@@ -1,8 +1,9 @@
 'use strict';
 
 module.exports = {
+  
   up: (queryInterface, Sequelize) => {
-    return [
+    return Promise.all([
       queryInterface.addColumn(
         'vouchers',
         'isloginneeded',
@@ -11,14 +12,14 @@ module.exports = {
           allowNull: true
         }
       )
-    ];
+    ]);
 
 
   },
 
   down: (queryInterface, Sequelize) => {
-    return [
+    return Promise.all([
       queryInterface.removeColumn('vouchers', 'isloginneeded')
-    ];
+    ]);
   }
 };
