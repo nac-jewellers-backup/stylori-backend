@@ -395,7 +395,7 @@ exports.productupload =  async (req, res) => {
                 image_url: element.image_url,
                 image_position: imgposition,
                 ishover,
-                isdefault : isdefault
+                isdefault : default_metal_color === element.color ? true : false
 
             }
             prod_images.push(image_obj)
