@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     colour_varient: DataTypes.STRING,
     selling_qty: DataTypes.INTEGER,
     isreorderable: DataTypes.BOOLEAN,
+    hsn_number: DataTypes.STRING,
     attributes:{
       type: DataTypes.ARRAY(DataTypes.TEXT)
     },

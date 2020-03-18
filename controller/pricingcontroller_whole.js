@@ -256,6 +256,7 @@ exports.priceupdate = (req, res) => {
         let currentproduct = products[processed_product_count]
         product_ids.push(currentproduct.product_id)
         product_obj =   await  models.product_lists.findOne({
+          
           include: [{
             model: models.trans_sku_lists,
             attributes:['generated_sku','sku_weight','product_id','purity','diamond_type','sku_size'],
@@ -1838,14 +1839,26 @@ exports.priceupdate = (req, res) => {
               
               totaldiscountpricevalue = (materialsum.discount_price + matalsum.discount_price) ;
             
+              let taxobj = await models.master_tax_settings.findOne({
+                where: {
+                  hsn_number : product_obj.hsn_number
+                }
+              })
+              // let taxobj = {
+              //   tax_value : 3
+              // }
+              console.log("taxcomponent")
+              console.log(JSON.stringify(product_obj.hsn_number))
+            let taxval = taxobj.tax_value ? parseInt(taxobj.tax_value) : 3; 
+
               // res.send(200,{materialsum, matalsum})
-              const costpricetax = (total_costprice * 3 /100);
-              const sellingpricetax = (total_sellingprice * 3 /100);
+              const costpricetax = (total_costprice * taxval /100);
+              const sellingpricetax = (total_sellingprice * taxval /100);
               
               let skumarkup = materialsum.markup + matalsum.markup;
               let skudiscount = materialsum.discount_price + matalsum.discount_price;
-              const markuppricetax = (skumarkup * 3 /100);
-              const discountpricetax  = (skudiscount * 3 /100);
+              const markuppricetax = (skumarkup * taxval /100);
+              const discountpricetax  = (skudiscount * taxval /100);
               let transskuobj = {
                 cost_price : total_costprice + costpricetax,
                 cost_price_tax : costpricetax,

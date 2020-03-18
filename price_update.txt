@@ -1,10 +1,20 @@
 diamondpriceseeting
-{"vendor_code":"STYPA 120","diamond_colour":"SI","diamond_clarity":"IJ"}
-SR3326
+{"vendor_code":"STYPA 060","diamond_colour":"SI","diamond_clarity":"GH"}
+SB0010
 diamond cost price
-1690
+9600
 diamondpriceseeting
-{"vendor_code":"STYPA 120","diamond_colour":"VS","diamond_clarity":"GH"}
-SR3326
+{"vendor_code":"STYPA 060","diamond_colour":"SI","diamond_clarity":"GH"}
+SB0010
 diamond cost price
-2968.29
+4800
+diamondpriceseeting
+{"vendor_code":"STYPA 060","diamond_colour":"SI","diamond_clarity":"GH"}
+SB0010
+diamond cost price
+15600
+diamondpriceseeting
+{"vendor_code":"STYPA 060","diamond_colour":"SI","diamond_clarity":"GH"}
+SB0010
+diamond cost price
+39000
