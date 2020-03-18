@@ -596,7 +596,7 @@ exports.updatetax = async (req, res) => {
         }else{
             var taxobj = {
                 id:uuidv1(),
-                hasn_number: hsnNumber,
+                hsn_number: hsnNumber,
                 tax_value: taxValue,
                 createdAt: new Date(),
                 updatedAt: new Date()
