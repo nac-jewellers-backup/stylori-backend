@@ -571,3 +571,34 @@ exports.updatevendor = async (req, res) => {
 
     res.send(200, {message: response})
 }
+
+
+
+exports.updatetax = async (req, res) => {
+    const {hsnNumber,taxValue, isedit, id} = req.body
+    
+        if(isedit)
+        {
+            let response = await models.master_tax_settings.update(
+                {
+                    hsn_number : hsnNumber,
+                    tax_value: taxValue
+                },
+                { // Clause
+                    where: 
+                    {
+                        id: id
+                    }
+                }
+            )
+            res.send(200, {message: response})
+
+        }else{
+            
+        }
+  
+ 
+ }
+
+
+

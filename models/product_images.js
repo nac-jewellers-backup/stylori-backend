@@ -6,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
     image_url: DataTypes.STRING,
     image_position: DataTypes.INTEGER,
     ishover: DataTypes.BOOLEAN,
-    is_active: DataTypes.BOOLEAN,
     isdefault: DataTypes.BOOLEAN
   }, {});
   product_images.associate = function(models) {

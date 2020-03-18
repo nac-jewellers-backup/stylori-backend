@@ -143,7 +143,9 @@ module.exports = function(app) {
 	app.post('/updateproductcreatedate', master_uploaddata_controller.updateproductcreatedate);
 	app.post('/updategemstonepricemaster', master_uploaddata_controller.updategemstonepricemaster);
 	app.post('/updatecustomerreviews', master_uploaddata_controller.updatecustomerreviews);
+	app.post('/updatetax', master_uploaddata_controller.updatetax);
 
+	
 	
 	
 	app.post("/auto_complete", async function(req, res) {
