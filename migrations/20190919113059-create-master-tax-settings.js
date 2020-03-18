@@ -7,7 +7,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
-      product_type: {
+      hsn_number: {
         type: Sequelize.STRING
       },
       tax_name: {
