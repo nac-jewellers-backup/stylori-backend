@@ -1849,7 +1849,12 @@ exports.priceupdate = (req, res) => {
               // }
               console.log("taxcomponent")
               console.log(JSON.stringify(product_obj.hsn_number))
-            let taxval = taxobj.tax_value ? parseInt(taxobj.tax_value) : 3; 
+              let taxval = 3;
+              if(taxobj)
+              {
+                taxval = taxobj.tax_value ? parseInt(taxobj.tax_value) : 3; 
+
+              }
 
               // res.send(200,{materialsum, matalsum})
               const costpricetax = (total_costprice * taxval /100);
