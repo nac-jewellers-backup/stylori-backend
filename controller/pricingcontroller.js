@@ -2102,7 +2102,8 @@ exports.getaliasproductlist =  async (req, res) => {
       }
     })
   let product_lists =  await models.product_lists.findAll({
-      where:{
+    attributes:['product_id'],
+    where:{
         attributes:{
           [Op.contains]:aliaslist
         }
