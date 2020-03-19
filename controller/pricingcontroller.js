@@ -2080,7 +2080,38 @@ exports.updatemakingcharge =  async (req, res) => {
 
 
 }
+exports.getaliasproductlist =  async (req, res) => {
+  if(req.body)
+  {
+    console.log(Object.keys(req.body))
+    let keys = Object.keys(req.body)
+    let req_obj = req.body
+    let aliaslist = []
+    keys.forEach(keyobj => {
+      let obj_arr = req_obj[keyobj]
+      if(Array.isArray(obj_arr))
+      {
+        obj_arr.forEach(attrobj => {
+          if(attrobj.alias)
+          {
+            aliaslist.push(attrobj.alias)
 
+          }
+
+        })
+      }
+    })
+  let product_lists =  await models.product_lists.findAll({
+      where:{
+        attributes:{
+          [Op.contains]:aliaslist
+        }
+      }
+    })
+    res.send(200,{"allkeys":product_lists.length})
+  }
+
+}
 
 exports.getdistinctproduct =  async (req, res) => {
   const {vendorid, product_category,product_type} = req.body
