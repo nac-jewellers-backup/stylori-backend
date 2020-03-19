@@ -2108,7 +2108,7 @@ exports.getaliasproductlist =  async (req, res) => {
         }
       }
     })
-    res.send(200,{"allkeys":product_lists.length})
+    res.send(200,{"products":product_lists})
   }
 
 }
