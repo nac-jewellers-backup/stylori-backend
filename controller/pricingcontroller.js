@@ -2159,7 +2159,6 @@ exports.getdistinctproduct =  async (req, res) => {
     }
    
   })
-
   let vendorlist = await models.product_lists.findAll({
     attributes: ['vendor_code'],
     group: ['vendor_code'],
