@@ -38,7 +38,7 @@ var products =    await models.product_lists.findAll({
             },
             product_id : prod_id
         }
-      })  
+      }) 
       uniquesizes.forEach(prod_sizes => {
         prod_size_varient.push(prod_sizes.sku_size)
       })
