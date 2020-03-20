@@ -1654,7 +1654,7 @@ exports.priceupdate = (req, res) => {
           
           var goldmarkupvalue = goldsellingprice;
           let skus_arrr = [];
-          skus_arrr.push(productskus[skucount].generated_sku)
+          skus_arrr.push(productskus[skucount].product_id)
           let disscount_obj = {}
           let discounts_arr = await models.sale_discount.findAll({
             where: {
@@ -1971,11 +1971,10 @@ exports.priceupdate = (req, res) => {
 
           }else{
             //skucount = 0
-            console.log("i am here12")
             var endDate   = new Date();
             var seconds = (endDate.getTime() - startDate.getTime()) / 1000;
             startDate = new Date()
-            console.log("prcesstime"+seconds)
+            console.log("processtime"+seconds)
             
             processed_product_count = processed_product_count  + 1;
             
