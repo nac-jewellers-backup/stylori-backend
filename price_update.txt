@@ -1,10 +1,10 @@
 diamondpriceseeting
-{"vendor_code":"STYPA 080","diamond_colour":"SI","diamond_clarity":"IJ"}
-SP0829
+{"vendor_code":"STYPA 060","diamond_colour":"SI","diamond_clarity":"GH"}
+SE0198
 diamond cost price
-3466.6671
+46740
 diamondpriceseeting
-{"vendor_code":"STYPA 080","diamond_colour":"VVS","diamond_clarity":"EF"}
-SP0829
+{"vendor_code":"STYPA 060","diamond_colour":"SI","diamond_clarity":"GH"}
+SE0198
 diamond cost price
-5936.6671
+46740

@@ -1,7 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const sale_discount = sequelize.define('sale_discount', {
-    sale_id: DataTypes.UUID,
     components: {
       type: DataTypes.ARRAY(DataTypes.TEXT)
     },
