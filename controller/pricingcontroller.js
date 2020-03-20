@@ -2080,40 +2080,152 @@ exports.updatemakingcharge =  async (req, res) => {
 
 
 }
-exports.getaliasproductlist =  async (req, res) => {
-  if(req.body)
+exports.checkdiscount =  async (req, res) => {
+
+  const {category,product_types,materials,collections,occations,styles,themes} = req.body
+  var whereclause = {
+    isactive : true
+  }
+  var includeclause = []
+  includeclause.push({
+    attributes: ['generated_sku'],
+    model : models.trans_sku_lists
+   })
+  if(category)
   {
-    console.log(Object.keys(req.body))
-    let keys = Object.keys(req.body)
-    let req_obj = req.body
-    let aliaslist = []
-    keys.forEach(keyobj => {
-      let obj_arr = req_obj[keyobj]
-      if(Array.isArray(obj_arr))
-      {
-        obj_arr.forEach(attrobj => {
-          if(attrobj.alias)
-          {
-            aliaslist.push(attrobj.alias)
-
-          }
-
-        })
-      }
+    let categories = []
+    category.forEach(catobj => {
+      categories.push(catobj.name)
     })
-  let product_lists =  await models.product_lists.findAll({
-    attributes:['product_id'],
-    where:{
-        attributes:{
-          [Op.contains]:aliaslist
-        }
-      }
-    })
-    res.send(200,{"products":product_lists})
+    whereclause['product_category'] = {
+      [Op.or] : categories
+    }
   }
 
-}
+  if(product_types)
+  {
+    let prod_types = [] 
+    product_types.forEach(prodtype => {
+      prod_types.push(prodtype.name)
+    })
+    whereclause['product_type'] = {
+      [Op.or] : prod_types
+    }
+  }
+  if(materials)
+  {
+    let material_names = [] 
+    materials.forEach(materialobj => {
+      material_names.push(materialobj.name)
+    })
+    whereclause['$product_materials.material_name$'] = {
+      [Op.or] : material_names
+    }
 
+    includeclause.push({
+      model : models.product_materials
+     })
+  }
+  if(collections)
+  {
+    let collection_names = [] 
+    collections.forEach(collectionobj => {
+      collection_names.push(collectionobj.name)
+    })
+    whereclause['$product_collections.collection_name$'] = {
+      [Op.or] : collection_names
+    }
+
+    includeclause.push({
+      model : models.product_collections
+     })
+  }
+  if(occations)
+  {
+    let occassion_names = [] 
+    occations.forEach(occationobj => {
+      occassion_names.push(occationobj.name)
+    })
+    whereclause['$product_occassions.occassion_name$'] = {
+      [Op.or] : occassion_names
+    }
+
+    includeclause.push({
+      model : models.product_occassions
+     })
+  }
+  if(styles)
+  {
+    let style_names = [] 
+    styles.forEach(styleobj => {
+      style_names.push(styleobj.name)
+    })
+    whereclause['$product_styles.style_name$'] = {
+      [Op.or] : style_names
+    }
+
+    includeclause.push({
+      model : models.product_styles
+     })
+  }
+  if(themes)
+  {
+    let theme_names = [] 
+    themes.forEach(themeobj => {
+      theme_names.push(themeobj.name)
+    })
+    whereclause['$product_themes.theme_name$'] = {
+      [Op.or] : theme_names
+    }
+
+    includeclause.push({
+      model : models.product_themes
+     })
+  }
+  
+   let product_lists =  await models.product_lists.findAndCountAll({
+    attributes:['product_id'],
+    include:includeclause,
+    where:whereclause
+    })
+    let prodlist = []
+    let skulist = []
+
+    if(product_lists.rows)
+    {
+      product_lists.rows.forEach(prodobj => {
+        prodlist.push(prodobj.product_id)
+        prodobj.trans_sku_lists.forEach(skuobj => {
+          skulist.push(skuobj.generated_sku)
+        })
+      })
+    }
+     res.send(200,{"products":prodlist,"skus":skulist})
+
+}
+exports.creatediscount =  async (req, res) => {
+  const {componenets, discounttype, discountvalue, skus} = req.body
+  let pricingcomponents = []
+  componenets.forEach(compobj =>{
+    pricingcomponents.push(compobj.name)
+  })
+  console.log("dad")
+  console.log(JSON.stringify({
+    id:  uuidv1(),
+    components : pricingcomponents,
+    discount_value : discountvalue,
+    discount_type : discounttype == 'percentage' ? 2 : 1,
+    product_ids : skus
+  }))
+  await models.sale_discount.create({
+    id:  uuidv1(),
+    components : pricingcomponents,
+    discount_value : discountvalue,
+    discount_type : discounttype == 'percentage' ? 2 : 1,
+    product_ids : skus
+  })
+  res.send(200,{"message":"success"})
+}
 exports.getdistinctproduct =  async (req, res) => {
   const {vendorid, product_category,product_type} = req.body
   let whereclause = {
@@ -2192,3 +2304,63 @@ exports.getdistinctproduct =  async (req, res) => {
 }
 
 
+exports.getaliasproductlist =  async (req, res) => {
+  const {category, product_types} = req.body
+  let bodyobj = req.body;
+  let whereclause = {}
+  let attrs = [];
+  let keys = Object.keys(req.body);
+  keys.forEach(key => {
+    let attributeobj = bodyobj[key];
+    if(Array.isArray(attributeobj))
+    {
+      let componentarr = [];
+      attributeobj.forEach(attr => {
+        if(attr.alias)
+        {
+          let attr_where = {
+            attributes: {
+              [Op.contains] : [attr.alias]
+            }
+          }
+          componentarr.push(attr_where)
+        }
+
+       
+      })
+     if(componentarr.length > 0)
+     {
+      let attrobj = {
+        [Op.or] : componentarr
+      }
+      attrs.push(attrobj)
+     }
+   
+    }
+
+  })
+  
+
+  whereclause = {
+    [Op.and]:attrs
+  }
+ 
+  let productlists = await models.product_lists.findAll({
+    attributes: ["product_id"],
+    include: [{
+      attributes:["generated_sku"],
+      model : models.trans_sku_lists,
+
+    }],
+    where:whereclause
+  })
+  let prodlist = []
+  let skulist = [];
+  productlists.forEach(prodobj => {
+    prodlist.push(prodobj.product_id)
+    prodobj.trans_sku_lists.forEach(skuobj => {
+      skulist.push(skuobj.generated_sku)
+    })
+  })
+  res.send(200,{"products":prodlist,"skus":skulist})
+}

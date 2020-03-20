@@ -265,7 +265,6 @@ exports.priceupdate = (req, res) => {
            {
             model: models.product_diamonds,
             attributes:['diamond_type','diamond_colour','diamond_clarity','stone_count','stone_weight'],
-
            },
            {
             model: models.product_gemstones,
@@ -275,7 +274,6 @@ exports.priceupdate = (req, res) => {
          
           ],
           where: {
-           
             product_id: currentproduct.product_id
           }
         })

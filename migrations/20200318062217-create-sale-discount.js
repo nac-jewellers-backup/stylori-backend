@@ -8,6 +8,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
+      discount_type:{
+        type: Sequelize.INTEGER
+      },
+      dicount_value: {
+        type: Sequelize.DOUBLE
+      },
       components: {
         type: Sequelize.ARRAY(Sequelize.TEXT)
       },

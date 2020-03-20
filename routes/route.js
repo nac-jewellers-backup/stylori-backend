@@ -80,6 +80,8 @@ module.exports = function(app) {
 	app.get('/getlogfile', pricingontroller.logfile);
 	app.post('/getcomponentpricestatus', pricingontroller.priceupdatestatus);
 	app.post('/getaliasproduct', pricingontroller.getaliasproductlist);
+	app.post('/creatediscount', pricingontroller.creatediscount);
+	app.post('/checksalediscount', pricingontroller.checkdiscount);
 
 	
 	app.post('/updatemarkup', pricingontroller.updatemarkup);
