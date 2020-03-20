@@ -2217,14 +2217,18 @@ exports.creatediscount =  async (req, res) => {
     discount_type : discounttype == 'percentage' ? 2 : 1,
     product_ids : skus
   }))
-  await models.sale_discount.create({
+   models.sale_discount.create({
     id:  uuidv1(),
     components : pricingcomponents,
     discount_value : discountvalue,
     discount_type : discounttype == 'percentage' ? 2 : 1,
     product_ids : skus
+  }).then(sale => {
+    res.send(200,{"message":"success"})
+
+  }).catch(err => {
+    res.send(200,{"message":"failure","content": JSON.stringify(err)})
   })
-  res.send(200,{"message":"success"})
 }
 exports.getdistinctproduct =  async (req, res) => {
   const {vendorid, product_category,product_type} = req.body
