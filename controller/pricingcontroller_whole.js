@@ -1651,9 +1651,19 @@ exports.priceupdate = (req, res) => {
 
           let sku_margin = ((total_sellingprice - total_costprice)/total_costprice)*100
           let markupobj =  await materialmarkupval(total_sellingprice,product_obj.product_category)
+          
           var goldmarkupvalue = goldsellingprice;
        
+          let discounts_arr = await models.sale_discount.findAll({
+                    where: {
+                      product_ids :{
+                        [Op.contains] :productskus[skucount].generated_sku
+                      }
+                    }
+          })
 
+          console.log("*&*&&*&")
+          console.log(JSON.stringify(discounts_arr))
           var makingchargemarkupvalue = makingsellingprice;
           var makingchargediscountvalue = ((makingchargemarkupvalue * 100) /(100 - discount_percentage));
           var diamondmarkupvalue = diamondsellingprice;
@@ -1707,7 +1717,7 @@ exports.priceupdate = (req, res) => {
 
 
           });
-        }
+          }
 
           var golddiscountvalue = ((goldmarkupvalue * 100) /(100 - discount_percentage));
       
