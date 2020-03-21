@@ -608,6 +608,18 @@ exports.updatetax = async (req, res) => {
   
  
  }
+ exports.generatevendorcode = async (req, res) => {
 
-
+    let latestvendor = await models.master_vendors.findOne({
+         order: [
+            ['createdAt', 'DESC']
+            
+        ],
+    })
+    let vendorcode = latestvendor.short_code;
+    let vendor_id = vendorcode.split(' ')
+    let newvendorcode = vendor_id[0] +' '+ (parseInt(vendor_id[1]) + 1)
+    res.send(200,{"newvendorcode": newvendorcode})
+ }
+ 
 

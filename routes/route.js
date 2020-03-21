@@ -94,7 +94,7 @@ module.exports = function(app) {
 	app.post('/addemailsubscription', authcontroller.addemailsubscription);
 	app.post('/asktoexport', authcontroller.asktoexport);
 
-	
+
 	
 	app.post('/addwishlist', cartcontroller.addwishlist);
 	app.post('/removewishlist', cartcontroller.removewishlist);
@@ -131,6 +131,7 @@ module.exports = function(app) {
 	
 	
 	app.post('/updatevendor', master_uploaddata_controller.updatevendor);
+	app.post('/getnewvendorcode', master_uploaddata_controller.generatevendorcode);
 
 	app.post('/updatebestseller', master_uploaddata_controller.updatebestseller);
 	app.post('/updatereadytoship', master_uploaddata_controller.updatereadytoship);
