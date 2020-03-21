@@ -552,24 +552,42 @@ exports.updatecustomerreviews = async (req, res) => {
 }
 
 exports.updatevendor = async (req, res) => {
-   const {shortCode,name, address, city, gstNo, vendorDelivaryDays} = req.body
-    let response = await models.master_vendors.update(
-        {
-            name : name,
-            address: address,
-            city : city,
-            gst_no: gstNo,
-            vendor_delivary_days : vendorDelivaryDays
-        },
-        { // Clause
-            where: 
+   const {shortCode,name, address, city, gstNo, vendorDelivaryDays, isedit} = req.body
+    if(isedit)
+    {
+        let response = await models.master_vendors.update(
             {
-                short_code: shortCode
+                name : name,
+                address: address,
+                city : city,
+                gst_no: gstNo,
+                vendor_delivary_days : vendorDelivaryDays
+            },
+            { // Clause
+                where: 
+                {
+                    short_code: shortCode
+                }
             }
-        }
-    )
-
-    res.send(200, {message: response})
+        )
+    
+        res.send(200, {message: response})
+    } else{
+        let response = await models.master_vendors.create(
+            {
+                short_code:shortCode,
+                name : name,
+                address: address,
+                city : city,
+                gst_no: gstNo,
+                currency: "INR",
+                vendor_delivary_days : vendorDelivaryDays
+            }
+        )
+    
+        res.send(200, {message: response})
+    }
+  
 }
 
 
