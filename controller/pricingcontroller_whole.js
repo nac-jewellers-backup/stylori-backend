@@ -246,11 +246,9 @@ exports.priceupdate = (req, res) => {
     });
     var start = 0;
     async function processproduct(){
-      console.log(">>>><<<<<<>>>>><<<<<<"+processed_product_count)
 
       if(products.length > processed_product_count)
       {
-        
          start = new Date()
 
         let currentproduct = products[processed_product_count]
