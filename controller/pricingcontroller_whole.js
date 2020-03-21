@@ -246,7 +246,6 @@ exports.priceupdate = (req, res) => {
     });
     var start = 0;
     async function processproduct(){
-
       if(products.length > processed_product_count)
       {
          start = new Date()
