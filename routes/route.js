@@ -107,6 +107,8 @@ module.exports = function(app) {
 
 	app.post('/addproductreview', cartcontroller.addproductreview);
 	app.post('/applyvoucher', cartcontroller.applyvoucher);
+	app.post('/createvoucher', cartcontroller.createvoucher);
+
 	app.post('/addgiftwrap', cartcontroller.addgiftwrap);
 	app.post('/addtocart', cartcontroller.addtocart);
 	app.post('/addaddress', cartcontroller.addaddress);

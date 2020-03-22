@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     starts_at: DataTypes.DATE,
     expires_at: DataTypes.DATE,
     is_active: DataTypes.BOOLEAN,
-    isloginneeded: DataTypes.BOOLEAN
-
+    isloginneeded: DataTypes.BOOLEAN,
+    product_attributes: DataTypes.JSON
   }, {});
   vouchers.associate = function(models) {
     // associations can be defined here

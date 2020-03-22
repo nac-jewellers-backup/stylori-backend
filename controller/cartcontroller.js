@@ -42,7 +42,59 @@ models.giftwrap.create(giftwrapobj).then(giftwrapobj=> {
   res.send(500,{message: "Failed"})
 });
 }
+exports.createvoucher = async (req, res) => {
+const {vouchername,vouchercodes,startdate,enddate,description,attributes,discounttype,discount,isonce,limittouse,minimumreq,minorder} = req.body
+  let vouchers = []
+  let product_attributes = {}
+  let keys = Object.keys(attributes);
+  keys.forEach(key => {
+    let attributeobj = attributes[key];
+    if(Array.isArray(attributeobj))
+    {
+      let componentarr = [];
+      attributeobj.forEach(attr => {
+        if(attr.alias)
+        {
+          
+          componentarr.push(attr.alias)
+        }
 
+       
+      })
+     if(componentarr.length > 0)
+     {
+
+      product_attributes[key] = componentarr
+     }
+   
+    }
+
+  })
+  let discounttype_value = 2;
+  vouchercodes.forEach(codes => {
+    let voucherobj = {
+      id: uuidv1(),
+      code: codes,
+      name: vouchername,
+      description: description,
+      max_uses: limittouse,
+      uses: 0,
+      max_uses_user: isonce ? 0 : null,
+      type: discounttype_value,
+      discount_amount: discount,
+      is_active: true,
+      min_cart_value: minorder,
+      starts_at: startdate,
+      expires_at: enddate,
+      product_attributes: product_attributes
+    }
+
+    vouchers.push(voucherobj)
+  })
+  await models.vouchers.bulkCreate(
+    vouchers, {individualHooks: true})
+  res.send(200,{"codes":vouchers})
+}
 exports.applyvoucher = async (req, res) => {
   const {vouchercode, cart_id,user_profile_id} = req.body
   var isloggedin = false
