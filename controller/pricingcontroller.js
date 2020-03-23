@@ -2065,9 +2065,50 @@ exports.updatemarkup =  async (req, res) => {
 }
 
 exports.updatemakingcharge =  async (req, res) => {
-  const {material,price_type,cost_price_id, selling_price_id,weight_end, weight_start,cost_price, selling_price} = req.body
-  
-  
+  const {material,price_type,isadd,purity,vendor_code,cost_price_id, selling_price_id,weight_end, weight_start,cost_price, selling_price} = req.body
+  let pricing_arr = []
+  if(isadd)
+  {
+    let costpriceobj = {
+      id : uuidv1(),
+      vendor_code: vendor_code,
+      material : material,
+      price_type : 1,
+      weight_start: weight_start,
+      weight_end : weight_end,
+      rate_type : 1,
+      price_type: 1,
+      purity,
+      selling_price_type : 1,
+      price:cost_price   }
+
+    let sellingpriceobj = {
+      id : uuidv1(),
+      vendor_code: vendor_code,
+      material : material,
+      price_type : 1,
+      weight_start: weight_start,
+      weight_end : weight_end,
+      rate_type : 1,
+      price_type: 1,
+      purity,
+      selling_price_type : price_type,
+      price:selling_price
+    }
+    pricing_arr.push(costpriceobj)
+    pricing_arr.push(sellingpriceobj)
+    let response =await models.making_charge_settings.bulkCreate(
+    pricing_arr
+        , {individualHooks: true})
+        if(response)
+      {
+          res.send(200,{"message": "success"})
+
+      }else{
+          res.send(402,{"message": "Try again later"})
+
+      }
+  }else{
   let response = await models.making_charge_settings.update(
       {
           weight_start : weight_start,
@@ -2103,7 +2144,7 @@ exports.updatemakingcharge =  async (req, res) => {
           res.send(402,{"message": "Try again later"})
 
       }
-
+    }
 
 }
 exports.checkdiscount =  async (req, res) => {
