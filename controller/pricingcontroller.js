@@ -1925,7 +1925,7 @@ exports.updatediamondprice =  async (req, res) => {
 
 
 exports.updategemstoneprice =  async (req, res) => {
-  const {isadd,cost_price_id,vendor_code,gemstone_type, selling_price_id, selling_price, cost_price,weight_start, weight_end} = req.body
+  const {isadd,cost_price_id,vendor_code,gemstone_type, selling_price_type,selling_price_id, selling_price, cost_price,weight_start, weight_end} = req.body
   if(isadd)
   {
     let price_arr = [];
