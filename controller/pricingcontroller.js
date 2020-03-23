@@ -1876,7 +1876,7 @@ exports.updatediamondprice =  async (req, res) => {
 
   if(isadd)
   {
-    let response = await models.diamond_price_settings.update(
+    let response = await models.diamond_price_settings.create(
       {
         id: uuidv1(),
         vendor_code: vendor_code,
