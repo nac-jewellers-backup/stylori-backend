@@ -2360,7 +2360,7 @@ exports.creatediscount =  async (req, res) => {
     discount_value : discountvalue,
     discount_type : discounttype == 'percentage' ? 2 : 1,
     product_ids : skus,
-    product_attributes
+    product_attributes : product_attributes
   }).then(sale => {
     res.send(200,{"message":"success"})
   }).catch(err => {
