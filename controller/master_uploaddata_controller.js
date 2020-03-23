@@ -575,6 +575,7 @@ exports.updatevendor = async (req, res) => {
     } else{
         let response = await models.master_vendors.create(
             {
+                id: uuidv1(),
                 short_code:shortCode,
                 name : name,
                 address: address,
