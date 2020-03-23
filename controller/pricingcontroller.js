@@ -1709,8 +1709,31 @@ exports.priceupdate = (req, res) => {
 
 
 exports.updatemetalprice =  async (req, res) => {
-  const {priceid, costprice, sellingprice, pricetype} = req.body
-  let response = await models.gold_price_settings.update(
+  const {material,purity,vendor,isadd,priceid, costprice, sellingprice, pricetype} = req.body
+  if(isadd)
+  {
+    let metalpriceobj = {
+      id: uuidv1(),
+      material: material,
+      purity: purity,
+      cost_price : costprice,
+        selling_price : sellingprice,
+        selling_price_type: pricetype,
+        vendor_code: vendor,
+        createdAt : new Date()   
+    }
+    let response = await models.gold_price_settings.create(
+      metalpriceobj)
+    if(response)
+    {
+        res.send(200,{"message": "success"})
+
+    }else{
+        res.send(402,{"message": response})
+
+    }
+  }else{
+    let response = await models.gold_price_settings.update(
       // Values to update
       {
           cost_price : costprice,
@@ -1732,6 +1755,8 @@ exports.updatemetalprice =  async (req, res) => {
           res.send(402,{"message": "Try again later"})
 
       }
+  }
+  
 
 
 }
