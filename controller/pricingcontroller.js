@@ -1730,7 +1730,6 @@ exports.updatemetalprice =  async (req, res) => {
 
     }else{
         res.send(402,{"message": response})
-
     }
   }else{
     let response = await models.gold_price_settings.update(
