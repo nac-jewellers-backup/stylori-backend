@@ -1872,7 +1872,30 @@ res.send(200,{message:status_message})
 
 
 exports.updatediamondprice =  async (req, res) => {
-  const {priceid, costprice, sellingprice, pricetype} = req.body
+  const {vendor_code,diamondcolor,diamondclarity,isadd,priceid, costprice, sellingprice, pricetype} = req.body
+
+  if(isadd)
+  {
+    let response = await models.diamond_price_settings.update(
+      {
+        id: uuidv1(),
+        vendor_code: vendor_code,
+        diamond_colour : diamondcolor,
+        diamond_clarity: diamondclarity,
+        selling_price_type: pricetype,
+        cost_price: costprice,
+        selling_price: sellingprice
+      }
+    )
+    if(response)
+      {
+          res.send(200,{"message": "success"})
+
+      }else{
+          res.send(402,{"message": "Try again later"})
+
+      }
+  }else{
   let response = await models.diamond_price_settings.update(
       // Values to update
       {
@@ -1895,14 +1918,55 @@ exports.updatediamondprice =  async (req, res) => {
           res.send(402,{"message": "Try again later"})
 
       }
+    }
 
 
 }
 
 
 exports.updategemstoneprice =  async (req, res) => {
-  const {cost_price_id, selling_price_id, selling_price, cost_price,weight_start, weight_end} = req.body
-  let response = await models.gemstone_price_settings.update(
+  const {isadd,cost_price_id,vendor_code,gemstone_type, selling_price_id, selling_price, cost_price,weight_start, weight_end} = req.body
+  if(isadd)
+  {
+    let price_arr = [];
+    let costpriceobj = {
+      id: uuidv1(),
+      weight_start : weight_start,
+      weight_end : weight_end,
+      price: cost_price,
+      vendor_code : vendor_code,
+      gemstone_type : gemstone_type,
+      rate_type  : 1,
+      selling_price_type : 1,
+      price : cost_price
+    }
+    let sellingpriceobj = {
+      id: uuidv1(),
+      weight_start : weight_start,
+      weight_end : weight_end,
+      price: cost_price,
+      vendor_code : vendor_code,
+      gemstone_type : gemstone_type,
+      rate_type  : 1,
+      selling_price_type : selling_price_type,
+      price : selling_price
+    }
+    price_arr.push(costpriceobj)
+    price_arr.push(sellingpriceobj)
+    let response =await models.gemstone_price_settings.bulkCreate(
+      price_arr
+          , {individualHooks: true})
+          if(response)
+        {
+            res.send(200,{"message": "success"})
+  
+        }else{
+            res.send(402,{"message": "Try again later"})
+  
+        }
+  }else{
+
+    let response = await models.gemstone_price_settings.update(
       // Values to update
       {
           weight_start : weight_start,
@@ -1940,6 +2004,12 @@ exports.updategemstoneprice =  async (req, res) => {
 
       }
 
+
+  }
+  
+  
+  
+  
 
 }
 exports.logfile =  async (req, res) => {
