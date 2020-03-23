@@ -124,19 +124,51 @@ exports.applyvoucher = async (req, res) => {
       
     }
   })
+  console.log(">>>><<<<<<<<")
+  console.log(JSON.stringify(coupon_info))
   if(coupon_info)
   {
-  attributes_condition.push({
-    attributes:{
-      [Op.contains]: coupon_info.attributes
+  // attributes_condition.push({
+  //   attributes:{
+  //     [Op.contains]: coupon_info.attributes
+  //   }
+  // })
+  let keys = Object.keys(coupon_info.product_attributes);
+  keys.forEach(key => {
+    let attributeobj = coupon_info.product_attributes[key];
+    if(Array.isArray(attributeobj))
+    {
+      let componentarr = [];
+      attributeobj.forEach(attr => {
+        if(attr.alias)
+        {
+          let attr_where = {
+            attributes: {
+              [Op.contains] : [attr.alias]
+            }
+          }
+          componentarr.push(attr_where)
+        }
+
+       
+      })
+     if(componentarr.length > 0)
+     {
+      let attrobj = {
+        [Op.or] : componentarr
+      }
+      attributes_condition.push(attrobj)
+     }
+   
     }
+
   })
 }else{
   return res.status(200).send({message:"Please Enter Valid Coupon"})
 }
 
     var  couponwhereclause = {
-      [Op.or]: attributes_condition
+      [Op.and]: attributes_condition
     }
   // var couponwhereclause = {
   //   product_category : 'Jewellery'
@@ -166,7 +198,7 @@ exports.applyvoucher = async (req, res) => {
     }
 
   })
-  
+  console.log(">>>><<<<<<<<")
 var eligible_amount = 0;
 shoppingcart.forEach(element => {
   if(element.trans_sku_list)
@@ -175,7 +207,8 @@ shoppingcart.forEach(element => {
 
   }
 
-  
+  console.log(JSON.stringify(eligible_amount))
+
 
  
 })
