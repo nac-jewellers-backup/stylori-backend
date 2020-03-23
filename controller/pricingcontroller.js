@@ -2065,7 +2065,9 @@ exports.updatemarkup =  async (req, res) => {
 }
 
 exports.updatemakingcharge =  async (req, res) => {
-  const {cost_price_id, selling_price_id,weight_end, weight_start,cost_price, selling_price} = req.body
+  const {material,price_type,cost_price_id, selling_price_id,weight_end, weight_start,cost_price, selling_price} = req.body
+  
+  
   let response = await models.making_charge_settings.update(
       {
           weight_start : weight_start,

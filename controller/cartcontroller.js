@@ -937,7 +937,7 @@ exports.removewishlist = async (req, res) => {
  exports.testorderemail = async (req, res) => {
   var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Password Reset Successfully"}]
  // sendMail(emilreceipiants,emailTemp.changepasswordTemp("Manokaran"))
-   sendorderconformationemail("257f2960-41b8-11ea-8d48-ad47b85a39a4",res)
+   sendorderconformationemail("4c76a1d0-5610-11ea-8539-9938031cbfe9",res)
 
  }
 async function sendorderconformationemail(order_id,res)
@@ -1021,7 +1021,7 @@ async function sendorderconformationemail(order_id,res)
     imagelist[element.product_id] = 'https://styloriimages.s3.ap-south-1.amazonaws.com/'+imagename
   })
 
-  var emilreceipiants = [{to :orderdetails.user_profile.email ,subject:"Order Placed Successfully"},{to :process.env.adminemail,subject:"Order Placed Successfully"}]
+ var emilreceipiants = [{to :orderdetails.user_profile.email ,subject:"Order Placed Successfully"},{to :process.env.adminemail,subject:"Order Placed Successfully"}]
 // var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
 var isloggedin = false
 if(orderdetails.user_profile.facebookid || orderdetails.user_profile.user_id)
@@ -1041,21 +1041,19 @@ exports.addproductreview = async (req, res) => {
        }
      })
      if(!userreviews || userreviews.length === 0)
-     {
-
-     
-    const review_content = {
-      id: uuidv1(),
-      product_id: product_id,
-      product_sku: product_sku,
-      customer_name: username,
-      userprofile_id: user_id,
-      title: title,
-      message: message,
-      rating: rate,
-      is_publish: false,
-      is_active: true
-  }
+     {     
+          const review_content = {
+            id: uuidv1(),
+            product_id: product_id,
+            product_sku: product_sku,
+            customer_name: username,
+            userprofile_id: user_id,
+            title: title,
+            message: message,
+            rating: rate,
+            is_publish: false,
+            is_active: true
+        }
 
 
   models.customer_reviews.create(review_content,{
