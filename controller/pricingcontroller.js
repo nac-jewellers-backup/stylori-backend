@@ -2089,7 +2089,7 @@ exports.updatemakingcharge =  async (req, res) => {
       price_type : 1,
       weight_start: weight_start,
       weight_end : weight_end,
-      rate_type : 1,
+      rate_type : 2,
       price_type: 1,
       purity,
       selling_price_type : price_type,
