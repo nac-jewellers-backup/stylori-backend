@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
     discount_value: {
       type: DataTypes.DOUBLE
     },
+    product_attributes: DataTypes.JSON
+
   }, {});
   sale_discount.associate = function(models) {
     // associations can be defined here
