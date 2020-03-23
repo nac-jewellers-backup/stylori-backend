@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     attributes: {
       type: DataTypes.ARRAY(DataTypes.TEXT)
     },
+    
     discount_type:{
       type: DataTypes.INTEGER
     },
