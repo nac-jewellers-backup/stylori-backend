@@ -2341,7 +2341,7 @@ exports.checkdiscount =  async (req, res) => {
 
 }
 exports.creatediscount =  async (req, res) => {
-  const {componenets, discounttype, discountvalue, skus, product_attributes} = req.body
+  const {componenets,product_attributes_text, discounttype, discountvalue, skus, product_attributes} = req.body
   let pricingcomponents = []
   componenets.forEach(compobj =>{
     pricingcomponents.push(compobj.name)
@@ -2360,7 +2360,8 @@ exports.creatediscount =  async (req, res) => {
     discount_value : discountvalue,
     discount_type : discounttype == 'percentage' ? 2 : 1,
     product_ids : skus,
-    product_attributes : product_attributes
+    product_attributes : product_attributes,
+    product_attributes_text : product_attributes_text
   }).then(sale => {
     res.send(200,{"message":"success"})
   }).catch(err => {
