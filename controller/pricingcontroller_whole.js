@@ -46,7 +46,7 @@ exports.priceupdate = (req, res) => {
     var whereclause1 = {
       isactive : true,
       // product_id: {
-      //   [Op.iLike]:'%SGC%'
+      //   [Op.iLike]:'%SGC020%'
       // }
     }
     console.log(":>>>>>>>>>1212")
@@ -1676,29 +1676,57 @@ exports.priceupdate = (req, res) => {
             })
             console.log("CKDHDJDJJDJD")
            console.log(JSON.stringify(disscount_obj))
+           console.log(JSON.stringify(skus_arrr))
+
           var mkcharge_discount  = 0;
           var diamond_discount  = 0;
           var gemstone_discount  = 0;
           var metal_discount  = 0;
-           if(disscount_obj["Making Charge"])
+           if(disscount_obj["Making Charge"] || disscount_obj["All"])
            {
-            mkcharge_discount  = disscount_obj["Making Charge"].value ? disscount_obj["Making Charge"].value : 0;
+            if(disscount_obj["Making Charge"])
+            {
+              mkcharge_discount  = disscount_obj["Making Charge"].value ? disscount_obj["Making Charge"].value : 0;
+
+            }else{
+              mkcharge_discount  = disscount_obj["All"].value ? disscount_obj["All"].value : 0;
+
+            }
 
            } 
-           if(disscount_obj["Diamond"])
+           if(disscount_obj["Diamond"] || disscount_obj["All"])
            {
-            diamond_discount  = disscount_obj["Diamond"].value ? disscount_obj["Diamond"].value : 0;
+            if(disscount_obj["Diamond"])
+            {
+              diamond_discount  = disscount_obj["Diamond"].value ? disscount_obj["Diamond"].value : 0;
 
+            }else{
+              diamond_discount  = disscount_obj["All"].value ? disscount_obj["All"].value : 0;
+
+            }
            } 
-           if(disscount_obj["Gemstone"])
+           if(disscount_obj["Gemstone"] || disscount_obj["All"] )
            {
-            gemstone_discount  = disscount_obj["Gemstone"].value ? disscount_obj["Gemstone"].value : 0;
+            if(disscount_obj["Gemstone"])
+            {
+              gemstone_discount  = disscount_obj["Gemstone"].value ? disscount_obj["Gemstone"].value : 0;
 
+
+            }else{
+              gemstone_discount  = disscount_obj["All"].value ? disscount_obj["All"].value : 0;
+
+            }
            } 
-           if(disscount_obj["Gold"])
+           if(disscount_obj["Gold"] || disscount_obj["All"])
            {
-            metal_discount  = disscount_obj["Gold"].value ? disscount_obj["Gold"].value : 0;
+            if(disscount_obj["Gold"])
+            {
+              metal_discount  = disscount_obj["Gold"].value ? disscount_obj["Gold"].value : 0;
 
+            }else{
+              metal_discount  = disscount_obj["All"].value ? disscount_obj["All"].value : 0;
+
+            }
            } 
            console.log("CKDHDJDJJDJD")
            console.log(mkcharge_discount)
