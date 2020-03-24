@@ -1,0 +1,20 @@
+diamondpriceseeting
+{"vendor_code":"STYPA 050","diamond_colour":"SI","diamond_clarity":"IJ"}
+SE0012
+diamond cost price
+1259.99982
+diamondpriceseeting
+{"vendor_code":"STYPA 050","diamond_colour":"SI","diamond_clarity":"IJ"}
+SE0012
+diamond cost price
+1726.66642
+diamondpriceseeting
+{"vendor_code":"STYPA 050","diamond_colour":"SI","diamond_clarity":"IJ"}
+SE0012
+diamond cost price
+419.99994
+diamondpriceseeting
+{"vendor_code":"STYPA 050","diamond_colour":"SI","diamond_clarity":"IJ"}
+SE0012
+diamond cost price
+1119.9998400000002
