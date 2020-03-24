@@ -1761,16 +1761,48 @@ exports.updatemetalprice =  async (req, res) => {
 }
 exports.priceupdatestatus =  async (req, res) => {
   const {component} = req.body
+  var componentproductcount = 0;
   let component_history = await models.price_running_history.findOne({
     order: [
       ['createdAt', 'DESC']
-    ]
+    ],
+    where:{
+      pricing_component: component
+    }
   })
   let status_message = ""
   var product_ids = component_history.product_ids;
   product_ids = product_ids.split(',')
+  var includeclause = []
+  var whereclause = {}
+
+  whereclause['product_id'] = {
+    [Op.in] : product_ids
+  }
+  if(component !== 'updateskuprice')
+  {
+    includeclause.push({
+        
+      model:models.product_materials,
+      attributes:["product_sku"]
+    })
+    whereclause['$product_materials.material_name$'] = {
+        [Op.eq] : component
+      }
+  }
+  
+  let componenets_products = await models.product_lists.findAll({
+    attributes:['product_id'],
+      include:includeclause,
+    where:whereclause
+  })
+  componentproductcount = componenets_products.length
   if(component === 'Diamond' || component === 'Gemstone')
   {
+    
+    console.log("returncount")
+
+    //console.log(JSON.stringify(componenets_products))
     let updatedskus = await models.pricing_sku_materials.findAll({
       attributes: [
         'product_id'
@@ -1788,12 +1820,12 @@ exports.priceupdatestatus =  async (req, res) => {
       },
       group: 'product_id'
     })
-    if(updatedskus.length === product_ids.length)
+    if(updatedskus.length === componentproductcount)
     {
       status_message = "Completed"
-  
+
     }else{
-      status_message = updatedskus.length +" out of "+ product_ids.length
+      status_message = updatedskus.length +" out of "+ componentproductcount
   
     }
   }
