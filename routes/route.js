@@ -85,6 +85,7 @@ module.exports = function(app) {
 
 	
 	app.post('/updatemarkup', pricingontroller.updatemarkup);
+	app.post('/addmarkup', pricingontroller.addmarkup);
 
 	
 	

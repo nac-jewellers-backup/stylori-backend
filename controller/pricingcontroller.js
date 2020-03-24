@@ -2142,7 +2142,29 @@ exports.vendormakingprice =  async (req, res) => {
   res.send(200,{gems})
 
 }
+exports.addmarkup =  async (req, res) => {
+  const {material, sellingPriceMin,sellingPriceMax, markupValue,markuptype,category,producttype} = req.body
+  let response = await models.pricing_markup.create(
+    {
+      id: uuidv1(),
+        selling_price_min : sellingPriceMin,
+        selling_price_max : sellingPriceMax,
+        markup_type: markuptype,
+        category: category,
+        product_type : producttype,
+        markup_value: markupValue,
+        material: material,
+        updatedAt : new Date()
+    })
+    if(response)
+    {
+        res.send(200,{"message": "success"})
 
+    }else{
+        res.send(402,{"message": "Try again later"})
+
+    }
+}
 exports.updatemarkup =  async (req, res) => {
   const {markupid, sellingPriceMin,sellingPriceMax, markupValue} = req.body
   let response = await models.pricing_markup.update(
