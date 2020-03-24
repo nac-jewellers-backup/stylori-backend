@@ -32,8 +32,8 @@ var seofilterattributevalue = []
         model : models.trans_sku_lists
        })
       whereclause['$trans_sku_lists.is_active$'] = {
-        [Op.eq]:true
-        }
+      [Op.eq]:true
+      }
     }else{
       seofilterattribute.push('Category')
       seofilterattributevalue.push(category)
