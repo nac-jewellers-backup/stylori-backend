@@ -45,9 +45,9 @@ exports.priceupdate = (req, res) => {
     const {req_product_id,generatedSku, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
     var whereclause1 = {
       isactive : true,
-      // product_id: {
-      //   [Op.iLike]:'%SGC020%'
-      // }
+      product_id: {
+        [Op.iLike]:'%SGC020%'
+      }
     }
     console.log(":>>>>>>>>>1212")
     var product_id_arr1 = []
@@ -2005,7 +2005,7 @@ exports.priceupdate = (req, res) => {
             
             
             console.log(JSON.stringify(product_ids))
-            let price_update_query = "update trans_sku_lists set cost_price = ROUND(cost_price::numeric,2),selling_price = ROUND(selling_price::numeric,2), markup_price = ROUND(markup_price::numeric,2),cost_price_tax = ROUND(cost_price_tax::numeric,2),selling_price_tax = ROUND(selling_price_tax::numeric,2),markup_price_tax = ROUND(markup_price_tax::numeric,2),discount_price_tax = ROUND(discount_price_tax::numeric,2), discount_price = ROUND(discount_price::numeric,2)   where product_id ='"+product_obj.product_id+"'";
+            let price_update_query = "update trans_sku_lists set cost_price = ROUND(cost_price::numeric,2),selling_price = ROUND(selling_price::numeric,2), markup_price = ROUND(markup_price::numeric,2),cost_price_tax = ROUND(cost_price_tax::numeric,2),selling_price_tax = ROUND(selling_price_tax::numeric,2),markup_price_tax = ROUND(markup_price_tax::numeric,2),discount_price_tax = ROUND(discount_price_tax::numeric,2), discount_price = ROUND(discount_price::numeric,2),discount= ROUND(((discount_price-selling_price)/discount_price) * 100)   where product_id ='"+product_obj.product_id+"'";
 
        
          await models.sequelize.query(price_update_query).then(([results, metadata]) => {
