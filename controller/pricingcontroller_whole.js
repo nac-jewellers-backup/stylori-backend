@@ -2009,10 +2009,7 @@ exports.priceupdate = (req, res) => {
             let price_update_query = "update trans_sku_lists set cost_price = ROUND(cost_price::numeric,2),selling_price = ROUND(selling_price::numeric,2), markup_price = ROUND(markup_price::numeric,2),cost_price_tax = ROUND(cost_price_tax::numeric,2),selling_price_tax = ROUND(selling_price_tax::numeric,2),markup_price_tax = ROUND(markup_price_tax::numeric,2),discount_price_tax = ROUND(discount_price_tax::numeric,2), discount_price = ROUND(discount_price::numeric,2),discount= ROUND(((discount_price-markup_price)/discount_price) * 100)   where product_id ='"+product_obj.product_id+"'";
 
        
-         await models.sequelize.query(price_update_query).then(([results, metadata]) => {
-            
-
-            })
+         await models.sequelize.query(price_update_query).then(([results, metadata]) => { })
             await sleep(1000)
 
             processproduct()
