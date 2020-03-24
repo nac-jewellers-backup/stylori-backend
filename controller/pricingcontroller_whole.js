@@ -195,7 +195,13 @@ exports.priceupdate = (req, res) => {
     console.log(">>>>")
     console.log(JSON.stringify(product_type_arr))
     
-
+    if(pricingcomponent !== 'updateskuprice')
+    {
+     
+      whereclause['$product_materials.material_name$'] = {
+          [Op.eq] : pricingcomponent
+        }
+    }
 
 
     const msg = {
@@ -206,6 +212,7 @@ exports.priceupdate = (req, res) => {
       };
     //  sgMail.send(msg);
     models.product_lists.findAll({
+
       // include: [{
       //   model: models.trans_sku_lists,
       //   where:{
@@ -258,6 +265,9 @@ exports.priceupdate = (req, res) => {
             model: models.trans_sku_lists,
             attributes:['generated_sku','sku_weight','product_id','purity','diamond_type','sku_size'],
             where:skuwhereclause
+           },
+           {
+             model: models.product_materials
            },
            {
             model: models.product_diamonds,
@@ -875,8 +885,7 @@ exports.priceupdate = (req, res) => {
                diamond_clarity: diamondobj.diamond_colour
           }
           
-          writelog("diamondpriceseeting")
-          writelog(JSON.stringify(conditionobj))
+   
           
           models.diamond_price_settings.findOne({
   
@@ -896,9 +905,7 @@ exports.priceupdate = (req, res) => {
               let materialname = diamondobj.diamond_clarity+""+diamondobj.diamond_colour
               processcount++;
             
-              writelog(product_obj.product_id)
-              writelog("diamond cost price")
-              writelog(diamondcost)
+             
 
                var  diamondmargin = ((diamondsellingprice - diamondcost)/diamondcost)*100
                var diamondprice = {
@@ -2007,6 +2014,11 @@ exports.priceupdate = (req, res) => {
             var seconds = (endDate.getTime() - startDate.getTime()) / 1000;
             startDate = new Date()
             console.log("processtime"+seconds)
+            if(pricingcomponent)
+            {
+              writelog(pricingcomponent)
+              writelog(product_obj.product_id)
+            }
             
             processed_product_count = processed_product_count  + 1;
             
