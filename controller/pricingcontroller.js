@@ -2504,5 +2504,31 @@ exports.getaliasproductlist =  async (req, res) => {
       skulist.push(skuobj.generated_sku)
     })
   })
-  res.send(200,{"products":prodlist,"skus":skulist})
+  let overlaparr = []
+  let overlaprows = await models.sale_discount.findAll({
+    attributes:['product_ids'],
+    where:{
+      product_ids: {
+        [Op.overlap]:prodlist
+      }
+    }
+  })
+  overlaprows.forEach(rows =>{
+    let ovelapelemets =intersect(prodlist, overlaprows[0].product_ids);
+    overlaparr = overlaparr.concat(ovelapelemets)
+    overlaparr = overlaparr.filter((item, pos) => overlaparr.indexOf(item) === pos)
+
+  })
+  
+  function intersect(a, b) {
+    return a.filter(Set.prototype.has, new Set(b));
+  }
+  // if(overlaprows.length > 0)
+  // {
+  //   res.send(200,{"products":overlaparr})
+
+  // }else{
+    res.send(200,{"products":prodlist,"skus":skulist,eror_skus:overlaparr})
+
+//  }
 }
