@@ -1773,8 +1773,7 @@ exports.priceupdatestatus =  async (req, res) => {
   {
     let updatedskus = await models.pricing_sku_materials.findAll({
       attributes: [
-        'product_id',
-        [squelize.literal('COUNT(DISTINCT(product_id))'), 'countOfProducts']
+        'product_id'
       ],
       where:{
         product_id : {
@@ -1782,6 +1781,9 @@ exports.priceupdatestatus =  async (req, res) => {
         },
         updatedAt: {
           [Op.gt] : component_history.createdAt
+        },
+        component: {
+          [Op.iLike]: '%'+component+'%'
         }
       },
       group: 'product_id'
@@ -1795,7 +1797,7 @@ exports.priceupdatestatus =  async (req, res) => {
   
     }
   }
-  if(component === 'updateskuprice')
+ else if(component === 'updateskuprice')
   {
 
   let updatedskus = await models.trans_sku_lists.findAll({

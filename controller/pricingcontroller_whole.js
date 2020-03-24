@@ -849,7 +849,7 @@ exports.priceupdate = (req, res) => {
         sku_component_count = 0
         var pricing_diamonds_list = []
         let product_diamonds = await productdiamonds(productsku.product_id)
-
+        console.log("diamondcount"+product_diamonds.length)
         diamond_component_count = product_diamonds.length
         if(product_diamonds.length > 0)
         {
@@ -1991,7 +1991,13 @@ exports.priceupdate = (req, res) => {
           if(product_obj.trans_sku_lists.length > skucount)
           {
             //checkisinclude()
-            updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
+            if(pricingcomponent)
+            {
+              checkisinclude()
+            }else{
+              updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
+
+            }
            // updategoldprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
 
 
