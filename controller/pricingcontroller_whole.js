@@ -195,13 +195,13 @@ exports.priceupdate = (req, res) => {
     console.log(">>>>")
     console.log(JSON.stringify(product_type_arr))
     
-    if(pricingcomponent !== 'updateskuprice')
-    {
+    // if(pricingcomponent !== 'updateskuprice')
+    // {
      
-      whereclause1['$product_materials.material_name$'] = {
-          [Op.eq] : pricingcomponent
-        }
-    }
+    //   whereclause1['$product_materials.material_name$'] = {
+    //       [Op.eq] : pricingcomponent
+    //     }
+    // }
 
 
     const msg = {
