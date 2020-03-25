@@ -1684,6 +1684,8 @@ exports.priceupdate = (req, res) => {
                                          
             })
             console.log("CKDHDJDJJDJD")
+            console.log(JSON.stringify(discounttitle))
+
            console.log(JSON.stringify(disscount_obj))
            console.log(JSON.stringify(skus_arrr))
 

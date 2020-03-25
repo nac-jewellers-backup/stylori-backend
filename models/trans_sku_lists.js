@@ -75,6 +75,9 @@ module.exports = (sequelize, DataTypes) => {
     vendor_delivery_time:{
       type: DataTypes.INTEGER
     },
+    discount_desc:{
+      type: DataTypes.TEXT
+    },
     attributes:{
       type: DataTypes.ARRAY(DataTypes.TEXT)
     },
