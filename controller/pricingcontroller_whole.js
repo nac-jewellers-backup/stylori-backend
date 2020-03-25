@@ -198,7 +198,7 @@ exports.priceupdate = (req, res) => {
     if(pricingcomponent !== 'updateskuprice')
     {
      
-      whereclause['$product_materials.material_name$'] = {
+      whereclause1['$product_materials.material_name$'] = {
           [Op.eq] : pricingcomponent
         }
     }
