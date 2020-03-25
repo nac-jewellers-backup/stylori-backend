@@ -82,6 +82,7 @@ module.exports = function(app) {
 	app.post('/getaliasproduct', pricingontroller.getaliasproductlist);
 	app.post('/creatediscount', pricingontroller.creatediscount);
 	app.post('/checksalediscount', pricingontroller.checkdiscount);
+	app.post('/getdiscount', pricingontroller.discountinfo);
 
 	
 	app.post('/updatemarkup', pricingontroller.updatemarkup);

@@ -2396,6 +2396,16 @@ exports.checkdiscount =  async (req, res) => {
      res.send(200,{"products":prodlist,"skus":skulist})
 
 }
+exports.discountinfo =  async (req, res) => {
+  const {discountid} = req.body
+  let discountobj = await models.sale_discount.findOne({
+    where:{
+      id : discountid
+    }
+  })
+
+  res.send(200, {"discunt" :discountobj })
+}
 exports.creatediscount =  async (req, res) => {
   const {componenets,discountname,product_attributes_text, discounttype, discountvalue, skus, product_attributes} = req.body
   let pricingcomponents = []
