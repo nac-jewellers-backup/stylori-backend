@@ -2428,6 +2428,7 @@ exports.creatediscount =  async (req, res) => {
     discount_value : discountvalue,
     discount_type : discounttype == 'percentage' ? 2 : 1,
     product_ids : skus,
+    is_active: true,
     product_attributes : product_attributes,
     product_attributes_text : product_attributes_text
   }).then(sale => {
