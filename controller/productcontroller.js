@@ -44,15 +44,22 @@ exports.ringpriceupdate =  async (req, res) => {
 
 
 exports.updateproductattr =  async (req, res) => {
-    let products = await models.product_lists.findAll({
+    let products = await models.trans_sku_lists.findAll({
+       
         where:{
-            isactive : true
+            is_active : true,
+            product_id:{
+                [Op.notILike]:'%SR%'
+            },
+            attributes:{
+                [Op.eq] : null
+            }
         }
     })
    var processcount = 0;
     res.send(200,{"response":products.length})
-
-    productupdate(processcount)
+    console.log(products.length)
+   productupdate(processcount)
   async  function productupdate(processcount)
     {
         let product_id = products[processcount].product_id

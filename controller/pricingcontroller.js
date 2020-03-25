@@ -2407,7 +2407,7 @@ exports.discountinfo =  async (req, res) => {
   res.send(200, {"discunt" :discountobj })
 }
 exports.creatediscount =  async (req, res) => {
-  const {componenets,discountname,product_attributes_text, discounttype, discountvalue, skus, product_attributes} = req.body
+  const {componenets,discountname,product_attributes_text, discounttype,discounttitle, discountvalue, skus, product_attributes} = req.body
   let pricingcomponents = []
   componenets.forEach(compobj =>{
     pricingcomponents.push(compobj.name)
@@ -2423,6 +2423,7 @@ exports.creatediscount =  async (req, res) => {
    models.sale_discount.create({
     id:  uuidv1(),
     discount_name : discountname,
+    discount_title: discounttitle,
     components : pricingcomponents,
     discount_value : discountvalue,
     discount_type : discounttype == 'percentage' ? 2 : 1,
@@ -2600,7 +2601,8 @@ exports.getaliasproductlist =  async (req, res) => {
   //   res.send(200,{"products":overlaparr})
 
   // }else{
-    res.send(200,{"products":prod_skus,"skus":skulist,eror_skus:overlaparr})
+    let titletext = prod_skus.length + " Products" +skulist.length + " skus and "+ overlaparr.length +" overlapskus"
+    res.send(200,{"products":prod_skus,"skus":skulist,eror_skus:overlaparr,"title": titletext})
 
 //  }
 }
