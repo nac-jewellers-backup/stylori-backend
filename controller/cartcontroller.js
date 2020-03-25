@@ -43,7 +43,7 @@ models.giftwrap.create(giftwrapobj).then(giftwrapobj=> {
 });
 }
 exports.createvoucher = async (req, res) => {
-const {vouchername,vouchercodes,startdate,enddate,description,attributes,discounttype,discount,isonce,limittouse,minimumreq,minorder} = req.body
+const {vouchername,vouchercodes,description,isloggedin,discounttype,maxdiscount,startdate,enddate,attributes,discount,isonce,limittouse,minorderqty,minorder} = req.body
   let vouchers = []
   let product_attributes = {}
   let keys = Object.keys(attributes);
@@ -71,29 +71,33 @@ const {vouchername,vouchercodes,startdate,enddate,description,attributes,discoun
 
   })
   let discounttype_value = 2;
-  vouchercodes.forEach(codes => {
+  // vouchercodes.forEach(codes => {
     let voucherobj = {
       id: uuidv1(),
-      code: codes,
+      voucher_codes: vouchercodes,
+      code: vouchercodes[0],
       name: vouchername,
       description: description,
-      max_uses: limittouse,
-      uses: 0,
-      max_uses_user: isonce ? 0 : null,
-      type: discounttype_value,
+      isloginneeded: isloggedin,
       discount_amount: discount,
-      is_active: true,
+      max_discount: maxdiscount,
+      type: discounttype ? discounttype : null,
       min_cart_value: minorder,
+      max_uses: limittouse,
+      min_cart_qty:minorderqty,
+      uses: 0,
+      max_uses_user: isonce ? isonce : 1,
+      is_active: true,
       starts_at: startdate,
       expires_at: enddate,
       product_attributes: product_attributes
     }
 
-    vouchers.push(voucherobj)
-  })
-  await models.vouchers.bulkCreate(
-    vouchers, {individualHooks: true})
-  res.send(200,{"codes":vouchers})
+  //   vouchers.push(voucherobj)
+  // })
+  await models.vouchers.create(
+    voucherobj)
+  res.send(200,{"codes":voucherobj})
 }
 exports.applyvoucher = async (req, res) => {
   const {vouchercode, cart_id,user_profile_id} = req.body
