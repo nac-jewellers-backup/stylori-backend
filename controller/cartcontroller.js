@@ -101,6 +101,8 @@ const {vouchername,vouchercodes,description,isloggedin,discounttype,maxdiscount,
 }
 exports.applyvoucher = async (req, res) => {
   const {vouchercode, cart_id,user_profile_id} = req.body
+  let vouchers = []
+  vouchers.push(vouchercode)
   var isloggedin = false
   if(user_profile_id)
   {
@@ -122,8 +124,8 @@ exports.applyvoucher = async (req, res) => {
  let coupon_info = await models.vouchers.findOne({
     where:{
       is_active: true,
-      code:{
-        [Op.eq]:vouchercode
+      voucher_codes:{
+        [Op.overlap]:vouchers
       },
       
     }
@@ -254,13 +256,30 @@ models.vouchers.findOne({
    var discountpercent = discountvalue/100
     // isvalid = true
    // message_response = "Applied Successfully"
-    var query = "UPDATE shopping_carts SET discount = "+discountvalue+" , discounted_price = (gross_amount -"+discountvalue+") where id ='"+cart_id+"'" ;
+   var query = "";
     if(giftwrapobj.type === 2)
     {
       let discountval  = eligible_amount * discountpercent;
      // let discountendamount  = eligible_amount * discountpercent;
-
+     if( giftwrapobj.max_discount)
+     {
+      if(discountval > giftwrapobj.max_discount)
+      {
+        discountval = giftwrapobj.max_discount
+      }
+    }
+      
     query = "UPDATE shopping_carts SET discount = "+discountval+", discounted_price = (gross_amount - "+discountval+") where id ='"+cart_id+"'" ;
+    }else{
+      if( giftwrapobj.max_discount)
+     {
+      if(discountvalue > giftwrapobj.max_discount)
+      {
+        discountvalue = giftwrapobj.max_discount
+      }
+    }
+       query = "UPDATE shopping_carts SET discount = "+discountvalue+" , discounted_price = (gross_amount -"+discountvalue+") where id ='"+cart_id+"'" ;
+
     }
     console.log(JSON.stringify(query))
 
