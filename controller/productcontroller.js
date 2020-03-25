@@ -62,6 +62,10 @@ exports.updateproductattr =  async (req, res) => {
             "product_category"],
         include:[
             {
+                model: models.trans_sku_lists,
+                attributes: ['purity','diamond_type','generated_sku']
+            },
+            {
                 model: models.product_themes,
                 attributes: ['theme_name'],
             },
@@ -86,6 +90,10 @@ exports.updateproductattr =  async (req, res) => {
                 attributes: ['purity'],
             },
             {
+                model: models.product_diamonds,
+                attributes: ['diamond_colour','diamond_clarity'],
+            },
+            {
                 model: models.product_stonecount,
                 attributes: ['stonecount'],
             },
@@ -103,7 +111,9 @@ exports.updateproductattr =  async (req, res) => {
             product_id : product_id
         }
     })
+    
     let attributes_array = []
+    let purity_obj = {}
     let product_category = await  models.master_product_categories.findOne({
             where: {
                 name : product_object.product_category
@@ -157,8 +167,10 @@ exports.updateproductattr =  async (req, res) => {
             }
         }
     })
-    purity_arr.forEach(purity_obj => {
-        attributes_array.push(purity_obj.alias)
+    console.log(JSON.stringify(purity_arr))
+    purity_arr.forEach(purityobj => {
+       // attributes_array.push(purity_obj.alias)
+       purity_obj[purityobj.name] = purityobj.alias
     })
 
 
@@ -192,24 +204,72 @@ exports.updateproductattr =  async (req, res) => {
         attributes_array.push(ocassion_obj.alias)
     })
 
-    
-    let updateobj = await models.product_lists.update(
-        {"attributes": attributes_array},
+    processsku(0)
+    async function processsku(skucount)
+    {
+        if( product_object.trans_sku_lists.length > skucount)
         {
-        where:{
-            product_id : product_id
-        }
-    }
-        
-    )
-
-    if(products.length > processcount)
+            let skuobj = product_object.trans_sku_lists[skucount]
+            let sku_atter = []
+            attributes_array.forEach(attr => {
+                sku_atter.push(attr)
+            })
+            sku_atter.push(purity_obj[skuobj.purity])
+            await models.trans_sku_lists.update(
+             {
+                 "attributes" : sku_atter
+             },
+             {
+                 where:{
+                     generated_sku : skuobj.generated_sku
+                 }
+             }
+         )
+            skucount = skucount + 1
+            processsku(skucount)
+        }else
+        {
+            if(products.length > processcount)
     {
         processcount =processcount +1;
         productupdate(processcount)
     }else{
         console.log("update complete")
         }
+        }
+
+    }
+    // product_object.trans_sku_lists.forEach(async skuobj => {
+    //     let sku_atter = []
+    //     sku_atter = attributes_array
+    //     console.log(skuobj.generated_sku)
+        
+    //      sku_atter.push(purity_obj[skuobj.purity])
+
+    //      await models.trans_sku_lists.update(
+    //          {
+    //              "attributes" : sku_atter
+    //          },
+    //          {
+    //              where:{
+    //                  generated_sku : skuobj.generated_sku
+    //              }
+    //          }
+    //      )
+    //     // res.send(200,{"response":sku_atter})
+
+    // })
+    // let updateobj = await models.product_lists.update(
+    //     {"attributes": attributes_array},
+    //     {
+    //     where:{
+    //         product_id : product_id
+    //     }
+    // }
+        
+    // )
+
+    
 }
 
 

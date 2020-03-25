@@ -2565,11 +2565,16 @@ exports.getaliasproductlist =  async (req, res) => {
   })
   let prodlist = []
   let skulist = [];
+  let prod_skus = []
   productlists.forEach(prodobj => {
-    prodlist.push(prodobj.product_id)
+    let prod_obj = {}
+  //  prodlist.push(prodobj.product_id)
     prodobj.trans_sku_lists.forEach(skuobj => {
       skulist.push(skuobj.generated_sku)
     })
+    prod_obj['product_id'] = prodobj.product_id
+    prod_obj['skus'] = prodobj.skulist
+    prodlist.push(prod_obj)
   })
   let overlaparr = []
   let overlaprows = await models.sale_discount.findAll({
