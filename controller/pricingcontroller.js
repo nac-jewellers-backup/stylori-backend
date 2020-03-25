@@ -2581,6 +2581,7 @@ exports.getaliasproductlist =  async (req, res) => {
   let overlaprows = await models.sale_discount.findAll({
     attributes:['product_ids'],
     where:{
+      is_active:true,
       product_ids: {
         [Op.overlap]:prodlist
       }
@@ -2601,7 +2602,7 @@ exports.getaliasproductlist =  async (req, res) => {
   //   res.send(200,{"products":overlaparr})
 
   // }else{
-    let titletext = prod_skus.length + " Products" +skulist.length + " skus and "+ overlaparr.length +" overlapskus"
+    let titletext = prod_skus.length + " Products " +skulist.length + " skus and "+ overlaparr.length +" overlapskus"
     res.send(200,{"products":prod_skus,"skus":skulist,eror_skus:overlaparr,"title": titletext})
 
 //  }
