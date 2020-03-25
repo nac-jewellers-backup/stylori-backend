@@ -2572,9 +2572,9 @@ exports.getaliasproductlist =  async (req, res) => {
     prodobj.trans_sku_lists.forEach(skuobj => {
       skulist.push(skuobj.generated_sku)
     })
-   // prod_obj['product_id'] = prodobj.product_id
-   // prod_obj['skus'] = prodobj.trans_sku_lists
-   // prodlist.push(prod_obj)
+   prod_obj['product_id'] = prodobj.product_id
+   prod_obj['skus'] = prodobj.trans_sku_lists
+   prod_skus.push(prod_obj)
   })
   let overlaparr = []
   let overlaprows = await models.sale_discount.findAll({
@@ -2600,7 +2600,7 @@ exports.getaliasproductlist =  async (req, res) => {
   //   res.send(200,{"products":overlaparr})
 
   // }else{
-    res.send(200,{"products":prodlist,"skus":skulist,eror_skus:overlaparr})
+    res.send(200,{"products":prod_skus,"skus":skulist,eror_skus:overlaparr})
 
 //  }
 }
