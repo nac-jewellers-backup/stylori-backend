@@ -1658,10 +1658,12 @@ exports.priceupdate = (req, res) => {
           
           var goldmarkupvalue = goldsellingprice;
           let skus_arrr = [];
-          skus_arrr.push(productskus[skucount].product_id)
+          var discounttitle = ""
+          skus_arrr.push(productskus[skucount].generated_sku)
           let disscount_obj = {}
           let discounts_arr = await models.sale_discount.findAll({
             where: {
+              is_active: true,
               product_ids :{
                 [Op.contains] : skus_arrr
               }
@@ -1669,7 +1671,7 @@ exports.priceupdate = (req, res) => {
             })
             discounts_arr.forEach(discount => {
                            let componentname = discount.components;
-                           
+                           discounttitle = discount.discount_title
                            componentname.forEach(comp => {
                             
                               disscount_obj[comp] = {
@@ -1959,7 +1961,8 @@ exports.priceupdate = (req, res) => {
                 discount_price_tax : discountpricetax,
                 markup_price: skumarkup  + markuppricetax,
                 markup_price_tax :  markuppricetax,
-                margin_on_sale_percentage : sku_margin
+                margin_on_sale_percentage : sku_margin,
+                discount_desc: discounttitle
               } 
               
              // res.send(200,{"material":materialsum,"metal":matalsum});
