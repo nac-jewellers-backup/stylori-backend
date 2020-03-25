@@ -2584,12 +2584,12 @@ exports.getaliasproductlist =  async (req, res) => {
     where:{
       is_active:true,
       product_ids: {
-        [Op.overlap]:prodlist
+        [Op.overlap]:skulist
       }
     }
   })
   overlaprows.forEach(rows =>{
-    let ovelapelemets =intersect(prodlist, overlaprows[0].product_ids);
+    let ovelapelemets =intersect(skulist, overlaprows[0].product_ids);
     overlaparr = overlaparr.concat(ovelapelemets)
     overlaparr = overlaparr.filter((item, pos) => overlaparr.indexOf(item) === pos)
 
