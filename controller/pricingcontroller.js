@@ -2604,7 +2604,7 @@ exports.getaliasproductlist =  async (req, res) => {
 
   // }else{
     let titletext = prod_skus.length + " Products " +skulist.length + " skus and "+ overlaparr.length +" overlapskus"
-    res.send(200,{"products":prod_skus,"skus":skulist,eror_skus:overlaparr,"title": titletext})
+    res.send(200,{"products":prodlist,"skus":skulist,eror_skus:overlaparr,"title": titletext})
 
 //  }
 }
