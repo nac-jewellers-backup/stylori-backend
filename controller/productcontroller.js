@@ -1416,13 +1416,14 @@ exports.editproductgemstone =  async (req, res) => {
 
 }
 exports.updateskuinfo =  async (req, res) => {
-    const {generatedSku, vendorDeliveryTime, isdefault, isActive, isReadyToShip} = req.body
+    const {generatedSku, vendorDeliveryTime,discount, isdefault, isActive, isReadyToShip} = req.body
     let response_obj1 = await models.trans_sku_lists.update(
         // Values to update
         {
             vendor_delivery_time: vendorDeliveryTime,
             isdefault : isdefault,
             is_active : isActive,
+            discount_desc:discount,
             is_ready_to_ship : isReadyToShip
         },
         { // Clause
