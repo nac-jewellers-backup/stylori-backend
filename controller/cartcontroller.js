@@ -42,6 +42,15 @@ models.giftwrap.create(giftwrapobj).then(giftwrapobj=> {
   res.send(500,{message: "Failed"})
 });
 }
+exports.getvoucher = async (req, res) => {
+  const { id} = req.body
+  let response = await models.vouchers.findOne({
+    where:{
+      id: id
+    }
+  })
+  res.send(200,{response})
+}
 exports.createvoucher = async (req, res) => {
 const {vouchername,vouchercodes,description,isloggedin,discounttype,maxdiscount,startdate,enddate,attributes,discount,isonce,limittouse,minorderqty,minorder} = req.body
   let vouchers = []
