@@ -2420,7 +2420,6 @@ exports.creatediscount =  async (req, res) => {
     newarray.push(chunk)
   
   }
-  console.log("dad")
   // console.log(JSON.stringify({
   //   id:  uuidv1(),
   //   components : pricingcomponents,
