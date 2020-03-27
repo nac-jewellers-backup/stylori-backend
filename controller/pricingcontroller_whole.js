@@ -859,7 +859,7 @@ exports.priceupdate = (req, res) => {
         sku_component_count = 0
         var pricing_diamonds_list = []
         let product_diamonds = await productdiamonds(productsku.product_id)
-        console.log("diamondcount"+product_diamonds.length)
+       
         diamond_component_count = product_diamonds.length
         if(product_diamonds.length > 0)
         {
@@ -879,12 +879,16 @@ exports.priceupdate = (req, res) => {
 
        function diamond_process(diamondobj,vendorcode)
        {
+         console.log(">>>>>>>>")
+         console.log(processcount)
+
+
           var conditionobj = {
              vendor_code: vendorcode,
                diamond_colour: diamondobj.diamond_clarity,
                diamond_clarity: diamondobj.diamond_colour
           }
-          
+
    
           
           models.diamond_price_settings.findOne({
@@ -925,8 +929,10 @@ exports.priceupdate = (req, res) => {
 
         
                     models.pricing_sku_materials.findOne({
-                      where: {product_id: product_obj.product_id}
+                      where: {product_id: product_obj.product_id, material_name :materialname }
                     }).then(price_splitup_model=> {
+                      console.log(JSON.stringify(price_splitup_model))
+
                       if(price_splitup_model)
                       {
                        // isdiamondexist()
@@ -989,9 +995,13 @@ exports.priceupdate = (req, res) => {
             
                 function isdiamondexist()
                 {
+                  // processcount = processcount +1;
+
                   if(product_diamonds.length > processcount)
                   {
-                  
+                    console.log("diamondname")
+                    console.log(JSON.stringify(product_diamonds[processcount]))
+
                   diamond_process(product_diamonds[processcount],vendorcode)
                   }else{
                   //  updateskuprice() 

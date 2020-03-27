@@ -42,21 +42,219 @@ exports.ringpriceupdate =  async (req, res) => {
 
 }
 
-
 exports.updateproductattr =  async (req, res) => {
-    let products = await models.trans_sku_lists.findAll({
-       
+    let products = await models.product_lists.findAll({
         where:{
-            is_active : true,
-            product_id:{
-                [Op.iLike]:'%SR%'
-            },
-            attributes:{
-                [Op.eq] : null
+            isactive : true,
+            product_id : {
+                [Op.notILike] : "%SR%"
             }
         }
     })
    var processcount = 0;
+    res.send(200,{"response":products.length})
+
+    productupdate(processcount)
+  async  function productupdate(processcount)
+    {
+        let product_id = products[processcount].product_id
+        console.log(product_id)
+        var product_object = await models.product_lists.findOne({
+        attributes:[ "product_type",
+            "product_category"],
+        include:[
+            {
+                model: models.product_themes,
+                attributes: ['theme_name'],
+            },
+            {
+                model: models.product_styles,
+                attributes: ['style_name'],
+            },
+            {
+                model: models.product_occassions,
+                attributes: ['occassion_name'],
+            },
+            {
+                model: models.product_collections,
+                attributes: ['collection_name'],
+            },
+            {
+                model: models.product_materials,
+                attributes: ['material_name'],
+            },
+            {
+                model: models.product_diamonds,
+                attributes: ['diamond_colour','diamond_clarity'],
+            },
+            {
+                model: models.product_purities,
+                attributes: ['purity'],
+            },
+            {
+                model: models.product_stonecount,
+                attributes: ['stonecount'],
+            },
+            {
+                model: models.product_stonecolor,
+                attributes: ['stonecolor'],
+            },
+            {
+                model: models.product_gender,
+                attributes: ['gender_name'],
+            }
+    
+        ],
+        where:{
+            product_id : product_id
+        }
+    })
+    let attributes_array = []
+    let product_category = await  models.master_product_categories.findOne({
+            where: {
+                name : product_object.product_category
+            }
+        })
+    attributes_array.push(product_category.short_code)
+    let product_type = await  models.master_product_types.findOne({
+        where: {
+            name : product_object.product_type
+        }
+    })
+    attributes_array.push(product_type.alias)
+
+    let materialname = []
+    product_object.product_materials.forEach(materialobj => {
+        materialname.push(materialobj.material_name)
+    })
+    let materials_arr = await  models.master_materials.findAll({
+        where: {
+            name : {
+                [Op.in] : materialname
+            }
+        }
+    })
+    materials_arr.forEach(mat_obj => {
+        attributes_array.push(mat_obj.alias)
+    })
+    let collectionname = []
+    product_object.product_collections.forEach(collectionobj => {
+        collectionname.push(collectionobj.collection_name)
+    })
+    let collections_arr = await  models.master_collections.findAll({
+        where: {
+            name : {
+                [Op.in] : collectionname
+            }
+        }
+    })
+    collections_arr.forEach(col_obj => {
+        attributes_array.push(col_obj.alias)
+    })
+
+    let purities = []
+    product_object.product_purities.forEach(purityobj => {
+        purities.push(purityobj.purity)
+    })
+    let purity_arr = await  models.master_metals_purities.findAll({
+        where: {
+            name : {
+                [Op.in] : purities
+            }
+        }
+    })
+    purity_arr.forEach(purity_obj => {
+        attributes_array.push(purity_obj.alias)
+    })
+
+
+    let styles = []
+    product_object.product_styles.forEach(styleobj => {
+        styles.push(styleobj.style_name)
+    })
+    let style_arr = await  models.master_styles.findAll({
+        where: {
+            name : {
+                [Op.in] : styles
+            }
+        }
+    })
+    style_arr.forEach(style_obj => {
+        attributes_array.push(style_obj.alias)
+    })
+
+    let occassions = []
+    product_object.product_occassions.forEach(ocassionobj => {
+        occassions.push(ocassionobj.occassion_name)
+    })
+    let occassion_arr = await  models.master_occasions.findAll({
+        where: {
+            name : {
+                [Op.in] : occassions
+            }
+        }
+    })
+    
+    occassion_arr.forEach(ocassion_obj => {
+        attributes_array.push(ocassion_obj.alias)
+    })
+    let diamonds_clarity_arr = []
+    let diamonds_color_arr = []
+
+    product_object.product_diamonds.forEach(diamond_obj =>{
+        diamonds_clarity_arr.push(diamond_obj.diamond_clarity+diamond_obj.diamond_colour)
+    })
+    let master_diamonds = await models.master_diamond_types.findAll({
+           
+    })         
+   
+    master_diamonds.forEach(diamond =>{
+        let diamondname = diamond.diamond_color+diamond.diamond_clarity
+
+        if(diamonds_clarity_arr.indexOf(diamondname) >  -1)
+        {
+
+            attributes_array.push(diamond.short_code)
+
+        }
+    })
+    let updateobj = await models.product_lists.update(
+        {"attributes": attributes_array},
+        {
+        where:{
+            product_id : product_id
+        }
+    }
+        
+    )
+
+    if(products.length > processcount)
+    {
+        processcount =processcount +1;
+        productupdate(processcount)
+    }else{
+        console.log("update complete")
+        }
+}
+
+
+}
+exports.updateproductattr_bk =  async (req, res) => {
+    let products = await models.trans_sku_lists.findAll({
+        attributes:[
+            "product_id"
+
+        ],
+        group:["product_id"],
+        where:{
+            is_active : true,
+            product_id:{
+                [Op.iLike]:'%SR%'
+            }
+        }
+    })
+   var processcount = 0;
+
     res.send(200,{"response":products.length})
     console.log(products.length)
    productupdate(processcount)
@@ -121,6 +319,7 @@ exports.updateproductattr =  async (req, res) => {
     
     let attributes_array = []
     let purity_obj = {}
+    let diamond_obj = {}
     let product_category = await  models.master_product_categories.findOne({
             where: {
                 name : product_object.product_category
@@ -174,7 +373,33 @@ exports.updateproductattr =  async (req, res) => {
             }
         }
     })
-    console.log(JSON.stringify(purity_arr))
+
+    let diamonds_clarity_arr = []
+    let diamonds_color_arr = []
+
+    product_object.product_diamonds.forEach(diamond_obj =>{
+        diamonds_clarity_arr.push(diamond_obj.diamond_clarity)
+        diamonds_color_arr.push(diamond_obj.diamond_colour)
+    })
+    let master_diamonds = await models.master_diamond_types.findAll({
+            where:{
+                diamond_color: {
+                    [Op.in]: diamonds_clarity_arr
+                },
+                diamond_clarity:{
+                    [Op.in]: diamonds_color_arr
+                }
+            }
+    })
+    console.log(JSON.stringify(diamonds_clarity_arr))
+    console.log(JSON.stringify(diamonds_color_arr))
+
+    master_diamonds.forEach(diamond =>{
+        let diamond_val = diamond.diamond_color+diamond.diamond_clarity
+        let diamond_shortcode = diamond.short_code
+        diamond_obj[diamond_val] = diamond_shortcode
+    })
+    console.log(JSON.stringify(diamond_obj))
     purity_arr.forEach(purityobj => {
        // attributes_array.push(purity_obj.alias)
        purity_obj[purityobj.name] = purityobj.alias
@@ -221,7 +446,9 @@ exports.updateproductattr =  async (req, res) => {
             attributes_array.forEach(attr => {
                 sku_atter.push(attr)
             })
+            sku_atter.push(diamond_obj[skuobj.diamond_type])
             sku_atter.push(purity_obj[skuobj.purity])
+            
             await models.trans_sku_lists.update(
              {
                  "attributes" : sku_atter
@@ -1829,7 +2056,7 @@ exports.getproductlist =  async (req, res) => {
          
        }
        var sort = "DESC"
-       var orderbycolumn = 'product_id'
+       var orderbycolumn = 'updatedAt'
        if(orderby)
        {
         orderbycolumn = orderby
