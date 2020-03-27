@@ -2412,30 +2412,62 @@ exports.creatediscount =  async (req, res) => {
   componenets.forEach(compobj =>{
     pricingcomponents.push(compobj.name)
   })
+  var chunk ;
+  var newarray = []
+  while (skus.length > 0) {
+    chunk = []
+    chunk = skus.splice(0,50000)
+    newarray.push(chunk)
+  
+  }
   console.log("dad")
-  console.log(JSON.stringify({
-    id:  uuidv1(),
-    components : pricingcomponents,
-    discount_value : discountvalue,
-    discount_type : discounttype == 'percentage' ? 2 : 1,
-    product_ids : skus
-  }))
-   models.sale_discount.create({
-    id:  uuidv1(),
-    discount_name : discountname,
-    discount_title: discounttitle,
-    components : pricingcomponents,
-    discount_value : discountvalue,
-    discount_type : discounttype == 'percentage' ? 2 : 1,
-    product_ids : skus,
-    is_active: true,
-    product_attributes : product_attributes,
-    product_attributes_text : product_attributes_text
-  }).then(sale => {
-    res.send(200,{"message":"success"})
-  }).catch(err => {
-    res.send(200,{"message":"failure","content": JSON.stringify(err)})
+  // console.log(JSON.stringify({
+  //   id:  uuidv1(),
+  //   components : pricingcomponents,
+  //   discount_value : discountvalue,
+  //   discount_type : discounttype == 'percentage' ? 2 : 1,
+  //   product_ids : skus
+  // }))
+  let discount_arr = []
+  newarray.forEach(skuarr => {
+   let discount_obj = {
+        id:  uuidv1(),
+        discount_name : discountname,
+        discount_title: discounttitle,
+        components : pricingcomponents,
+        discount_value : discountvalue,
+        discount_type : discounttype == 'percentage' ? 2 : 1,
+        product_ids : skuarr,
+        is_active: true,
+        product_attributes : product_attributes,
+        product_attributes_text : product_attributes_text
+      }
+
+      discount_arr.push(discount_obj)
   })
+   models.sale_discount.bulkCreate(
+    discount_arr
+        , {individualHooks: true}).then(sale => {
+            res.send(200,{"message":"success"})
+          }).catch(err => {
+            res.send(200,{"message":"failure","content": JSON.stringify(err)})
+          })
+  //  models.sale_discount.create({
+  //   id:  uuidv1(),
+  //   discount_name : discountname,
+  //   discount_title: discounttitle,
+  //   components : pricingcomponents,
+  //   discount_value : discountvalue,
+  //   discount_type : discounttype == 'percentage' ? 2 : 1,
+  //   product_ids : skus,
+  //   is_active: true,
+  //   product_attributes : product_attributes,
+  //   product_attributes_text : product_attributes_text
+  // }).then(sale => {
+  //   res.send(200,{"message":"success"})
+  // }).catch(err => {
+  //   res.send(200,{"message":"failure","content": JSON.stringify(err)})
+  // })
 }
 exports.getdistinctproduct =  async (req, res) => {
   const {vendorid, product_category,product_type} = req.body
