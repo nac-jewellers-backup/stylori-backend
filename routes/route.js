@@ -2,6 +2,7 @@ const authJwt = require('./verifyJwtToken');
 const productPricing = require('../controller/productMasters');
 let {esSearch} = require('../controller/elasticServices');
 module.exports = function(app) {
+    const configurationcontroller = require('../controller/master_configuration.js');
 
     const authcontroller = require('../controller/authcontroller.js');
 	const productcontroller = require('../controller/productcontroller.js');
@@ -153,6 +154,10 @@ module.exports = function(app) {
 	app.post('/updategemstonepricemaster', master_uploaddata_controller.updategemstonepricemaster);
 	app.post('/updatecustomerreviews', master_uploaddata_controller.updatecustomerreviews);
 	app.post('/updatetax', master_uploaddata_controller.updatetax);
+
+	app.post('/managetaxsetup', configurationcontroller.managetaxsetup);
+
+	
 
 	
 	
