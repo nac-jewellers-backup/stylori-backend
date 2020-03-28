@@ -156,7 +156,9 @@ module.exports = function(app) {
 	app.post('/updatetax', master_uploaddata_controller.updatetax);
 
 	app.post('/managetaxsetup', configurationcontroller.managetaxsetup);
+	app.post('/manageproducttypes', configurationcontroller.manageproducttypes);
 
+	
 	
 
 	

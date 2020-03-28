@@ -41,5 +41,36 @@ exports.managetaxsetup = async (req, res) => {
                     )
         res.send(200,{"message":"Created Successfully"})
     }
+}
+
+exports.manageproducttypes = async (req, res) => {
+    const {id,name,shortCode,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_product_types.update(
+            
+            {name: name, 
+                shortCode : shortCode},
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            shortCode : shortCode ,
+            }
+        await   models.master_product_types.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
 
 }
