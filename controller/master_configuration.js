@@ -50,7 +50,7 @@ exports.manageproducttypes = async (req, res) => {
         await   models.master_product_types.update(
             
             {name: name, 
-                shortCode : shortCode},
+                short_code : shortCode},
                 {where: {
                 id: id
                 }
@@ -65,7 +65,7 @@ exports.manageproducttypes = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            shortCode : shortCode ,
+            short_code : shortCode ,
             }
         await   models.master_product_types.create(   
                      taxobj
