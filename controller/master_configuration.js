@@ -8,7 +8,7 @@ var splitArray = require('split-array');
 var request = require('request');
 
 exports.managetaxsetup = async (req, res) => {
-    const {id,taxName,taxValue,hsnNumber,IGST,CGST,isedit,isdelete} = req.body
+    const {id,taxName,taxValue,hsnNumber,igst,cgst,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_tax_settings.update(
@@ -16,8 +16,8 @@ exports.managetaxsetup = async (req, res) => {
             {tax_name: taxName, 
             tax_value : taxValue ,
             hsn_number: hsnNumber,
-            IGST: IGST,
-            CGST:CGST},
+            IGST: igst,
+            CGST:cgst},
                 {where: {
                 id: id
                 }
@@ -34,8 +34,8 @@ exports.managetaxsetup = async (req, res) => {
             tax_name: taxName, 
             tax_value : taxValue ,
             hsn_number: hsnNumber,
-            IGST: IGST,
-            CGST:CGST}
+            IGST: igst,
+            CGST:cgst}
         await   models.master_tax_settings.create(   
                      taxobj
                     )

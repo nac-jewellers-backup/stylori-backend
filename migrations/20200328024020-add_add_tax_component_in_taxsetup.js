@@ -16,7 +16,7 @@ module.exports = {
         'master_tax_settings',
         'CGST',
         {
-          type: Sequelize.INTEGER,
+          type: Sequelize.DOUBLE,
           allowNull: true
         }
       )
