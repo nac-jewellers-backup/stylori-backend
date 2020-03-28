@@ -7,7 +7,7 @@ const uuidv1 = require('uuid/v1');
 var splitArray = require('split-array');
 var request = require('request');
 
-exports.managetagsetup = async (req, res) => {
+exports.managetaxsetup = async (req, res) => {
     const {id,taxName,taxValue,hsnNumber,IGST,CGST,isedit,isdelete} = req.body
     if(isedit)
     {
