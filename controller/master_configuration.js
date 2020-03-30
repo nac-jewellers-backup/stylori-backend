@@ -540,3 +540,36 @@ exports.managematerials = async (req, res) => {
     }
 
 }
+
+exports.manageearring = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_earring_backing.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_earring_backing.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}

@@ -170,6 +170,7 @@ module.exports = function(app) {
 	app.post('/managemetalcolors', configurationcontroller.managemetalcolors);
 	app.post('/managematerials', configurationcontroller.managematerials);
 	app.post('/managecategories', configurationcontroller.managecategories);
+	app.post('/manageearring', configurationcontroller.manageearring);
 
 	
 	
