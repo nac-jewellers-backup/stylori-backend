@@ -173,7 +173,10 @@ module.exports = function(app) {
 	app.post('/manageearring', configurationcontroller.manageearring);
 	app.post('/managemasterattributes', configurationcontroller.managemasterattributes);
 
-	
+	app.post('/managestones', configurationcontroller.managestones);
+	app.post('/managestonecolors', configurationcontroller.managestonecolors);
+	app.post('/managestoneshapes', configurationcontroller.managestoneshapes);
+
 	
 	
 

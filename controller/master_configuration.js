@@ -614,3 +614,100 @@ exports.managemasterattributes = async (req, res) => {
     }
 
 }
+
+exports.managestones = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_stones.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_stones.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+exports.managestonecolors = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_stones_colors.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_stones_colors.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+exports.managestoneshapes = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_stones_shapes.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_stones_shapes.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
