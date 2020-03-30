@@ -42,7 +42,38 @@ exports.managetaxsetup = async (req, res) => {
         res.send(200,{"message":"Created Successfully"})
     }
 }
+exports.managetaxsetup2 = async (req, res) => {
+    const {id,name,value,hsnCode,igst,cgst,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.taxsettings.update(
+            
+            {name: name, 
+                value : value ,
+            hsn_code: hsnCode,
+            },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
 
+    }else{
+        let taxobj ={
+            name: name, 
+            value : value ,
+            hsn_code: hsnCode
+        }
+        await   models.taxsettings.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+}
 exports.manageproducttypes = async (req, res) => {
     const {id,name,shortCode,certificate,isedit,isdelete} = req.body
     if(isedit)
