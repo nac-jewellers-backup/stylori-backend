@@ -44,12 +44,13 @@ exports.managetaxsetup = async (req, res) => {
 }
 
 exports.manageproducttypes = async (req, res) => {
-    const {id,name,shortCode,isedit,isdelete} = req.body
+    const {id,name,shortCode,certificate,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_product_types.update(
             
             {name: name, 
+                certificate:certificate,
                 short_code : shortCode},
                 {where: {
                 id: id
@@ -65,6 +66,7 @@ exports.manageproducttypes = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
+            certificate:certificate,
             short_code : shortCode ,
             }
         await   models.master_product_types.create(   
