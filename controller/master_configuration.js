@@ -479,7 +479,7 @@ exports.managemetalcolors = async (req, res) => {
     const {id,name,isedit,isdelete} = req.body
     if(isedit)
     {
-        await   models.master_metal_colors.update(
+        await   models.master_metals_colors.update(
             
             {   
                 name: name
@@ -500,7 +500,7 @@ exports.managemetalcolors = async (req, res) => {
             name: name, 
             alias : name 
             }
-        await   models.master_metal_colors.create(   
+        await   models.master_metals_colors.create(   
                      taxobj
                     )
         res.send(200,{"message":"Created Successfully"})
