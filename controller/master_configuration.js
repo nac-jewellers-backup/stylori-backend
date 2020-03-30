@@ -313,7 +313,7 @@ exports.managediamondsettings = async (req, res) => {
     const {id,name,isedit,isdelete} = req.body
     if(isedit)
     {
-        await   models.master_diamond_settings.update(
+        await   models.master_diamonds_settings.update(
             
             {   
                 name: name
@@ -334,7 +334,7 @@ exports.managediamondsettings = async (req, res) => {
             name: name, 
             alias : name 
             }
-        await   models.master_diamond_settings.create(   
+        await   models.master_diamonds_settings.create(   
                      taxobj
                     )
         res.send(200,{"message":"Created Successfully"})
