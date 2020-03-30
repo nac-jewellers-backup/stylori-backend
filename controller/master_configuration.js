@@ -602,7 +602,7 @@ exports.managemasterattributes = async (req, res) => {
             is_filter: isFilter,
             filter_position : filterPosition,
             is_active: true,
-            shortCode : "",
+            short_code : "",
             }
         await   models.Attribute_master.create(   
                      taxobj
