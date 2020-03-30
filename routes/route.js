@@ -171,6 +171,7 @@ module.exports = function(app) {
 	app.post('/managematerials', configurationcontroller.managematerials);
 	app.post('/managecategories', configurationcontroller.managecategories);
 	app.post('/manageearring', configurationcontroller.manageearring);
+	app.post('/managemasterattributes', configurationcontroller.managemasterattributes);
 
 	
 	

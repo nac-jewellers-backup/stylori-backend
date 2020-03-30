@@ -574,7 +574,7 @@ exports.manageearring = async (req, res) => {
 
 }
 
-exports.manageearring = async (req, res) => {
+exports.managemasterattributes = async (req, res) => {
     const {id,name,isFilter,filterPosition,isdelete,isedit} = req.body
     if(isedit)
     {
