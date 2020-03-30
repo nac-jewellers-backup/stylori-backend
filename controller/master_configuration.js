@@ -600,7 +600,7 @@ exports.managemasterattributes = async (req, res) => {
             id:uuidv1(),
             name: name,
             is_filter: isFilter,
-            filter_position : filterPosition,
+            filter_position : parseInt(filterPosition),
             is_active: true,
             short_code : "",
             }
