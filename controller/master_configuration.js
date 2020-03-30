@@ -597,10 +597,9 @@ exports.managemasterattributes = async (req, res) => {
 
     }else{
         let taxobj ={
-            id:uuidv1(),
             name: name,
             is_filter: isFilter,
-            filter_position : parseInt(filterPosition),
+            filter_position : filterPosition,
             is_active: true,
             short_code : "",
             }
