@@ -169,6 +169,7 @@ module.exports = function(app) {
 	app.post('/managepurities', configurationcontroller.managepurities);
 	app.post('/managemetalcolors', configurationcontroller.managemetalcolors);
 	app.post('/managematerials', configurationcontroller.managematerials);
+	app.post('/managecategories', configurationcontroller.managecategories);
 
 	
 	

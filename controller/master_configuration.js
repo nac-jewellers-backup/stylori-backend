@@ -75,6 +75,38 @@ exports.manageproducttypes = async (req, res) => {
 
 }
 
+exports.managecategories = async (req, res) => {
+    const {id,name,shortCode,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_product_categories.update(
+            
+            {name: name, 
+                short_code : shortCode},
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            short_code : shortCode ,
+            }
+        await   models.master_product_categories.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
 exports.managematerials = async (req, res) => {
     const {id,name,shortCode,isedit,isdelete} = req.body
     if(isedit)
