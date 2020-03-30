@@ -74,3 +74,437 @@ exports.manageproducttypes = async (req, res) => {
     }
 
 }
+
+exports.managematerials = async (req, res) => {
+    const {id,name,shortCode,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_product_types.update(
+            
+            {name: name, 
+                short_code : shortCode},
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            short_code : shortCode ,
+            }
+        await   models.master_product_types.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+
+exports.managegenders = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_genders.update(
+            
+            {   name: name 
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name ,
+            }
+        await   models.master_genders.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+
+exports.managegemtypes = async (req, res) => {
+    const {id,name,colorCode,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_gemstones_types.update(
+            
+            {   
+                name: name,
+                color_code:  colorCode
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name ,
+            color_code: colorCode
+            }
+        await   models.master_gemstones_types.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+exports.managegemshapes = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_gemstones_shapes.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_gemstones_shapes.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+exports.managegemsettings = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_gemstones_settings.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_gemstones_settings.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+
+exports.managediamondtypes = async (req, res) => {
+    const {id,diamondClarity,diamondColor,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_diamond_types.update(
+            
+            {   
+                diamond_clarity: diamondClarity,
+                diamond_color : diamondColor
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            diamond_clarity: diamondClarity,
+            diamond_color : diamondColor,
+            short_code : ""
+            }
+        await   models.master_diamond_types.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+exports.managediamondsettings = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_diamond_settings.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_diamond_settings.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+exports.managediamondshapes = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_diamond_shapes.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_diamond_shapes.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+exports.managedesigns = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_designs.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_designs.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+exports.managecollections = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_collections.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_collections.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+exports.managepurities = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_purities.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_purities.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+
+exports.managemetalcolors = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_metal_colors.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_metal_colors.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+exports.managematerials = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_materials.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_materials.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}

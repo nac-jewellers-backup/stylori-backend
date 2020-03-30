@@ -157,7 +157,20 @@ module.exports = function(app) {
 
 	app.post('/managetaxsetup', configurationcontroller.managetaxsetup);
 	app.post('/manageproducttypes', configurationcontroller.manageproducttypes);
+	app.post('/managegenders', configurationcontroller.managegenders);
+	app.post('/managegemtypes', configurationcontroller.managegemtypes);
+	app.post('/managegemshapes', configurationcontroller.managegemshapes);
+	app.post('/managegemsettings', configurationcontroller.managegemsettings);
+	app.post('/managediamondtypes', configurationcontroller.managediamondtypes);
+	app.post('/managediamondsettings', configurationcontroller.managediamondsettings);
+	app.post('/managediamondshapes', configurationcontroller.managediamondshapes);
+	app.post('/managedesigns', configurationcontroller.managedesigns);
+	app.post('/managecollections', configurationcontroller.managecollections);
+	app.post('/managepurities', configurationcontroller.managepurities);
+	app.post('/managemetalcolors', configurationcontroller.managemetalcolors);
+	app.post('/managematerials', configurationcontroller.managematerials);
 
+	
 	
 	
 
