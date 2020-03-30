@@ -445,7 +445,7 @@ exports.managepurities = async (req, res) => {
     const {id,name,isedit,isdelete} = req.body
     if(isedit)
     {
-        await   models.master_purities.update(
+        await   models.master_metals_purities.update(
             
             {   
                 name: name
@@ -466,7 +466,7 @@ exports.managepurities = async (req, res) => {
             name: name, 
             alias : name 
             }
-        await   models.master_purities.create(   
+        await   models.master_metals_purities.create(   
                      taxobj
                     )
         res.send(200,{"message":"Created Successfully"})
