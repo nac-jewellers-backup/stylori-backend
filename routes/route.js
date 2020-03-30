@@ -176,6 +176,7 @@ module.exports = function(app) {
 	app.post('/managestones', configurationcontroller.managestones);
 	app.post('/managestonecolors', configurationcontroller.managestonecolors);
 	app.post('/managestoneshapes', configurationcontroller.managestoneshapes);
+	app.post('/manageweights', configurationcontroller.manageweights);
 
 	
 	

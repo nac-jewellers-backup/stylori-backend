@@ -711,3 +711,36 @@ exports.managestoneshapes = async (req, res) => {
     }
 
 }
+
+exports.manageweights = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_weights.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_weights.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
