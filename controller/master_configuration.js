@@ -575,7 +575,7 @@ exports.manageearring = async (req, res) => {
 }
 
 exports.managemasterattributes = async (req, res) => {
-    const {id,name,isFilter,filterPosition,isdelete,isedit} = req.body
+    const {id,name,isFilter,isSearch,filterPosition,isdelete,isedit} = req.body
     if(isedit)
     {
         await   models.Attribute_master.update(
@@ -584,6 +584,7 @@ exports.managemasterattributes = async (req, res) => {
                 name: name,
                 is_filter: isFilter,
                 filter_position : filterPosition,
+                is_search : isSearch
                 },
                 {where: {
                 id: id
@@ -600,6 +601,7 @@ exports.managemasterattributes = async (req, res) => {
             name: name,
             is_filter: isFilter,
             filter_position : filterPosition,
+            is_search : isSearch,
             is_active: true,
             short_code : "",
             }
