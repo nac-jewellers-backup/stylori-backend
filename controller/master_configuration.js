@@ -573,3 +573,41 @@ exports.manageearring = async (req, res) => {
     }
 
 }
+
+exports.manageearring = async (req, res) => {
+    const {id,name,isFilter,filterPosition,isdelete,isedit} = req.body
+    if(isedit)
+    {
+        await   models.Attribute_master.update(
+            
+            {   
+                name: name,
+                is_filter: isFilter,
+                filter_position : filterPosition,
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name,
+            is_filter: isFilter,
+            filter_position : filterPosition,
+            is_active: true,
+            shortCode : "",
+            }
+        await   models.Attribute_master.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
