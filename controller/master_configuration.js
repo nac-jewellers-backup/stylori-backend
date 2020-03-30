@@ -346,7 +346,7 @@ exports.managediamondshapes = async (req, res) => {
     const {id,name,isedit,isdelete} = req.body
     if(isedit)
     {
-        await   models.master_diamond_shapes.update(
+        await   models.master_diamonds_shapes.update(
             
             {   
                 name: name
@@ -367,7 +367,7 @@ exports.managediamondshapes = async (req, res) => {
             name: name, 
             alias : name 
             }
-        await   models.master_diamond_shapes.create(   
+        await   models.master_diamonds_shapes.create(   
                      taxobj
                     )
         res.send(200,{"message":"Created Successfully"})
