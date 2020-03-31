@@ -75,14 +75,17 @@ exports.managetaxsetup2 = async (req, res) => {
     }
 }
 exports.manageproducttypes = async (req, res) => {
-    const {id,name,shortCode,certificate,isedit,isdelete} = req.body
+    const {id,name,shortCode,displayOrder,isFilter,isActive,certificate,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_product_types.update(
             
             {name: name, 
                 certificate:certificate,
-                short_code : shortCode},
+                short_code : shortCode,
+                display_order:displayOrder,
+                is_filter : isFilter
+                },
                 {where: {
                 id: id
                 }
@@ -92,12 +95,21 @@ exports.manageproducttypes = async (req, res) => {
         res.send(200,{"message":"Updated Successfully"})
     }else if(isdelete)
     {
-
+        await   models.master_product_types.update(
+                        {
+                            is_active : isActive
+                            },
+                            {where: {
+                            id: id
+                            }
+                        }
+                    )
     }else{
         let taxobj ={
             id:uuidv1(),
             name: name, 
             certificate:certificate,
+            display_order:displayOrder,
             short_code : shortCode ,
             }
         await   models.master_product_types.create(   
