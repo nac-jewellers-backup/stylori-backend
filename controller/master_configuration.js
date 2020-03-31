@@ -423,15 +423,17 @@ exports.managedesigns = async (req, res) => {
     }
 
 }
-
-exports.managecollections = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+exports.manageoccassions = async (req, res) => {
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
-        await   models.master_collections.update(
+        await   models.master_occasions.update(
             
             {   
-                name: name
+                name: name,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -447,7 +449,49 @@ exports.managecollections = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter: isFilter,
+            is_active: isActive,
+            filter_order : filterOrder 
+            }
+        await   models.master_occasions.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+exports.managecollections = async (req, res) => {
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_collections.update(
+            
+            {   
+                name: name,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name,
+            is_filter: isFilter,
+            is_active: isActive,
+            filter_order : filterOrder 
             }
         await   models.master_collections.create(   
                      taxobj
@@ -525,13 +569,16 @@ exports.managestyles = async (req, res) => {
 
 
 exports.managepurities = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_metals_purities.update(
             
             {   
-                name: name
+                name: name,
+                is_filter: isFilter,
+                is_active : isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -547,7 +594,10 @@ exports.managepurities = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter: isFilter,
+            is_active : isActive,
+            filter_order : filterOrder 
             }
         await   models.master_metals_purities.create(   
                      taxobj
@@ -559,13 +609,16 @@ exports.managepurities = async (req, res) => {
 
 
 exports.managemetalcolors = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_metals_colors.update(
             
             {   
-                name: name
+                name: name,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -581,7 +634,10 @@ exports.managemetalcolors = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter: isFilter,
+            is_active: isActive,
+            filter_order : filterOrder 
             }
         await   models.master_metals_colors.create(   
                      taxobj

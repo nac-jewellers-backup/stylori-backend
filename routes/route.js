@@ -178,7 +178,9 @@ module.exports = function(app) {
 	app.post('/managestonecolors', configurationcontroller.managestonecolors);
 	app.post('/managestoneshapes', configurationcontroller.managestoneshapes);
 	app.post('/manageweights', configurationcontroller.manageweights);
+	app.post('/manageoccassions', configurationcontroller.manageoccassions);
 
+	
 	app.post('/managetaxsetup2', configurationcontroller.managetaxsetup2);
 	
 	
