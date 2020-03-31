@@ -474,6 +474,73 @@ exports.managecollections = async (req, res) => {
 
 }
 
+exports.managethemes = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_themes.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_themes.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+exports.managestyles = async (req, res) => {
+    const {id,name,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.master_styles.update(
+            
+            {   
+                name: name
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            alias : name 
+            }
+        await   models.master_styles.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+
 exports.managepurities = async (req, res) => {
     const {id,name,isedit,isdelete} = req.body
     if(isedit)

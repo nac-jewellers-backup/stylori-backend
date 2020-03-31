@@ -172,6 +172,8 @@ module.exports = function(app) {
 	app.post('/managecategories', configurationcontroller.managecategories);
 	app.post('/manageearring', configurationcontroller.manageearring);
 	app.post('/managemasterattributes', configurationcontroller.managemasterattributes);
+	app.post('/managestyles', configurationcontroller.managestyles);
+	app.post('/managethemes', configurationcontroller.managethemes);
 
 	app.post('/managestones', configurationcontroller.managestones);
 	app.post('/managestonecolors', configurationcontroller.managestonecolors);
