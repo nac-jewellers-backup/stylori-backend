@@ -154,13 +154,19 @@ exports.managecategories = async (req, res) => {
 }
 
 exports.managematerials = async (req, res) => {
-    const {id,name,shortCode,isedit,isdelete} = req.body
+    const {id,name,shortCode,filterOrder,isActive,isFilter,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_product_types.update(
             
-            {name: name, 
-                short_code : shortCode},
+            {
+                name: name, 
+                short_code : shortCode,
+                filter_order: filterOrder,
+                is_filter : isFilter,
+                is_active : isActive
+            
+            },
                 {where: {
                 id: id
                 }
@@ -176,6 +182,9 @@ exports.managematerials = async (req, res) => {
             id:uuidv1(),
             name: name, 
             short_code : shortCode ,
+            filter_order: filterOrder,
+            is_filter : isFilter,
+            is_active : isActive
             }
         await   models.master_product_types.create(   
                      taxobj
