@@ -627,7 +627,6 @@ exports.managematerials = async (req, res) => {
                     )
         res.send(200,{"message":"Created Successfully"})
     }
-
 }
 
 exports.manageearring = async (req, res) => {
