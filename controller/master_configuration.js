@@ -153,46 +153,7 @@ exports.managecategories = async (req, res) => {
 
 }
 
-exports.managematerials = async (req, res) => {
-    const {id,name,shortCode,filterOrder,isActive,isFilter,isedit,isdelete} = req.body
-    if(isedit)
-    {
-        await   models.master_product_types.update(
-            
-            {
-                name: name, 
-                short_code : shortCode,
-                filter_order: filterOrder,
-                is_filter : isFilter,
-                is_active : isActive
-            
-            },
-                {where: {
-                id: id
-                }
-             }
-            
-        )
-        res.send(200,{"message":"Updated Successfully"})
-    }else if(isdelete)
-    {
 
-    }else{
-        let taxobj ={
-            id:uuidv1(),
-            name: name, 
-            short_code : shortCode ,
-            filter_order: filterOrder,
-            is_filter : isFilter,
-            is_active : isActive
-            }
-        await   models.master_product_types.create(   
-                     taxobj
-                    )
-        res.send(200,{"message":"Created Successfully"})
-    }
-
-}
 
 
 exports.managegenders = async (req, res) => {
@@ -631,13 +592,17 @@ exports.managemetalcolors = async (req, res) => {
 }
 
 exports.managematerials = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,filterOrder,isActive,isFilter,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_materials.update(
             
             {   
-                name: name
+                name: name,
+                filter_position : filterPosition,
+                is_filter : isFilter,
+                is_active : isActive
+
                 },
                 {where: {
                 id: id
@@ -653,7 +618,10 @@ exports.managematerials = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name ,
+            filter_position : filterPosition,
+                is_filter : isFilter,
+                is_active : isActive
             }
         await   models.master_materials.create(   
                      taxobj
