@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return [
+    return Promise.all([
       queryInterface.addColumn(
         'trans_sku_lists',
         'attributes',
@@ -12,7 +12,7 @@ module.exports = {
         }
       )
       
-    ];
+    ]);
   },
 
   down: (queryInterface, Sequelize) => {
@@ -23,9 +23,9 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-   return [
+   return Promise.all([ 
     queryInterface.removeColumn('trans_sku_lists', 'attributes')
  
-    ]
+    ])
   }
 };

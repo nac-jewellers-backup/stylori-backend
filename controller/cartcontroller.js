@@ -197,15 +197,14 @@ exports.applyvoucher = async (req, res) => {
     include:[
       {
         model: models.trans_sku_lists,
-        attributes: ['generated_sku',"markup_price","attributes"],
+        attributes: ['generated_sku',"markup_price"],
         include: [
           {
             model: models.product_lists,
             attributes: ['product_category'],
-           
+            where: couponwhereclause
           }
-        ],
-        where: couponwhereclause
+        ]
       }
     ],
     where:{
@@ -237,9 +236,7 @@ models.vouchers.findOne({
     },
     code:{
       [Op.iLike]:vouchercode
-    }
-     
-    
+    } 
   }
 }).then(async giftwrapobj=> {
  var message_response = ""
