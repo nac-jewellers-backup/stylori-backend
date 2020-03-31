@@ -430,10 +430,8 @@ exports.manageoccassions = async (req, res) => {
         await   models.master_occasions.update(
             
             {   
-                name: name,
-                is_filter: isFilter,
-                is_active: isActive,
-                filter_order : filterOrder
+                name: name
+               
                 },
                 {where: {
                 id: id
@@ -449,10 +447,8 @@ exports.manageoccassions = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name,
-            is_filter: isFilter,
-            is_active: isActive,
-            filter_order : filterOrder 
+            alias : name
+           
             }
         await   models.master_occasions.create(   
                      taxobj
