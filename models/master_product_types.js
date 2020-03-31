@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     alias: DataTypes.STRING,
     short_code: DataTypes.STRING,
     certificate: DataTypes.TEXT,
-    display_order: DataTypes.INTEGER
+    display_order: DataTypes.INTEGER,
+    is_filter: DataTypes.BOOLEAN,
+    is_active: DataTypes.BOOLEAN
   }, {});
   master_product_types.associate = function(models) {
     // associations can be defined here
