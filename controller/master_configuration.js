@@ -599,7 +599,7 @@ exports.managematerials = async (req, res) => {
             
             {   
                 name: name,
-                filter_position : filterPosition,
+                filter_order : filterOrder,
                 is_filter : isFilter,
                 is_active : isActive
 
@@ -619,7 +619,7 @@ exports.managematerials = async (req, res) => {
             id:uuidv1(),
             name: name, 
             alias : name ,
-            filter_position : filterPosition,
+            filter_order : filterOrder,
                 is_filter : isFilter,
                 is_active : isActive
             }
