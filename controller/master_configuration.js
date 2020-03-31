@@ -85,7 +85,7 @@ exports.manageproducttypes = async (req, res) => {
                 short_code : shortCode,
                 display_order:displayOrder,
                 is_filter : isFilter,
-                is_Active : isActive
+                is_active : isActive
                 },
                 {where: {
                 id: id
