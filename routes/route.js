@@ -180,10 +180,6 @@ module.exports = function(app) {
 	app.post('/manageweights', configurationcontroller.manageweights);
 
 	app.post('/managetaxsetup2', configurationcontroller.managetaxsetup2);
-
-	
-
-	
 	
 	
 	app.post("/auto_complete", async function(req, res) {
