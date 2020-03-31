@@ -79,7 +79,7 @@ exports.manageproducttypes = async (req, res) => {
     if(isedit)
     {
         await   models.master_product_types.update(
-            
+
             {name: name, 
                 certificate:certificate,
                 short_code : shortCode,
