@@ -164,7 +164,7 @@ exports.managepaymentstatus = async (req, res) => {
     const {id,name,isedit,isdelete,isActive} = req.body
     if(isedit)
     {
-        await   models.payment_status_masters.update(
+        await   models.payment_status_master.update(
             
             {name: name, 
                 
@@ -187,7 +187,7 @@ exports.managepaymentstatus = async (req, res) => {
             is_active: isActive
            
             }
-        await   models.payment_status_masters.create(   
+        await   models.payment_status_master.create(   
                      taxobj
                     )
         res.send(200,{"message":"Created Successfully"})
