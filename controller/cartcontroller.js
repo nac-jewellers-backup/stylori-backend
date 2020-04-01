@@ -382,7 +382,7 @@ exports.updateorderstatus = async (req, res) => {
  }
   )
 
-  let response1 = await models.giftwraps.update(
+  let response1 = await models.giftwrap.update(
     {
       message: giftmessage
 
