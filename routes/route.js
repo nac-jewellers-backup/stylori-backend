@@ -122,6 +122,9 @@ module.exports = function(app) {
 	app.post('/uploadimage', cartcontroller.uploadimage);
 	app.post('/filterlist', filtercontroller.filteroptions);
 	app.post('/getsizes', cartcontroller.getsizes);
+	app.post('/updateorderstatus', cartcontroller.updateorderstatus);
+
+	
 	app.post('/fetchproducts', productFetchController.filteroptions);
 	app.post('/esearchfetchproducts', productfetchController_esearch.filteroptions);
 	app.post('/getproductvarient', productcontroller.getproductvarient);
