@@ -160,6 +160,40 @@ exports.managecategories = async (req, res) => {
 
 }
 
+exports.managepaymentstatus = async (req, res) => {
+    const {id,name,isedit,isdelete,isActive} = req.body
+    if(isedit)
+    {
+        await   models.payment_status_masters.update(
+            
+            {name: name, 
+                
+                is_active: isActive,
+            },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            name: name, 
+            is_active: isActive
+           
+            }
+        await   models.payment_status_masters.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
 
 
 

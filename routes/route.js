@@ -179,8 +179,8 @@ module.exports = function(app) {
 	app.post('/managestoneshapes', configurationcontroller.managestoneshapes);
 	app.post('/manageweights', configurationcontroller.manageweights);
 	app.post('/manageoccassions', configurationcontroller.manageoccassions);
+	app.post('/managepaymentstatus', configurationcontroller.managepaymentstatus);
 
-	
 	app.post('/managetaxsetup2', configurationcontroller.managetaxsetup2);
 	
 	
