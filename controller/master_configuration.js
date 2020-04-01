@@ -131,7 +131,8 @@ exports.managecategories = async (req, res) => {
                 short_code : shortCode,
                 is_filter: isFilter,
                 is_active: isActive,
-                filter_order : filterOrder},
+                filter_order : filterOrder
+            },
                 {where: {
                 id: id
                 }
