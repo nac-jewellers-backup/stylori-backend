@@ -542,6 +542,33 @@ module.exports = {
           allowNull: true
         }
       ),
+
+      queryInterface.addColumn(
+        'master_occasions',
+        'filter_order',
+        {
+          type: Sequelize.INTEGER,
+          allowNull: true
+        }
+      ),
+      queryInterface.addColumn(
+        'master_occasions',
+        'is_filter',
+        {
+          type: Sequelize.BOOLEAN,
+          allowNull: true
+        }
+      ),
+      queryInterface.addColumn(
+        'master_occasions',
+        'is_active',
+        {
+          type: Sequelize.BOOLEAN,
+          allowNull: true
+        }
+      ),
+
+      
     ]);
   },
 

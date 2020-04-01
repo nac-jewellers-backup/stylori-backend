@@ -122,13 +122,16 @@ exports.manageproducttypes = async (req, res) => {
 }
 
 exports.managecategories = async (req, res) => {
-    const {id,name,shortCode,isedit,isdelete} = req.body
+    const {id,name,shortCode,isedit,isdelete,isFilter,isActive,filterOrder} = req.body
     if(isedit)
     {
         await   models.master_product_categories.update(
             
             {name: name, 
-                short_code : shortCode},
+                short_code : shortCode,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder},
                 {where: {
                 id: id
                 }
@@ -143,7 +146,10 @@ exports.managecategories = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            short_code : shortCode ,
+            short_code : shortCode,
+            is_filter: isFilter,
+            is_active: isActive,
+            filter_order : filterOrder
             }
         await   models.master_product_categories.create(   
                      taxobj
@@ -190,14 +196,17 @@ exports.managegenders = async (req, res) => {
 
 
 exports.managegemtypes = async (req, res) => {
-    const {id,name,colorCode,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,filterOrder,colorCode,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_gemstones_types.update(
             
             {   
                 name: name,
-                color_code:  colorCode
+                color_code:  colorCode,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -214,7 +223,10 @@ exports.managegemtypes = async (req, res) => {
             id:uuidv1(),
             name: name, 
             alias : name ,
-            color_code: colorCode
+            color_code: colorCode,
+            is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
             }
         await   models.master_gemstones_types.create(   
                      taxobj
@@ -225,13 +237,16 @@ exports.managegemtypes = async (req, res) => {
 }
 
 exports.managegemshapes = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_gemstones_shapes.update(
             
             {   
-                name: name
+                name: name,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -247,7 +262,10 @@ exports.managegemshapes = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder 
             }
         await   models.master_gemstones_shapes.create(   
                      taxobj
@@ -257,13 +275,16 @@ exports.managegemshapes = async (req, res) => {
 
 }
 exports.managegemsettings = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_gemstones_settings.update(
             
             {   
-                name: name
+                name: name,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -279,7 +300,10 @@ exports.managegemsettings = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder 
             }
         await   models.master_gemstones_settings.create(   
                      taxobj
@@ -291,14 +315,17 @@ exports.managegemsettings = async (req, res) => {
 
 
 exports.managediamondtypes = async (req, res) => {
-    const {id,diamondClarity,diamondColor,isedit,isdelete} = req.body
+    const {id,diamondClarity,diamondColor,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_diamond_types.update(
             
             {   
                 diamond_clarity: diamondClarity,
-                diamond_color : diamondColor
+                diamond_color : diamondColor,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -315,7 +342,10 @@ exports.managediamondtypes = async (req, res) => {
             id:uuidv1(),
             diamond_clarity: diamondClarity,
             diamond_color : diamondColor,
-            short_code : ""
+            short_code : "",
+            is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
             }
         await   models.master_diamond_types.create(   
                      taxobj
@@ -326,13 +356,16 @@ exports.managediamondtypes = async (req, res) => {
 }
 
 exports.managediamondsettings = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_diamonds_settings.update(
             
             {   
-                name: name
+                name: name,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -348,7 +381,10 @@ exports.managediamondsettings = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder 
             }
         await   models.master_diamonds_settings.create(   
                      taxobj
@@ -359,14 +395,17 @@ exports.managediamondsettings = async (req, res) => {
 }
 
 exports.managediamondshapes = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_diamonds_shapes.update(
             
             {   
-                name: name
-                },
+                name: name,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
+                            },
                 {where: {
                 id: id
                 }
@@ -381,7 +420,10 @@ exports.managediamondshapes = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder 
             }
         await   models.master_diamonds_shapes.create(   
                      taxobj
@@ -392,13 +434,16 @@ exports.managediamondshapes = async (req, res) => {
 }
 
 exports.managedesigns = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_designs.update(
             
             {   
-                name: name
+                name: name,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -414,7 +459,10 @@ exports.managedesigns = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder 
             }
         await   models.master_designs.create(   
                      taxobj
@@ -498,13 +546,16 @@ exports.managecollections = async (req, res) => {
 }
 
 exports.managethemes = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_themes.update(
             
             {   
-                name: name
+                name: name,
+                is_filter : isFilter,
+                is_active : isActive,
+                filter_order: filterOrder
                 },
                 {where: {
                 id: id
@@ -520,7 +571,10 @@ exports.managethemes = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter : isFilter,
+                is_active : isActive,
+                filter_order: filterOrder 
             }
         await   models.master_themes.create(   
                      taxobj
@@ -531,13 +585,16 @@ exports.managethemes = async (req, res) => {
 }
 
 exports.managestyles = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isedit,isdelete,isFilter,isActive,filterOrder} = req.body
     if(isedit)
     {
         await   models.master_styles.update(
             
             {   
-                name: name
+                name: name,
+                is_filter : isFilter,
+                is_active : isActive,
+                filter_order: filterOrder
                 },
                 {where: {
                 id: id
@@ -553,7 +610,10 @@ exports.managestyles = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter : isFilter,
+            is_active : isActive,
+            filter_order: filterOrder 
             }
         await   models.master_styles.create(   
                      taxobj
@@ -682,13 +742,16 @@ exports.managematerials = async (req, res) => {
 }
 
 exports.manageearring = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_earring_backing.update(
             
             {   
-                name: name
+                name: name,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -704,7 +767,10 @@ exports.manageearring = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter: isFilter,
+            is_active: isActive,
+            filter_order : filterOrder 
             }
         await   models.master_earring_backing.create(   
                      taxobj
@@ -754,13 +820,16 @@ exports.managemasterattributes = async (req, res) => {
 }
 
 exports.managestones = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_stones.update(
             
             {   
-                name: name
+                name: name,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -776,7 +845,10 @@ exports.managestones = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter: isFilter,
+            is_active: isActive,
+            filter_order : filterOrder 
             }
         await   models.master_stones.create(   
                      taxobj
@@ -786,13 +858,16 @@ exports.managestones = async (req, res) => {
 
 }
 exports.managestonecolors = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_stones_colors.update(
             
             {   
-                name: name
+                name: name,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -808,7 +883,10 @@ exports.managestonecolors = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter: isFilter,
+            is_active: isActive,
+            filter_order : filterOrder 
             }
         await   models.master_stones_colors.create(   
                      taxobj
@@ -818,13 +896,16 @@ exports.managestonecolors = async (req, res) => {
 
 }
 exports.managestoneshapes = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_stones_shapes.update(
             
             {   
-                name: name
+                name: name,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -840,7 +921,10 @@ exports.managestoneshapes = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter: isFilter,
+            is_active: isActive,
+            filter_order : filterOrder 
             }
         await   models.master_stones_shapes.create(   
                      taxobj
@@ -851,13 +935,16 @@ exports.managestoneshapes = async (req, res) => {
 }
 
 exports.manageweights = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isedit,isFilter,isActive,filterOrder,isdelete} = req.body
     if(isedit)
     {
         await   models.master_weights.update(
             
             {   
-                name: name
+                name: name,
+                is_filter: isFilter,
+                is_active: isActive,
+                filter_order : filterOrder
                 },
                 {where: {
                 id: id
@@ -873,7 +960,10 @@ exports.manageweights = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name 
+            alias : name,
+            is_filter: isFilter,
+            is_active: isActive,
+            filter_order : filterOrder 
             }
         await   models.master_weights.create(   
                      taxobj
