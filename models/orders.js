@@ -5,7 +5,10 @@ module.exports = (sequelize, DataTypes) => {
     user_profile_id: DataTypes.UUID,
     payment_mode: DataTypes.STRING,
     payment_status: DataTypes.STRING,
-    order_status: DataTypes.STRING
+    order_status: DataTypes.STRING,
+    awb_number: DataTypes.TEXT,
+    comments: DataTypes.TEXT
+
 
   }, {});
   orders.associate = function(models) {
