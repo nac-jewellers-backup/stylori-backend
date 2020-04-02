@@ -641,4 +641,38 @@ exports.updatetax = async (req, res) => {
     res.send(200,{"newvendorcode": newvendorcode})
  }
  
+ exports.updatefilterposition = async (req, res) => {
+    var processcount = 0;
+    let contents = await models.master_gemstones_types.findAll(
+        {
+            order: [
+                ['name', 'ASC']
+                
+            ],
+        }
+    )
+    processcontent(processcount)
+   
+       async function processcontent()
+        {
+            let conobj = contents[processcount]
+            processcount = processcount +1
+            let res =   await   models.master_gemstones_types.update(
+            
+            {
+                filter_order : processcount,
+                is_active: true,
+                is_filter: true
+            },
+                {where: {
+                id: conobj.id
+                }
+             }
+            
+        )
+        processcontent(processcount)
+            }
 
+    
+res.send(200,{message: contents})
+ }

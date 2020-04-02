@@ -1904,6 +1904,38 @@ res.send(200,{message:status_message})
 
 }
 
+exports.getincompletepricerun =  async (req, res) => {
+  const {component} = req.body
+  var componentproductcount = 0;
+  let component_history = await models.price_running_history.findOne({
+    order: [
+      ['createdAt', 'DESC']
+    ],
+    where:{
+      pricing_component: component
+    }
+  })
+  let status_message = ""
+  var product_ids = component_history.product_ids;
+  var ccompleted_product_ids = component_history.completed_products;
+
+  product_ids = product_ids.split(',')
+  ccompleted_product_ids = ccompleted_product_ids.split(',')
+
+  var myArray = product_ids.filter( function( el ) {
+    return ccompleted_product_ids.indexOf( el ) < 0;
+  });
+  if(myArray.length > 0)
+  {
+    res.send(200,{iscomplete:false, products:myArray })
+
+  }else{
+    res.send(200,{iscomplete:true})
+
+  }
+
+
+}
 
 exports.updatediamondprice =  async (req, res) => {
   const {vendor_code,diamondcolor,diamondclarity,isadd,priceid, costprice, sellingprice, pricetype} = req.body

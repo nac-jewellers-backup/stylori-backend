@@ -84,6 +84,7 @@ module.exports = function(app) {
 	app.post('/creatediscount', pricingontroller.creatediscount);
 	app.post('/checksalediscount', pricingontroller.checkdiscount);
 	app.post('/getdiscount', pricingontroller.discountinfo);
+	app.post('/getincompletepricerun', pricingontroller.getincompletepricerun);
 
 	
 	app.post('/updatemarkup', pricingontroller.updatemarkup);
@@ -183,6 +184,8 @@ module.exports = function(app) {
 	app.post('/manageweights', configurationcontroller.manageweights);
 	app.post('/manageoccassions', configurationcontroller.manageoccassions);
 	app.post('/managepaymentstatus', configurationcontroller.managepaymentstatus);
+	
+	app.post('/updatefilterposition', master_uploaddata_controller.updatefilterposition);
 
 	app.post('/managetaxsetup2', configurationcontroller.managetaxsetup2);
 	
