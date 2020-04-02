@@ -1771,7 +1771,13 @@ exports.priceupdatestatus =  async (req, res) => {
     }
   })
   let status_message = ""
-  status_message = component_history.completed_product_count +" out of "+ component_history.total_product
+  if(component_history.completed_product_count == component_history.total_product)
+  {
+    status_message = "Completed"
+  }else{
+    status_message = component_history.completed_product_count +" out of "+ component_history.total_product
+
+  }
 
 res.send(200,{message:status_message})
 

@@ -43,6 +43,7 @@ exports.priceupdate = (req, res) => {
     var discount_percentage = 0
     var processed_product_count = 0;
     var completedproducts = []
+    var price_running_id = 0;
     const {req_product_id,generatedSku,history_id, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
     var whereclause1 = {
       isactive : true,
@@ -50,6 +51,7 @@ exports.priceupdate = (req, res) => {
       //   [Op.iLike]:'%SGC020%'
       // }
     }
+    price_running_id = history_id
     console.log(":>>>>>>>>>1212")
     var product_id_arr1 = []
    var  startDate = new Date()
@@ -87,18 +89,19 @@ exports.priceupdate = (req, res) => {
     updatehistory()
     async function updatehistory()
     {
-        if(!history_id)
+        if(!price_running_id)
         {
-        await models.price_running_history.create({
+     let response =   await models.price_running_history.create({
           pricing_component : pricingcomponent,
           product_ids: product_id_arr1.join(','),
           total_product : product_id_arr1.length,
           createdAt : new Date()
         })
-
+        price_running_id = response.id
         res.send(200,{
           pricing_component : pricingcomponent,
           product_ids: product_id_arr1,
+          response,
           total_product : product_id_arr1.length,
           createdAt : new Date()
         })
@@ -107,7 +110,7 @@ exports.priceupdate = (req, res) => {
         let component_history = await models.price_running_history.findOne({
          
           where:{
-            id: history_id
+            id: price_running_id
           }
         })
         var ccompleted_product_ids = component_history.completed_products;
@@ -2083,7 +2086,7 @@ exports.priceupdate = (req, res) => {
 
          },
          {where: {
-          id: history_id
+          id: price_running_id
           }
        })
 
