@@ -1845,7 +1845,10 @@ exports.priceupdate = (req, res) => {
 
         var golddiscount_percentage = golddiscountvalue/total_sku_discountvalue;
         var makingcharge_percentage = makingchargediscountvalue/total_sku_discountvalue;
-     
+        if(isNaN(makingcharge_percentage))
+        {
+          makingcharge_percentage = 0;
+        }
 
         var diamond_percentage = diamonddiscountvalue/total_sku_discountvalue;
         var gemstone_percentage = gemstonediscountvalue/total_sku_discountvalue;
@@ -1853,6 +1856,10 @@ exports.priceupdate = (req, res) => {
            
 
         var discount_price_distribute_percentage = golddiscount_percentage/sku_component_count;
+          if(isNaN(discount_price_distribute_percentage))
+          {
+            discount_price_distribute_percentage = 0
+          }
         if(makingchargediscountvalue > 0)
          {
           makingchargediscountvalue = makingchargediscountvalue + (golddiscount_different * (discount_price_distribute_percentage + makingcharge_percentage));
@@ -1869,7 +1876,8 @@ exports.priceupdate = (req, res) => {
          }
          
          total_sku_discountvalue = makingchargediscountvalue + golddiscountvalue + gemstonediscountvalue + diamonddiscountvalue;
-
+         console.log("testing error")
+        console.log(discount_price_distribute_percentage)
         
         var mkquery = "UPDATE pricing_sku_metals SET discount_price = ((markup * 100) /(100 - "+mkcharge_discount+") + ("+golddiscount_different+" * ("+discount_price_distribute_percentage+" + "+makingcharge_percentage+" ))) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'makingcharge'" ;
           await models.sequelize.query(mkquery).then(([results, metadata]) => {
@@ -2065,7 +2073,7 @@ exports.priceupdate = (req, res) => {
             
             console.log(JSON.stringify(product_ids))
             completedproducts.push(product_obj.product_id)
-            let price_update_query = "update trans_sku_lists set cost_price = ROUND(cost_price::numeric,2),selling_price = ROUND(selling_price::numeric,2), markup_price = ROUND(markup_price::numeric,2),cost_price_tax = ROUND(cost_price_tax::numeric,2),selling_price_tax = ROUND(selling_price_tax::numeric,2),markup_price_tax = ROUND(markup_price_tax::numeric,2),discount_price_tax = ROUND(discount_price_tax::numeric,2), discount_price = ROUND(discount_price::numeric,2),discount= ROUND(((discount_price-markup_price)/discount_price) * 100)   where product_id ='"+product_obj.product_id+"'";
+            let price_update_query = "update trans_sku_lists set cost_price = ROUND(cost_price::numeric,2),selling_price = ROUND(selling_price::numeric,2), markup_price = ROUND(markup_price::numeric,2),cost_price_tax = ROUND(cost_price_tax::numeric,2),selling_price_tax = ROUND(selling_price_tax::numeric,2),markup_price_tax = ROUND(markup_price_tax::numeric,2),discount_price_tax = ROUND(discount_price_tax::numeric,2), discount_price = ROUND(discount_price::numeric,2),discount= ROUND(((discount_price-markup_price)/discount_price) * 100)   where product_id ='"+product_obj.product_id+"' and discount_price > 0";
             
          await models.sequelize.query(price_update_query).then(([results, metadata]) => { })
          let comp_products =  completedproducts.join(',')
