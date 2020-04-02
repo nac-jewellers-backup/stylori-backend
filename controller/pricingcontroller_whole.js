@@ -42,7 +42,8 @@ exports.priceupdate = (req, res) => {
     var pricing_comp = []
     var discount_percentage = 0
     var processed_product_count = 0;
-    const {req_product_id,generatedSku, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
+    var completedproducts = []
+    const {req_product_id,generatedSku,history_id, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
     var whereclause1 = {
       isactive : true,
       // product_id: {
@@ -86,7 +87,8 @@ exports.priceupdate = (req, res) => {
     updatehistory()
     async function updatehistory()
     {
-
+        if(!history_id)
+        {
         await models.price_running_history.create({
           pricing_component : pricingcomponent,
           product_ids: product_id_arr1.join(','),
@@ -100,6 +102,22 @@ exports.priceupdate = (req, res) => {
           total_product : product_id_arr1.length,
           createdAt : new Date()
         })
+      }else{
+        
+        let component_history = await models.price_running_history.findOne({
+         
+          where:{
+            id: history_id
+          }
+        })
+      }
+      var ccompleted_product_ids = component_history.completed_products;
+
+      if(ccompleted_product_ids)
+      {
+        completedproducts = ccompleted_product_ids.split(',')
+      }
+      
     }
     let vendor_arr = []
 
@@ -2039,11 +2057,22 @@ exports.priceupdate = (req, res) => {
             
             
             console.log(JSON.stringify(product_ids))
+            completedproducts.push(product_obj.product_id)
             let price_update_query = "update trans_sku_lists set cost_price = ROUND(cost_price::numeric,2),selling_price = ROUND(selling_price::numeric,2), markup_price = ROUND(markup_price::numeric,2),cost_price_tax = ROUND(cost_price_tax::numeric,2),selling_price_tax = ROUND(selling_price_tax::numeric,2),markup_price_tax = ROUND(markup_price_tax::numeric,2),discount_price_tax = ROUND(discount_price_tax::numeric,2), discount_price = ROUND(discount_price::numeric,2),discount= ROUND(((discount_price-markup_price)/discount_price) * 100)   where product_id ='"+product_obj.product_id+"'";
-
-       
+            
          await models.sequelize.query(price_update_query).then(([results, metadata]) => { })
-            await sleep(1000)
+         let comp_products =  completedproducts.join(',')
+         await models.price_running_histories.update({
+           completed_product_count : completedproducts.length,
+           completed_products : comp_products
+
+         },
+         {where: {
+          id: history_id
+          }
+       })
+
+         await sleep(1000)
 
             processproduct()
               ;

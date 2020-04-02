@@ -1915,12 +1915,14 @@ exports.getincompletepricerun =  async (req, res) => {
       pricing_component: component
     }
   })
-  
+
   let status_message = ""
   var product_ids = component_history.product_ids;
   var ccompleted_product_ids = component_history.completed_products;
 
   product_ids = product_ids.split(',')
+  if(ccompleted_product_ids)
+  {
   ccompleted_product_ids = ccompleted_product_ids.split(',')
 
   var myArray = product_ids.filter( function( el ) {
@@ -1928,12 +1930,16 @@ exports.getincompletepricerun =  async (req, res) => {
   });
   if(myArray.length > 0)
   {
-    res.send(200,{iscomplete:false, products:myArray })
+    res.send(200,{iscomplete:false,id:component_history.id,  products:myArray })
 
   }else{
     res.send(200,{iscomplete:true})
 
   }
+}else{
+  res.send(200,{iscomplete:true})
+
+}
 
 
 }
