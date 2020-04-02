@@ -110,12 +110,19 @@ exports.priceupdate = (req, res) => {
             id: history_id
           }
         })
-      }
-      var ccompleted_product_ids = component_history.completed_products;
+        var ccompleted_product_ids = component_history.completed_products;
 
       if(ccompleted_product_ids)
       {
         completedproducts = ccompleted_product_ids.split(',')
+      }
+      res.send(200,{
+        pricing_component : pricingcomponent,
+        product_ids: product_id_arr1,
+        total_product : product_id_arr1.length,
+        completed_product : completedproducts.length,
+        createdAt : new Date()
+      })
       }
       
     }
@@ -2062,7 +2069,7 @@ exports.priceupdate = (req, res) => {
             
          await models.sequelize.query(price_update_query).then(([results, metadata]) => { })
          let comp_products =  completedproducts.join(',')
-         await models.price_running_histories.update({
+         await models.price_running_history.update({
            completed_product_count : completedproducts.length,
            completed_products : comp_products
 
