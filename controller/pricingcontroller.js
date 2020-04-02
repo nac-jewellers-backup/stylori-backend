@@ -1915,6 +1915,7 @@ exports.getincompletepricerun =  async (req, res) => {
       pricing_component: component
     }
   })
+  
   let status_message = ""
   var product_ids = component_history.product_ids;
   var ccompleted_product_ids = component_history.completed_products;
