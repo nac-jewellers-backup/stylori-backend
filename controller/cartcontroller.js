@@ -368,7 +368,7 @@ exports.paymentsuccess = async (req, res) => {
  return res.redirect(redirectionurl);
 }
 exports.updateorderstatus = async (req, res) => {
-  const {paymentstatus,cartid,orderid,awbNumber,comments,giftmessage} = req.body
+  const {orderstatus,cartid,orderid,awbNumber,comments,giftmessage} = req.body
   let response = await models.orders.update(
     {
       order_status : orderstatus.name,
