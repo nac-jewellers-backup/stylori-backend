@@ -3,7 +3,6 @@ const models=require('./../models');
 import 'dotenv/config';
 const Op= require('sequelize').Op;
 import apidata from './apidata.json';
-import { UUIDV1 } from 'sequelize/types';
 const uuidv1 = require('uuid/v1');
 var splitArray = require('split-array');
 var request = require('request');
@@ -231,17 +230,20 @@ exports.manageorderstatus = async (req, res) => {
 
 
 exports.manageseoattributes = async (req, res) => {
-    const {id,attributeName,attributeValue,priority,seoText,seoUrl,isedit,isdelete,isActive} = req.body
+    const {id,name,attributeName,
+        attributeValue,priority,seoText,seoUrl,
+        isedit,isdelete,isActive} = req.body
     if(isedit)
     {
         await   models.seo_url_priorities.update(
             
-            {
+            { 
                 attribute_name: attributeName, 
-                attribute_value: attributeValue, 
-                priority: priority, 
-                seo_text: seoText, 
-                seo_url: seoUrl,
+                attribute_value: attributeValue,
+                priority: priority,
+                seo_text:seoText,
+                seo_url:seoUrl,
+                is_active: isActive
             },
                 {where: {
                 id: id
@@ -255,13 +257,14 @@ exports.manageseoattributes = async (req, res) => {
 
     }else{
         let taxobj ={
-                id: UUIDV1(),
-                 attribute_name: attributeName, 
-                attribute_value: attributeValue, 
-                priority: priority, 
-                seo_text: seoText, 
-                seo_url: seoUrl,
+            id:uuidv1(),
+            attribute_name: attributeName, 
+            attribute_value: attributeValue,
+            priority: priority,
+            seo_text:seoText,
+            seo_url:seoUrl,
             is_active: isActive
+            
            
             }
         await   models.seo_url_priorities.create(   
