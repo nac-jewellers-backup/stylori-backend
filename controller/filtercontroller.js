@@ -329,7 +329,27 @@ let prod_type_where = {}
     where:prod_type_where   
 
   })
-
+  var mastervalues = [];
+  var product_type_masters = [];
+  
+  master_product_type.forEach(product__type_obj => {
+    mastervalues.push(product__type_obj.product_type)
+  })
+  if(mastervalues.length > 0)
+  {
+     product_type_masters = await models.master_product_types.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : mastervalues
+        },
+        is_active: true
+        },   
+        order: [
+          ['display_order', 'ASC']
+        ]
+    })
+  }
 
 
 
@@ -569,7 +589,7 @@ let prod_type_where = {}
     seo_text = seotexts_arr.join(' ')
     res.send(200,{
         master_category,
-        "Product Type":master_product_type,
+        "Product Type":product_type_masters,
         "Style":master_styles,
         "Theme":master_themes,
         "Occasion":master_occassion,
