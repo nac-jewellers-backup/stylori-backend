@@ -873,7 +873,8 @@ exports.addaddress = async (req, res) => {
           models.cart_address.bulkCreate(
               address_arr
                 , {individualHooks: true}).then(function(response){
-            res.send(200,{"message":"updated successfully"})        
+            res.send(200,{"message":"updated successfully",
+                          "shippingcharge": "200"})        
           }).catch(reason => {
               res.send(500,{"message":"Error Please try again"}) 
               console.log(reason)
