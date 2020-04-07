@@ -194,6 +194,39 @@ exports.managepaymentstatus = async (req, res) => {
 
 }
 
+exports.manageorderstatus = async (req, res) => {
+    const {id,name,isedit,isdelete,isActive} = req.body
+    if(isedit)
+    {
+        await   models.order_status_master.update(
+            
+            {name: name, 
+                
+                is_active: isActive,
+            },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            name: name, 
+            is_active: isActive
+           
+            }
+        await   models.order_status_master.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
 
 
 exports.managegenders = async (req, res) => {
