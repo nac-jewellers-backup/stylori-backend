@@ -585,7 +585,7 @@ let prod_type_where = {}
   var product_purity_masters = [];
   
   master_purity.forEach(purity_obj => {
-    masterpurities.push(purity_obj.purity_name)
+    masterpurities.push(purity_obj.purity)
   })
   if(masterpurities.length > 0)
   {
