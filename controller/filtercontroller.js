@@ -363,6 +363,29 @@ let prod_type_where = {}
     ]
   })
 
+  var masterstyles = [];
+  var product_style_masters = [];
+  
+  master_styles.forEach(style_obj => {
+    masterstyles.push(style_obj.style_name)
+  })
+  if(masterstyles.length > 0)
+  {
+    product_style_masters = await models.master_styles.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterstyles
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
+
   var theme_whereclause = {
     theme_name : {
       [Op.ne]: null
@@ -388,6 +411,30 @@ let prod_type_where = {}
       ['theme_name', 'ASC']
     ]
   })
+
+  var masterthemes = [];
+  var product_theme_masters = [];
+  
+  master_themes.forEach(theme_obj => {
+    masterthemes.push(theme_obj.theme_name)
+  })
+  if(masterthemes.length > 0)
+  {
+    product_theme_masters = await models.master_themes.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterthemes
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
+
 
   var master_occassion = await models.product_occassions.findAll({
     attributes: ['occassion_name'],
@@ -591,8 +638,8 @@ let prod_type_where = {}
     res.send(200,{
         master_category,
         "Product Type":product_type_masters,
-        "Style":master_styles,
-        "Theme":master_themes,
+        "Style":product_style_masters,
+        "Theme":product_theme_masters,
         "Occasion":master_occassion,
         "Material":master_material,
         "Collection":master_collection,
