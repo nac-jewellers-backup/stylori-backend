@@ -520,6 +520,30 @@ let prod_type_where = {}
       ['gemstone_shape', 'ASC']
     ]
   })
+  var mastergemstone = [];
+  var product_gemstone_masters = [];
+  
+  gemstone_shape.forEach(gemstone_obj => {
+    mastergemstone.push(gemstone_obj.gemstone_name)
+  })
+  if(mastergemstone.length > 0)
+  {
+    product_gemstone_masters = await models.master_gemstones_shapes.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : mastergemstone
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
+
+
 
   let collection_whereclause = {}
   if(product_list.length > 0)
@@ -612,7 +636,28 @@ let prod_type_where = {}
       ['gender_name', 'ASC']
     ]
   })
-
+var mastergender = [];
+  var product_gender_masters = [];
+  
+  gender_shape.forEach(gender_obj => {
+    mastergender.push(gender_obj.gender_name)
+  })
+  if(mastergender.length > 0)
+  {
+    product_gender_masters = await models.master_genders.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : mastergender
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
 
   var metalcolor_where = {
     product_color : {
@@ -656,7 +701,28 @@ let prod_type_where = {}
       ['product_color', 'ASC']
     ]
   })
-
+ var mastercolor = [];
+  var product_color_masters = [];
+  
+  master_colors.forEach(color_obj => {
+    mastercolor.push(color_obj.product_color)
+  })
+  if(mastercolor.length > 0)
+  {
+    product_color_masters = await models.master_metals_colors.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : mastercolor
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
 
   // var price_range2 = await models.trans_sku_lists.findOne({
   //   attributes:["selling_price"]
@@ -733,9 +799,9 @@ let prod_type_where = {}
         "Material":product_material_masters,
         "Collection":product_collection_masters,
         "Metal Purity":product_purity_masters,
-        "Metal Color":master_colors,
-        "Stone Shape":gemstone_shape,
-        "Gender":master_gender,
+        "Metal Color":product_color_masters,
+        "Stone Shape":product_gemstone_masters,
+        "Gender":product_gender_masters,
         "Stone Color":master_stonecolor,
         "No Of Stones":master_stonecount,
        // price_range,
