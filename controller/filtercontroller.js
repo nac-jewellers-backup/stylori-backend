@@ -292,7 +292,8 @@ let prod_type_where = {}
     prod_type_where =  {
       product_id : {
         [Op.in]: product_list
-      }
+      },
+      
     }
     
   }
@@ -566,7 +567,9 @@ let prod_type_where = {}
     })
     seo_url = seourls_arr.join('-')
     seo_text = seotexts_arr.join(' ')
-    res.send(200,{master_category,master_product_type,master_styles,master_themes,
+    res.send(200,{master_category,
+        "Product Type":master_product_type,
+        master_styles,master_themes,
         master_occassion,
         master_material,
         master_collection,
