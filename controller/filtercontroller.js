@@ -583,7 +583,16 @@ let prod_type_where = {}
         "No Of Stones":master_stonecount,
        // price_range,
        "By Design":master_bydesign,
-       
+       'Offers': [
+        'Up to  20%',
+        'Up to  30%',
+        'Up to  40%',
+        'Up to  50%',
+    ],
+    'Availability': [
+        "1 Day Shipping", '10 & Above Days Shipping'
+​
+    ],
       "By Weight": master_byweight,
         seo_url,
         seo_text
