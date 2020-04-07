@@ -444,6 +444,30 @@ let prod_type_where = {}
       ['occassion_name', 'ASC']
     ]
   })
+
+
+  var masteroccassions = [];
+  var product_occasion_masters = [];
+  
+  master_occassion.forEach(occass_obj => {
+    masteroccassions.push(occass_obj.occassion_name)
+  })
+  if(masteroccassions.length > 0)
+  {
+    product_occasion_masters = await models.master_occasions.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masteroccassions
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
   
   let material_whereclause = {}
   if(product_list.length > 0)
@@ -463,7 +487,28 @@ let prod_type_where = {}
       ['material_name', 'ASC']
     ]
   })
-
+  var mastermaterial = [];
+  var product_material_masters = [];
+  
+  master_material.forEach(material_obj => {
+    mastermaterial.push(material_obj.material_name)
+  })
+  if(mastermaterial.length > 0)
+  {
+    product_material_masters = await models.master_materials.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : mastermaterial
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
 
 
 
@@ -493,6 +538,29 @@ let prod_type_where = {}
       ['collection_name', 'ASC']
     ]
   })
+  var mastercollection = [];
+  var product_collection_masters = [];
+  
+  master_collection.forEach(collection_obj => {
+    mastercollection.push(collection_obj.collection_name)
+  })
+  if(mastercollection.length > 0)
+  {
+    product_collection_masters = await models.master_collections.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : mastercollection
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
+
 
   
   let purity_where = {}
@@ -513,7 +581,28 @@ let prod_type_where = {}
       ['purity', 'ASC']
     ]
   })
-
+  var masterpurities = [];
+  var product_purity_masters = [];
+  
+  master_purity.forEach(purity_obj => {
+    masterpurities.push(purity_obj.purity_name)
+  })
+  if(masterpurities.length > 0)
+  {
+    product_purity_masters = await models.master_metals_purities.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterpurities
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
 
   var master_gender = await models.product_gender.findAll({
     attributes: ['gender_name'],
@@ -640,10 +729,10 @@ let prod_type_where = {}
         "Product Type":product_type_masters,
         "Style":product_style_masters,
         "Theme":product_theme_masters,
-        "Occasion":master_occassion,
-        "Material":master_material,
-        "Collection":master_collection,
-        "Metal Purity":master_purity,
+        "Occasion":product_occasion_masters,
+        "Material":product_material_masters,
+        "Collection":product_collection_masters,
+        "Metal Purity":product_purity_masters,
         "Metal Color":master_colors,
         "Stone Shape":gemstone_shape,
         "Gender":master_gender,
