@@ -3,6 +3,7 @@ const models=require('./../models');
 import 'dotenv/config';
 const Op= require('sequelize').Op;
 import apidata from './apidata.json';
+import { UUIDV1 } from 'sequelize/types';
 const uuidv1 = require('uuid/v1');
 var splitArray = require('split-array');
 var request = require('request');
@@ -228,6 +229,48 @@ exports.manageorderstatus = async (req, res) => {
 
 }
 
+
+exports.manageseoattributes = async (req, res) => {
+    const {id,attributeName,attributeValue,priority,seoText,seoUrl,isedit,isdelete,isActive} = req.body
+    if(isedit)
+    {
+        await   models.seo_url_priorities.update(
+            
+            {
+                attribute_name: attributeName, 
+                attribute_value: attributeValue, 
+                priority: priority, 
+                seo_text: seoText, 
+                seo_url: seoUrl,
+            },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+                id: UUIDV1(),
+                 attribute_name: attributeName, 
+                attribute_value: attributeValue, 
+                priority: priority, 
+                seo_text: seoText, 
+                seo_url: seoUrl,
+            is_active: isActive
+           
+            }
+        await   models.seo_url_priorities.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
 
 exports.managegenders = async (req, res) => {
     const {id,name,isedit,isdelete} = req.body
