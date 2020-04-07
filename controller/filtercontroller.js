@@ -567,21 +567,24 @@ let prod_type_where = {}
     })
     seo_url = seourls_arr.join('-')
     seo_text = seotexts_arr.join(' ')
-    res.send(200,{master_category,
+    res.send(200,{
+        master_category,
         "Product Type":master_product_type,
-        master_styles,master_themes,
-        master_occassion,
-        master_material,
-        master_collection,
-        master_purity,
-        master_colors,
-        gemstone_shape,
-        master_gender,
-        master_stonecolor,
-        master_stonecount,
+        "Style":master_styles,
+        "Theme":master_themes,
+        "Occasion":master_occassion,
+        "Material":master_material,
+        "Collection":master_collection,
+        "Metal Purity":master_purity,
+        "Metal Color":master_colors,
+        "Stone Shape":gemstone_shape,
+        "Gender":master_gender,
+        "Stone Color":master_stonecolor,
+        "No Of Stones":master_stonecount,
        // price_range,
-       master_bydesign,
-       master_byweight,
+       "By Design":master_bydesign,
+       
+      "By Weight": master_byweight,
         seo_url,
         seo_text
               })
