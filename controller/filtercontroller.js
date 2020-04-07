@@ -343,7 +343,8 @@ let prod_type_where = {}
         name:{
           [Op.in] : mastervalues
         },
-        is_active: true
+        is_active: true,
+        is_filter:  true
         },   
         order: [
           ['display_order', 'ASC']
