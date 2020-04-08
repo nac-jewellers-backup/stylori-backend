@@ -303,24 +303,114 @@ let prod_type_where = {}
     group: ['stonecolor'],
     where:prod_type_where
   })
+  var masterstonecolor = [];
+  var product_stonecolor_masters = [];
+  
+  master_stonecolor.forEach(stonecolor_obj => {
+    masterstonecolor.push(stonecolor_obj.stonecolor)
+  })
+  if(masterstonecolor.length > 0)
+  {
+    product_stonecolor_masters = await models.master_stones_colors.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterstonecolor
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
+
   var master_byweight = await models.product_by_weight.findAll({
     attributes: ['weight'],
     group: ['weight'],
     where:prod_type_where
   })
 
+  var masterbyweight = [];
+  var product_byweight_masters = [];
+  
+  master_byweight.forEach(byweight_obj => {
+    masterbyweight.push(byweight_obj.weight)
+  })
+  if(masterbyweight.length > 0)
+  {
+    product_byweight_masters = await models.master_weights.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterbyweight
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
+
   var master_bydesign = await models.product_by_design.findAll({
     attributes: ['design_name'],
     group: ['design_name'],
     where:prod_type_where
   })
+  var masterbydesign = [];
+  var product_bydesign_masters = [];
+  
+  master_bydesign.forEach(bydesign_obj => {
+    masterbydesign.push(bydesign_obj.design_name)
+  })
+  if(masterbydesign.length > 0)
+  {
+    product_bydesign_masters = await models.master_designs.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterbydesign
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
+
 
   var master_stonecount = await models.product_stonecount.findAll({
     attributes: ['stonecount'],
     group: ['stonecount'],
     where:prod_type_where
   })
-
+  var masterstonecount = [];
+  var product_stonecount_masters = [];
+  
+  master_stonecount.forEach(stonecount_obj => {
+    masterstonecount.push(stonecount_obj.stonecount)
+  })
+  if(masterstonecount.length > 0)
+  {
+    product_stonecount_masters = await models.master_stones.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterstonecount
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
 
   
  var master_product_type = await models.product_lists.findAll({
@@ -524,7 +614,7 @@ let prod_type_where = {}
   var product_gemstone_masters = [];
   
   gemstone_shape.forEach(gemstone_obj => {
-    mastergemstone.push(gemstone_obj.gemstone_name)
+    mastergemstone.push(gemstone_obj.gemstone_shape)
   })
   if(mastergemstone.length > 0)
   {
@@ -639,7 +729,7 @@ let prod_type_where = {}
 var mastergender = [];
   var product_gender_masters = [];
   
-  gender_shape.forEach(gender_obj => {
+  master_gender.forEach(gender_obj => {
     mastergender.push(gender_obj.gender_name)
   })
   if(mastergender.length > 0)
@@ -802,10 +892,10 @@ var mastergender = [];
         "Metal Color":product_color_masters,
         "Stone Shape":product_gemstone_masters,
         "Gender":product_gender_masters,
-        "Stone Color":master_stonecolor,
+        "Stone Color":product_stonecolor_masters,
         "No Of Stones":master_stonecount,
        // price_range,
-       "By Design":master_bydesign,
+       "By Design":product_bydesign_masters,
        "Offers": [
         "Up to  20%",
         "Up to  30%",
@@ -816,7 +906,7 @@ var mastergender = [];
           "1 Day Shipping", 
           "10 & Above Days Shipping"
       ],
-      "By Weight": master_byweight,
+      "By Weight": product_byweight_masters,
         seo_url,
         seo_text
               })
