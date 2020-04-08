@@ -332,10 +332,25 @@ exports.manageshippingzone = async (req, res) => {
             name: name, 
             is_active: isActive
             }
-        await   models.shipping_zones.create(   
+      let response =   await   models.shipping_zones.create(   
                      taxobj
                     )
-        res.send(200,{"message":"Created Successfully"})
+        if(country.length > 0)
+        {
+            var shippingcountries = []
+            country.forEach(element => {
+                shippingcountries.push({
+                        country_id : element.id,
+                        zone_id : response.id,
+                        is_active: true
+                })
+            });
+            await  models.shipping_zone_countries.bulkCreate(
+                shippingcountries
+                , {individualHooks: true})
+        }
+
+        res.send(200,{"message":"Updated Successfully"})
     }
 
 }
