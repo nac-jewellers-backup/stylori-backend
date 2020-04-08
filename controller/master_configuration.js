@@ -308,9 +308,32 @@ exports.managegenders = async (req, res) => {
 }
 
 exports.manageshippingzone = async (req, res) => {
-    const {id,name,country,isActive,isedit,isdelete} = req.body
+    const {id,name,zonecountry,isActive,isedit,isdelete} = req.body
     if(isedit)
     {
+     let zonecountries =   await models.shipping_zone_countries.findAll({
+            where:{
+                zone_id : id
+            }
+        })
+        let country_ids= []
+        zonecountry.forEach(country_obj => {
+            country_ids.push(country_obj.id)
+        })
+        let create_arr = [];
+        let delete_arr = [];
+        zonecountries.forEach(zonemap_obj => {
+            if(country_ids.indexOf(zonemap_obj.country_id) > -1)
+            {
+                let index = country_ids.indexOf(zonemap_obj.country_id);
+                country_ids.splice(index, 1);
+               
+            }else{
+
+                delete_arr.push(zonemap_obj.country_id)
+            }
+
+        })
         await   models.shipping_zones.update(
             
             {   name: name,
@@ -322,6 +345,30 @@ exports.manageshippingzone = async (req, res) => {
              }
             
         )
+       await models.shipping_zone_countries.destroy({
+            where: {
+               country_id:{
+                   [Op.in] : delete_arr
+               },
+               zone_id : id
+
+            }
+        })
+
+        if(country_ids.length > 0)
+        {
+            var shippingcountries = []
+            country_ids.forEach(element => {
+                shippingcountries.push({
+                        country_id : element,
+                        zone_id : id,
+                        is_active: true
+                })
+            });
+            await  models.shipping_zone_countries.bulkCreate(
+                shippingcountries
+                , {individualHooks: true})
+        }
         res.send(200,{"message":"Updated Successfully"})
     }else if(isdelete)
     {
@@ -335,10 +382,10 @@ exports.manageshippingzone = async (req, res) => {
       let response =   await   models.shipping_zones.create(   
                      taxobj
                     )
-        if(country.length > 0)
+        if(zonecountry.length > 0)
         {
             var shippingcountries = []
-            country.forEach(element => {
+            zonecountry.forEach(element => {
                 shippingcountries.push({
                         country_id : element.id,
                         zone_id : response.id,
