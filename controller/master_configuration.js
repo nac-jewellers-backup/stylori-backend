@@ -308,7 +308,7 @@ exports.managegenders = async (req, res) => {
 }
 
 exports.manageshippingzone = async (req, res) => {
-    const {id,name,country,isedit,isdelete} = req.body
+    const {id,name,country,isActive,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.shipping_zones.update(
