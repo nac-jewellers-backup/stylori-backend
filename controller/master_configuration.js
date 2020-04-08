@@ -307,6 +307,41 @@ exports.managegenders = async (req, res) => {
 
 }
 
+exports.manageshippingzone = async (req, res) => {
+    const {id,name,country,isedit,isdelete} = req.body
+    if(isedit)
+    {
+        await   models.shipping_zones.update(
+            
+            {   name: name,
+                is_active: isActive 
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj = {
+            id:uuidv1(),
+            name: name, 
+            is_active: isActive
+            }
+        await   models.shipping_zones.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+
+
 
 exports.managegemtypes = async (req, res) => {
     const {id,name,isFilter,isActive,filterOrder,colorCode,isedit,isdelete} = req.body
