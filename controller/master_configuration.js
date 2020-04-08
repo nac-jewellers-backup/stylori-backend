@@ -306,7 +306,54 @@ exports.managegenders = async (req, res) => {
     }
 
 }
+exports.manageshipmentsettings = async (req, res) => {
+    const {id,name,shippingzones,rangetype,rangeFrom,rangeTo,
+        shipmentCharge,isActive,isedit,isdelete} = req.body
+    if(isedit)
+    {
+    
+        await   models.shipping_charges.update(
+            
+            {  
+                
+                zone_id : shippingzones.id,
+            charge_type : rangetype.id,
+            range_from : rangeFrom,
+            range_to : rangeTo,
+            shipment_charge : shipmentCharge,
+            name: name, 
+            is_active: isActive
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+    
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
 
+    }else{
+        let taxobj = {
+            zone_id : shippingzones.id,
+            charge_type : rangetype.id,
+            range_from : rangeFrom,
+            range_to : rangeTo,
+            shipment_charge : shipmentCharge,
+            name: name, 
+            is_active: isActive
+            }
+      let response =   await   models.shipping_charges.create(   
+                     taxobj
+                    )
+      
+
+        res.send(200,{"message":"Updated Successfully"})
+    }
+
+}
 exports.manageshippingzone = async (req, res) => {
     const {id,name,zonecountry,isActive,isedit,isdelete} = req.body
     if(isedit)

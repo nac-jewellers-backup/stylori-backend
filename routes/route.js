@@ -187,7 +187,9 @@ module.exports = function(app) {
 	app.post('/manageorderstatus', configurationcontroller.manageorderstatus);
 	app.post('/manageseoattributes', configurationcontroller.manageseoattributes);
 	app.post('/manageshippingzone', configurationcontroller.manageshippingzone);
+	app.post('/manageshipmentsettings', configurationcontroller.manageshipmentsettings);
 
+	
 	app.post('/updatefilterposition', master_uploaddata_controller.updatefilterposition);
 
 	app.post('/managetaxsetup2', configurationcontroller.managetaxsetup2);
