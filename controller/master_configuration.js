@@ -328,7 +328,7 @@ exports.manageshippingzone = async (req, res) => {
 
     }else{
         let taxobj = {
-            id:uuidv1(),
+           
             name: name, 
             is_active: isActive
             }
