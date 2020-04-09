@@ -450,7 +450,7 @@ exports.manageshippingzone = async (req, res) => {
 }
 
 exports.manageshippingattributes = async (req, res) => {
-    const {rateid,attributes} = req.body
+    const {rateid,attributes,display_text} = req.body
       let product_attributes = {}
       let keys = Object.keys(attributes);
       keys.forEach(key => {
@@ -479,20 +479,17 @@ exports.manageshippingattributes = async (req, res) => {
 
 
       await   models.shipping_charges.update(
-            
         {  
-            
-            product_attributes:product_attributes
+            product_attributes:product_attributes,
+            display_attributes:display_text
             },
             {where: {
             id: rateid
             }
          }
-        
     )
 
     res.send(200,{"message":"Updated Successfully"})
-      res.send(200,{product_attributes})
     
     }
 

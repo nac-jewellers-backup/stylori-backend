@@ -14,9 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.INTEGER,
     discount_amount: DataTypes.DOUBLE,
     is_fixed: DataTypes.BOOLEAN,
-    attributes:{
-      type: DataTypes.ARRAY(DataTypes.TEXT)
-    },
     starts_at: DataTypes.DATE,
     expires_at: DataTypes.DATE,
     is_active: DataTypes.BOOLEAN,

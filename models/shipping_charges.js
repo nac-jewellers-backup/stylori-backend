@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     range_to: DataTypes.DOUBLE,
     shipment_charge: DataTypes.DOUBLE,
     product_attributes: {
-      type: DataTypes.ARRAY(DataTypes.TEXT)
+      type: DataTypes.JSON
     },
     is_active: DataTypes.BOOLEAN
   }, {});
