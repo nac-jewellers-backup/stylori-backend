@@ -31,7 +31,10 @@ module.exports = {
         type: Sequelize.DOUBLE
       },
       product_attributes: {
-        type: Sequelize.ARRAY(Sequelize.TEXT)
+        type: Sequelize.JSON,
+      },
+      display_attributes: {
+        type: Sequelize.TEXT,
       },
       is_active: {
         type: Sequelize.BOOLEAN

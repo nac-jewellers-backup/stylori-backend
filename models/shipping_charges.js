@@ -7,7 +7,9 @@ module.exports = (sequelize, DataTypes) => {
     range_from: DataTypes.DOUBLE,
     range_to: DataTypes.DOUBLE,
     shipment_charge: DataTypes.DOUBLE,
-    product_attributes: DataTypes.STRING,
+    product_attributes: {
+      type: DataTypes.ARRAY(DataTypes.TEXT)
+    },
     is_active: DataTypes.BOOLEAN
   }, {});
   shipping_charges.associate = function(models) {

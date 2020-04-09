@@ -188,7 +188,10 @@ module.exports = function(app) {
 	app.post('/manageseoattributes', configurationcontroller.manageseoattributes);
 	app.post('/manageshippingzone', configurationcontroller.manageshippingzone);
 	app.post('/manageshipmentsettings', configurationcontroller.manageshipmentsettings);
+	app.post('/manageshippingattributes', configurationcontroller.manageshippingattributes);
 
+
+	
 	
 	app.post('/updatefilterposition', master_uploaddata_controller.updatefilterposition);
 

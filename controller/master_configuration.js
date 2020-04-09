@@ -449,6 +449,52 @@ exports.manageshippingzone = async (req, res) => {
 
 }
 
+exports.manageshippingattributes = async (req, res) => {
+    const {rateid,attributes} = req.body
+      let product_attributes = {}
+      let keys = Object.keys(attributes);
+      keys.forEach(key => {
+        let attributeobj = attributes[key];
+        if(Array.isArray(attributeobj))
+        {
+          let componentarr = [];
+          attributeobj.forEach(attr => {
+            if(attr.alias)
+            {
+              
+              componentarr.push(attr.alias)
+            }
+    
+           
+          })
+         if(componentarr.length > 0)
+         {
+    
+          product_attributes[key] = componentarr
+         }
+       
+        }
+    
+      })
+
+
+      await   models.shipping_charges.update(
+            
+        {  
+            
+            product_attributes:product_attributes
+            },
+            {where: {
+            id: rateid
+            }
+         }
+        
+    )
+
+    res.send(200,{"message":"Updated Successfully"})
+      res.send(200,{product_attributes})
+    
+    }
 
 
 
