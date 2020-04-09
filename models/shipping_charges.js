@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     product_attributes: {
       type: DataTypes.JSON
     },
+    display_attributes: DataTypes.TEXT,
     is_active: DataTypes.BOOLEAN
   }, {});
   shipping_charges.associate = function(models) {
