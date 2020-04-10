@@ -2,7 +2,8 @@ const es = require("elasticsearch");
 const esClient = new es.Client({
   host:
     "https://search-elastic-server-uguyslt53rg63cttm2b4hgwkb4.ap-south-1.es.amazonaws.com/",
-  requestTimeout: Infinity
+  requestTimeout: Infinity,
+  keepAlive : false
   // log: "trace"
 });
 
@@ -132,6 +133,7 @@ module.exports = {
             });
           },
           function(_err) {
+            
             return reject({ data: false, status: 500, message: _err.message });
           }
         );

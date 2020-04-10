@@ -734,9 +734,21 @@ res.send(200,{'data':products_all})
 
 
 exports.productesearch = async (req, res) => {
+  let skuwhere = {}
+  let prodwhere = {
+    isactive : true
+  }
+  if(req.body.product_id)
+  {
+    prodwhere['product_id'] = req.body.product_id
+    skuwhere['product_id'] = req.body.product_id
 
+  }
+
+  
   let sku_list = await models.trans_sku_lists.findAll({
             attributes:["generated_sku","sku_url"],
+            where:skuwhere
   })
   let product_list = await models.product_lists.findAll({
     attributes:["product_name"],
@@ -748,8 +760,11 @@ exports.productesearch = async (req, res) => {
           isdefault: true
         }
       }
-    ]
+    ],
+    where:prodwhere
 })
+
+console.log(JSON.stringify(product_list.length))
 // let seo_list = await models.seo_url_priorities.findAll({
 //   attributes:["attribute_value","seo_url","priority"]
 // })

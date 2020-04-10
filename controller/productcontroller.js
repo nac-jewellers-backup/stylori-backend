@@ -5,16 +5,34 @@ var request = require('request');
 const sequelize = require('sequelize');
 const Op= require('sequelize').Op;
 import apidata from './apidata.json';
+const axios = require("axios");
+
 const uuidv1 = require('uuid/v1');
 exports.priceupdate =  async (req, res) => {
-    request({
-        url: 'http://localhost:8000/updatepricelist',
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({req_product_id : 'SR3261'})
-    }, function(error, response, body) {
-       console.log(body)
-    });
+    // request({
+    //     url: 'http://localhost:8000/updatepricelist',
+    //     method: "POST",
+    //     headers: {"Content-Type": "application/json"},
+    //     body: JSON.stringify({req_product_id : 'SR3261'})
+    // }, function(error, response, body) {
+    //    console.log(body)
+    // });
+
+    const _obj = {
+        method: "post",
+        url: process.env.apibaseurl+"/esearch_forceindex",
+        data: {
+           // product_id : 'SR3331'
+        }
+      };
+
+                axios(_obj)
+					  .then(async response => {
+                      }).catch({
+
+                      })
+
+
 
 }
 
@@ -1185,6 +1203,22 @@ exports.productupload =  async (req, res) => {
                     //    console.log(response)
 
                     // });
+                 const _obj = {
+                        method: "post",
+                        url: process.env.apibaseurl+"/esearch_forceindex",
+                        data: {
+                            product_id : prod_obj.product_id
+                        }
+                    };
+
+                axios(_obj)
+					  .then(async response => {
+                      }).catch({
+
+                      })
+
+
+
                     res.json(uploadskus);
 
                     })
