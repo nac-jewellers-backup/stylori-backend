@@ -276,12 +276,16 @@ exports.manageseoattributes = async (req, res) => {
 }
 
 exports.managegenders = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isedit,isFilter,isActive,filterOrder,isdelete} = req.body
     if(isedit)
     {
         await   models.master_genders.update(
             
-            {   name: name 
+            {   name: name,
+                is_filter: isFilter,
+                is_active : isActive,
+                filter_order : filterOrder
+
                 },
                 {where: {
                 id: id
@@ -298,6 +302,9 @@ exports.managegenders = async (req, res) => {
             id:uuidv1(),
             name: name, 
             alias : name ,
+            is_filter: isFilter,
+                is_active : isActive,
+                filter_order : filterOrder
             }
         await   models.master_genders.create(   
                      taxobj
