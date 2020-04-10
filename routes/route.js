@@ -214,6 +214,8 @@ module.exports = function(app) {
 		{
 			datapaylod['product_id'] = req.body.product_id
 		}
+		res.status(200).send({"message":"Success"})
+
 		const _obj = {
 			method: "post",
 			url: turl,
@@ -389,7 +391,6 @@ module.exports = function(app) {
 						  .then(response => {
 							console.log("» » » Docs Uploaded");
 							console.log("Promises Resolved ", response.length);
-							res.status(200).send({"message":"Success"})
 						  })
 						  .catch(_e => {
 							console.log(_e.message);

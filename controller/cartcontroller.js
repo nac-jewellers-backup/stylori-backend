@@ -370,12 +370,16 @@ exports.paymentsuccess = async (req, res) => {
 exports.updateorderstatus = async (req, res) => {
   const {orderstatus,paymentstatus,cartid,orderid,awbNumber,comments,giftmessage} = req.body
   var payment_current_status = ''
-  if(paymentstatus.name)
+  if(paymentstatus)
+  {
+    if(paymentstatus.name)
   {
     payment_current_status = paymentstatus.name
   }else{
     payment_current_status = paymentstatus
   }
+  }
+  
   let response = await models.orders.update(
     {
       order_status : orderstatus.name,

@@ -1203,19 +1203,19 @@ exports.productupload =  async (req, res) => {
                     //    console.log(response)
 
                     // });
-                 const _obj = {
-                        method: "post",
-                        url: process.env.apibaseurl+"/esearch_forceindex",
-                        data: {
-                            product_id : prod_obj.product_id
-                        }
-                    };
+                //  const _obj = {
+                //         method: "post",
+                //         url: process.env.apibaseurl+"/esearch_forceindex",
+                //         data: {
+                //             product_id : prod_obj.product_id
+                //         }
+                //     };
 
-                axios(_obj)
-					  .then(async response => {
-                      }).catch({
+                // axios(_obj)
+				// 	  .then(async response => {
+                //       }).catch({
 
-                      })
+                //       })
 
 
 
