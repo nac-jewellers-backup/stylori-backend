@@ -205,6 +205,7 @@ module.exports = function(app) {
 	app.post('/manageshipmentsettings', configurationcontroller.manageshipmentsettings);
 	app.post('/manageshippingattributes', configurationcontroller.manageshippingattributes);
 	app.post('/managepages', configurationcontroller.managepages);
+	app.post('/manageroles', configurationcontroller.manageroles);
 
 	
 	

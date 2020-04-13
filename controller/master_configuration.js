@@ -1319,3 +1319,35 @@ exports.managepages = async (req, res) => {
     }
 
 }
+
+
+exports.manageroles = async (req, res) => {
+    const {name,isedit,id} = req.body
+    if(isedit)
+    {
+        await   models.master_roles.update(
+            
+                {   
+                    
+                    name: name
+                  
+               
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else{
+        let taxobj ={
+            name: name
+            }
+        await   models.master_roles.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
