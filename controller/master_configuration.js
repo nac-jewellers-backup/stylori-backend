@@ -460,11 +460,12 @@ exports.manageshippingattributes = async (req, res) => {
     const {rateid,attributes,display_text} = req.body
       let product_attributes = {}
       let keys = Object.keys(attributes);
+      let componentarr = [];
+
       keys.forEach(key => {
         let attributeobj = attributes[key];
         if(Array.isArray(attributeobj))
         {
-          let componentarr = [];
           attributeobj.forEach(attr => {
             if(attr.alias)
             {
@@ -477,7 +478,7 @@ exports.manageshippingattributes = async (req, res) => {
          if(componentarr.length > 0)
          {
     
-          product_attributes[key] = componentarr
+         // product_attributes[key] = componentarr
          }
        
         }
@@ -487,7 +488,7 @@ exports.manageshippingattributes = async (req, res) => {
 
       await   models.shipping_charges.update(
         {  
-            product_attributes:product_attributes,
+            product_attributes:componentarr,
             display_attributes:display_text
             },
             {where: {

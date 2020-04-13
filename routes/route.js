@@ -58,6 +58,7 @@ module.exports = function(app) {
 	app.post('/priceupdate', productcontroller.priceupdate);
 	app.post('/disableproduct', productcontroller.disableproduct);
 	app.post('/getproductlist', productcontroller.getproductlist);
+	app.post('/getorders', productcontroller.getorderlist);
 
 	
 	app.post('/productpriceupdate',single_product_pricecontroller.priceupdate)
@@ -135,8 +136,9 @@ module.exports = function(app) {
 	app.post('/filterlist', filtercontroller.filteroptions);
 	app.post('/getsizes', cartcontroller.getsizes);
 	app.post('/updateorderstatus', cartcontroller.updateorderstatus);
-
 	
+	app.post('/getshippingcharge', cartcontroller.getshippingcharge);
+
 	app.post('/fetchproducts', productFetchController.filteroptions);
 	app.post('/esearchfetchproducts', productfetchController_esearch.filteroptions);
 	app.post('/getproductvarient', productcontroller.getproductvarient);

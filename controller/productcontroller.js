@@ -2148,3 +2148,71 @@ exports.getproductlist =  async (req, res) => {
     
     
     }
+
+
+    exports.getorderlist =  async (req, res) => {
+        const {size, offset,  searchtext, order, orderby} = req.body
+           let whereclause = {
+             
+           }
+           var sort = "DESC"
+           var orderbycolumn = 'updatedAt'
+           if(orderby)
+           {
+            orderbycolumn = orderby
+           }
+           if(order)
+           {
+            sort =  order.toUpperCase()
+           }
+        //    if(order)
+        //    {
+        //     sort = 'ASC'
+        //    }
+           if(searchtext)
+           {
+               whereclause= {
+                   [Op.or]:[
+                       {
+                           product_id :{
+                            [Op.iLike] : "%"+searchtext+"%"
+    
+                           }
+                       },
+                       {
+                        product_name :{
+                         [Op.iLike] : "%"+searchtext+"%"
+    
+                        }
+                    }
+                   ]
+               }
+               
+           }
+           
+    
+            
+            let orders = await models.orders.findAndCountAll({
+                include:[
+                    {
+                        model : models.shopping_cart,
+                        include : [
+                            {
+                                model : models.shopping_cart_item
+                            }
+                        ]
+                    }
+                ],
+                where: whereclause,
+                offset: offset, limit: size,
+                order: [
+                    [orderbycolumn, sort]
+                   
+                ],
+            })
+        
+        
+            res.send(200,{orders})
+        
+        
+        }

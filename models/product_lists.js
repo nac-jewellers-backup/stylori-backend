@@ -134,6 +134,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'product_id',
       targetKey: 'product_id'
     });
+    models.product_lists.belongsTo(models.master_product_categories,{
+      foreignKey: 'product_category',
+      targetKey: 'name'
+    });
+    models.product_lists.belongsTo(models.master_product_types,{
+      foreignKey: 'product_type',
+      targetKey: 'name'
+    });
   };
   return product_lists;
 };

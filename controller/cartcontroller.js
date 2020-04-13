@@ -768,7 +768,222 @@ exports.removeaddress = async (req, res) => {
   
   
 }
+async function updateshippingcharge(cart_id,res)
+{
+  let cartaddress = await models.cart_address.findOne({
+    where:{
+      cart_id : cart_id,
+      address_type : 1
+    }
+  })
+  let shippingcountry = cartaddress.country
+  let countryid = await models.master_countries.findOne({
+    where:{
+      name : shippingcountry.toUpperCase()
+      
+    }
+  })
+  let zones = await models.shipping_zone_countries.findAll({
+    where:{
+      country_id : countryid.id
+      
+    }
+  })
 
+  let zoneids = []
+  zones.forEach(zoneobj => {
+    zoneids.push(zoneobj.id)
+  })
+
+
+  
+  let products = await models.shopping_cart_item.findAll({
+    where:{
+      shopping_cart_id : cart_id
+    }
+  })
+  if(products.length > 0)
+  {
+    processskus(0)
+  }
+  async function processskus(skucount)
+  {
+    let itemobj = products[skucount]
+    let product_attributes1 = await models.product_lists.findOne({
+      hierarchy: true,
+      attributes : ['product_id','product_category','product_type'],
+      include:[{
+       
+        model: models.trans_sku_lists,
+        attributes:['purity','generated_sku'],
+        include: [
+          {
+            model: models.master_metals_purities,
+            attributes:["alias"],
+          }
+        ],
+        where:{
+          generated_sku: itemobj.product_sku
+        }
+      },
+      {
+        model: models.master_product_categories,
+        attributes:['alias']
+      },
+      {
+        model: models.master_product_types,
+        attributes:['alias']
+      },
+      {
+        model: models.product_materials,
+        attributes:["material_name"],
+        include:[{
+          model: models.master_materials,
+          attributes: ["alias"]
+        }]
+      },
+      {
+        model: models.product_collections,
+        attributes: ["collection_name"],
+        include:[{
+          model : models.master_collections,
+          attributes:["alias"]
+        }]
+      },
+      {
+        model: models.product_occassions,
+        attributes: ["occassion_name"],
+        include:[{
+          model : models.master_occasions,
+          attributes:["alias"]
+        }]
+      },
+      {
+        model: models.product_gemstones,
+        attributes: ["gemstone_type"],
+        include:[{
+          model : models.master_gemstones_types,
+          attributes:["alias"]
+        }]
+      },
+      {
+        model: models.product_styles,
+        attributes: ["style_name"],
+        include:[{
+          model : models.master_styles,
+          attributes:["alias"]
+        }]
+      },
+      {
+        model: models.product_themes,
+        attributes: ["theme_name"],
+        include:[{
+          model : models.master_themes,
+          attributes:["alias"]
+        }]
+      },
+      {
+        model: models.product_stonecolor
+      },
+      {
+        model : models.product_gender
+
+      }
+      ]
+    })
+    delete product_attributes1['dataValues'];
+    delete product_attributes1['_previousDataValues'];
+    delete product_attributes1['_modelOptions'];
+    delete product_attributes1['_options'];
+    delete product_attributes1['isNewRecord'];
+    delete product_attributes1['_changed'];
+    
+    let keys = Object.keys(product_attributes1);
+    let attributes = {}
+      function isJson(str) {
+
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+      }
+
+      keys.forEach(element => {
+ 
+        if(product_attributes1[element])
+        {
+          let attributeobj = product_attributes1[element]
+
+          if(Array.isArray(attributeobj))
+          {
+            let attributes_value = []
+
+            attributeobj.forEach(attr_obj => {
+              delete attr_obj['dataValues'];
+              delete attr_obj['_previousDataValues'];
+              delete attr_obj['_modelOptions'];
+              delete attr_obj['_options'];
+              delete attr_obj['isNewRecord'];
+              delete attr_obj['_changed'];
+              let nestkeys = Object.keys(attr_obj);
+              nestkeys.forEach(aliasobj => {
+                
+                if(isJson(JSON.stringify(attr_obj[aliasobj])))
+                {
+                  attributes_value.push(attr_obj[aliasobj].alias)
+                 // attributes[element+"_key"] = attr_obj[aliasobj]
+
+                }
+              })
+             // attributes[element] = attr_obj
+             
+            })
+           
+            attributes[element] = attributes_value
+
+          }else{
+            let attributes_value = []
+            attributes_value.push(attributeobj.alias)
+            attributes[element] = attributes_value
+
+          }
+        }
+      })
+
+      let attrkeys = Object.keys(attributes);
+      attrkeys.forEach(key => {
+    let attributeobj = attributes[key];
+    if(Array.isArray(attributeobj))
+    {
+     
+     if(attributeobj.length > 0)
+     {
+       console.log(attributeobj)
+      let attrobj = {
+        [Op.or] : attributeobj
+      }
+      attributes_condition.push(attrobj)
+     }
+   
+    }
+
+  })
+   res.send(200,{attributes})
+
+  }
+
+
+
+  
+
+  
+}
+exports.getshippingcharge = async (req, res) => {
+  const {cart_id} =  req.body
+  await updateshippingcharge(cart_id,res)
+}
 exports.addaddress = async (req, res) => {
     let {user_id, address,cart_id,isguestlogin} = req.body
     

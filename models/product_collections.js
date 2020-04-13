@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   product_collections.associate = function(models) {
     // associations can be defined here
+    models.product_collections.belongsTo(models.master_collections,{
+      foreignKey: 'collection_name',
+      targetKey: 'name'
+    });
   };
   return product_collections;
 };
