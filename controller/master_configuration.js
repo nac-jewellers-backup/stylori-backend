@@ -1307,9 +1307,6 @@ exports.managepages = async (req, res) => {
             
         )
         res.send(200,{"message":"Updated Successfully"})
-    }else if(isdelete)
-    {
-
     }else{
         let taxobj ={
             displayname: displayname,
