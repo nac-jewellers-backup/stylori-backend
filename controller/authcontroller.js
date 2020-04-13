@@ -617,3 +617,37 @@ exports.addemailsubscription = (req, res) => {
   
 })
 }
+
+exports.getmasterroles = async (req, res) => {
+  let masterroles = await models.master_roles.findAll({
+    where:{
+      // role_name: {
+      //   [Op.notIn] : ['Admin','user']
+      // }
+    }
+  })
+
+  res.status(200).send({roles : masterroles})
+}
+
+exports.getadminusers = async (req, res) => {
+  let userslists = await models.users.findAll({
+    include:[
+      {
+        model : models.user_roles,
+        include:[{
+          model:models.master_roles
+        }],
+        where:{
+          role_name: {
+            [Op.notIn] : ['user']
+          }
+        }
+      }
+    
+    ]
+   
+  })
+
+  res.status(200).send({users : userslists})
+}

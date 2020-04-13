@@ -97,7 +97,7 @@ module.exports = function(app) {
 	app.post('/checksalediscount', pricingontroller.checkdiscount);
 	app.post('/getdiscount', pricingontroller.discountinfo);
 	app.post('/getincompletepricerun', pricingontroller.getincompletepricerun);
-
+	
 	
 	app.post('/updatemarkup', pricingontroller.updatemarkup);
 	app.post('/addmarkup', pricingontroller.addmarkup);
@@ -109,8 +109,10 @@ module.exports = function(app) {
 	app.post('/addquestion', authcontroller.addquestion);
 	app.post('/addemailsubscription', authcontroller.addemailsubscription);
 	app.post('/asktoexport', authcontroller.asktoexport);
+	app.post('/getmasterroles', authcontroller.getmasterroles);
+	app.post('/getadminusers', authcontroller.getadminusers);
 
-
+	
 	
 	app.post('/addwishlist', cartcontroller.addwishlist);
 	app.post('/removewishlist', cartcontroller.removewishlist);
