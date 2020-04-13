@@ -620,6 +620,7 @@ exports.addemailsubscription = (req, res) => {
 
 exports.getmasterroles = async (req, res) => {
   let masterroles = await models.master_roles.findAll({
+    attributes:["id",["role_name","name"]],
     where:{
       // role_name: {
       //   [Op.notIn] : ['Admin','user']
