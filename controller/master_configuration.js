@@ -1286,3 +1286,39 @@ exports.manageweights = async (req, res) => {
     }
 
 }
+
+
+exports.managepages = async (req, res) => {
+    const {displayname,pagename,isedit,id} = req.body
+    if(isedit)
+    {
+        await   models.uniquepages.update(
+            
+                {   
+                    
+                    displayname: displayname,
+                    pagename: pagename
+               
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            displayname: displayname,
+            pagename: pagename
+            }
+        await   models.uniquepages.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
