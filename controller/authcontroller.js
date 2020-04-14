@@ -147,7 +147,7 @@ exports.signup = (req, res) => {
                   }
                   userroles.push(roleobj);
             })
-
+            console.log(JSON.stringify(userroles))
                 await models.user_roles.bulkCreate(
                   userroles, {individualHooks: true})
           var verifytoken = crypto({length: 16});
