@@ -83,6 +83,8 @@ module.exports = function(app) {
 	app.post('/api/auth/guestlogin', authcontroller.guestlogin);
 	app.post('/api/auth/verifyotp', authcontroller.verifyotp);
 	
+	app.post('/updatevendorgoldprice', pricingontroller.updatevendorgoldprice);
+
 	app.post('/updatemetalprice', pricingontroller.updatemetalprice);
 	app.post('/updatediamondprice', pricingontroller.updatediamondprice);
 	app.post('/updategemstoneprice', pricingontroller.updategemstoneprice);

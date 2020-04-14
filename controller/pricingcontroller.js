@@ -1877,6 +1877,52 @@ exports.updatediamondprice =  async (req, res) => {
 }
 
 
+
+exports.updatevendorgoldprice =  async (req, res) => {
+  const {prices,vendors} = req.body
+  if(prices)
+  {
+    let purities = Object.keys(prices)
+
+      var bar = new Promise((resolve, reject) => {
+
+        purities.forEach(async (element, index) => {
+
+          
+
+          // console.log(element)
+          // console.log(vendors)
+
+          await   models.gold_price_settings.update(
+              {   
+                 selling_price : prices[element]
+              },
+              {where: {
+                  vendor_code : {
+                    [Op.in]: vendors
+                  },
+                  purity: element
+
+              }
+           }
+     )
+        
+         if (index === purities.length -1) resolve();
+      })
+
+  });
+
+      bar.then(async() => {
+         
+
+        
+              res.send(200,{response: "updated scuccessfully"})
+      });
+ 
+  }
+ 
+
+}
 exports.updategemstoneprice =  async (req, res) => {
   const {isadd,cost_price_id,vendor_code,gemstone_type, selling_price_type,selling_price_id, selling_price, cost_price,weight_start, weight_end} = req.body
   if(isadd)

@@ -315,7 +315,7 @@ exports.managegenders = async (req, res) => {
 }
 exports.manageshipmentsettings = async (req, res) => {
     const {id,name,shippingzones,rangetype,rangeFrom,rangeTo,
-        shipmentCharge,isActive,isedit,isdelete} = req.body
+        shipmentCharge,isActive,isCart,isedit,isdelete} = req.body
     if(isedit)
     {
     
@@ -326,6 +326,7 @@ exports.manageshipmentsettings = async (req, res) => {
                 zone_id : shippingzones.id,
             charge_type : rangetype.id,
             range_from : rangeFrom,
+            isCart: isCart,
             range_to : rangeTo,
             shipment_charge : shipmentCharge,
             name: name, 
@@ -350,6 +351,7 @@ exports.manageshipmentsettings = async (req, res) => {
             range_to : rangeTo,
             shipment_charge : shipmentCharge,
             name: name, 
+            isCart: isCart,
             is_active: isActive
             }
       let response =   await   models.shipping_charges.create(   
