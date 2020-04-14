@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     role_id: DataTypes.UUID,
     page_id: DataTypes.INTEGER,
     is_view: DataTypes.BOOLEAN,
-    is_read: DataTypes.BOOLEAN
+    is_write: DataTypes.BOOLEAN
   }, {});
   role_permissions.associate = function(models) {
     // associations can be defined here

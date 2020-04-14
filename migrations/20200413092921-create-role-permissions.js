@@ -19,7 +19,7 @@ module.exports = {
       is_view: {
         type: Sequelize.BOOLEAN
       },
-      is_read: {
+      is_write: {
         type: Sequelize.BOOLEAN
       },
       createdAt: {

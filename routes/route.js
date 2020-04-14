@@ -206,8 +206,9 @@ module.exports = function(app) {
 	app.post('/manageshippingattributes', configurationcontroller.manageshippingattributes);
 	app.post('/managepages', configurationcontroller.managepages);
 	app.post('/manageroles', configurationcontroller.manageroles);
+	app.post('/managepermissions', configurationcontroller.managepermissions);
+	app.post('/getrolepermissions', configurationcontroller.getrolepermissions);
 
-	
 	
 	
 	app.post('/updatefilterposition', master_uploaddata_controller.updatefilterposition);

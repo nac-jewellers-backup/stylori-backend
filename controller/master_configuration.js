@@ -1351,3 +1351,86 @@ exports.manageroles = async (req, res) => {
     }
 
 }
+
+exports.getrolepermissions = async (req, res) => {
+    const {role_id} = req.body
+    let permissions = await models.role_permissions.findAll({
+        where:{
+            role_id : role_id
+        }
+    })
+    let response_obj = {}
+    permissions.forEach(element => {
+        response_obj[element.page_id] = {
+            iswrite : element.is_write,
+            isview: element.is_view
+        }
+    })
+    res.send(200,{permissions:response_obj})
+
+}
+exports.managepermissions = async (req, res) => {
+    const {role_id,permissions,isedit,id} = req.body
+    if(permissions)
+    {
+        let newpermissions = []
+        let permission_ids = Object.keys(permissions)
+        var bar = new Promise((resolve, reject) => {
+ 
+        permission_ids.forEach(async (element, index) => {
+
+            let permissionobj =  await models.role_permissions.findOne({
+                where:{
+                    role_id : role_id,
+                    page_id : element
+                }
+            })
+
+           if(permissionobj)
+           {
+            permissionobj['is_view'] = permissions[element].isview
+            permissionobj['is_write'] = permissions[element].iswrite
+            await   models.role_permissions.update(
+                {   
+                    is_view: permissions[element].isview,
+                    is_write:permissions[element].iswrite
+                },
+                {where: {
+                    role_id : role_id,
+                    page_id : element
+                }
+             }
+        )
+        permissionobj.update()
+           } else{
+               let per_obj = {
+                role_id : role_id,
+                page_id : parseInt(element),
+                is_view:  permissions[element].isview,
+                is_write: permissions[element].iswrite
+            }
+            newpermissions.push(per_obj)
+            console.log(newpermissions)
+
+           }
+           if (index === permission_ids.length -1) resolve();
+        })
+
+    });
+
+        bar.then(async() => {
+            console.log('All done!');
+            console.log(newpermissions)
+
+            let response =   await models.role_permissions.bulkCreate(
+                newpermissions
+                , {individualHooks: true})
+    
+    
+                res.send(200,{response: newpermissions})
+        });
+   
+    }
+   
+
+}
