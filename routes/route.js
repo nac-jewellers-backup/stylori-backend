@@ -113,7 +113,7 @@ module.exports = function(app) {
 	app.post('/asktoexport', authcontroller.asktoexport);
 	app.post('/getmasterroles', authcontroller.getmasterroles);
 	app.post('/getadminusers', authcontroller.getadminusers);
-	app.post('/getwebusers', authcontroller.getwebusers);
+	app.post('/getpageaccess',[authJwt.verifyToken], authcontroller.getpageaccess);
 
 	
 	
@@ -211,6 +211,7 @@ module.exports = function(app) {
 	app.post('/manageroles', configurationcontroller.manageroles);
 	app.post('/managepermissions', configurationcontroller.managepermissions);
 	app.post('/getrolepermissions', configurationcontroller.getrolepermissions);
+	app.post('/getwebusers', configurationcontroller.getwebusers);
 
 	
 	

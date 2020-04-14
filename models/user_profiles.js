@@ -25,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
   user_profiles.associate = function(models) {
+    models.user_profiles.belongsTo(models.users,{
+        foreignKey: 'user_id',
+      targetKey: 'id'
+    })
     // associations can be defined here
     // models.user_profiles.hasMany(models.user_address,{
     //   foreignKey: 'userprofile_id',

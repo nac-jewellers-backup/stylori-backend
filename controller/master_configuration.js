@@ -1436,3 +1436,25 @@ exports.managepermissions = async (req, res) => {
    
 
 }
+
+exports.getwebusers = async (req, res) => {
+    let users = await models.user_profiles.findAll({
+        include:[{
+            model:models.users,
+            include:[
+                {
+                    model:models.user_roles,
+                    where:{
+                        role_name: {
+                          [Op.in] : ['user']
+                        }
+                      }
+                }
+            ]
+        }],
+            limit: 10
+    })
+
+    res.status(200).send({users})
+
+}

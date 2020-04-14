@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   role_permissions.associate = function(models) {
     // associations can be defined here
+    models.role_permissions.belongsTo(models.uniquepages,{
+      foreignKey: 'page_id',
+      targetKey: 'id'
+  })
   };
   return role_permissions;
 };

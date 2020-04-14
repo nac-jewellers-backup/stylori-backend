@@ -683,3 +683,52 @@ exports.getadminusers = async (req, res) => {
   res.status(200).send({users : userslists})
 }
 
+exports.getpageaccess = async (req, res) => {
+    const{userName} = req
+    console.log(userName)
+    let userobj = await models.users.findOne({
+      attributes:['id'],
+      where:{
+        email : userName
+      }
+    })
+    let user_roles = await models.user_roles.findAll({
+      attributes:['role_id'],
+      where:{
+        user_id : userobj.id
+      }
+    })
+
+    let userroles = []
+    user_roles.forEach(roleobj => {
+      userroles.push(roleobj.role_id)
+    })
+    let user_pages = await models.role_permissions.findAll({
+      attributes:['role_id','page_id','is_view','is_write'],
+      include:[
+        {
+          model: models.uniquepages
+        }
+      ],
+      where:{
+        role_id : {
+          [Op.in] : userroles
+        }
+      }
+    })
+    let userpages = []
+    user_pages.forEach(element => {
+      let pageobj = {
+        pagename : element.uniquepage.displayname,
+        pageurl : element.uniquepage.pagename,
+        is_view : element.is_view,
+        is_write : element.is_write
+
+
+      }
+      userpages.push(pageobj)
+    })
+    res.send(200,{"pages":userpages})
+}
+
+
