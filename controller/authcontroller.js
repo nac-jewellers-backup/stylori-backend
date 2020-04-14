@@ -633,6 +633,31 @@ exports.getmasterroles = async (req, res) => {
   res.status(200).send({roles : masterroles})
 }
 
+exports.getwebusers = async (req, res) => {
+  let userslists = await models.users.findAll({
+    attributes:["id","username","password","email","mobile","status"],
+    include:[
+      {
+        model : models.user_roles,
+        attributes : ["role_name"],
+        include:[{
+          model:models.master_roles,
+          attributes:["id",["role_name","name"]]
+        }],
+        where:{
+          role_name: {
+            [Op.in] : ['user']
+          }
+        }
+      }
+    
+    ]
+   
+  })
+
+  res.status(200).send({users : userslists})
+}
+
 exports.getadminusers = async (req, res) => {
   let userslists = await models.users.findAll({
     attributes:["id","username","password","email","mobile","status"],
@@ -657,5 +682,4 @@ exports.getadminusers = async (req, res) => {
 
   res.status(200).send({users : userslists})
 }
-
 

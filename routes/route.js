@@ -113,6 +113,7 @@ module.exports = function(app) {
 	app.post('/asktoexport', authcontroller.asktoexport);
 	app.post('/getmasterroles', authcontroller.getmasterroles);
 	app.post('/getadminusers', authcontroller.getadminusers);
+	app.post('/getwebusers', authcontroller.getwebusers);
 
 	
 	
