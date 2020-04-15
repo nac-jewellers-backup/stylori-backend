@@ -713,7 +713,15 @@ exports.getpageaccess = async (req, res) => {
       where:{
         role_id : {
           [Op.in] : userroles
-        }
+        },
+        [Op.or]:[
+          {
+            is_view : true
+          },
+          {
+            is_write : true
+          }
+        ]
       }
     })
     let userpages = []
