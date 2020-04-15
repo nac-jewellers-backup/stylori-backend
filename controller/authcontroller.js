@@ -634,28 +634,49 @@ exports.getmasterroles = async (req, res) => {
 }
 
 exports.getwebusers = async (req, res) => {
-  let userslists = await models.users.findAll({
-    attributes:["id","username","password","email","mobile","status"],
-    include:[
-      {
-        model : models.user_roles,
-        attributes : ["role_name"],
-        include:[{
-          model:models.master_roles,
-          attributes:["id",["role_name","name"]]
-        }],
-        where:{
-          role_name: {
-            [Op.in] : ['user']
-          }
-        }
-      }
+  // let userslists = await models.users.findAll({
+  //   attributes:["id","username","password","email","mobile","status"],
+  //   include:[
+  //     {
+  //       model : models.user_roles,
+  //       attributes : ["role_name"],
+  //       include:[{
+  //         model:models.master_roles,
+  //         attributes:["id",["role_name","name"]]
+  //       }],
+  //       where:{
+  //         role_name: {
+  //           [Op.in] : ['user']
+  //         }
+  //       }
+  //     }
     
-    ]
+  //   ]
    
+  // })
+
+  let userslists = await models.user_profiles.findAll({
+    // include: [
+    //   {
+    //     model : models.user,
+    //     // include : [
+    //     //   {
+    //     //     model : models.user_roles,
+    //     //     where :
+    //     //     {
+    //     //       role_name : {
+    //     //         [Op.notIn] : 'Admin'
+    //     //       }
+    //     //     }
+    //     //   }
+    //     // ]
+    //   }
+    // ],
+   // limit :10
   })
 
-  res.status(200).send({users : userslists})
+
+  res.status(200).send({users : userslists.length})
 }
 
 exports.getadminusers = async (req, res) => {
