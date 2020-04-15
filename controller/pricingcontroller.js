@@ -1879,10 +1879,10 @@ exports.updatediamondprice =  async (req, res) => {
 
 
 exports.updatevendorgoldprice =  async (req, res) => {
-  const {prices,vendors} = req.body
-  if(prices)
+  const {costprices,sellingprices,vendors,metal} = req.body
+  if(costprices)
   {
-    let purities = Object.keys(prices)
+    let purities = Object.keys(costprices)
 
       var bar = new Promise((resolve, reject) => {
 
@@ -1895,7 +1895,8 @@ exports.updatevendorgoldprice =  async (req, res) => {
 
           await   models.gold_price_settings.update(
               {   
-                 selling_price : prices[element]
+                 selling_price : costprices[element],
+                 cost_price : sellingprices[element]
               },
               {where: {
                   vendor_code : {
