@@ -1895,8 +1895,9 @@ exports.updatevendorgoldprice =  async (req, res) => {
 
           await   models.gold_price_settings.update(
               {   
-                 selling_price : costprices[element],
-                 cost_price : sellingprices[element]
+                cost_price : costprices[element],
+                selling_price_type : 1,
+                selling_price : sellingprices[element]
               },
               {where: {
                   vendor_code : {
