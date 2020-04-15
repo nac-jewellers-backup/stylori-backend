@@ -1438,6 +1438,7 @@ exports.managepermissions = async (req, res) => {
 }
 
 exports.getwebusers = async (req, res) => {
+    const {size, offset} = req.body
     let users = await models.user_profiles.findAll({
         include:[{
             model:models.users,
@@ -1452,7 +1453,8 @@ exports.getwebusers = async (req, res) => {
             //     }
             // ]
         }],
-            limit: 10
+            limit: size,
+            offset : offset
     })
 
     res.status(200).send({users})
