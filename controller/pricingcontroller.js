@@ -1879,7 +1879,7 @@ exports.updatediamondprice =  async (req, res) => {
 
 
 exports.updatevendorgoldprice =  async (req, res) => {
-  const {costprices,sellingprices,vendors,metal} = req.body
+  const {costprices,sellingprices,vendors,metal,pricetype} = req.body
   if(costprices)
   {
     let purities = Object.keys(costprices)
@@ -1896,7 +1896,7 @@ exports.updatevendorgoldprice =  async (req, res) => {
           await   models.gold_price_settings.update(
               {   
                 cost_price : costprices[element],
-                selling_price_type : 1,
+                selling_price_type : pricetype ? pricetype.value : 1,
                 selling_price : sellingprices[element]
               },
               {where: {
