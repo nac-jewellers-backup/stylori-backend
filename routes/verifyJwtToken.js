@@ -44,7 +44,25 @@ const isAdmin = (req, res, next) => {
 			})
 		})
 }
+const updateLastlogin = async (req, res, next) => {
+	if(req.userName)
+	{
+		await   models.user_profiles.update(
+            lastlogin
+            ,
+                {where: {
+                username: req.userName
+                }
+             }
+            
+		)
+		next();
+	}	else{
+		next();
+	}
+	
 
+}
 const generateToken = (payload) => {
     try{
         let token = jwt.sign(payload,process.env.SECRET,{
@@ -59,5 +77,7 @@ const generateToken = (payload) => {
 const authJwt = {};
 authJwt.verifyToken = verifyToken;
 authJwt.generateToken = generateToken;
+authJwt.updateLastlogin = updateLastlogin;
+
 authJwt.isAdmin = isAdmin;
 module.exports = authJwt;
