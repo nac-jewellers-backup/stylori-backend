@@ -138,7 +138,7 @@ module.exports = function(app) {
 	app.post('/resendorderemail', cartcontroller.resendorderemail);
 	app.post('/removecartitem', cartcontroller.removecartitem);
 	app.post('/uploadimage', cartcontroller.uploadimage);
-	app.post('/filterlist',[authJwt.updateLastlogin], filtercontroller.filteroptions);
+	app.post('/filterlist',[authJwt.checkguest],[authJwt.updateLastlogin], filtercontroller.filteroptions);
 	app.post('/getsizes', cartcontroller.getsizes);
 	app.post('/updateorderstatus', cartcontroller.updateorderstatus);
 	

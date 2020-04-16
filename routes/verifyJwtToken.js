@@ -23,6 +23,25 @@ const verifyToken = (req, res, next) => {
 		next();
 	});
 }
+const checkguest = (req, res, next) => {
+	let token = req.headers['x-access-token'];
+	console.log(token);
+	if (!token){
+		next
+	}
+
+	jwt.verify(token, process.env.SECRET, (err, decoded) => {
+		if (err){
+			return res.status(500).send({ 
+					auth: false, 
+					message: 'Fail to Authentication. Error -> ' + err 
+				});
+		}
+		console.log("here"+decoded.id)
+		req.userName = decoded.id;
+		next();
+	});
+}
 const isAdmin = (req, res, next) => {
 	let token = req.headers['x-access-token'];
 	models.User.findOne({
@@ -47,6 +66,7 @@ const isAdmin = (req, res, next) => {
 const updateLastlogin = async (req, res, next) => {
 	if(req.userName)
 	{
+		console.log("username"+req.userName)
 		await   models.user_profiles.update(
 			{
 				lastlogin : new Date()
@@ -80,6 +100,8 @@ const authJwt = {};
 authJwt.verifyToken = verifyToken;
 authJwt.generateToken = generateToken;
 authJwt.updateLastlogin = updateLastlogin;
+authJwt.checkguest = checkguest;
+
 
 authJwt.isAdmin = isAdmin;
 module.exports = authJwt;
