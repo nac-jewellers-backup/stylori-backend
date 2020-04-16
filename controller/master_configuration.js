@@ -1438,10 +1438,20 @@ exports.managepermissions = async (req, res) => {
 }
 
 exports.getwebusers = async (req, res) => {
-    const {size, offset} = req.body
-    let users = await models.user_profiles.findAll({
+    const {size, offset,searchtext} = req.body
+    let whereclause = {}
+    if(searchtext)
+    {
+        whereclause = {
+            email : {
+                [Op.ilike]: '%'+searchtext+'%'
+            }
+        }
+    }
+    let users = await models.user_profiles.findAndCountAll({
         include:[{
             model:models.users,
+            where: whereclause
             // include:[
             //     {
             //         model:models.user_roles,
