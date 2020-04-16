@@ -48,7 +48,10 @@ const updateLastlogin = async (req, res, next) => {
 	if(req.userName)
 	{
 		await   models.user_profiles.update(
-            lastlogin
+			{
+				lastlogin : new Date()
+			}
+           
             ,
                 {where: {
                 username: req.userName
