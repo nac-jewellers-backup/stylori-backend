@@ -1444,7 +1444,7 @@ exports.getwebusers = async (req, res) => {
     {
         whereclause = {
             email : {
-                [Op.ilike]: '%'+searchtext+'%'
+                [Op.iLike]: '%'+searchtext+'%'
             }
         }
     }
