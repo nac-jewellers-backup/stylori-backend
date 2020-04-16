@@ -51,7 +51,6 @@ const updateLastlogin = async (req, res, next) => {
 			{
 				lastlogin : new Date()
 			}
-           
             ,
                 {where: {
                 email: req.userName
