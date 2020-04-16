@@ -47,9 +47,9 @@ exports.priceupdate = (req, res) => {
     const {req_product_id,generatedSku,history_id, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
     var whereclause1 = {
       isactive : true,
-      product_id: {
-        [Op.iLike]:'%SGC020%'
-      }
+      // product_id: {
+      //   [Op.iLike]:'%SGC020%'
+      // }
     }
     price_running_id = history_id
     console.log(":>>>>>>>>>1212")
