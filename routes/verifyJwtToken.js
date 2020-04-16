@@ -54,7 +54,7 @@ const updateLastlogin = async (req, res, next) => {
            
             ,
                 {where: {
-                username: req.userName
+                email: req.userName
                 }
              }
             
