@@ -142,6 +142,8 @@ module.exports = function(app) {
 	app.post('/getsizes', cartcontroller.getsizes);
 	app.post('/updateorderstatus', cartcontroller.updateorderstatus);
 	
+	app.post('/getuserinfo', authcontroller.getuserinfo);
+
 	app.post('/getshippingcharge', cartcontroller.getshippingcharge);
 
 	app.post('/fetchproducts', productFetchController.filteroptions);

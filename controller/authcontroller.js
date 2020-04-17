@@ -760,4 +760,48 @@ exports.getpageaccess = async (req, res) => {
     res.send(200,{"pages":userpages})
 }
 
+exports.getuserinfo = async (req, res) => {
+  const {user_id} = req.body;
+  let userinfo = {}
+  let useraddress = await models.user_address.findAll({
+    where:{
+      userprofile_id : user_id
+    }
+  })
+  let addressess = []
+  if(useraddress)
+  {
+    useraddress.forEach(element => {
+      let addresobj = {}
+      addresobj['firstname'] = element.firstname
+      addresobj['lastname'] = element.lastname
+      addresobj['address'] = element.addressline1 + ','+element.addressline2
+      addresobj['city'] = element.city
+      addresobj['state'] = element.state
+      addresobj['country'] = element.country
+      addresobj['pincode'] = element.pincode
+      addresobj['mobile'] = element.country_code+element.contact_number
+      addresobj['addresstype'] = ""
+      if( element.default_billing && element.default_shipping)
+      {
+        addresobj['addresstype'] = 'Billing & Shipping'
+
+      }else if(element.default_billing)
+      {
+        addresobj['addresstype'] = 'Billing'
+
+      }else if(element.default_shipping)
+      {
+        addresobj['addresstype'] = 'Shipping'
+
+      }
+
+      addressess.push(addresobj)
+    })
+    
+  }
+  userinfo['addressess'] = addressess
+  res.status(200).send({userinfo})
+}
+
 
