@@ -800,6 +800,56 @@ exports.getuserinfo = async (req, res) => {
     })
     
   }
+  let userorders = await models.orders.findAll({
+    include:[
+      {
+        model:models.shopping_cart,
+        attributes: ['gross_amount'],
+        include: [{
+          model: models.shopping_cart_item,
+          attributes: ['product_sku']
+        }]
+      }
+    ],
+    where:{
+      user_profile_id : user_id
+    }
+  })
+
+  let orders = []
+  if(userorders)
+  {
+    userorders.forEach(element => {
+      let orderobj = {}
+      orderobj['orderid'] = element.id
+      orderobj['paymentmode'] = element.payment_mode
+      orderobj['paymentstatus'] = element.payment_status
+      orderobj['orderstatus'] = element.order_status
+      orderobj['awbnumber'] = element.awb_number
+      orderobj['orderdate'] = element.createdAt
+
+      let skus = []
+      if(element.shopping_cart)
+      {
+      let cartobj = element.shopping_cart
+
+      orderobj['grossamount'] = cartobj.grossamount
+
+        if(cartobj.shopping_cart_items)
+        {
+          cartobj.shopping_cart_items.forEach(cartitem => {
+            skus.push(cartitem.product_sku)
+          })
+        }
+        orderobj['skus'] = skus.join(',')
+      }
+
+      orders.push(orderobj)
+    })
+    
+  }
+  userinfo['orders'] = orders
+
   userinfo['addressess'] = addressess
   res.status(200).send({userinfo})
 }
