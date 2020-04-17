@@ -768,6 +768,12 @@ exports.getuserinfo = async (req, res) => {
       userprofile_id : user_id
     }
   })
+  let userprofile = await models.user_profiles.findOne({
+    attributes:["id","first_name","last_name","email","mobile","ismobileverified","isemailverified","address","city","country","pincode","lastlogin","createdAt"],
+    where:{
+      id : user_id
+    }
+  })
   let addressess = []
   if(useraddress)
   {
@@ -856,9 +862,8 @@ exports.getuserinfo = async (req, res) => {
   })
   userinfo['orders'] = orders
   userinfo['wishlists'] = wishlists
-
   userinfo['addressess'] = addressess
-  res.status(200).send({userinfo})
+  res.status(200).send({userinfo,userprofile})
 }
 
 
