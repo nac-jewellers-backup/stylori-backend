@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'user_id',
       targetKey: 'id'
     })
+     models.user_profiles.hasMany(models.orders,{
+      foreignKey: 'user_profile_id',
+      targetKey: 'id'
+    });
     // associations can be defined here
     // models.user_profiles.hasMany(models.user_address,{
     //   foreignKey: 'userprofile_id',

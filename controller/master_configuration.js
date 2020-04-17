@@ -1451,6 +1451,7 @@ exports.getwebusers = async (req, res) => {
     let users = await models.user_profiles.findAndCountAll({
         include:[{
             model:models.users,
+          
             where: whereclause
             // include:[
             //     {
@@ -1462,7 +1463,10 @@ exports.getwebusers = async (req, res) => {
             //           }
             //     }
             // ]
-        }],
+        },
+    {
+        model: models.orders
+    }],
             limit: size,
             offset : offset
     })
