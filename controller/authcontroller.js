@@ -848,7 +848,14 @@ exports.getuserinfo = async (req, res) => {
     })
     
   }
+  let wishlists = await models.user_whislists.findAll({
+    
+    where:{
+      userprofile_id : user_id
+    }
+  })
   userinfo['orders'] = orders
+  userinfo['wishlists'] = wishlists
 
   userinfo['addressess'] = addressess
   res.status(200).send({userinfo})
