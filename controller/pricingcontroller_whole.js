@@ -48,7 +48,7 @@ exports.priceupdate = (req, res) => {
     var whereclause1 = {
       isactive : true,
       // product_id: {
-      //   [Op.iLike]:'%SGC020%'
+      //   [Op.iLike]:'%SR0361%'
       // }
     }
     price_running_id = history_id
