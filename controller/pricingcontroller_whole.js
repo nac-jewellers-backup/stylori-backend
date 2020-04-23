@@ -178,7 +178,7 @@ exports.priceupdate = (req, res) => {
     }
     }
     // skuwhereclause['generated_sku'] = {
-    //   [Op.eq] : 'SR0185-18240000-8'
+    //   [Op.eq] : 'SR0010-14130000-12'
     // }
     // skuwhereclause['discount_price'] = {
     //   [Op.eq] : 25
@@ -1796,6 +1796,8 @@ exports.priceupdate = (req, res) => {
 
           
           markupobj.forEach(async markup => {
+                console.log("XXXXXXXXXXXXXXX")
+                console.log(markup.material)
                 if(markup.material == 'Gold')
                   {
                     goldmarkupvalue = (goldsellingprice + (goldsellingprice * (markup.markup_value/100)))
@@ -1833,10 +1835,13 @@ exports.priceupdate = (req, res) => {
                     console.log(diamondmarkupvalue)
                     diamonddiscountvalue = ((diamondmarkupvalue * 100) /(100 - diamond_discount));
 
-                    var query = "UPDATE pricing_sku_materials SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and component LIKE 'diamond%'" ;
+                    var query = "UPDATE pricing_sku_materials SET markup = "+diamondmarkupvalue+" where product_sku ='"+productskus[skucount].generated_sku+"' and component LIKE 'diamond%'" ;
                     console.log(query)
 
                     await models.sequelize.query(query).then(([results, metadata]) => {
+                      console.log(JSON.stringify(metadata))
+                      console.log(JSON.stringify(results))
+
                       // Results will be an empty array and metadata will contain the number of affected rows.
                     })
                   }

@@ -808,6 +808,7 @@ async function updateshippingcharge(cart_id,res)
   }
   async function processskus(skucount)
   {
+    let attributes_condition = []
     let itemobj = products[skucount]
     let product_attributes1 = await models.product_lists.findOne({
       hierarchy: true,
@@ -969,6 +970,9 @@ async function updateshippingcharge(cart_id,res)
    
     }
 
+
+    
+
   })
    res.send(200,{attributes})
 
@@ -982,7 +986,10 @@ async function updateshippingcharge(cart_id,res)
 }
 exports.getshippingcharge = async (req, res) => {
   const {cart_id} =  req.body
-  await updateshippingcharge(cart_id,res)
+
+  res.send(200,{shipping_charge : 200})
+
+  //await updateshippingcharge(cart_id,res)
 }
 exports.addaddress = async (req, res) => {
     let {user_id, address,cart_id,isguestlogin} = req.body
