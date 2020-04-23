@@ -27,18 +27,21 @@ const checkguest = (req, res, next) => {
 	let token = req.headers['x-access-token'];
 	console.log(token);
 	if (!token){
-		next
+
+	 return	next()
 	}
 
 	jwt.verify(token, process.env.SECRET, (err, decoded) => {
 		if (err){
-			return res.status(500).send({ 
-					auth: false, 
-					message: 'Fail to Authentication. Error -> ' + err 
-				});
+			return	next()
 		}
-		console.log("here"+decoded.id)
-		req.userName = decoded.id;
+		if(decoded)
+		{
+			console.log("here"+decoded.id)
+
+			req.userName = decoded.id;
+
+		}
 		next();
 	});
 }

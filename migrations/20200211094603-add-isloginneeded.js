@@ -4,14 +4,14 @@ module.exports = {
   
   up: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.addColumn(
-        'vouchers',
-        'isloginneeded',
-        {
-          type: Sequelize.BOOLEAN,
-          allowNull: true
-        }
-      )
+      // queryInterface.addColumn(
+      //   'vouchers',
+      //   'isloginneeded',
+      //   {
+      //     type: Sequelize.BOOLEAN,
+      //     allowNull: true
+      //   }
+      // )
     ]);
 
 
@@ -19,7 +19,7 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.removeColumn('vouchers', 'isloginneeded')
+    //  queryInterface.removeColumn('vouchers', 'isloginneeded')
     ]);
   }
 };
