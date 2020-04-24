@@ -1835,7 +1835,7 @@ exports.priceupdate = (req, res) => {
                     console.log(diamondmarkupvalue)
                     diamonddiscountvalue = ((diamondmarkupvalue * 100) /(100 - diamond_discount));
 
-                    var query = "UPDATE pricing_sku_materials SET markup = "+diamondmarkupvalue+" where product_sku ='"+productskus[skucount].generated_sku+"' and component LIKE 'diamond%'" ;
+                    var query = "UPDATE pricing_sku_materials SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and component LIKE 'diamond%'" ;
                     console.log(query)
 
                     await models.sequelize.query(query).then(([results, metadata]) => {
