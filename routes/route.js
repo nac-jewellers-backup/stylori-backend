@@ -25,7 +25,7 @@ module.exports = function(app) {
     const filtercontroller = require('../controller/filtercontroller.js');
     const master_uploaddata_controller = require('../controller/master_uploaddata_controller.js');
     const pricesplitup_controller = require('../controller/pricesplitupcontroller.js');
-    const single_product_pricecontroller = require('../controller/pricingcontroller_whole.js');
+    const single_product_pricecontroller = require('../controller/pricingcontroller_whole_prod.js');
 	const component_price_update = require('../controller/priceupdateController.js');
 	const productfetchController_esearch = require('../controller/productfetchController_esearch.js');
 

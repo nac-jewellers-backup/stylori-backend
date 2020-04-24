@@ -1,0 +1,36 @@
+diamondpriceseeting
+{"vendor_code":"STYPA 010","diamond_colour":"SI","diamond_clarity":"IJ"}
+SR0010
+diamond cost price
+225
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 010","diamond_colour":"SI","diamond_clarity":"IJ"}
+SR0010
+225
+diamond cost price
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 010","diamond_colour":"SI","diamond_clarity":"IJ"}
+SR0010
+3600
+diamond cost price
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 010","diamond_colour":"SI","diamond_clarity":"IJ"}
+SR0010
+225
+diamond cost price
+diamondexist
+diamondpriceseeting
+{"vendor_code":"STYPA 010","diamond_colour":"SI","diamond_clarity":"IJ"}
+SR0010
+diamond cost price
+225
+diamondexist
+{"vendor_code":"STYPA 010","diamond_colour":"SI","diamond_clarity":"IJ"}
+diamondpriceseeting
+SR0010
+diamond cost price
+3600
+diamondexist

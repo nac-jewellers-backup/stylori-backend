@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     selling_price_min: DataTypes.DOUBLE,
     selling_price_max: DataTypes.DOUBLE,
     markup_value: DataTypes.DOUBLE,
-    category: DataTypes.STRING,
-    product_type : DataTypes.STRING
+    // category: DataTypes.STRING,
+    // product_type : DataTypes.STRING
   }, {});
   pricing_markup.associate = function(models) {
     // associations can be defined here
