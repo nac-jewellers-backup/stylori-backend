@@ -47,9 +47,9 @@ exports.priceupdate = (req, res) => {
     const {req_product_id,generatedSku,history_id, vendorcode,category,product_type,metalpurity,product_category,pricingcomponent,purity,sizes,diamondtypes} = req.body
     var whereclause1 = {
       isactive : true,
-      product_id: {
-        [Op.iLike]:'%SR0010%'
-      }
+      // product_id: {
+      //   [Op.iLike]:'%SR0010%'
+      // }
     }
     price_running_id = history_id
     console.log(":>>>>>>>>>1212")
@@ -61,7 +61,7 @@ exports.priceupdate = (req, res) => {
       res.send(200,{message:"success"})
 
     }else{
-     // res.send(200,{message:"Price Running"})
+      res.send(200,{message:"Price Running"})
     }
     if(req_product_id)
     {
@@ -961,12 +961,22 @@ exports.priceupdate = (req, res) => {
 
                       if(price_splitup_model)
                       {
+                        let whereclause_markup = {}
+                        if(pricingcomponent)
+                        {
+                          whereclause_markup  =  {where: 
+                            {product_id: product_obj.product_id, component: diamondprice.component}
+                          }
+
+                        }else{
+                           whereclause_markup  =  {where: 
+                            {product_id: product_obj.product_id,product_sku : productsku.generated_sku, component: diamondprice.component}
+                          }
+                        }
                        // isdiamondexist()
                         models.pricing_sku_materials.update(
                           diamondprice,
-                          {
-                            where: {product_id: product_obj.product_id, component: diamondprice.component}
-                          }
+                          whereclause_markup
                         ).then(updatedmakingchargeprice => {
                           isdiamondexist()
                         })
@@ -1819,7 +1829,7 @@ exports.priceupdate = (req, res) => {
                   {
                     diamondmarkupvalue = (diamondsellingprice + (diamondsellingprice * (markup.markup_value/100)))
                     console.log("log diamond")
-                    
+                    console.log(productskus[skucount].generated_sku)
                     diamonddiscountvalue = ((diamondmarkupvalue * 100) /(100 - diamond_discount));
 
                     var query = "UPDATE pricing_sku_materials SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and component LIKE 'diamond%'" ;
