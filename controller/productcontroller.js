@@ -65,7 +65,7 @@ exports.updateproductattr =  async (req, res) => {
         where:{
             isactive : true,
             product_id : {
-                [Op.notILike] : "%SR%"
+                [Op.iLike] : "%SR%"
             }
         }
     })

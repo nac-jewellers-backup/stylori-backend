@@ -18,9 +18,13 @@ var whereclause = {
 var skusort = {}
 var sortelement = []
 var prod_iclude = []
-var skuwhereclause = {}
+var skuwhereclause = {
+  is_active : false
+}
 var includeclause = [];
-var defaultskuwhereclause = {}
+var defaultskuwhereclause = {
+  is_active : false
+}
 var imagewhereclause = {
   isdefault : true,
   image_position:{
@@ -734,7 +738,9 @@ res.send(200,{'data':products_all})
 
 
 exports.productesearch = async (req, res) => {
-  let skuwhere = {}
+  let skuwhere = {
+    is_active : true
+    }
   let prodwhere = {
     isactive : true
   }
