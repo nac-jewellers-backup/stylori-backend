@@ -292,7 +292,8 @@ let prod_type_where = {}
     prod_type_where =  {
       product_id : {
         [Op.in]: product_list
-      }
+      },
+      
     }
     
   }
@@ -302,24 +303,114 @@ let prod_type_where = {}
     group: ['stonecolor'],
     where:prod_type_where
   })
+  var masterstonecolor = [];
+  var product_stonecolor_masters = [];
+  
+  master_stonecolor.forEach(stonecolor_obj => {
+    masterstonecolor.push(stonecolor_obj.stonecolor)
+  })
+  if(masterstonecolor.length > 0)
+  {
+    product_stonecolor_masters = await models.master_stones_colors.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterstonecolor
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
+
   var master_byweight = await models.product_by_weight.findAll({
     attributes: ['weight'],
     group: ['weight'],
     where:prod_type_where
   })
 
+  var masterbyweight = [];
+  var product_byweight_masters = [];
+  
+  master_byweight.forEach(byweight_obj => {
+    masterbyweight.push(byweight_obj.weight)
+  })
+  if(masterbyweight.length > 0)
+  {
+    product_byweight_masters = await models.master_weights.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterbyweight
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
+
   var master_bydesign = await models.product_by_design.findAll({
     attributes: ['design_name'],
     group: ['design_name'],
     where:prod_type_where
   })
+  var masterbydesign = [];
+  var product_bydesign_masters = [];
+  
+  master_bydesign.forEach(bydesign_obj => {
+    masterbydesign.push(bydesign_obj.design_name)
+  })
+  if(masterbydesign.length > 0)
+  {
+    product_bydesign_masters = await models.master_designs.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterbydesign
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
+
 
   var master_stonecount = await models.product_stonecount.findAll({
     attributes: ['stonecount'],
     group: ['stonecount'],
     where:prod_type_where
   })
-
+  var masterstonecount = [];
+  var product_stonecount_masters = [];
+  
+  master_stonecount.forEach(stonecount_obj => {
+    masterstonecount.push(stonecount_obj.stonecount)
+  })
+  if(masterstonecount.length > 0)
+  {
+    product_stonecount_masters = await models.master_stones.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterstonecount
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
 
   
  var master_product_type = await models.product_lists.findAll({
@@ -328,7 +419,28 @@ let prod_type_where = {}
     where:prod_type_where   
 
   })
-
+  var mastervalues = [];
+  var product_type_masters = [];
+  
+  master_product_type.forEach(product__type_obj => {
+    mastervalues.push(product__type_obj.product_type)
+  })
+  if(mastervalues.length > 0)
+  {
+     product_type_masters = await models.master_product_types.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : mastervalues
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['display_order', 'ASC']
+        ]
+    })
+  }
 
 
 
@@ -340,6 +452,29 @@ let prod_type_where = {}
       ['style_name', 'ASC']
     ]
   })
+
+  var masterstyles = [];
+  var product_style_masters = [];
+  
+  master_styles.forEach(style_obj => {
+    masterstyles.push(style_obj.style_name)
+  })
+  if(masterstyles.length > 0)
+  {
+    product_style_masters = await models.master_styles.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterstyles
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
 
   var theme_whereclause = {
     theme_name : {
@@ -367,6 +502,30 @@ let prod_type_where = {}
     ]
   })
 
+  var masterthemes = [];
+  var product_theme_masters = [];
+  
+  master_themes.forEach(theme_obj => {
+    masterthemes.push(theme_obj.theme_name)
+  })
+  if(masterthemes.length > 0)
+  {
+    product_theme_masters = await models.master_themes.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterthemes
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
+
+
   var master_occassion = await models.product_occassions.findAll({
     attributes: ['occassion_name'],
     group: ['occassion_name'],
@@ -375,6 +534,30 @@ let prod_type_where = {}
       ['occassion_name', 'ASC']
     ]
   })
+
+
+  var masteroccassions = [];
+  var product_occasion_masters = [];
+  
+  master_occassion.forEach(occass_obj => {
+    masteroccassions.push(occass_obj.occassion_name)
+  })
+  if(masteroccassions.length > 0)
+  {
+    product_occasion_masters = await models.master_occasions.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masteroccassions
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
   
   let material_whereclause = {}
   if(product_list.length > 0)
@@ -394,7 +577,28 @@ let prod_type_where = {}
       ['material_name', 'ASC']
     ]
   })
-
+  var mastermaterial = [];
+  var product_material_masters = [];
+  
+  master_material.forEach(material_obj => {
+    mastermaterial.push(material_obj.material_name)
+  })
+  if(mastermaterial.length > 0)
+  {
+    product_material_masters = await models.master_materials.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : mastermaterial
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
 
 
 
@@ -406,6 +610,30 @@ let prod_type_where = {}
       ['gemstone_shape', 'ASC']
     ]
   })
+  var mastergemstone = [];
+  var product_gemstone_masters = [];
+  
+  gemstone_shape.forEach(gemstone_obj => {
+    mastergemstone.push(gemstone_obj.gemstone_shape)
+  })
+  if(mastergemstone.length > 0)
+  {
+    product_gemstone_masters = await models.master_gemstones_shapes.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : mastergemstone
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
+
+
 
   let collection_whereclause = {}
   if(product_list.length > 0)
@@ -424,6 +652,29 @@ let prod_type_where = {}
       ['collection_name', 'ASC']
     ]
   })
+  var mastercollection = [];
+  var product_collection_masters = [];
+  
+  master_collection.forEach(collection_obj => {
+    mastercollection.push(collection_obj.collection_name)
+  })
+  if(mastercollection.length > 0)
+  {
+    product_collection_masters = await models.master_collections.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : mastercollection
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
+
 
   
   let purity_where = {}
@@ -444,7 +695,28 @@ let prod_type_where = {}
       ['purity', 'ASC']
     ]
   })
-
+  var masterpurities = [];
+  var product_purity_masters = [];
+  
+  master_purity.forEach(purity_obj => {
+    masterpurities.push(purity_obj.purity)
+  })
+  if(masterpurities.length > 0)
+  {
+    product_purity_masters = await models.master_metals_purities.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : masterpurities
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
 
   var master_gender = await models.product_gender.findAll({
     attributes: ['gender_name'],
@@ -454,7 +726,28 @@ let prod_type_where = {}
       ['gender_name', 'ASC']
     ]
   })
-
+var mastergender = [];
+  var product_gender_masters = [];
+  
+  master_gender.forEach(gender_obj => {
+    mastergender.push(gender_obj.gender_name)
+  })
+  if(mastergender.length > 0)
+  {
+    product_gender_masters = await models.master_genders.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : mastergender
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
 
   var metalcolor_where = {
     product_color : {
@@ -498,7 +791,28 @@ let prod_type_where = {}
       ['product_color', 'ASC']
     ]
   })
-
+ var mastercolor = [];
+  var product_color_masters = [];
+  
+  master_colors.forEach(color_obj => {
+    mastercolor.push(color_obj.product_color)
+  })
+  if(mastercolor.length > 0)
+  {
+    product_color_masters = await models.master_metals_colors.findAll({
+      attributes: ['name'],
+      where:{
+        name:{
+          [Op.in] : mastercolor
+        },
+        is_active: true,
+        is_filter:  true
+        },   
+        order: [
+          ['filter_order', 'ASC']
+        ]
+    })
+  }
 
   // var price_range2 = await models.trans_sku_lists.findOne({
   //   attributes:["selling_price"]
@@ -566,19 +880,33 @@ let prod_type_where = {}
     })
     seo_url = seourls_arr.join('-')
     seo_text = seotexts_arr.join(' ')
-    res.send(200,{master_category,master_product_type,master_styles,master_themes,
-        master_occassion,
-        master_material,
-        master_collection,
-        master_purity,
-        master_colors,
-        gemstone_shape,
-        master_gender,
-        master_stonecolor,
-        master_stonecount,
+    res.send(200,{
+        master_category,
+        "Product Type":product_type_masters,
+        "Style":product_style_masters,
+        "Theme":product_theme_masters,
+        "Occasion":product_occasion_masters,
+        "Material":product_material_masters,
+        "Collection":product_collection_masters,
+        "Metal Purity":product_purity_masters,
+        "Metal Color":product_color_masters,
+        "Stone Shape":product_gemstone_masters,
+        "Gender":product_gender_masters,
+        "Stone Color":product_stonecolor_masters,
+        "No Of Stones":master_stonecount,
        // price_range,
-       master_bydesign,
-       master_byweight,
+       "By Design":product_bydesign_masters,
+       "Offers": [
+        "Up to  20%",
+        "Up to  30%",
+        "Up to  40%",
+        "Up to  50%",
+      ],
+      "Availability": [
+          "1 Day Shipping", 
+          "10 & Above Days Shipping"
+      ],
+      "By Weight": product_byweight_masters,
         seo_url,
         seo_text
               })

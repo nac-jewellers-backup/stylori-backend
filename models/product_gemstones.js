@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {timestamps: false});
   product_gemstones.associate = function(models) {
     // associations can be defined here
+    models.product_gemstones.belongsTo(models.master_gemstones_types,{
+      foreignKey: 'gemstone_type',
+      targetKey: 'name'
+    });
+    
   };
   return product_gemstones;
 };

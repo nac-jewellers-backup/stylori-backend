@@ -11,6 +11,7 @@ module.exports = {
           allowNull: true
         }
       ),
+      
       queryInterface.addColumn(
         'master_product_categories',
         'is_filter',

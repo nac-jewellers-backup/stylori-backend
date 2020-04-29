@@ -147,7 +147,7 @@ exports.signup = (req, res) => {
                   }
                   userroles.push(roleobj);
             })
-
+            console.log(JSON.stringify(userroles))
                 await models.user_roles.bulkCreate(
                   userroles, {individualHooks: true})
           var verifytoken = crypto({length: 16});
@@ -617,3 +617,253 @@ exports.addemailsubscription = (req, res) => {
   
 })
 }
+
+
+exports.getmasterroles = async (req, res) => {
+  let masterroles = await models.master_roles.findAll({
+    attributes:["id",["role_name","name"]],
+  
+    where:{
+      // role_name: {
+      //   [Op.notIn] : ['Admin','user']
+      // }
+    }
+  })
+
+  res.status(200).send({roles : masterroles})
+}
+
+exports.getwebusers = async (req, res) => {
+  // let userslists = await models.users.findAll({
+  //   attributes:["id","username","password","email","mobile","status"],
+  //   include:[
+  //     {
+  //       model : models.user_roles,
+  //       attributes : ["role_name"],
+  //       include:[{
+  //         model:models.master_roles,
+  //         attributes:["id",["role_name","name"]]
+  //       }],
+  //       where:{
+  //         role_name: {
+  //           [Op.in] : ['user']
+  //         }
+  //       }
+  //     }
+    
+  //   ]
+   
+  // })
+
+  let userslists = await models.user_profiles.findAll({
+    // include: [
+    //   {
+    //     model : models.user,
+    //     // include : [
+    //     //   {
+    //     //     model : models.user_roles,
+    //     //     where :
+    //     //     {
+    //     //       role_name : {
+    //     //         [Op.notIn] : 'Admin'
+    //     //       }
+    //     //     }
+    //     //   }
+    //     // ]
+    //   }
+    // ],
+   // limit :10
+  })
+
+
+  res.status(200).send({users : userslists.length})
+}
+
+exports.getadminusers = async (req, res) => {
+  let userslists = await models.users.findAll({
+    attributes:["id","username","password","email","mobile","status"],
+    include:[
+      {
+        model : models.user_roles,
+        attributes : ["role_name"],
+        include:[{
+          model:models.master_roles,
+          attributes:["id",["role_name","name"]]
+        }],
+        where:{
+          role_name: {
+            [Op.notIn] : ['user']
+          }
+        }
+      }
+    
+    ]
+   
+  })
+
+  res.status(200).send({users : userslists})
+}
+
+exports.getpageaccess = async (req, res) => {
+    const{userName} = req
+    console.log(userName)
+    let userobj = await models.users.findOne({
+      attributes:['id'],
+      where:{
+        email : userName
+      }
+    })
+    let user_roles = await models.user_roles.findAll({
+      attributes:['role_id'],
+      where:{
+        user_id : userobj.id
+      }
+    })
+
+    let userroles = []
+    user_roles.forEach(roleobj => {
+      userroles.push(roleobj.role_id)
+    })
+    let user_pages = await models.role_permissions.findAll({
+      attributes:['role_id','page_id','is_view','is_write'],
+      include:[
+        {
+          model: models.uniquepages
+        }
+      ],
+      where:{
+        role_id : {
+          [Op.in] : userroles
+        },
+        [Op.or]:[
+          {
+            is_view : true
+          },
+          {
+            is_write : true
+          }
+        ]
+      }
+    })
+    let userpages = []
+    user_pages.forEach(element => {
+      let pageobj = {
+        pagename : element.uniquepage.displayname,
+        pageurl : element.uniquepage.pagename,
+        is_view : element.is_view,
+        is_write : element.is_write
+
+
+      }
+      userpages.push(pageobj)
+    })
+    res.send(200,{"pages":userpages})
+}
+
+exports.getuserinfo = async (req, res) => {
+  const {user_id} = req.body;
+  let userinfo = {}
+  let useraddress = await models.user_address.findAll({
+    where:{
+      userprofile_id : user_id
+    }
+  })
+  let userprofile = await models.user_profiles.findOne({
+    attributes:["id","first_name","last_name","email","mobile","ismobileverified","isemailverified","address","city","country","pincode","lastlogin","createdAt"],
+    where:{
+      id : user_id
+    }
+  })
+  let addressess = []
+  if(useraddress)
+  {
+    useraddress.forEach(element => {
+      let addresobj = {}
+      addresobj['firstname'] = element.firstname
+      addresobj['lastname'] = element.lastname
+      addresobj['address'] = element.addressline1 + ','+element.addressline2
+      addresobj['city'] = element.city
+      addresobj['state'] = element.state
+      addresobj['country'] = element.country
+      addresobj['pincode'] = element.pincode
+      addresobj['mobile'] = element.country_code+element.contact_number
+      addresobj['addresstype'] = ""
+      if( element.default_billing && element.default_shipping)
+      {
+        addresobj['addresstype'] = 'Billing & Shipping'
+
+      }else if(element.default_billing)
+      {
+        addresobj['addresstype'] = 'Billing'
+
+      }else if(element.default_shipping)
+      {
+        addresobj['addresstype'] = 'Shipping'
+
+      }
+
+      addressess.push(addresobj)
+    })
+    
+  }
+  let userorders = await models.orders.findAll({
+    include:[
+      {
+        model:models.shopping_cart,
+        attributes: ['gross_amount'],
+        include: [{
+          model: models.shopping_cart_item,
+          attributes: ['product_sku']
+        }]
+      }
+    ],
+    where:{
+      user_profile_id : user_id
+    }
+  })
+
+  let orders = []
+  if(userorders)
+  {
+    userorders.forEach(element => {
+      let orderobj = {}
+      orderobj['orderid'] = element.id
+      orderobj['paymentmode'] = element.payment_mode
+      orderobj['paymentstatus'] = element.payment_status
+      orderobj['orderstatus'] = element.order_status
+      orderobj['awbnumber'] = element.awb_number
+      orderobj['orderdate'] = element.createdAt
+
+      let skus = []
+      if(element.shopping_cart)
+      {
+      let cartobj = element.shopping_cart
+
+      orderobj['grossamount'] = cartobj.grossamount
+
+        if(cartobj.shopping_cart_items)
+        {
+          cartobj.shopping_cart_items.forEach(cartitem => {
+            skus.push(cartitem.product_sku)
+          })
+        }
+        orderobj['skus'] = skus.join(',')
+      }
+
+      orders.push(orderobj)
+    })
+    
+  }
+  let wishlists = await models.user_whislists.findAll({
+    
+    where:{
+      userprofile_id : user_id
+    }
+  })
+  userinfo['orders'] = orders
+  userinfo['wishlists'] = wishlists
+  userinfo['addressess'] = addressess
+  res.status(200).send({userinfo,userprofile})
+}
+
+

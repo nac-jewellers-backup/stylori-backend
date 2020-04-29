@@ -194,15 +194,98 @@ exports.managepaymentstatus = async (req, res) => {
 
 }
 
+exports.manageorderstatus = async (req, res) => {
+    const {id,name,isedit,isdelete,isActive} = req.body
+    if(isedit)
+    {
+        await   models.order_status_master.update(
+            
+            {name: name, 
+                
+                is_active: isActive,
+            },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
 
+    }else{
+        let taxobj ={
+            name: name, 
+            is_active: isActive
+           
+            }
+        await   models.order_status_master.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+
+exports.manageseoattributes = async (req, res) => {
+    const {id,name,attributeName,
+        attributeValue,priority,seoText,seoUrl,
+        isedit,isdelete,isActive} = req.body
+    if(isedit)
+    {
+        await   models.seo_url_priorities.update(
+            
+            { 
+                attribute_name: attributeName, 
+                attribute_value: attributeValue,
+                priority: priority,
+                seo_text:seoText,
+                seo_url:seoUrl,
+                is_active: isActive
+            },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj ={
+            id:uuidv1(),
+            attribute_name: attributeName, 
+            attribute_value: attributeValue,
+            priority: priority,
+            seo_text:seoText,
+            seo_url:seoUrl,
+            is_active: isActive
+            
+           
+            }
+        await   models.seo_url_priorities.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
 
 exports.managegenders = async (req, res) => {
-    const {id,name,isedit,isdelete} = req.body
+    const {id,name,isedit,isFilter,isActive,filterOrder,isdelete} = req.body
     if(isedit)
     {
         await   models.master_genders.update(
             
-            {   name: name 
+            {   name: name,
+                is_filter: isFilter,
+                is_active : isActive,
+                filter_order : filterOrder
+
                 },
                 {where: {
                 id: id
@@ -219,6 +302,9 @@ exports.managegenders = async (req, res) => {
             id:uuidv1(),
             name: name, 
             alias : name ,
+            is_filter: isFilter,
+                is_active : isActive,
+                filter_order : filterOrder
             }
         await   models.master_genders.create(   
                      taxobj
@@ -227,6 +313,196 @@ exports.managegenders = async (req, res) => {
     }
 
 }
+exports.manageshipmentsettings = async (req, res) => {
+    const {id,name,shippingzones,rangetype,rangeFrom,rangeTo,
+        shipmentCharge,isActive,isCart,isedit,isdelete} = req.body
+    if(isedit)
+    {
+    
+        await   models.shipping_charges.update(
+            
+            {  
+                
+                zone_id : shippingzones.id,
+            charge_type : rangetype.id,
+            range_from : rangeFrom,
+            isCart: isCart,
+            range_to : rangeTo,
+            shipment_charge : shipmentCharge,
+            name: name, 
+            is_active: isActive
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+    
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj = {
+            zone_id : shippingzones.id,
+            charge_type : rangetype.id,
+            range_from : rangeFrom,
+            range_to : rangeTo,
+            shipment_charge : shipmentCharge,
+            name: name, 
+            isCart: isCart,
+            is_active: isActive
+            }
+      let response =   await   models.shipping_charges.create(   
+                     taxobj
+                    )
+      
+
+        res.send(200,{"message":"Updated Successfully"})
+    }
+
+}
+exports.manageshippingzone = async (req, res) => {
+    const {id,name,zonecountry,isActive,isedit,isdelete} = req.body
+    if(isedit)
+    {
+     let zonecountries =   await models.shipping_zone_countries.findAll({
+            where:{
+                zone_id : id
+            }
+        })
+        let country_ids= []
+        zonecountry.forEach(country_obj => {
+            country_ids.push(country_obj.id)
+        })
+        let create_arr = [];
+        let delete_arr = [];
+        zonecountries.forEach(zonemap_obj => {
+            if(country_ids.indexOf(zonemap_obj.country_id) > -1)
+            {
+                let index = country_ids.indexOf(zonemap_obj.country_id);
+                country_ids.splice(index, 1);
+               
+            }else{
+
+                delete_arr.push(zonemap_obj.country_id)
+            }
+
+        })
+        await   models.shipping_zones.update(
+            
+            {   name: name,
+                is_active: isActive 
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+       await models.shipping_zone_countries.destroy({
+            where: {
+               country_id:{
+                   [Op.in] : delete_arr
+               },
+               zone_id : id
+
+            }
+        })
+
+        if(country_ids.length > 0)
+        {
+            var shippingcountries = []
+            country_ids.forEach(element => {
+                shippingcountries.push({
+                        country_id : element,
+                        zone_id : id,
+                        is_active: true
+                })
+            });
+            await  models.shipping_zone_countries.bulkCreate(
+                shippingcountries
+                , {individualHooks: true})
+        }
+        res.send(200,{"message":"Updated Successfully"})
+    }else if(isdelete)
+    {
+
+    }else{
+        let taxobj = {
+           
+            name: name, 
+            is_active: isActive
+            }
+      let response =   await   models.shipping_zones.create(   
+                     taxobj
+                    )
+        if(zonecountry.length > 0)
+        {
+            var shippingcountries = []
+            zonecountry.forEach(element => {
+                shippingcountries.push({
+                        country_id : element.id,
+                        zone_id : response.id,
+                        is_active: true
+                })
+            });
+            await  models.shipping_zone_countries.bulkCreate(
+                shippingcountries
+                , {individualHooks: true})
+        }
+
+        res.send(200,{"message":"Updated Successfully"})
+    }
+
+}
+
+exports.manageshippingattributes = async (req, res) => {
+    const {rateid,attributes,display_text} = req.body
+      let product_attributes = {}
+      let keys = Object.keys(attributes);
+      let componentarr = [];
+
+      keys.forEach(key => {
+        let attributeobj = attributes[key];
+        if(Array.isArray(attributeobj))
+        {
+          attributeobj.forEach(attr => {
+            if(attr.alias)
+            {
+              
+              componentarr.push(attr.alias)
+            }
+    
+           
+          })
+         if(componentarr.length > 0)
+         {
+    
+         // product_attributes[key] = componentarr
+         }
+       
+        }
+    
+      })
+
+
+      await   models.shipping_charges.update(
+        {  
+            product_attributes:product_attributes,
+            display_attributes:display_text
+            },
+            {where: {
+            id: rateid
+            }
+         }
+    )
+
+    res.send(200,{"message":"Updated Successfully"})
+    
+    }
+
 
 
 exports.managegemtypes = async (req, res) => {
@@ -1010,5 +1286,191 @@ exports.manageweights = async (req, res) => {
                     )
         res.send(200,{"message":"Created Successfully"})
     }
+
+}
+
+
+exports.managepages = async (req, res) => {
+    const {displayname,pagename,isedit,id} = req.body
+    if(isedit)
+    {
+        await   models.uniquepages.update(
+            
+                {   
+                    
+                    displayname: displayname,
+                    pagename: pagename
+               
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else{
+        let taxobj ={
+            displayname: displayname,
+            pagename: pagename
+            }
+        await   models.uniquepages.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+
+exports.manageroles = async (req, res) => {
+    const {name,isedit,id} = req.body
+    if(isedit)
+    {
+        await   models.master_roles.update(
+            
+                {   
+                    
+                    name: name
+                  
+               
+                },
+                {where: {
+                id: id
+                }
+             }
+            
+        )
+        res.send(200,{"message":"Updated Successfully"})
+    }else{
+        let taxobj ={
+            name: name
+            }
+        await   models.master_roles.create(   
+                     taxobj
+                    )
+        res.send(200,{"message":"Created Successfully"})
+    }
+
+}
+
+exports.getrolepermissions = async (req, res) => {
+    const {role_id} = req.body
+    let permissions = await models.role_permissions.findAll({
+        where:{
+            role_id : role_id
+        }
+    })
+    let response_obj = {}
+    permissions.forEach(element => {
+        response_obj[element.page_id] = {
+            iswrite : element.is_write,
+            isview: element.is_view
+        }
+    })
+    res.send(200,{permissions:response_obj})
+
+}
+exports.managepermissions = async (req, res) => {
+    const {role_id,permissions,isedit,id} = req.body
+    if(permissions)
+    {
+        let newpermissions = []
+        let permission_ids = Object.keys(permissions)
+        var bar = new Promise((resolve, reject) => {
+ 
+        permission_ids.forEach(async (element, index) => {
+
+            let permissionobj =  await models.role_permissions.findOne({
+                where:{
+                    role_id : role_id,
+                    page_id : element
+                }
+            })
+
+           if(permissionobj)
+           {
+            permissionobj['is_view'] = permissions[element].isview
+            permissionobj['is_write'] = permissions[element].iswrite
+            await   models.role_permissions.update(
+                {   
+                    is_view: permissions[element].isview,
+                    is_write:permissions[element].iswrite
+                },
+                {where: {
+                    role_id : role_id,
+                    page_id : element
+                }
+             }
+        )
+        permissionobj.update()
+           } else{
+               let per_obj = {
+                role_id : role_id,
+                page_id : parseInt(element),
+                is_view:  permissions[element].isview,
+                is_write: permissions[element].iswrite
+            }
+            newpermissions.push(per_obj)
+            console.log(newpermissions)
+
+           }
+           if (index === permission_ids.length -1) resolve();
+        })
+
+    });
+
+        bar.then(async() => {
+            console.log('All done!');
+            console.log(newpermissions)
+
+            let response =   await models.role_permissions.bulkCreate(
+                newpermissions
+                , {individualHooks: true})
+    
+    
+                res.send(200,{response: newpermissions})
+        });
+   
+    }
+   
+
+}
+
+exports.getwebusers = async (req, res) => {
+    const {size, offset,searchtext} = req.body
+    let whereclause = {}
+    if(searchtext)
+    {
+        whereclause = {
+            email : {
+                [Op.iLike]: '%'+searchtext+'%'
+            }
+        }
+    }
+    let users = await models.user_profiles.findAndCountAll({
+        include:[{
+            model:models.users,
+          
+            where: whereclause
+            // include:[
+            //     {
+            //         model:models.user_roles,
+            //         where:{
+            //             role_name: {
+            //               [Op.in] : ['user']
+            //             }
+            //           }
+            //     }
+            // ]
+        },
+    {
+        model: models.orders
+    }],
+            limit: size,
+            offset : offset
+    })
+
+    res.status(200).send({users})
 
 }

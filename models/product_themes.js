@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   product_themes.associate = function(models) {
     // associations can be defined here
+    models.product_themes.belongsTo(models.master_themes,{
+      foreignKey: 'theme_name',
+      targetKey: 'name'
+    });
   };
   return product_themes;
 };

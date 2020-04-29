@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'id',
       targetKey: 'role_id'
     });
+    models.master_roles.hasMany(models.role_permissions,{
+      foreignKey: 'id',
+      targetKey: 'role_id'
+    });
   };
   return master_roles;
 };

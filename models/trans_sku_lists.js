@@ -116,7 +116,10 @@ module.exports = (sequelize, DataTypes) => {
       targetKey: 'product_id'
     });
     
-
+    models.trans_sku_lists.belongsTo(models.master_metals_purities,{
+      foreignKey: 'purity',
+      targetKey: 'name'
+    });
 
   };
   return trans_sku_lists;

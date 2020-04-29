@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   product_occassions.associate = function(models) {
     // associations can be defined here
+    models.product_occassions.belongsTo(models.master_occasions,{
+      foreignKey: 'occassion_name',
+      targetKey: 'name'
+    });
   };
   return product_occassions;
 };

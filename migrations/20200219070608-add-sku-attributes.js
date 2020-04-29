@@ -7,7 +7,7 @@ module.exports = {
         'trans_sku_lists',
         'attributes',
         {
-          type: Sequelize.STRING,
+          type: Sequelize.ARRAY(Sequelize.TEXT),
           allowNull: true
         }
       )
