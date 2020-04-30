@@ -301,8 +301,17 @@ exports.viewskupricesummary = async (req, res) => {
                     product_sku: req.params.skuid
                 }
             }).then(metal_price => {
-                    
-                response['metals'] = metal_price
+                let metal_prices = []
+                metal_price.forEach(metal => {
+                    if(metal.material_name.includes('gold'))
+                    {
+                        metal['cost_price'] = metal.cost_price + " ( "+(metal.cost_price / accs.sku_weight )+" ) "
+                        metal['selling_price'] = metal.selling_price + " ( "+(metal.selling_price / accs.sku_weight )+" / gram ) "
+
+                    }
+                    metal_prices.push(metal)
+                })    
+                response['metals'] = metal_prices
                 res.send(200,{"price_summary":response})
     
             })
