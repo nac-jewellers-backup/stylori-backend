@@ -279,14 +279,15 @@ exports.viewskupricesummary = async (req, res) => {
         generated_sku: req.params.skuid
         }
     }).then(accs => {
-        response['skuprice'] = accs
         var discount_percentage = ((accs.discount_price - accs.markup_price)/accs.discount_price)*100;
         response['discount_percentage'] = discount_percentage
         if(accs.sku_weight)
         {
-            response['pricepergram'] = accs.selling_price / accs.sku_weight
+            accs['selling_price'] = accs.selling_price + " ( "+ accs.selling_price / accs.sku_weight+" ) ";
+            accs['cost_price'] = accs.cost_price + " ( "+ accs.cost_price / accs.sku_weight+" ) ";
 
         }
+        response['skuprice'] = accs
 
         models.pricing_sku_materials.findAll({
             where:{

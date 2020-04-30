@@ -487,10 +487,10 @@ exports.manageshippingattributes = async (req, res) => {
     
       })
 
-
+      console.log(product_attributes)
       await   models.shipping_charges.update(
         {  
-            product_attributes:product_attributes,
+            product_attributes:componentarr,
             display_attributes:display_text
             },
             {where: {
