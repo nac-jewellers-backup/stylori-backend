@@ -283,8 +283,8 @@ exports.viewskupricesummary = async (req, res) => {
         response['discount_percentage'] = discount_percentage
         if(accs.sku_weight)
         {
-            accs['selling_price'] = accs.selling_price + " ( "+ accs.selling_price / accs.sku_weight+" ) ";
-            accs['cost_price'] = accs.cost_price + " ( "+ accs.cost_price / accs.sku_weight+" ) ";
+           // accs['selling_price'] = accs.selling_price + " ( "+ accs.selling_price / accs.sku_weight+" ) ";
+           // accs['cost_price'] = accs.cost_price + " ( "+ accs.cost_price / accs.sku_weight+" ) ";
 
         }
         response['skuprice'] = accs
