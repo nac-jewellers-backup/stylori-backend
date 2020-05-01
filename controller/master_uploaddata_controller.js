@@ -273,12 +273,17 @@ exports.viewskupricesummary = async (req, res) => {
         ],
         attributes: [
             'cost_price','selling_price','markup_price','discount_price','sku_weight',
-            'cost_price_tax','markup_price_tax','discount_price_tax','margin_on_sale_percentage'
+            'cost_price_tax','diamond_type','markup_price_tax','discount_price_tax','margin_on_sale_percentage'
         ],
         where: {
         generated_sku: req.params.skuid
         }
+<<<<<<< HEAD
     }).then(accs => {
+=======
+    }).then(async accs => {
+        response['skuprice'] = accs
+>>>>>>> master
         var discount_percentage = ((accs.discount_price - accs.markup_price)/accs.discount_price)*100;
         response['discount_percentage'] = discount_percentage
         if(accs.sku_weight)
@@ -287,15 +292,37 @@ exports.viewskupricesummary = async (req, res) => {
            // accs['cost_price'] = accs.cost_price + " ( "+ accs.cost_price / accs.sku_weight+" ) ";
 
         }
+<<<<<<< HEAD
         response['skuprice'] = accs
 
+=======
+       let diamondetaial = await models.product_diamonds.findAll({
+           where :{
+               diamond_type : accs.diamond_type
+           }
+       })
+>>>>>>> master
         models.pricing_sku_materials.findAll({
             where:{
                 product_sku: req.params.skuid
             }
         }).then(material_price => {
+            let diamond_count = 0
+            let material_prices = []
+            material_price.forEach((materialobj,index) => {
+                if(materialobj.component.includes('diamond'))
+                {
 
-            response['materials'] = material_price
+                    materialobj['cost_price'] = materialobj.cost_price + " ( "+(materialobj.cost_price / diamondetaial[diamond_count].stone_weight )+" ) "
+                    materialobj['selling_price'] = materialobj.selling_price + " ( "+(materialobj.selling_price / diamondetaial[diamond_count].stone_weight )+" ) "
+                    diamond_count = diamond_count+ 1
+                }
+                material_prices.push(materialobj)
+            })
+            response['materials'] = material_prices
+
+
+
             models.pricing_sku_metals.findAll({
                 where:{
                     product_sku: req.params.skuid
