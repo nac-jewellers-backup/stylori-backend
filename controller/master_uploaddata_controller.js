@@ -278,12 +278,9 @@ exports.viewskupricesummary = async (req, res) => {
         where: {
         generated_sku: req.params.skuid
         }
-<<<<<<< HEAD
-    }).then(accs => {
-=======
+
     }).then(async accs => {
         response['skuprice'] = accs
->>>>>>> master
         var discount_percentage = ((accs.discount_price - accs.markup_price)/accs.discount_price)*100;
         response['discount_percentage'] = discount_percentage
         if(accs.sku_weight)
@@ -292,16 +289,11 @@ exports.viewskupricesummary = async (req, res) => {
            // accs['cost_price'] = accs.cost_price + " ( "+ accs.cost_price / accs.sku_weight+" ) ";
 
         }
-<<<<<<< HEAD
-        response['skuprice'] = accs
-
-=======
        let diamondetaial = await models.product_diamonds.findAll({
            where :{
                diamond_type : accs.diamond_type
            }
        })
->>>>>>> master
         models.pricing_sku_materials.findAll({
             where:{
                 product_sku: req.params.skuid
