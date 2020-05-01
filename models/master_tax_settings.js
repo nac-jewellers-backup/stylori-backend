@@ -5,8 +5,12 @@ module.exports = (sequelize, DataTypes) => {
     tax_name: DataTypes.STRING,
     tax_value: DataTypes.DOUBLE,
     IGST: DataTypes.DOUBLE,
-    CGST: DataTypes.DOUBLE
-    
+    CGST: DataTypes.DOUBLE,
+    product_attributes: {
+      type: DataTypes.ARRAY(DataTypes.TEXT),
+
+    },
+    display_attributes : DataTypes.TEXT
   }, {});
   master_tax_settings.associate = function(models) {
     // associations can be defined here
