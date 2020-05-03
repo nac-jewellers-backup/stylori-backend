@@ -2,16 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return Promise.all([
-    queryInterface.addColumn(
-      'master_product_categories',
-      'short_code',
-      {
-        type: Sequelize.STRING,
-        allowNull: true
-      }
-    )
-  ]);
+   
     /*
       Add altering commands here.
       Return a promise to correctly handle asynchronicity.
