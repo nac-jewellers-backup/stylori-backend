@@ -453,7 +453,15 @@ exports.updateproductattr_bk =  async (req, res) => {
     occassion_arr.forEach(ocassion_obj => {
         attributes_array.push(ocassion_obj.alias)
     })
-
+      let updateobj = await models.product_lists.update(
+        {"attributes": attributes_array},
+        {
+        where:{
+            product_id : product_id
+        }
+    }
+        
+    )
     processsku(0)
     async function processsku(skucount)
     {
