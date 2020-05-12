@@ -215,6 +215,7 @@ module.exports = function(app) {
 	app.post('/managepermissions', configurationcontroller.managepermissions);
 	app.post('/getrolepermissions', configurationcontroller.getrolepermissions);
 	app.post('/getwebusers', configurationcontroller.getwebusers);
+	app.post('/managetaxattributes', configurationcontroller.managetaxattributes);
 
 	
 	

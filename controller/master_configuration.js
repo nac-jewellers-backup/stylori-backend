@@ -487,10 +487,10 @@ exports.manageshippingattributes = async (req, res) => {
     
       })
 
-
+      console.log(product_attributes)
       await   models.shipping_charges.update(
         {  
-            product_attributes:product_attributes,
+            product_attributes:componentarr,
             display_attributes:display_text
             },
             {where: {
@@ -503,7 +503,50 @@ exports.manageshippingattributes = async (req, res) => {
     
     }
 
-
+    exports.managetaxattributes = async (req, res) => {
+        const {rateid,attributes,display_text} = req.body
+          let product_attributes = {}
+          let keys = Object.keys(attributes);
+          let componentarr = [];
+    
+          keys.forEach(key => {
+            let attributeobj = attributes[key];
+            if(Array.isArray(attributeobj))
+            {
+              attributeobj.forEach(attr => {
+                if(attr.alias)
+                {
+                  
+                  componentarr.push(attr.alias)
+                }
+        
+               
+              })
+             if(componentarr.length > 0)
+             {
+        
+             // product_attributes[key] = componentarr
+             }
+           
+            }
+        
+          })
+    
+          console.log(product_attributes)
+          await   models.master_tax_settings.update(
+            {  
+                product_attributes:componentarr,
+                display_attributes:display_text
+                },
+                {where: {
+                id: rateid
+                }
+             }
+        )
+    
+        res.send(200,{"message":"Updated Successfully"})
+        
+        }
 
 exports.managegemtypes = async (req, res) => {
     const {id,name,isFilter,isActive,filterOrder,colorCode,isedit,isdelete} = req.body

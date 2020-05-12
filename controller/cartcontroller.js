@@ -113,7 +113,6 @@ exports.applyvoucher = async (req, res) => {
   let vouchers = []
   vouchers.push(vouchercode)
   var isloggedin = false
-  console.log(user_profile_id)
   if(user_profile_id)
   {
  let userprofile = await models.user_profiles.findOne({
@@ -121,8 +120,9 @@ exports.applyvoucher = async (req, res) => {
                           id: user_profile_id
                         }
                     })
-                 
-  if(userprofile && (userprofile.facebookid || userprofile.user_id))
+
+    
+  if(userprofile.facebookid || userprofile.user_id)
   {
     isloggedin = true
   }
@@ -136,12 +136,11 @@ exports.applyvoucher = async (req, res) => {
       voucher_codes:{
         [Op.overlap]:vouchers
       },
-      // code:{
-      //   [Op.eq]:vouchercode
-      // },
+      
     }
   })
- 
+  console.log(">>>><<<<<<<<")
+  console.log(JSON.stringify(coupon_info))
   if(coupon_info)
   {
   // attributes_condition.push({
@@ -150,24 +149,19 @@ exports.applyvoucher = async (req, res) => {
   //   }
   // })
   let keys = Object.keys(coupon_info.product_attributes);
-
   keys.forEach(key => {
     let attributeobj = coupon_info.product_attributes[key];
-
     if(Array.isArray(attributeobj))
     {
       let componentarr = [];
       attributeobj.forEach(attr => {
-        if(attr)
+        if(attr.alias)
         {
           let attr_where = {
             attributes: {
-              [Op.contains] : [attr]
+              [Op.contains] : [attr.alias]
             }
           }
-          console.log(JSON.stringify("XXXX"))
-
-          console.log(JSON.stringify(attr))
           componentarr.push(attr_where)
         }
 
@@ -187,7 +181,7 @@ exports.applyvoucher = async (req, res) => {
 }else{
   return res.status(200).send({message:"Please Enter Valid Coupon"})
 }
-  console.log(JSON.stringify(shoppingcart))
+
     var  couponwhereclause = {
       [Op.and]: attributes_condition
     }
@@ -218,7 +212,6 @@ exports.applyvoucher = async (req, res) => {
     }
 
   })
-  
   console.log(">>>><<<<<<<<")
 var eligible_amount = 0;
 shoppingcart.forEach(element => {
@@ -295,7 +288,7 @@ models.vouchers.findOne({
 
     }
     console.log(JSON.stringify(query))
-   // res.status(200).send("coupon applied successfully")
+
     await models.sequelize.query(query).then(([results, metadata]) => {
       // Results will be an empty array and metadata will contain the number of affected rows.
           console.log(JSON.stringify(metadata))
