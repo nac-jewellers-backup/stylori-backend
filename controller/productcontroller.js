@@ -65,7 +65,7 @@ exports.updateproductattr =  async (req, res) => {
         where:{
             isactive : true,
             product_id : {
-                [Op.iLike] : "%SR%"
+                [Op.iLike] : "%SR0422%"
             }
         }
     })
@@ -236,6 +236,8 @@ exports.updateproductattr =  async (req, res) => {
 
         }
     })
+    console.log("CCCSPODSDOPSOD")
+    console.log(attributes_array)
     let updateobj = await models.product_lists.update(
         {"attributes": attributes_array},
         {
@@ -267,7 +269,7 @@ exports.updateproductattr_bk =  async (req, res) => {
         where:{
             is_active : true,
             product_id:{
-                [Op.iLike]:'%SR%'
+                [Op.iLike]:'%SR0422%'
             }
         }
     })
@@ -453,10 +455,23 @@ exports.updateproductattr_bk =  async (req, res) => {
     occassion_arr.forEach(ocassion_obj => {
         attributes_array.push(ocassion_obj.alias)
     })
+    let updateobj = await models.product_lists.update(
+        {"attributes": attributes_array},
+        {
+        where:{
+            product_id : product_id
+        }
+             })
 
-    processsku(0)
+console.log(updateobj)
+console.log(attributes_array)
+
+console.log(product_id)
+
+    //processsku(0)
     async function processsku(skucount)
     {
+        
         if( product_object.trans_sku_lists.length > skucount)
         {
             let skuobj = product_object.trans_sku_lists[skucount]
@@ -466,8 +481,7 @@ exports.updateproductattr_bk =  async (req, res) => {
             })
             sku_atter.push(diamond_obj[skuobj.diamond_type])
             sku_atter.push(purity_obj[skuobj.purity])
-            
-            await models.trans_sku_lists.update(
+          let resopo =   await models.trans_sku_lists.update(
              {
                  "attributes" : sku_atter
              },
@@ -477,8 +491,16 @@ exports.updateproductattr_bk =  async (req, res) => {
                  }
              }
          )
+         console.log(resopo)   
+         console.log(sku_atter)
+         console.log(skuobj.generated_sku)   
+
             skucount = skucount + 1
-            processsku(skucount)
+            if( product_object.trans_sku_lists.length > skucount)
+            {
+                processsku(skucount)
+
+            }
         }else
         {
             if(products.length > processcount)
