@@ -269,7 +269,7 @@ exports.updateproductattr_bk =  async (req, res) => {
         where:{
             is_active : true,
             product_id:{
-                [Op.iLike]:'%SR0422%'
+                [Op.iLike]:'%SR%'
             }
         }
     })
@@ -496,6 +496,17 @@ exports.updateproductattr_bk =  async (req, res) => {
             {
                 processsku(skucount)
 
+            }else
+            {
+                console.log("update complete"+products.length)
+
+                if(products.length > processcount)
+                {
+                    processcount =processcount +1;
+                    productupdate(processcount)
+                }else{
+                    console.log("update complete")
+                    }
             }
         }else
         {

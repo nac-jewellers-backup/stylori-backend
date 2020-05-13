@@ -365,6 +365,7 @@ exports.updateproduct_stonecolor = async (req, res) => {
     
          
 }
+
 exports.updatecodpincodes = async (req, res) => {
     console.log("I ma here")
     var pincodes = req.body.cod_pincode;
