@@ -987,7 +987,7 @@ async function updateshippingcharge(cart_id,res)
 exports.getshippingcharge = async (req, res) => {
   const {cart_id} =  req.body
 
-  res.send(200,{shipping_charge : 200})
+  res.send(200,{shipping_charge : "Free"})
 
   //await updateshippingcharge(cart_id,res)
 }
