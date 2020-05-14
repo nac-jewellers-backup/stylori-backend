@@ -1,36 +1,70 @@
-diamondpriceseeting
-{"vendor_code":"STYPA 010","diamond_colour":"SI","diamond_clarity":"IJ"}
-SR0010
-diamond cost price
-225
-diamondexist
-diamondpriceseeting
-{"vendor_code":"STYPA 010","diamond_colour":"SI","diamond_clarity":"IJ"}
-SR0010
-225
-diamond cost price
-diamondexist
-diamondpriceseeting
-{"vendor_code":"STYPA 010","diamond_colour":"SI","diamond_clarity":"IJ"}
-SR0010
-3600
-diamond cost price
-diamondexist
-diamondpriceseeting
-{"vendor_code":"STYPA 010","diamond_colour":"SI","diamond_clarity":"IJ"}
-SR0010
-225
-diamond cost price
-diamondexist
-diamondpriceseeting
-{"vendor_code":"STYPA 010","diamond_colour":"SI","diamond_clarity":"IJ"}
-SR0010
-diamond cost price
-225
-diamondexist
-{"vendor_code":"STYPA 010","diamond_colour":"SI","diamond_clarity":"IJ"}
-diamondpriceseeting
-SR0010
-diamond cost price
-3600
-diamondexist
+updateskuprice
+SGC042
+updateskuprice
+SGC050
+updateskuprice
+SGC021
+updateskuprice
+SGC036
+updateskuprice
+SGC031
+updateskuprice
+SGC032
+updateskuprice
+SGC013
+updateskuprice
+SGC055
+updateskuprice
+SGC018
+updateskuprice
+SGC028
+updateskuprice
+SGC041
+updateskuprice
+SGC016
+updateskuprice
+SGC035
+updateskuprice
+SGC024
+updateskuprice
+SGC012
+updateskuprice
+SGC051
+updateskuprice
+SGC054
+updateskuprice
+SGC022
+updateskuprice
+SGC033
+updateskuprice
+SGC026
+updateskuprice
+SGC027
+updateskuprice
+SGC030
+updateskuprice
+SGC015
+updateskuprice
+SGC052
+updateskuprice
+SGC014
+updateskuprice
+SGC011
+updateskuprice
+SGC025
+updateskuprice
+SGC023
+updateskuprice
+SGC020
+updateskuprice
+SGC053
+updateskuprice
+SGC044
+updateskuprice
+SGC017
+updateskuprice
+SGC043
+updateskuprice
+SGC034
+updateskuprice
+SGC029

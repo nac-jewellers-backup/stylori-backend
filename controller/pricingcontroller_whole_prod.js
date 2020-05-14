@@ -43,7 +43,7 @@ exports.priceupdate = (req, res) => {
     }
     console.log(":>>>>>>>>>1212")
    var  startDate = new Date()
-    console.log(new Date())
+    console.log(req_product_id)
     if(req_product_id)
     {
       var product_id_arr1 = req_product_id.split(',');
