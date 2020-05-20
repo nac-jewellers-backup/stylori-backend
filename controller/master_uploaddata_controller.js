@@ -272,7 +272,7 @@ exports.viewskupricesummary = async (req, res) => {
             }
         ],
         attributes: [
-            'cost_price','selling_price','markup_price','discount_price','sku_weight',
+            'cost_price','selling_price','markup_price','discount_price','sku_weight','product_id',
             'cost_price_tax','diamond_type','markup_price_tax','discount_price_tax','margin_on_sale_percentage'
         ],
         where: {
@@ -291,9 +291,11 @@ exports.viewskupricesummary = async (req, res) => {
         }
        let diamondetaial = await models.product_diamonds.findAll({
            where :{
-               diamond_type : accs.diamond_type
+               diamond_type : accs.diamond_type,
+               product_sku : accs.product_id
            }
        })
+     // return res.send(200,{diamondetaial})
         models.pricing_sku_materials.findAll({
             where:{
                 product_sku: req.params.skuid
@@ -304,10 +306,10 @@ exports.viewskupricesummary = async (req, res) => {
             material_price.forEach((materialobj,index) => {
                 if(materialobj.component.includes('diamond'))
                 {
-
+                    materialobj['material_name'] = materialobj.material_name + " ("+diamondetaial[diamond_count].stone_weight + " ~ "+diamondetaial[diamond_count].stone_count+" )"
                     materialobj['cost_price'] = materialobj.cost_price + " ( "+(materialobj.cost_price / diamondetaial[diamond_count].stone_weight )+" ) "
                     materialobj['selling_price'] = materialobj.selling_price + " ( "+(materialobj.selling_price / diamondetaial[diamond_count].stone_weight )+" ) "
-                    diamond_count = diamond_count+ 1
+                    diamond_count = diamond_count + 1
                 }
                 material_prices.push(materialobj)
             })
