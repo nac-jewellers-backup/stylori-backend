@@ -306,7 +306,7 @@ exports.viewskupricesummary = async (req, res) => {
             material_price.forEach((materialobj,index) => {
                 if(materialobj.component.includes('diamond'))
                 {
-                    materialobj['material_name'] = materialobj.material_name + " ("+diamondetaial[diamond_count].stone_weight + " ~ "+diamondetaial[diamond_count].stone_count+" )"
+                //    materialobj['material_name'] = materialobj.material_name + " ("+diamondetaial[diamond_count].stone_weight + " ~ "+diamondetaial[diamond_count].stone_count+" )"
                     materialobj['cost_price'] = materialobj.cost_price + " ( "+(materialobj.cost_price / diamondetaial[diamond_count].stone_weight )+" ) "
                     materialobj['selling_price'] = materialobj.selling_price + " ( "+(materialobj.selling_price / diamondetaial[diamond_count].stone_weight )+" ) "
                     diamond_count = diamond_count + 1
