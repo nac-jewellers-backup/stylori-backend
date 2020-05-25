@@ -887,7 +887,6 @@ exports.priceupdate = (req, res) => {
         sku_component_count = 0
         var pricing_diamonds_list = []
         let product_diamonds = await productdiamonds(productsku.product_id)
-       
         diamond_component_count = product_diamonds.length
         if(product_diamonds.length > 0)
         {
@@ -907,7 +906,7 @@ exports.priceupdate = (req, res) => {
 
        function diamond_process(diamondobj,vendorcode)
        {
-       
+       console.log(JSON.stringify(diamondobj))
 
 
           var conditionobj = {
