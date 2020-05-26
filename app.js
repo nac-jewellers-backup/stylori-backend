@@ -48,6 +48,7 @@ app.use(express.urlencoded({limit: '50mb'}));
 // });
 
 app.get('/', (req, res) => {
+  console.log("running")
   res.send('NAC Auth running');
 });
 app.use(cors())
