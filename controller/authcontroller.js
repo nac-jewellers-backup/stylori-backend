@@ -775,6 +775,7 @@ exports.getuserinfo = async (req, res) => {
     }
   })
   let addressess = []
+  let useraddressobj = {}
   if(useraddress)
   {
     useraddress.forEach(element => {
@@ -801,11 +802,35 @@ exports.getuserinfo = async (req, res) => {
         addresobj['addresstype'] = 'Shipping'
 
       }
+      if(!useraddressobj.city)
+      {
+        if(element.default_shipping)
+        {
+          useraddressobj = element
+        }else
+        {
+          if(element.default_billing)
+          {
+            useraddressobj = element
+          }
+        }
+        
 
+      }
+      
       addressess.push(addresobj)
     })
     
   }
+  console.log("+XXXXXXXX+")
+
+  if(!useraddressobj.city && addressess.length > 0)
+      {
+        console.log("+XXXXXXXX+")
+        useraddressobj = addressess[0]
+      }
+userprofile['address'] = useraddressobj
+ 
   let userorders = await models.orders.findAll({
     include:[
       {

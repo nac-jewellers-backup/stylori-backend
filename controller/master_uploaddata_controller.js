@@ -295,6 +295,11 @@ exports.viewskupricesummary = async (req, res) => {
                product_sku : accs.product_id
            }
        })
+       let gemstonedetails = await models.product_gemstones.findAll({
+        where :{
+            product_sku : accs.product_id
+        }
+    })
      // return res.send(200,{diamondetaial})
         models.pricing_sku_materials.findAll({
             where:{
@@ -303,21 +308,52 @@ exports.viewskupricesummary = async (req, res) => {
         }).then(material_price => {
             let diamond_count = 0
             let material_prices = []
+            let diamondcount = 0
             material_price.forEach((materialobj,index) => {
                 if(materialobj.component.includes('diamond'))
                 {
                     if(diamondetaial[diamond_count])
                     {
-                        materialobj['material_name'] = materialobj.material_name + " ("+diamondetaial[diamond_count].stone_weight + " ~ "+diamondetaial[diamond_count].stone_count+" )"
-                        materialobj['cost_price'] = materialobj.cost_price + " ( "+(materialobj.cost_price / diamondetaial[diamond_count].stone_weight ).toFixed(2)+" ) "
-                        materialobj['selling_price'] = materialobj.selling_price + " ( "+(materialobj.selling_price / diamondetaial[diamond_count].stone_weight ).toFixed(2)+" ) "
+                        diamondcount = diamondcount + 1;
+                        console.log("dasdasdas")
+                        let diamond_name = "Diamond " +diamondetaial[diamond_count].diamond_type + " "+ diamondcount
+                        console.log(JSON.stringify(diamondetaial[diamond_count]))
+                        materialobj['material_name'] = diamond_name + " ("+diamondetaial[diamond_count].stone_weight + " ~ "+diamondetaial[diamond_count].stone_count+" / ct) "
+                        materialobj['cost_price'] = materialobj.cost_price + " ( "+(materialobj.cost_price / diamondetaial[diamond_count].stone_weight ).toFixed(2)+"  / ct )"
+                        materialobj['selling_price'] = materialobj.selling_price + " ( "+(materialobj.selling_price / diamondetaial[diamond_count].stone_weight ).toFixed(2)+" / ct) "
                     }else{
-                        materialobj['material_name'] = materialobj.material_name 
+                        diamondcount = diamondcount + 1;
+                        let diamond_name = "Diamond " + diamondcount
+
+                        materialobj['material_name'] = diamond_name
                             materialobj['cost_price'] = (materialobj.cost_price ).toFixed(2)
                             materialobj['selling_price'] = (materialobj.selling_price ).toFixed(2)
                     }
                     
                     diamond_count = diamond_count + 1
+                }
+                else{
+                    let stoneweight = gemstonedetails.length > 0 ? gemstonedetails[0].stone_weight : 0
+                    let stonecount = gemstonedetails.length > 0 ? gemstonedetails[0].stone_count : 0
+                    let gem_cost_price = materialobj.cost_price
+                    let gem_selling_price = materialobj.selling_price
+
+                    if(stonecount)
+                    {
+                        gem_cost_price = gem_cost_price / stonecount
+                        gem_selling_price = gem_selling_price / stonecount
+
+                    }
+
+                    if(stoneweight)
+                    {
+                        gem_cost_price = gem_cost_price / stoneweight
+                        gem_selling_price = gem_selling_price / stoneweight
+                        
+                    }
+                    materialobj['cost_price'] = `${materialobj.cost_price} (${gem_cost_price}) / ct`
+                    materialobj['selling_price'] = `${materialobj.selling_price} (${gem_selling_price}) / ct`
+
                 }
                 material_prices.push(materialobj)
             })
@@ -334,8 +370,8 @@ exports.viewskupricesummary = async (req, res) => {
                 metal_price.forEach(metal => {
                     // if(metal.material_name.includes('gold'))
                     // {
-                        metal['cost_price'] = metal.cost_price + " ( "+(metal.cost_price / accs.sku_weight ).toFixed(2)+"  / gram) "
-                        metal['selling_price'] = metal.selling_price + " ( "+(metal.selling_price / accs.sku_weight ).toFixed(2)+" / gram ) "
+                        metal['cost_price'] = metal.cost_price + " ( "+(metal.cost_price / accs.sku_weight ).toFixed(2)+"  / gm) "
+                        metal['selling_price'] = metal.selling_price + " ( "+(metal.selling_price / accs.sku_weight ).toFixed(2)+" / gm ) "
 
                    // }
                     metal_prices.push(metal)
