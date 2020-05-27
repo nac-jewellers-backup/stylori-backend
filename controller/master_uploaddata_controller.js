@@ -309,12 +309,12 @@ exports.viewskupricesummary = async (req, res) => {
                     if(diamondetaial[diamond_count])
                     {
                         materialobj['material_name'] = materialobj.material_name + " ("+diamondetaial[diamond_count].stone_weight + " ~ "+diamondetaial[diamond_count].stone_count+" )"
-                        materialobj['cost_price'] = materialobj.cost_price + " ( "+(materialobj.cost_price / diamondetaial[diamond_count].stone_weight )+" ) "
-                        materialobj['selling_price'] = materialobj.selling_price + " ( "+(materialobj.selling_price / diamondetaial[diamond_count].stone_weight )+" ) "
+                        materialobj['cost_price'] = materialobj.cost_price + " ( "+(materialobj.cost_price / diamondetaial[diamond_count].stone_weight ).toFixed(2)+" ) "
+                        materialobj['selling_price'] = materialobj.selling_price + " ( "+(materialobj.selling_price / diamondetaial[diamond_count].stone_weight ).toFixed(2)+" ) "
                     }else{
                         materialobj['material_name'] = materialobj.material_name 
-                            materialobj['cost_price'] = materialobj.cost_price 
-                            materialobj['selling_price'] = materialobj.selling_price 
+                            materialobj['cost_price'] = (materialobj.cost_price ).toFixed(2)
+                            materialobj['selling_price'] = (materialobj.selling_price ).toFixed(2)
                     }
                     
                     diamond_count = diamond_count + 1
@@ -332,12 +332,12 @@ exports.viewskupricesummary = async (req, res) => {
             }).then(metal_price => {
                 let metal_prices = []
                 metal_price.forEach(metal => {
-                    if(metal.material_name.includes('gold'))
-                    {
-                        metal['cost_price'] = metal.cost_price + " ( "+(metal.cost_price / accs.sku_weight )+" ) "
-                        metal['selling_price'] = metal.selling_price + " ( "+(metal.selling_price / accs.sku_weight )+" / gram ) "
+                    // if(metal.material_name.includes('gold'))
+                    // {
+                        metal['cost_price'] = metal.cost_price + " ( "+(metal.cost_price / accs.sku_weight ).toFixed(2)+"  / gram) "
+                        metal['selling_price'] = metal.selling_price + " ( "+(metal.selling_price / accs.sku_weight ).toFixed(2)+" / gram ) "
 
-                    }
+                   // }
                     metal_prices.push(metal)
                 })    
                 response['metals'] = metal_prices

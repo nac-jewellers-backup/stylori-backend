@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     // associations can be defined here
     // models.user_profiles.hasMany(models.user_address,{
-    //   foreignKey: 'userprofile_id',
+    //   foreignKey: 'user_profile_id',
     //   targetKey: 'id'
     // });
   };
