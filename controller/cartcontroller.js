@@ -101,7 +101,7 @@ const {vouchername,vouchercodes,description,isloggedin,discounttype,maxdiscount,
       expires_at: enddate,
       product_attributes: product_attributes
     }
-
+//
   //   vouchers.push(voucherobj)
   // })
   await models.vouchers.create(
