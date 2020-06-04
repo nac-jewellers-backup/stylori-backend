@@ -231,7 +231,7 @@ exports.manageorderstatus = async (req, res) => {
 
 exports.manageseoattributes = async (req, res) => {
     const {id,name,attributeName,
-        attributeValue,priority,seoText,seoUrl,
+        attributeValue,priority,seoText,seoUrl,imageUrl,mobileImageUrl,
         isedit,isdelete,isActive} = req.body
     if(isedit)
     {
@@ -243,6 +243,8 @@ exports.manageseoattributes = async (req, res) => {
                 priority: priority,
                 seo_text:seoText,
                 seo_url:seoUrl,
+                image_url: imageUrl,
+                mobile_image_url : mobileImageUrl,
                 is_active: isActive
             },
                 {where: {
@@ -263,8 +265,9 @@ exports.manageseoattributes = async (req, res) => {
             priority: priority,
             seo_text:seoText,
             seo_url:seoUrl,
-            is_active: isActive
-            
+            is_active: isActive,
+            image_url: imageUrl,
+            mobile_image_url : mobileImageUrl
            
             }
         await   models.seo_url_priorities.create(   
@@ -1140,7 +1143,7 @@ exports.manageearring = async (req, res) => {
 }
 
 exports.managemasterattributes = async (req, res) => {
-    const {id,name,isFilter,isSearch,filterPosition,isdelete,isedit} = req.body
+    const {id,name,isFilter,isSearch,isTopMenu,filterPosition,isdelete,isedit} = req.body
     if(isedit)
     {
         await   models.Attribute_master.update(
@@ -1149,7 +1152,8 @@ exports.managemasterattributes = async (req, res) => {
                 name: name,
                 is_filter: isFilter,
                 filter_position : filterPosition,
-                is_search : isSearch
+                is_search : isSearch,
+                is_top_menu : isTopMenu
                 },
                 {where: {
                 id: id
@@ -1168,6 +1172,7 @@ exports.managemasterattributes = async (req, res) => {
             filter_position : filterPosition,
             is_search : isSearch,
             is_active: true,
+            is_top_menu : isTopMenu,
             short_code : "",
             }
         await   models.Attribute_master.create(   

@@ -874,9 +874,16 @@ var mastergender = [];
    var seourls_arr= []
    var seotexts_arr= []
 
+   var banner_image_arr= []
+
+
     seooptions.forEach(element =>{
       seourls_arr.push(element.seo_url);
       seotexts_arr.push(element.seo_text)
+      banner_image_arr.push({
+        image : element.image_url,
+        mobile_image : element.mobile_image_url
+      })
     })
     seo_url = seourls_arr.join('-')
     seo_text = seotexts_arr.join(' ')
@@ -908,6 +915,7 @@ var mastergender = [];
       ],
       "By Weight": product_byweight_masters,
         seo_url,
-        seo_text
+        seo_text,
+        seo_banner: banner_image_arr
               })
 }

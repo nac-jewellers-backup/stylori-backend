@@ -5,6 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     attribute_value: DataTypes.STRING,
     seo_text: DataTypes.STRING,
     seo_url: DataTypes.STRING,
+    image_url: DataTypes.STRING,
+    mobile_image_url: DataTypes.STRING,
     priority: DataTypes.INTEGER,
     is_active: DataTypes.BOOLEAN
   }, {});
