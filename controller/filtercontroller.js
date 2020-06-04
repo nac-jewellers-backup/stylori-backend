@@ -7,7 +7,7 @@ const sequelize= require('sequelize');
 import apidata from './apidata.json';
 const uuidv1 = require('uuid/v1');
 var splitArray = require('split-array');
-
+var silverpricerange = []
 exports.filteroptions = async (req, res) => {
 
 const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability,bydesign,byweight,offer_min,offer_max} = req.body
@@ -134,7 +134,38 @@ var seofilterattributevalue = []
 //           [Op.eq]:style
 //           },
 if(material)
-{         
+{        
+  if(material == 'Silver')
+  {
+    silverpricerange = [
+      {
+        label : 'Under 999',
+        min : 0,
+        max : 999
+      },
+      {
+        label : '999 - 2000',
+        min : 1000,
+        max : 2000
+      },
+      {
+        label : '2001 - 5000',
+        min : 2001,
+        max : 5000
+      },
+      {
+        label : '5001 - 8000',
+        min : 5001,
+        max : 8000
+      },
+      {
+        label : 'Above 8000',
+        min : 8001,
+        max : 100000
+      }
+
+    ]
+  } 
   seofilterattribute.push('Material')
   seofilterattributevalue.push(material)
 
@@ -913,7 +944,9 @@ var mastergender = [];
           "1 Day Shipping", 
           "10 & Above Days Shipping"
       ],
+      
       "By Weight": product_byweight_masters,
+      price_range : silverpricerange,
         seo_url,
         seo_text,
         seo_banner: banner_image_arr
