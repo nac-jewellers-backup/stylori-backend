@@ -946,7 +946,7 @@ var mastergender = [];
       ],
       
       "By Weight": product_byweight_masters,
-      price_range : silverpricerange,
+      price : silverpricerange,
         seo_url,
         seo_text,
         seo_banner: banner_image_arr
