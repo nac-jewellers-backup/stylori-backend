@@ -611,12 +611,13 @@ exports.addtocart = async (req, res) => {
       console.log("updated")
       if(element.sku_id)
       {
+        let prod_count = parseInt(element.qty)
       const lineobj = {
           id:uuidv1(),
           shopping_cart_id: cart_id,
           product_sku: element.sku_id,
           qty: element.qty,
-          price: element.price
+          price: (prod_count * element.price)
       }
       console.log(JSON.stringify(lineobj))
 
