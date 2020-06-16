@@ -125,7 +125,9 @@ module.exports = function(app) {
 	app.post('/productesearch', productfetchController_esearch.productesearch);
 
 	app.post('/createorder', cartcontroller.addorder);
+	app.post('/updatecartitem', cartcontroller.updatecartitem);
 
+	
 	app.post('/addproductreview', cartcontroller.addproductreview);
 	app.post('/applyvoucher', cartcontroller.applyvoucher);
 	app.post('/createvoucher', cartcontroller.createvoucher);
