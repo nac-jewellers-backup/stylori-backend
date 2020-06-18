@@ -1336,14 +1336,7 @@ async function sendorderconformationemail(order_id,res)
       }
     }
   })
-  let skuinfo = []
-  skudetails.forEach(skuelement => {
-      let skuobj = {
-        ...skuelement,
-        orderqty : skuqty[skuelement.generated_sku]
-      }
-      skuinfo.push(skuobj)
-  })
+  
   var imagelist = {}
   let prodimages = await models.product_images.findAll({
     attributes: ['product_id','product_color','image_url','image_position','isdefault'],
@@ -1367,7 +1360,7 @@ if(orderdetails.user_profile.facebookid || orderdetails.user_profile.user_id)
 {
   isloggedin = true
 }  
- sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skuinfo,imagelist,day,isloggedin))
+ sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skudetails,imagelist,day,isloggedin,skuqty))
 //return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
  }
 
