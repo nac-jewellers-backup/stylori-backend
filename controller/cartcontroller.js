@@ -689,9 +689,15 @@ exports.addtocart = async (req, res) => {
 }
 exports.uploadimage =  (req, res) => {
     console.log(req.body)
+    const {foldername} =req.body
     let extension = req.body.image;
+    let basefolder = 'base_images'
+    if(foldername)
+    {
+      basefolder = foldername
+    }
     const s3 = new aws.S3();  // Create a new instance of S3
-  const fileName = 'base_images/'+req.body.filename+'.'+extension.replace('jpeg','jpg').toLowerCase();
+  const fileName = basefolder+'/'+req.body.filename+'.'+extension.replace('jpeg','jpg').toLowerCase();
   const fileType = req.body.image;
   console.log(fileName)
 
