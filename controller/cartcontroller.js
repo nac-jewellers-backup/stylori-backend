@@ -1267,7 +1267,7 @@ exports.removewishlist = async (req, res) => {
  exports.testorderemail = async (req, res) => {
   var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Password Reset Successfully"}]
  // sendMail(emilreceipiants,emailTemp.changepasswordTemp("Manokaran"))
-   sendorderconformationemail("4c76a1d0-5610-11ea-8539-9938031cbfe9",res)
+   sendorderconformationemail("9cb91100-b083-11ea-82de-63badb42bd5b",res)
 
  }
 async function sendorderconformationemail(order_id,res)
@@ -1307,9 +1307,10 @@ async function sendorderconformationemail(order_id,res)
   var prod_image_condition = []
   console.log("orderinfodetails")
   console.log(JSON.stringify(orderdetails))
-  
+  let skuqty ={}
   orderdetails.shopping_cart.shopping_cart_items.forEach(element => {
     trans_sku_lists.push(element.product_sku)
+    skuqty[element.product_sku] =element.qty
     prod_image_condition.push({
       product_color : element.trans_sku_list.metal_color,
       product_id : element.trans_sku_list.product_id,
@@ -1335,6 +1336,14 @@ async function sendorderconformationemail(order_id,res)
       }
     }
   })
+  let skuinfo = []
+  skudetails.forEach(skuelement => {
+      let skuobj = {
+        ...skuelement,
+        orderqty : skuqty[skuelement.generated_sku]
+      }
+      skuinfo.push(skuobj)
+  })
   var imagelist = {}
   let prodimages = await models.product_images.findAll({
     attributes: ['product_id','product_color','image_url','image_position','isdefault'],
@@ -1358,7 +1367,7 @@ if(orderdetails.user_profile.facebookid || orderdetails.user_profile.user_id)
 {
   isloggedin = true
 }  
- sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skudetails,imagelist,day,isloggedin))
+ sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skuinfo,imagelist,day,isloggedin))
 //return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
  }
 
