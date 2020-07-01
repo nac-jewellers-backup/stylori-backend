@@ -2232,7 +2232,8 @@ exports.getproductlist =  async (req, res) => {
                 {
                     attributes:['sku_url'],
                     where: {
-                        isdefault : true
+                        isdefault : true,
+                        product_id : productid
                     }
                 }
 
