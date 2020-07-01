@@ -2224,3 +2224,18 @@ exports.getproductlist =  async (req, res) => {
         
         
         }
+
+        exports.getproducturl =  async (req, res) => {
+            const {productid} = req.body
+
+            let sku_details = await models.trans_sku_lists.findOne(
+                {
+                    attributes:['sku_url'],
+                    where: {
+                        isdefault : true
+                    }
+                }
+
+            )
+            res.status(200).send({url:sku_details })
+        }

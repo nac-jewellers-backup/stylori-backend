@@ -151,7 +151,9 @@ module.exports = function(app) {
 	app.post('/fetchproducts', productFetchController.filteroptions);
 	app.post('/esearchfetchproducts', productfetchController_esearch.filteroptions);
 	app.post('/getproductvarient', productcontroller.getproductvarient);
+	app.post('/getproducturl', productcontroller.getproducturl);
 
+	
 	app.post('/editproduct', productcontroller.editproduct);
 	app.post('/editproductdiamond', productcontroller.editproductdiamond);
 	app.post('/updateskuinfo', productcontroller.updateskuinfo);
