@@ -2238,5 +2238,6 @@ exports.getproductlist =  async (req, res) => {
                 }
 
             )
+            let url = `https://stylori.com/${sku_details.sku_url}`
             res.status(200).send({url:sku_details })
         }
