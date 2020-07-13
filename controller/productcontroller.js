@@ -2225,6 +2225,50 @@ exports.getproductlist =  async (req, res) => {
         
         }
 
+        exports.getorderdetails =  async (req, res) => {
+            const {order_id} = req.body
+               let whereclause = {
+                    id : order_id
+               }
+             
+        
+                
+                let orders = await models.orders.findOne({
+                    include:[
+                        {
+                            model : models.user_profiles,
+
+                        },
+                        
+                        {
+                            model : models.shopping_cart,
+                            include : [
+                                {
+                                    model : models.shopping_cart_item
+                                },
+                                {
+                                    model : models.giftwrap
+                                },
+                                {
+                                    model : models.cart_address,
+                                    where: {
+                                        address_type : 1
+                                    }
+        
+                                }
+                            ]
+                        }
+                    ],
+                    where: whereclause
+                    
+                })
+            
+            
+                res.send(200,{orders})
+            
+            }
+
+
         exports.getproducturl =  async (req, res) => {
             const {productid} = req.body
 

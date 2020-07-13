@@ -59,7 +59,7 @@ module.exports = function(app) {
 	app.post('/disableproduct', productcontroller.disableproduct);
 	app.post('/getproductlist', productcontroller.getproductlist);
 	app.post('/getorders', productcontroller.getorderlist);
-
+	app.post('/getorderdetails', productcontroller.getorderdetails);
 	
 	app.post('/productpriceupdate',single_product_pricecontroller.priceupdate)
 
