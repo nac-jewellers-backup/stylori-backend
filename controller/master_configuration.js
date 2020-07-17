@@ -319,17 +319,18 @@ exports.managegenders = async (req, res) => {
 exports.manageshipmentsettings = async (req, res) => {
     const {id,name,shippingzones,rangetype,rangeFrom,rangeTo,
         shipmentCharge,isActive,isCart,isedit,isdelete} = req.body
-    if(isedit)
+        console.log(JSON.stringify(rangetype))
+        if(isedit)
     {
     
         await   models.shipping_charges.update(
             
             {  
                 
-                zone_id : shippingzones.id,
+            zone_id : shippingzones.id,
             charge_type : rangetype.id,
             range_from : rangeFrom,
-            isCart: isCart,
+            is_cart: isCart,
             range_to : rangeTo,
             shipment_charge : shipmentCharge,
             name: name, 
@@ -342,7 +343,7 @@ exports.manageshipmentsettings = async (req, res) => {
             
         )
     
-        res.send(200,{"message":"Updated Successfully"})
+        res.send(200,{"message":"Updated 1 Successfully"})
     }else if(isdelete)
     {
 
