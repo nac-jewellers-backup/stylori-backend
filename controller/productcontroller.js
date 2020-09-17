@@ -1263,6 +1263,14 @@ exports.productupload =  async (req, res) => {
 exports.updateproductimage  =  async (req, res) => {
     const {imageobj, isedit} = req.body
     let imgurl = imageobj.imageUrl;
+    var product_object = await models.trans_sku_lists.findOne({
+        attributes:["metal_color"],
+        
+        where:{
+            product_id : imageobj.productId,
+           
+        }
+    })
     if(isedit)
     {
         let response_obj1 = await models.product_images.update(
@@ -1278,6 +1286,7 @@ exports.updateproductimage  =  async (req, res) => {
             })
 
     }else{
+       let default_metal_color = product_object.metal_color
         let newimage = {
             id: uuidv1(),
             image_url : imgurl.replace('png','jpg'),
