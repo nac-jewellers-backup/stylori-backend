@@ -2498,7 +2498,7 @@ exports.getaliasproductlist =  async (req, res) => {
         {
           let attr_where = {
             attributes: {
-              [Op.contains] : [attr.alias]
+              [Op.contains] : [key == "category" ? attr.shortCode : attr.alias]
             }
           }
           componentarr.push(attr_where)
