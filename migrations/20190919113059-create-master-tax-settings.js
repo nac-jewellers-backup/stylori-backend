@@ -13,13 +13,21 @@ module.exports = {
       tax_name: {
         type: Sequelize.STRING
       },
-      tax_value: {
+      IGST: {
         type: Sequelize.DOUBLE
       },
+      CGST: {
+        type: Sequelize.DOUBLE
+      },
+      SGST: {
+        type: Sequelize.DOUBLE
+      },
+     
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
+      IGST: DataTypes.DOUBLE,
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE

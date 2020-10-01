@@ -7,7 +7,7 @@ module.exports={
     password:process.env.LOCAL_DB_PASS,
     database:process.env.LOCAL_DB,
     host:process.env.LOCAL_DB_HOST,
-    logging : false,
+    logging : true,
     dialect: "postgres"
   },
   staging:{

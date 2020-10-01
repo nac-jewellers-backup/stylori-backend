@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     tax_value: DataTypes.DOUBLE,
     IGST: DataTypes.DOUBLE,
     CGST: DataTypes.DOUBLE,
+    SGST: DataTypes.DOUBLE,
     product_attributes: {
       type: DataTypes.ARRAY(DataTypes.TEXT),
 

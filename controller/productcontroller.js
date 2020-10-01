@@ -2244,7 +2244,13 @@ exports.getproductlist =  async (req, res) => {
                             model : models.shopping_cart,
                             include : [
                                 {
-                                    model : models.shopping_cart_item
+                                    model : models.shopping_cart_item,
+                                    include:[
+                                        {
+                                            model :  models.trans_sku_lists
+                                        },
+                                        
+                                    ]
                                 },
                                 {
                                     model : models.giftwrap

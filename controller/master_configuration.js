@@ -8,7 +8,9 @@ var splitArray = require('split-array');
 var request = require('request');
 
 exports.managetaxsetup = async (req, res) => {
-    const {id,taxName,taxValue,hsnNumber,igst,cgst,isedit,isdelete} = req.body
+    const {id,taxName,taxValue,hsnNumber,igst,cgst,sgst,isedit,isdelete} = req.body
+    console.log("sgstvalue")
+    console.log(sgst)
     if(isedit)
     {
         await   models.master_tax_settings.update(
@@ -17,6 +19,7 @@ exports.managetaxsetup = async (req, res) => {
             tax_value : taxValue ,
             hsn_number: hsnNumber,
             IGST: igst,
+            SGST: sgst,
             CGST:cgst},
                 {where: {
                 id: id
@@ -35,6 +38,7 @@ exports.managetaxsetup = async (req, res) => {
             tax_value : taxValue ,
             hsn_number: hsnNumber,
             IGST: igst,
+            SGST: sgst,
             CGST:cgst}
         await   models.master_tax_settings.create(   
                      taxobj
@@ -1028,7 +1032,7 @@ exports.managepurities = async (req, res) => {
 
 
 exports.managemetalcolors = async (req, res) => {
-    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,shortCode,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_metals_colors.update(
@@ -1037,6 +1041,7 @@ exports.managemetalcolors = async (req, res) => {
                 name: name,
                 is_filter: isFilter,
                 is_active: isActive,
+                short_code : shortCode,
                 filter_order : filterOrder
                 },
                 {where: {
@@ -1054,6 +1059,7 @@ exports.managemetalcolors = async (req, res) => {
             id:uuidv1(),
             name: name, 
             alias : name,
+            short_code : shortCode,
             is_filter: isFilter,
             is_active: isActive,
             filter_order : filterOrder 
