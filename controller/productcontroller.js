@@ -1241,6 +1241,8 @@ exports.productupload =  async (req, res) => {
 }
 exports.updateproductimage  =  async (req, res) => {
     const {imageobj, isedit} = req.body
+
+    console.log(JSON.stringify(req.body))
     let imgurl = imageobj.imageUrl;
     if(isedit)
     {
@@ -1264,7 +1266,7 @@ exports.updateproductimage  =  async (req, res) => {
             product_color: imageobj.productColor,
             image_position : imageobj.imagePosition,
             ishover : imageobj.imagePosition == 2 ? true : false,
-            isdefault : default_metal_color === imageobj.productColor ? true : false,
+            isdefault : imageobj.imagePosition == 1 ? true : false,
             createdAt : new Date(),
             updatedAt : new Date(),
 
