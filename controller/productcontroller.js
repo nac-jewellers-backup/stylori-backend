@@ -1775,9 +1775,13 @@ exports.updateskupriceinfo =  async (req, res) => {
 
 }
 exports.editproduct =  async (req, res) => {
-const {productId,productName,themes,styles,occassions,collections,stonecount,stonecolour,gender} = req.body
+const {productId,productName,themes,styles,occassions,collections,
+    minorderqty,
+    maxorderqty
+    ,stonecount,stonecolour,gender, earring_backing} = req.body
 
-
+console.log("=====================")
+console.log(JSON.stringify(req.body))
 var product_object = await models.product_lists.findOne({
     include:[
         {
@@ -1886,7 +1890,17 @@ let product_gender = product_object.product_genders;
         product_gender.forEach(element => {
             prev_genders.push(element.gender_name)
         })
-        
+        await models.product_themes.update(
+            {
+                is_active:  false
+            },
+            { 
+                where: 
+                {
+                   
+                  product_id: productId
+                }
+            })
         let theme_names = [];
         let reactive_themes = []
         themes.forEach(element => {
@@ -1919,7 +1933,13 @@ let product_gender = product_object.product_genders;
                   product_id: productId
                 }
             })
-
+            if(theme_names.length > 0)
+            {
+                await models.product_themes.bulkCreate(
+                    theme_names
+                      , {individualHooks: true})
+            }
+           
         let occassion_names = [];
         let reactive_occassions = []
         occassions.forEach(element => {
@@ -2038,6 +2058,19 @@ let product_gender = product_object.product_genders;
         await models.product_gender.bulkCreate(
             gender_names
               , {individualHooks: true})  
+
+              await models.product_styles.update(
+                // Values to update
+                {
+                    is_active:  false
+                },
+                { // Clause
+                    where: 
+                    {
+                     
+                        product_id: productId
+                    }
+                })
          let style_names = [];
         
          let reactive_styles = []
@@ -2074,10 +2107,14 @@ let product_gender = product_object.product_genders;
         await models.product_styles.bulkCreate(
             style_names
               , {individualHooks: true})
-
+            console.log("XXXXXXXXXXXXX")
+            console.log(maxorderqty)
               await models.product_lists.update(
                 // Values to update
                 {
+                    earring_backing :  earring_backing,
+                    selling_qty: minorderqty,
+                    max_booking_qty : maxorderqty,
                     product_name:  productName,
                     gender : genders_arr.join()
                 },
@@ -2095,9 +2132,12 @@ let product_gender = product_object.product_genders;
 
 
 
-//product_object['product_name'] = "testing"
+// product_object['earring_backing'] = earring_backing
 // await product_object.update({
-//     product_name : productName
+//     where: 
+//     {
+//       product_id: productId
+//     }
 // })
 res.status(200).send(prev_genders)
 
