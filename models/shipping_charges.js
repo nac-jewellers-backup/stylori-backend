@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ARRAY(DataTypes.TEXT),
 
     },
+    is_cart: DataTypes.BOOLEAN,
     display_attributes: DataTypes.TEXT,
     is_active: DataTypes.BOOLEAN
   }, {});

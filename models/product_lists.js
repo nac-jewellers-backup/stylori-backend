@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     width: DataTypes.DOUBLE,
     length: DataTypes.DOUBLE,
     product_type: DataTypes.STRING,
+    prod_description: DataTypes.STRING,
     earring_backing: DataTypes.STRING,
     product_vendor_code: DataTypes.STRING,
     size_varient: DataTypes.STRING,

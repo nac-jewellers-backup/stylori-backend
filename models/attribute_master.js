@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     is_filter: DataTypes.BOOLEAN,
     is_search: DataTypes.BOOLEAN,
     filter_position: DataTypes.INTEGER,
+    is_top_menu: DataTypes.BOOLEAN,
     is_active: DataTypes.BOOLEAN
   }, {});
   Attribute_master.associate = function(models) {

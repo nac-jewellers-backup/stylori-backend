@@ -573,7 +573,38 @@ let gross_amount = await models.shopping_cart_item.findOne({
       console.log(reason)
     });
 }
-  
+exports.updatecartitem = async (req, res) => {
+  let {cart_id, product } = req.body
+
+  let prod_count = parseInt(product.qty)
+ await models.shopping_cart_item.update({
+  qty: product.qty,
+  price: (prod_count * product.price)
+ },{
+    where: {
+        shopping_cart_id : cart_id,
+        product_sku : product.sku_id
+    }
+})
+
+let gross_amount = await models.shopping_cart_item.findOne({
+  attributes: [
+    [squelize.literal('SUM(price)'), 'price']
+  ],
+  where: {
+      shopping_cart_id: cart_id
+  }
+  })
+  console.log("cartline length")
+
+ await models.shopping_cart.update({gross_amount:gross_amount.price, discounted_price:gross_amount.price, discount: 0},{
+      where: {id: cart_id}
+      }).then(price_splitup_model=> { 
+      res.send(200,{message: 'Update product successfully'})
+    }).catch(reason => {
+      console.log(reason)
+    });
+}  
 exports.addtocart = async (req, res) => {
  let {user_id, products,cart_id} = req.body
  console.log(JSON.stringify(req.body));
@@ -611,12 +642,13 @@ exports.addtocart = async (req, res) => {
       console.log("updated")
       if(element.sku_id)
       {
+        let prod_count = parseInt(element.qty)
       const lineobj = {
           id:uuidv1(),
           shopping_cart_id: cart_id,
           product_sku: element.sku_id,
           qty: element.qty,
-          price: element.price
+          price: (prod_count * element.price)
       }
       console.log(JSON.stringify(lineobj))
 
@@ -657,9 +689,15 @@ exports.addtocart = async (req, res) => {
 }
 exports.uploadimage =  (req, res) => {
     console.log(req.body)
+    const {foldername} =req.body
     let extension = req.body.image;
+    let basefolder = 'base_images'
+    if(foldername)
+    {
+      basefolder = foldername
+    }
     const s3 = new aws.S3();  // Create a new instance of S3
-  const fileName = 'base_images/'+req.body.filename+'.'+extension.replace('jpeg','jpg').toLowerCase();
+  const fileName = basefolder+'/'+req.body.filename+'.'+extension.replace('jpeg','jpg').toLowerCase();
   const fileType = req.body.image;
   console.log(fileName)
 
@@ -1229,7 +1267,7 @@ exports.removewishlist = async (req, res) => {
  exports.testorderemail = async (req, res) => {
   var emilreceipiants = [{to : "manokarantk@gmail.com",subject:"Password Reset Successfully"}]
  // sendMail(emilreceipiants,emailTemp.changepasswordTemp("Manokaran"))
-   sendorderconformationemail("4c76a1d0-5610-11ea-8539-9938031cbfe9",res)
+   sendorderconformationemail("9cb91100-b083-11ea-82de-63badb42bd5b",res)
 
  }
 async function sendorderconformationemail(order_id,res)
@@ -1269,9 +1307,10 @@ async function sendorderconformationemail(order_id,res)
   var prod_image_condition = []
   console.log("orderinfodetails")
   console.log(JSON.stringify(orderdetails))
-  
+  let skuqty ={}
   orderdetails.shopping_cart.shopping_cart_items.forEach(element => {
     trans_sku_lists.push(element.product_sku)
+    skuqty[element.product_sku] =element.qty
     prod_image_condition.push({
       product_color : element.trans_sku_list.metal_color,
       product_id : element.trans_sku_list.product_id,
@@ -1297,6 +1336,7 @@ async function sendorderconformationemail(order_id,res)
       }
     }
   })
+  
   var imagelist = {}
   let prodimages = await models.product_images.findAll({
     attributes: ['product_id','product_color','image_url','image_position','isdefault'],
@@ -1320,7 +1360,7 @@ if(orderdetails.user_profile.facebookid || orderdetails.user_profile.user_id)
 {
   isloggedin = true
 }  
- sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skudetails,imagelist,day,isloggedin))
+ sendMail(emilreceipiants,emailTemp.orderConformation("",process.env.adminemail,orderdetails,skudetails,imagelist,day,isloggedin,skuqty))
 //return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
  }
 

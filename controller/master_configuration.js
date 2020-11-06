@@ -8,7 +8,9 @@ var splitArray = require('split-array');
 var request = require('request');
 
 exports.managetaxsetup = async (req, res) => {
-    const {id,taxName,taxValue,hsnNumber,igst,cgst,isedit,isdelete} = req.body
+    const {id,taxName,taxValue,hsnNumber,igst,cgst,sgst,isedit,isdelete} = req.body
+    console.log("sgstvalue")
+    console.log(sgst)
     if(isedit)
     {
         await   models.master_tax_settings.update(
@@ -17,6 +19,7 @@ exports.managetaxsetup = async (req, res) => {
             tax_value : taxValue ,
             hsn_number: hsnNumber,
             IGST: igst,
+            SGST: sgst,
             CGST:cgst},
                 {where: {
                 id: id
@@ -35,6 +38,7 @@ exports.managetaxsetup = async (req, res) => {
             tax_value : taxValue ,
             hsn_number: hsnNumber,
             IGST: igst,
+            SGST: sgst,
             CGST:cgst}
         await   models.master_tax_settings.create(   
                      taxobj
@@ -231,7 +235,7 @@ exports.manageorderstatus = async (req, res) => {
 
 exports.manageseoattributes = async (req, res) => {
     const {id,name,attributeName,
-        attributeValue,priority,seoText,seoUrl,
+        attributeValue,priority,seoText,seoUrl,imageUrl,mobileImageUrl,
         isedit,isdelete,isActive} = req.body
     if(isedit)
     {
@@ -243,6 +247,8 @@ exports.manageseoattributes = async (req, res) => {
                 priority: priority,
                 seo_text:seoText,
                 seo_url:seoUrl,
+                image_url: imageUrl,
+                mobile_image_url : mobileImageUrl,
                 is_active: isActive
             },
                 {where: {
@@ -263,8 +269,9 @@ exports.manageseoattributes = async (req, res) => {
             priority: priority,
             seo_text:seoText,
             seo_url:seoUrl,
-            is_active: isActive
-            
+            is_active: isActive,
+            image_url: imageUrl,
+            mobile_image_url : mobileImageUrl
            
             }
         await   models.seo_url_priorities.create(   
@@ -316,17 +323,18 @@ exports.managegenders = async (req, res) => {
 exports.manageshipmentsettings = async (req, res) => {
     const {id,name,shippingzones,rangetype,rangeFrom,rangeTo,
         shipmentCharge,isActive,isCart,isedit,isdelete} = req.body
-    if(isedit)
+        console.log(JSON.stringify(rangetype))
+        if(isedit)
     {
     
         await   models.shipping_charges.update(
             
             {  
                 
-                zone_id : shippingzones.id,
+            zone_id : shippingzones.id,
             charge_type : rangetype.id,
             range_from : rangeFrom,
-            isCart: isCart,
+            is_cart: isCart,
             range_to : rangeTo,
             shipment_charge : shipmentCharge,
             name: name, 
@@ -339,7 +347,7 @@ exports.manageshipmentsettings = async (req, res) => {
             
         )
     
-        res.send(200,{"message":"Updated Successfully"})
+        res.send(200,{"message":"Updated 1 Successfully"})
     }else if(isdelete)
     {
 
@@ -1024,7 +1032,7 @@ exports.managepurities = async (req, res) => {
 
 
 exports.managemetalcolors = async (req, res) => {
-    const {id,name,isFilter,isActive,filterOrder,isedit,isdelete} = req.body
+    const {id,name,isFilter,isActive,shortCode,filterOrder,isedit,isdelete} = req.body
     if(isedit)
     {
         await   models.master_metals_colors.update(
@@ -1033,6 +1041,7 @@ exports.managemetalcolors = async (req, res) => {
                 name: name,
                 is_filter: isFilter,
                 is_active: isActive,
+                short_code : shortCode,
                 filter_order : filterOrder
                 },
                 {where: {
@@ -1050,6 +1059,7 @@ exports.managemetalcolors = async (req, res) => {
             id:uuidv1(),
             name: name, 
             alias : name,
+            short_code : shortCode,
             is_filter: isFilter,
             is_active: isActive,
             filter_order : filterOrder 
@@ -1140,7 +1150,7 @@ exports.manageearring = async (req, res) => {
 }
 
 exports.managemasterattributes = async (req, res) => {
-    const {id,name,isFilter,isSearch,filterPosition,isdelete,isedit} = req.body
+    const {id,name,isFilter,isSearch,isTopMenu,filterPosition,isdelete,isedit} = req.body
     if(isedit)
     {
         await   models.Attribute_master.update(
@@ -1149,7 +1159,8 @@ exports.managemasterattributes = async (req, res) => {
                 name: name,
                 is_filter: isFilter,
                 filter_position : filterPosition,
-                is_search : isSearch
+                is_search : isSearch,
+                is_top_menu : isTopMenu
                 },
                 {where: {
                 id: id
@@ -1168,6 +1179,7 @@ exports.managemasterattributes = async (req, res) => {
             filter_position : filterPosition,
             is_search : isSearch,
             is_active: true,
+            is_top_menu : isTopMenu,
             short_code : "",
             }
         await   models.Attribute_master.create(   

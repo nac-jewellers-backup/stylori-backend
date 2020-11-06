@@ -20,7 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'cart_id',
       targetKey: 'id'
     });
-    
+    models.shopping_cart.hasMany(models.giftwrap,{
+      foreignKey: 'cart_id',
+      targetKey: 'id'
+    });
   };
   return shopping_cart;
 };

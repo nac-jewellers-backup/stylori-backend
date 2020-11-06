@@ -1262,6 +1262,8 @@ exports.productupload =  async (req, res) => {
 }
 exports.updateproductimage  =  async (req, res) => {
     const {imageobj, isedit} = req.body
+
+    console.log(JSON.stringify(req.body))
     let imgurl = imageobj.imageUrl;
     var product_object = await models.trans_sku_lists.findOne({
         attributes:["metal_color"],
@@ -1294,7 +1296,7 @@ exports.updateproductimage  =  async (req, res) => {
             product_color: imageobj.productColor,
             image_position : imageobj.imagePosition,
             ishover : imageobj.imagePosition == 2 ? true : false,
-            isdefault : default_metal_color === imageobj.productColor ? true : false,
+            isdefault : imageobj.imagePosition == 1 ? true : false,
             createdAt : new Date(),
             updatedAt : new Date(),
 
@@ -1746,7 +1748,14 @@ exports.updateskupriceinfo =  async (req, res) => {
 
     const {generatedSku, costPrice, costPriceTax, sellingPrice, 
         markupPrice, discountPrice,sellingPriceTax, markupPriceTax, discountPriceTax} = req.body
-    let response_obj1 = await models.trans_sku_lists.update(
+        var margin_on_sale = 0.0
+
+        if(costPrice > 0 && discountPrice > 0)
+        {
+            margin_on_sale =  (discountPrice - costPrice)/discountPrice * 100
+        }
+    
+        let response_obj1 = await models.trans_sku_lists.update(
         // Values to update
         {
             cost_price: costPrice,
@@ -1777,7 +1786,8 @@ exports.updateskupriceinfo =  async (req, res) => {
 exports.editproduct =  async (req, res) => {
 const {productId,productName,themes,styles,occassions,collections,
     minorderqty,
-    maxorderqty
+    maxorderqty,
+    prod_description
     ,stonecount,stonecolour,gender, earring_backing} = req.body
 
 console.log("=====================")
@@ -2116,7 +2126,8 @@ let product_gender = product_object.product_genders;
                     selling_qty: minorderqty,
                     max_booking_qty : maxorderqty,
                     product_name:  productName,
-                    gender : genders_arr.join()
+                    gender : genders_arr.join(),
+                    prod_description : prod_description
                 },
                 { // Clause
                     where: 
@@ -2293,4 +2304,71 @@ exports.getproductlist =  async (req, res) => {
             res.send(200,{orders})
         
         
+        }
+
+        exports.getorderdetails =  async (req, res) => {
+            const {order_id} = req.body
+               let whereclause = {
+                    id : order_id
+               }
+             
+        
+                
+                let orders = await models.orders.findOne({
+                    include:[
+                        {
+                            model : models.user_profiles,
+
+                        },
+                        
+                        {
+                            model : models.shopping_cart,
+                            include : [
+                                {
+                                    model : models.shopping_cart_item,
+                                    include:[
+                                        {
+                                            model :  models.trans_sku_lists
+                                        },
+                                        
+                                    ]
+                                },
+                                {
+                                    model : models.giftwrap
+                                },
+                                {
+                                    model : models.cart_address,
+                                    where: {
+                                        address_type : 1
+                                    }
+        
+                                }
+                            ]
+                        }
+                    ],
+                    where: whereclause
+                    
+                })
+            
+            
+                res.send(200,{orders})
+            
+            }
+
+
+        exports.getproducturl =  async (req, res) => {
+            const {productid} = req.body
+
+            let sku_details = await models.trans_sku_lists.findOne(
+                {
+                    attributes:['sku_url'],
+                    where: {
+                        isdefault : true,
+                        product_id : productid
+                    }
+                }
+
+            )
+            let url = `https://www.stylori.com/${sku_details.sku_url}`
+            res.status(200).send({url:url })
         }

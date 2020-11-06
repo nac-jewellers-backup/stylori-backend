@@ -60,7 +60,7 @@ module.exports = function(app) {
 	app.post('/disableproduct', productcontroller.disableproduct);
 	app.post('/getproductlist', productcontroller.getproductlist);
 	app.post('/getorders', productcontroller.getorderlist);
-
+	app.post('/getorderdetails', productcontroller.getorderdetails);
 	
 	app.post('/productpriceupdate',single_product_pricecontroller.priceupdate)
 
@@ -126,7 +126,9 @@ module.exports = function(app) {
 	app.post('/productesearch', productfetchController_esearch.productesearch);
 
 	app.post('/createorder', cartcontroller.addorder);
+	app.post('/updatecartitem', cartcontroller.updatecartitem);
 
+	
 	app.post('/addproductreview', cartcontroller.addproductreview);
 	app.post('/applyvoucher', cartcontroller.applyvoucher);
 	app.post('/createvoucher', cartcontroller.createvoucher);
@@ -150,7 +152,9 @@ module.exports = function(app) {
 	app.post('/fetchproducts', productFetchController.filteroptions);
 	app.post('/esearchfetchproducts', productfetchController_esearch.filteroptions);
 	app.post('/getproductvarient', productcontroller.getproductvarient);
+	app.post('/getproducturl', productcontroller.getproducturl);
 
+	
 	app.post('/editproduct', productcontroller.editproduct);
 	app.post('/editproductdiamond', productcontroller.editproductdiamond);
 	app.post('/updateskuinfo', productcontroller.updateskuinfo);

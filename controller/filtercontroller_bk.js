@@ -576,7 +576,7 @@ let prod_type_where = {}
         master_gender,
         master_stonecolor,
         master_stonecount,
-       // price_range,
+        // price_range,
        master_bydesign,
        master_byweight,
         seo_url,

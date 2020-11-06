@@ -543,7 +543,7 @@ const subscribeTemp = (userobj, email, token) => {
 };
 
 
-  const orderconformation = (username,email,paymentcontent,skudetail,imagelist,day,isloggedin) => {
+  const orderconformation = (username,email,paymentcontent,skudetail,imagelist,day,isloggedin,skuqty) => {
     var productlist = [];
     var prod_content = ""
     var grossamt = 0;
@@ -631,7 +631,7 @@ const subscribeTemp = (userobj, email, token) => {
             Expected Ship Date: <span >${deliverdate}</span>                      
             </p>
         </td>
-       <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;" >1</p></td>
+       <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;" >${skuqty[element.generated_sku]}</p></td>
         <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;"><!-- <i class="fa fa-inr" aria-hidden="true"></i>--><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span >${element.markup_price}</span></p>
         </td>
     </tr>`
