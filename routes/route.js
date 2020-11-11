@@ -220,8 +220,10 @@ module.exports = function(app) {
 	app.post('/getrolepermissions', configurationcontroller.getrolepermissions);
 	app.post('/getwebusers', configurationcontroller.getwebusers);
 	app.post('/managetaxattributes', configurationcontroller.managetaxattributes);
+	app.post('/managetaxattributes', configurationcontroller.managetaxattributes);
+	app.post('/silverproductpriceupdate', component_price_update.silverproductpriceupdate);
+	app.post('/updateproductattributes', component_price_update.updateproductattributes);
 
-	
 	
 	app.post('/updatefilterposition', master_uploaddata_controller.updatefilterposition);
 

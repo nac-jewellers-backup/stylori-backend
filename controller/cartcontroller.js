@@ -115,13 +115,15 @@ exports.applyvoucher = async (req, res) => {
   var isloggedin = false
   if(user_profile_id)
   {
+    console.log("XXXXXXX")
  let userprofile = await models.user_profiles.findOne({
                         where: {
                           id: user_profile_id
                         }
                     })
 
-    
+console.log(userprofile.facebookid)
+console.log(userprofile.user_id)
   if(userprofile.facebookid || userprofile.user_id)
   {
     isloggedin = true
@@ -149,17 +151,23 @@ exports.applyvoucher = async (req, res) => {
   //   }
   // })
   let keys = Object.keys(coupon_info.product_attributes);
+  console.log("attributefixes")
   keys.forEach(key => {
     let attributeobj = coupon_info.product_attributes[key];
     if(Array.isArray(attributeobj))
     {
+
+      console.log("NNNNNNNNNNNNNNN")
+      console.log(JSON.stringify(attributeobj))
       let componentarr = [];
       attributeobj.forEach(attr => {
-        if(attr.alias)
+              console.log(JSON.stringify(attr))
+
+        if(attr)
         {
           let attr_where = {
             attributes: {
-              [Op.contains] : [attr.alias]
+              [Op.contains] : [attr]
             }
           }
           componentarr.push(attr_where)
@@ -167,6 +175,8 @@ exports.applyvoucher = async (req, res) => {
 
        
       })
+      console.log(componentarr)
+
      if(componentarr.length > 0)
      {
       let attrobj = {
@@ -204,6 +214,7 @@ exports.applyvoucher = async (req, res) => {
             attributes: ['product_category'],
             where: couponwhereclause
           }
+          
         ]
       }
     ],

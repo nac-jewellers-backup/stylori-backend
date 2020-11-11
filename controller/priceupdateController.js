@@ -691,3 +691,240 @@ function getmaterialmarkupsum(skuvalue)
       })
   }
 }
+
+exports.silverproductpriceupdate = async (req, res) => {
+  const {Sheet1} = req.body
+  
+  Sheet1.forEach(async priceobj => {
+
+    let margin_on_sale_percentage = ((priceobj.Discount_Price - priceobj.Cost_Price)/priceobj.Discount_Price) *100
+
+    let transskuobj = {
+      cost_price : priceobj.Cost_Price,
+      cost_price_tax : priceobj.cost_tax,
+      selling_price : priceobj.Selling_Price ,
+      selling_price_tax : priceobj.sell_tax,
+      discount_price: priceobj.Discount_Price,
+      discount_price_tax : priceobj.discount_tax,
+      markup_price: priceobj.Markup_price,
+      markup_price_tax : priceobj.markup_tax,
+      margin_on_sale_percentage : margin_on_sale_percentage
+    } 
+        //res.send(200,{"material":transskuobj});
+
+  await models.trans_sku_lists.update(transskuobj,{
+    where: {product_id: priceobj.Stylori_SKU}
+    })
+   });  
+}
+
+exports.updateproductattributes = async (req, res) => {
+  const {Sheet1} = req.body
+
+  Sheet1.forEach(async priceobj => {
+    var attributes_alias = []
+    let productobj = await models.product_lists.findOne({
+      include: [{
+        model: models.trans_sku_lists,
+        attributes:['generated_sku','purity']
+        
+       },
+       {
+        model: models.product_materials,
+        attributes:['material_name']
+        
+       },
+       {
+        model: models.product_themes,
+        attributes:['theme_name']
+        
+       },
+       {
+        model: models.product_occassions,
+        attributes:['occassion_name']
+        
+       },
+       {
+        model: models.product_styles,
+        attributes:['style_name']
+        
+       },
+       {
+        model: models.product_collections,
+        attributes:['collection_name']
+        
+       },
+      ],
+      where:{
+        product_id : priceobj.Stylori_SKU
+      }
+    })
+
+    
+
+    let product_category = await models.master_product_categories.findOne({
+      where:{
+        name : productobj.product_category
+      }
+    })
+    if(product_category && product_category.short_code)
+    {
+      attributes_alias.push(product_category.short_code)
+    }
+   let prod_type = await models.master_product_types.findOne({
+      where:{
+        name : productobj.product_type
+      }
+    })
+    if(prod_type && prod_type.alias)
+    {
+      attributes_alias.push(prod_type.alias)
+    }
+    let materials = []
+    productobj.product_materials.forEach(material_content => {
+      materials.push(material_content.material_name)
+    })
+    if(materials.length > 0)
+    {
+    let master_alias = await models.master_materials.findAll({
+      where:{
+        name : {
+          [Op.in] : materials
+        }
+      }
+    })
+    if(master_alias)
+    {
+
+      master_alias.forEach(mat_obj => {
+        attributes_alias.push(mat_obj.alias)
+
+      })
+    }
+    let themes = []
+    productobj.product_themes.forEach(theme_content => {
+      themes.push(theme_content.theme_name)
+    })
+
+    if(themes.length > 0)
+    {
+    let theme_alias = await models.master_themes.findAll({
+      where:{
+        name : {
+          [Op.in] : themes
+        }
+      }
+    })
+    if(theme_alias)
+    {
+
+      theme_alias.forEach(mat_obj => {
+        attributes_alias.push(mat_obj.alias)
+
+      })
+    }
+  }
+  }
+    let occassions = []
+    productobj.product_occassions.forEach(occ_content => {
+      occassions.push(occ_content.occassion_name)
+    })
+    if(occassions.length > 0)
+    {
+    let occassion_alias = await models.master_occasions.findAll({
+      where:{
+        name : {
+          [Op.in] : occassions
+        }
+      }
+    })
+    if(occassion_alias)
+    {
+
+      occassion_alias.forEach(mat_obj => {
+        attributes_alias.push(mat_obj.alias)
+
+      })
+    }
+  }
+    
+
+  let styles = []
+    productobj.product_styles.forEach(style_content => {
+      styles.push(style_content.style_name)
+    })
+    if(styles.length > 0)
+    {
+    let style_alias = await models.master_styles.findAll({
+      where:{
+        name : {
+          [Op.in] : styles
+        }
+      }
+    })
+    if(style_alias)
+    {
+
+      style_alias.forEach(mat_obj => {
+        attributes_alias.push(mat_obj.alias)
+
+      })
+    }
+  }
+
+
+  let collections = []
+    productobj.product_collections.forEach(collection_content => {
+      collections.push(collection_content.collection_name)
+    })
+    if(collections.length > 0)
+    {
+    let collection_alias = await models.master_collections.findAll({
+      where:{
+        name : {
+          [Op.in] : collections
+        }
+      }
+    })
+    if(collection_alias)
+    {
+
+      collection_alias.forEach(mat_obj => {
+        attributes_alias.push(mat_obj.alias)
+
+      })
+    }
+  }
+  await models.product_lists.update({
+    attributes : attributes_alias
+  },{
+    where: {product_id: priceobj.Stylori_SKU}
+    });
+    if(productobj.trans_sku_lists.length > 0)
+    {
+      productobj.trans_sku_lists.forEach(async skuobj => {
+        if(skuobj.purity)
+        {
+          let purity_obj = await models.master_metals_purities.findOne({
+            where:{
+              name : skuobj.purity
+            }
+          })
+          console.log("================")
+          console.log(purity_obj.alias)
+
+          attributes_alias.push(purity_obj.alias)
+          await models.trans_sku_lists.update({
+            attributes : attributes_alias
+          },{
+            where: {generated_sku: skuobj.generated_sku}
+            });
+        }
+      })
+    }
+    
+
+
+  });
+
+}
