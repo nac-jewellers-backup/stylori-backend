@@ -184,7 +184,6 @@ console.log(userprofile.user_id)
       }
       attributes_condition.push(attrobj)
      }
-   
     }
 
   })
