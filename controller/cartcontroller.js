@@ -64,8 +64,14 @@ const {vouchername,vouchercodes,description,isloggedin,discounttype,maxdiscount,
       attributeobj.forEach(attr => {
         if(attr.alias)
         {
-          
-          componentarr.push(attr.alias)
+          if(attr.alias == "Gold Jewellery")
+          {
+            componentarr.push(attr.short_code)
+
+          }else{
+            componentarr.push(attr.alias)
+
+          }
         }
 
        
