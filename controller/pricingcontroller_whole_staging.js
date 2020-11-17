@@ -835,17 +835,11 @@ exports.priceupdate = (req, res) => {
       var gemstone_component_count = 0
 
       console.log("processlength"+product_obj.trans_sku_lists.length)
-      console.log("processlength"+pricingcomponent)
-
       if(pricingcomponent)
       {
-        console.log("testXXXXyX"+pricingcomponent)
-
        checkisinclude();
 
       }else{
-        console.log("testXXXXX"+pricingcomponent)
-
         updatediamondprice(productobj.vendor_code, productskus[0])
 
       }
@@ -853,8 +847,6 @@ exports.priceupdate = (req, res) => {
    // updategoldprice(productobj.vendor_code, productskus[0])
    function checkisinclude()
    {
-    console.log(pricingcomponent)
-
     if(pricingcomponent === "Diamond")
     {
       updatediamondprice(productobj.vendor_code, productskus[0])
@@ -901,7 +893,6 @@ exports.priceupdate = (req, res) => {
          diamond_process(product_diamonds[0],vendor_code);
         }else
         {
-          console.log(pricingcomponent)
           if(pricingcomponent === "Diamond")
           {
            isskuexist()
@@ -2011,10 +2002,6 @@ exports.priceupdate = (req, res) => {
               // res.send(200,{materialsum, matalsum})
               const costpricetax = (total_costprice * taxval /100);
               const sellingpricetax = (total_sellingprice * taxval /100);
-              console.log("test selling price")
-              console.log(sellingpricetax)
-              console.log(total_sellingprice)
-              console.log(productskus[skucount].generated_sku)
               
               let skumarkup = materialsum.markup + matalsum.markup;
               let skudiscount = materialsum.discount_price + matalsum.discount_price;
