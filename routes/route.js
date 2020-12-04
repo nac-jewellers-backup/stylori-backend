@@ -125,7 +125,7 @@ module.exports = function(app) {
 
 	app.post('/productesearch', productfetchController_esearch.productesearch);
 
-	app.post('/createorder', cartcontroller.addorder);
+	app.post('/createorder',[authJwt.checkorigin],  cartcontroller.addorder);
 	app.post('/updatecartitem', cartcontroller.updatecartitem);
 
 	
@@ -221,7 +221,7 @@ module.exports = function(app) {
 	app.post('/getwebusers', configurationcontroller.getwebusers);
 	app.post('/managetaxattributes', configurationcontroller.managetaxattributes);
 	app.post('/managetaxattributes', configurationcontroller.managetaxattributes);
-	//app.post('/silverproductpriceupdate', component_price_update.silverproductpriceupdate);
+	app.post('/silverproductpriceupdate',[authJwt.checkorigin], component_price_update.silverproductpriceupdate);
 	//app.post('/updateproductattributes', component_price_update.updateproductattributes);
 
 	

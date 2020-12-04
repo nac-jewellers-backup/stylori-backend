@@ -691,3 +691,43 @@ function getmaterialmarkupsum(skuvalue)
       })
   }
 }
+
+
+exports.silverproductpriceupdate = (req, res) => {
+const { prodlist } = req.body
+console.log("CCCCCCC")
+console.log(req.hostname  )
+
+// prodlist.forEach(async (priceobj, index) => {
+//   // if(index == 0)
+//   // {
+//     let transskuobj = {
+//       cost_price : priceobj.Cost_Price ,
+//       cost_price_tax : priceobj.cost_tax,
+//       selling_price : priceobj.Selling_Price ,
+//       selling_price_tax : priceobj.sell_tax,
+//       discount_price: priceobj.Discount_Price,
+//       discount_price_tax : priceobj.discount_tax,
+//       markup_price: priceobj.Markup_price
+   
+//     } 
+//    await models.trans_sku_lists.update(transskuobj,{
+//       where: {product_id : priceobj.Stylori_SKU}
+//       }).then(price_splitup_model=> {
+        
+//         console.log("updated")
+
+//     }).catch(reason => {
+//       console.log(reason)
+//     });    
+//     console.log(JSON.stringify(transskuobj))
+//   // }
+//   //   else{
+//   //     console.log("range out of box")
+//   //   }
+
+// });
+res.send(200,"success")
+
+
+}

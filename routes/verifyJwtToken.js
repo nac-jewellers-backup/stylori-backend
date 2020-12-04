@@ -23,6 +23,17 @@ const verifyToken = (req, res, next) => {
 		next();
 	});
 }
+
+const checkorigin = (req, res, next) => {
+	if(req.hostname == 'stylori.com')
+	{
+	  next();
+	}else{
+		res.status(401).send("Unauthorized access");
+
+	}
+  }
+  
 const checkguest = (req, res, next) => {
 	let token = req.headers['x-access-token'];
 	console.log(token);
@@ -104,6 +115,8 @@ authJwt.verifyToken = verifyToken;
 authJwt.generateToken = generateToken;
 authJwt.updateLastlogin = updateLastlogin;
 authJwt.checkguest = checkguest;
+authJwt.checkorigin = checkorigin;
+
 
 
 authJwt.isAdmin = isAdmin;

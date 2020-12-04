@@ -50,7 +50,6 @@ exports.signin = (req, res) => {
     });
 }
 
-
 exports.fbsignin = async(req, res) => {
     const {fbid} = req.body
     models.user_profiles.findOne({
