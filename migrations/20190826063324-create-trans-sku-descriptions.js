@@ -8,7 +8,11 @@ module.exports = {
         type: Sequelize.UUID
       },
       sku_id: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        references: {
+          model: 'trans_sku_lists', // name of Source model
+          key: 'generated_sku',
+        }
       },
       vendor_code: {
         type: Sequelize.STRING

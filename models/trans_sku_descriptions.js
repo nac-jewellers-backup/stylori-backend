@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   trans_sku_descriptions.associate = function(models) {
     // associations can be defined here
+    
   };
    
   return trans_sku_descriptions;

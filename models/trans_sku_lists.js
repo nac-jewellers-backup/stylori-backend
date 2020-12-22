@@ -3,15 +3,7 @@ const uuidv1 = require('uuid/v1');
 
 module.exports = (sequelize, DataTypes) => {
   const trans_sku_lists = sequelize.define('trans_sku_lists', {
-    id:
-    { 
-        allowNull: false,
-        autoIncrement: true,
-        type: DataTypes.UUID,
-        defaultValue: uuidv1(),
-        primaryKey: true,
-
-    },
+    
     purity: {
       type: DataTypes.STRING
     },
@@ -103,6 +95,10 @@ module.exports = (sequelize, DataTypes) => {
     //   foreignKey: 'product_sku',
     //   targetKey: 'generated_sku'
     // });
+    models.trans_sku_lists.belongsTo(models.trans_sku_descriptions,{
+      foreignKey: 'generated_sku',
+      targetKey: 'sku_id'
+    });
     models.trans_sku_lists.hasMany(models.pricing_sku_materials,{
       foreignKey: 'product_sku',
       targetKey: 'generated_sku'
