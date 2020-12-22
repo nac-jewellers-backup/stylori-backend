@@ -2329,7 +2329,9 @@ exports.getproductlist =  async (req, res) => {
                     model: models.product_materials,
                     attributes:["material_name"]
                 }],
-                limit : 10
+                where:{
+                    isactive : true
+                }
                 })
                 var res_json =[];
                 products.forEach( prod => {
