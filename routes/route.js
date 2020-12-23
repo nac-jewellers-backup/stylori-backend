@@ -162,8 +162,9 @@ module.exports = function(app) {
 	app.post('/updateproductattr', productcontroller.updateproductattr_bk);
 	app.post('/updateproductimage', productcontroller.updateproductimage);
 	app.post('/productdetails', productcontroller.productdetails);
-
 	
+	app.post('/sendtoairpay', cartcontroller.sendtoairpay);
+
 	
 	app.post('/updatevendor', master_uploaddata_controller.updatevendor);
 	app.post('/getnewvendorcode', master_uploaddata_controller.generatevendorcode);

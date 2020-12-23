@@ -458,7 +458,7 @@ returning: true
 
 }
 exports.generatepaymenturl = async (req, res) => {
-const {chargetotal} = req.body
+    const {chargetotal} = req.body
     var timezone = "IST";
     var authenticateTransaction = true;
     var txntype = "sale";
@@ -534,7 +534,49 @@ const {chargetotal} = req.body
 
 
 }
+exports.sendtoairpay = async (req, res) =>
+{
+  const {buyerEmail,buyerPhone,buyerFirstName,buyerLastName,
+    buyerAddress,buyerCity,buyerState,buyerCountry,buyerPinCode,
+    orderid,amount,customvar,subtype} = req.body
+	var md5 = require('md5');
+	var sha256 = require('sha256');
+  var dateformat = require('dateformat');
+  var mid = '19010';
+var username = '1021705';
+var password = '74b1K5k2';
+var secret = 'P43WoR9jcQkB7UOh';
+var now = new Date();
+   let alldata   = buyerEmail+buyerFirstName+buyerLastName+buyerAddress+buyerCity+buyerState+buyerCountry+amount+orderid;
+   let udata = username+':|:'+password;
+   let  privatekey = sha256(secret+'@'+udata);
+   let  aldata = alldata+dateformat(now,'yyyy-mm-dd');
+let	checksum = md5(aldata+privatekey);
+  let fdata = req.body; 
+    var bodyparams = {
+      ...fdata,
+      privatekey : privatekey,
+      mercid: mid,
+      currency: 356,
+      isocurrency: "INR",
+      chmod: "pg",
+      checksum: checksum
+    }
+      console.log(JSON.stringify(bodyparams))
+//   request({
+//     url: 'https://payments.airpay.co.in/pay/index.php',
+//     method: "POST",
+//     headers: {"Content-Type": "application/json"},
+//     body: JSON.stringify(bodyparams)
+// }, function(error, response, body) {
+//   console.log(JSON.stringify(response))
+//   console.log(JSON.stringify(body))
 
+   res.send(200,bodyparams);
+
+//});
+   //res.render('sendtoairpay', { mid : mid,data: fdata,privatekey : privatekey,checksum:checksum});
+};
 
 exports.getsizes = async (req, res) => {
   var prooduct_sizes = await models.trans_sku_lists.findAll({
