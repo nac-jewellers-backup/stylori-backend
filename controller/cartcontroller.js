@@ -542,10 +542,10 @@ exports.sendtoairpay = async (req, res) =>
 	var md5 = require('md5');
 	var sha256 = require('sha256');
   var dateformat = require('dateformat');
-  var mid = '19010';
-var username = '1021705';
-var password = '74b1K5k2';
-var secret = 'P43WoR9jcQkB7UOh';
+  var mid = '34701';
+var username = '5938224';
+var password = 'Kce2qpv8';
+var secret = 'mMxBy5Er3Q6756Qc';
 var now = new Date();
    let alldata   = buyerEmail+buyerFirstName+buyerLastName+buyerAddress+buyerCity+buyerState+buyerCountry+amount+orderid;
    let udata = username+':|:'+password;
