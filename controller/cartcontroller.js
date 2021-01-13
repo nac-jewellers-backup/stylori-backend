@@ -369,7 +369,7 @@ exports.paymentsuccess = async (req, res) => {
     //   returning: true
     // })
     //sendorderconformationemail(req.body.oid)
-  let redirectionurl = process.env.baseurl+'/paymentsuccess/'+req.body.TRANSACTIONID
+  let redirectionurl = process.env.baseurl+'/paymentsuccess/a08368f0-54e6-11eb-939a-ad9261576e22'
 
  return res.redirect(redirectionurl);
 }
