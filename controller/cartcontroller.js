@@ -542,10 +542,10 @@ exports.sendtoairpay = async (req, res) =>
 	var md5 = require('md5');
 	var sha256 = require('sha256');
   var dateformat = require('dateformat');
-  var mid = '35828';
-var username = '3212459';
-var password = 'ctwUUwf6';
-var secret = '2cUP2wCxu3Kufd2W';
+  var mid = process.env.airpay_mid;
+var username = process.env.username;
+var password = process.env.password;
+var secret = process.env.secret;
 var now = new Date();
    let alldata   = buyerEmail+buyerFirstName+buyerLastName+buyerAddress+buyerCity+buyerState+buyerCountry+amount+orderid;
    let udata = username+':|:'+password;
@@ -559,7 +559,7 @@ let	checksum = md5(aldata+privatekey);
       mercid: mid,
       currency: 356,
       isocurrency: "INR",
-      chmod: "pg",
+      chmod: "",
       checksum: checksum
     }
       console.log(JSON.stringify(bodyparams))
