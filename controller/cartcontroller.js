@@ -368,7 +368,7 @@ exports.paymentsuccess = async (req, res) => {
     let new_cart = await models.payment_details.create(paymentcontent,{
       returning: true
     })
-    sendorderconformationemail(req.body.oid)
+    //sendorderconformationemail(req.body.oid)
   let redirectionurl = process.env.baseurl+'/paymentsuccess/a08368f0-54e6-11eb-939a-ad9261576e22'
 
  return res.redirect(redirectionurl);
