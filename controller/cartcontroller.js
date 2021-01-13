@@ -349,27 +349,27 @@ models.vouchers.findOne({
 
 }
 exports.paymentsuccess = async (req, res) => {
-    let paymentcontent = {
-           order_id : req.body.oid,
-            payment_response : JSON.stringify(req.body)
-    }
-    let orderobj = await models.orders.findOne({
-      where : {
-          id : req.body.oid
-      }
-    })
-    const update_cartstatus = {
-      status: "paid"
-    }
-    let updatecart = await models.shopping_cart.update(update_cartstatus, {returning: true, 
-      where : {
-        id : orderobj.cart_id
-      }})
-    let new_cart = await models.payment_details.create(paymentcontent,{
-      returning: true
-    })
+    // let paymentcontent = {
+    //        order_id : req.body.oid,
+    //         payment_response : JSON.stringify(req.body)
+    // }
+    // let orderobj = await models.orders.findOne({
+    //   where : {
+    //       id : req.body.oid
+    //   }
+    // })
+    // const update_cartstatus = {
+    //   status: "paid"
+    // }
+    // let updatecart = await models.shopping_cart.update(update_cartstatus, {returning: true, 
+    //   where : {
+    //     id : orderobj.cart_id
+    //   }})
+    // let new_cart = await models.payment_details.create(paymentcontent,{
+    //   returning: true
+    // })
     //sendorderconformationemail(req.body.oid)
-  let redirectionurl = process.env.baseurl+'/paymentsuccess/a08368f0-54e6-11eb-939a-ad9261576e22'
+  let redirectionurl = process.env.baseurl+'/paymentsuccess/'+req.body.TRANSACTIONID
 
  return res.redirect(redirectionurl);
 }
