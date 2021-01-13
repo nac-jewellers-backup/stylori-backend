@@ -543,9 +543,9 @@ exports.sendtoairpay = async (req, res) =>
 	var sha256 = require('sha256');
   var dateformat = require('dateformat');
   var mid = process.env.airpay_mid;
-var username = process.env.username;
-var password = process.env.password;
-var secret = process.env.secret;
+var username = process.env.airpay_username;
+var password = process.env.airpay_username;
+var secret = process.env.airpay_secret;
 var now = new Date();
    let alldata   = buyerEmail+buyerFirstName+buyerLastName+buyerAddress+buyerCity+buyerState+buyerCountry+amount+orderid;
    let udata = username+':|:'+password;
