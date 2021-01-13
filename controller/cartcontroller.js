@@ -560,7 +560,11 @@ let	checksum = md5(aldata+privatekey);
       currency: 356,
       isocurrency: "INR",
       chmod: "",
-      checksum: checksum
+      checksum: checksum,
+      username,
+      password,
+      secret,
+      mid
     }
       console.log(JSON.stringify(bodyparams))
 //   request({
