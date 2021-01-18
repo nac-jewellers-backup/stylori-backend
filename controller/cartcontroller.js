@@ -349,26 +349,34 @@ models.vouchers.findOne({
 
 }
 exports.paymentsuccess = async (req, res) => {
+  const {txndata} = req.body
+
+  if(txndata.TRANSACTIONSTATUS == '200')
+  {
+    let transid = txndata.APTRANSACTIONID
+
+  }
+
     // let paymentcontent = {
     //        order_id : req.body.oid,
     //         payment_response : JSON.stringify(req.body)
     // }
-    // let orderobj = await models.orders.findOne({
-    //   where : {
-    //       id : req.body.oid
-    //   }
-    // })
-    // const update_cartstatus = {
-    //   status: "paid"
-    // }
-    // let updatecart = await models.shopping_cart.update(update_cartstatus, {returning: true, 
-    //   where : {
-    //     id : orderobj.cart_id
-    //   }})
-    // let new_cart = await models.payment_details.create(paymentcontent,{
-    //   returning: true
-    // })
-    //sendorderconformationemail(req.body.oid)
+    let orderobj = await models.orders.findOne({
+      where : {
+          payment_id : transid
+      }
+    })
+    const update_cartstatus = {
+      status: "paid"
+    }
+    let updatecart = await models.shopping_cart.update(update_cartstatus, {returning: true, 
+      where : {
+        id : orderobj.cart_id
+      }})
+    let new_cart = await models.payment_details.create(paymentcontent,{
+      returning: true
+    })
+    sendorderconformationemail(orderobj.id)
   let redirectionurl = process.env.baseurl+'/paymentsuccess/a08368f0-54e6-11eb-939a-ad9261576e22'
 
  return res.redirect(redirectionurl);
@@ -539,6 +547,33 @@ exports.sendtoairpay = async (req, res) =>
   const {buyerEmail,buyerPhone,buyerFirstName,buyerLastName,
     buyerAddress,buyerCity,buyerState,buyerCountry,buyerPinCode,
     orderid,amount,customvar,subtype} = req.body
+    var paymentid = 0;
+    var cartval = 1.0;
+    if(orderid)
+    {
+      let cartvalueobj = await  models.orders.findOne({
+        include:[
+          {
+            model: models.shopping_cart
+          }
+        ],
+        where:
+        {
+          id : orderid
+        }
+      })
+      if(cartvalueobj)
+      {
+        paymentid = cartvalueobj.payment_id
+
+      }
+      if(cartvalueobj.shopping_cart)
+      {
+       // cartval = cartvalueobj.shopping_cart.discounted_price
+      }
+    }else{
+
+    }
 	var md5 = require('md5');
 	var sha256 = require('sha256');
   var dateformat = require('dateformat');
@@ -547,7 +582,7 @@ var username = process.env.airpay_username;
 var password = process.env.airpay_password;
 var secret = process.env.airpay_secret;
 var now = new Date();
-   let alldata   = buyerEmail+buyerFirstName+buyerLastName+buyerAddress+buyerCity+buyerState+buyerCountry+amount+orderid;
+   let alldata   = buyerEmail+buyerFirstName+buyerLastName+buyerAddress+buyerCity+buyerState+buyerCountry+cartval+paymentid;
    let udata = username+':|:'+password;
    let  privatekey = sha256(secret+'@'+udata);
    let  aldata = alldata+dateformat(now,'yyyy-mm-dd');
@@ -560,8 +595,8 @@ let	checksum = md5(aldata+privatekey);
       currency: 356,
       isocurrency: "INR",
       chmod: "",
+      amount : cartvalue,
       checksum: checksum
-     
     }
       console.log(JSON.stringify(bodyparams))
 //   request({
