@@ -596,8 +596,7 @@ let	checksum = md5(aldata+privatekey);
       isocurrency: "INR",
       chmod: "",
       amount : cartval,
-      checksum: checksum,
-      cartvalueobj
+      checksum: checksum
       
 
     }
