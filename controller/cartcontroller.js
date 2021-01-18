@@ -357,15 +357,16 @@ exports.paymentsuccess = async (req, res) => {
 
   
 
-    // let paymentcontent = {
-    //        order_id : req.body.oid,
-    //         payment_response : JSON.stringify(req.body)
-    // }
+   
     let orderobj = await models.orders.findOne({
       where : {
           payment_id : transid
       }
     })
+    let paymentcontent = {
+      order_id : orderobj.id,
+       payment_response : JSON.stringify(req.body)
+}
     const update_cartstatus = {
       status: "paid"
     }
