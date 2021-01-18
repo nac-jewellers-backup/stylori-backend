@@ -354,7 +354,7 @@ console.log("???XXXXXXXXXXXXXXXXXXX")
 console.log(JSON.stringify(req.body))
   // if(txndata.TRANSACTIONSTATUS == '200')
   // {
-    let transid = txndata.APTRANSACTIONID
+    let transid = txndata.TRANSACTIONID
 
   
 
