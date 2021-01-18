@@ -351,11 +351,11 @@ models.vouchers.findOne({
 exports.paymentsuccess = async (req, res) => {
   const {txndata} = req.body
 
-  if(txndata.TRANSACTIONSTATUS == '200')
-  {
+  // if(txndata.TRANSACTIONSTATUS == '200')
+  // {
     let transid = txndata.APTRANSACTIONID
 
-  }
+  
 
     // let paymentcontent = {
     //        order_id : req.body.oid,
