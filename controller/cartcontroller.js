@@ -597,7 +597,7 @@ let	checksum = md5(aldata+privatekey);
       chmod: "",
       amount : cartval,
       checksum: checksum
-      
+      paymentid
 
     }
       console.log(JSON.stringify(bodyparams))
