@@ -595,8 +595,11 @@ let	checksum = md5(aldata+privatekey);
       currency: 356,
       isocurrency: "INR",
       chmod: "",
-      amount : cartvalue,
-      checksum: checksum
+      amount : cartval,
+      checksum: checksum,
+      cartvalueobj
+      
+
     }
       console.log(JSON.stringify(bodyparams))
 //   request({
