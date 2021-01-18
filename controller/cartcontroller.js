@@ -350,7 +350,8 @@ models.vouchers.findOne({
 }
 exports.paymentsuccess = async (req, res) => {
   const {txndata} = req.body
-
+console.log("???XXXXXXXXXXXXXXXXXXX")
+console.log(JSON.stringify(req.body))
   // if(txndata.TRANSACTIONSTATUS == '200')
   // {
     let transid = txndata.APTRANSACTIONID
