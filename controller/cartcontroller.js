@@ -379,7 +379,7 @@ console.log(JSON.stringify(req.body))
       returning: true
     })
     sendorderconformationemail(orderobj.id)
-  let redirectionurl = process.env.baseurl+'/paymentsuccess/a08368f0-54e6-11eb-939a-ad9261576e22'
+  let redirectionurl = process.env.baseurl+'/paymentsuccess/'+orderobj.id
 
  return res.redirect(redirectionurl);
 }
