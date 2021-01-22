@@ -353,15 +353,25 @@ models.vouchers.findOne({
 
 }
 exports.paymentsuccess = async (req, res) => {
-    let paymentcontent = {
-           order_id : req.body.oid,
-            payment_response : JSON.stringify(req.body)
-    }
+  const {TRANSACTIONID} = req.body
+console.log("???XXXXXXXXXXXXXXXXXXX")
+console.log(JSON.stringify(req.body))
+  // if(txndata.TRANSACTIONSTATUS == '200')
+  // {
+    let transid = req.body.TRANSACTIONID
+
+  
+
+   
     let orderobj = await models.orders.findOne({
       where : {
-          id : req.body.oid
+          payment_id : transid
       }
     })
+    let paymentcontent = {
+      order_id : orderobj.id,
+       payment_response : JSON.stringify(req.body)
+}
     const update_cartstatus = {
       status: "paid"
     }
@@ -372,8 +382,8 @@ exports.paymentsuccess = async (req, res) => {
     let new_cart = await models.payment_details.create(paymentcontent,{
       returning: true
     })
-    sendorderconformationemail(req.body.oid)
-  let redirectionurl = process.env.baseurl+'/paymentsuccess/'+req.body.oid
+    sendorderconformationemail(orderobj.id)
+  let redirectionurl = process.env.baseurl+'/paymentsuccess/'+orderobj.id
 
  return res.redirect(redirectionurl);
 }
