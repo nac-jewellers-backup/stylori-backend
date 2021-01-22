@@ -125,7 +125,7 @@ module.exports = function(app) {
 
 	app.post('/productesearch', productfetchController_esearch.productesearch);
 
-	app.post('/createorder',[authJwt.checkorigin],  cartcontroller.addorder);
+	app.post('/createorder',  cartcontroller.addorder);
 	app.post('/updatecartitem', cartcontroller.updatecartitem);
 
 	
