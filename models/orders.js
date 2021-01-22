@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     payment_status: DataTypes.STRING,
     order_status: DataTypes.STRING,
     awb_number: DataTypes.TEXT,
-    comments: DataTypes.TEXT
+    comments: DataTypes.TEXT,
+    payment_id: DataTypes.INTEGER
 
 
   }, {});
