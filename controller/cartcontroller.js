@@ -550,17 +550,26 @@ const {chargetotal} = req.body
 }
 exports.sendtoairpay = async (req, res) =>
 {
-  const {buyerEmail,buyerPhone,buyerFirstName,buyerLastName,
-    buyerAddress,buyerCity,buyerState,buyerCountry,buyerPinCode,
+  const {buyerPhone,buyerPinCode,
     orderid,amount,customvar,subtype} = req.body
     var paymentid = 0;
     var cartval = 1.0;
+    var buyerEmail = "";
+    var buyerFirstName = "";
+    var buyerLastName = "";
+    var buyerAddress = "";
+    var buyerCity = "";
+    var buyerState = "";
+    var buyerCountry = "";
     if(orderid)
     {
       let cartvalueobj = await  models.orders.findOne({
         include:[
           {
             model: models.shopping_cart
+          },
+          {
+            model: models.user_profiles
           }
         ],
         where:
@@ -568,6 +577,7 @@ exports.sendtoairpay = async (req, res) =>
           id : orderid
         }
       })
+      
       if(cartvalueobj)
       {
         paymentid = cartvalueobj.payment_id
@@ -575,7 +585,7 @@ exports.sendtoairpay = async (req, res) =>
       }
       if(cartvalueobj.shopping_cart)
       {
-       // cartval = cartvalueobj.shopping_cart.discounted_price
+        cartval = cartvalueobj.shopping_cart.discounted_price
       }
     }else{
 
