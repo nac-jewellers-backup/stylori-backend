@@ -224,7 +224,8 @@ module.exports = function(app) {
 	app.post('/silverproductpriceupdate',[authJwt.checkorigin], component_price_update.silverproductpriceupdate);
 	//app.post('/updateproductattributes', component_price_update.updateproductattributes);
 
-	
+	app.post('/sendtoairpay', cartcontroller.sendtoairpay);
+
 	app.post('/updatefilterposition', master_uploaddata_controller.updatefilterposition);
 
 	app.post('/managetaxsetup2', configurationcontroller.managetaxsetup2);
