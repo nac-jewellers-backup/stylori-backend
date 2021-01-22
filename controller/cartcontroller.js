@@ -538,7 +538,79 @@ const {chargetotal} = req.body
 
 
 }
+exports.sendtoairpay = async (req, res) =>
+{
+  const {buyerEmail,buyerPhone,buyerFirstName,buyerLastName,
+    buyerAddress,buyerCity,buyerState,buyerCountry,buyerPinCode,
+    orderid,amount,customvar,subtype} = req.body
+    var paymentid = 0;
+    var cartval = 1.0;
+    if(orderid)
+    {
+      let cartvalueobj = await  models.orders.findOne({
+        include:[
+          {
+            model: models.shopping_cart
+          }
+        ],
+        where:
+        {
+          id : orderid
+        }
+      })
+      if(cartvalueobj)
+      {
+        paymentid = cartvalueobj.payment_id
 
+      }
+      if(cartvalueobj.shopping_cart)
+      {
+       // cartval = cartvalueobj.shopping_cart.discounted_price
+      }
+    }else{
+
+    }
+	var md5 = require('md5');
+	var sha256 = require('sha256');
+  var dateformat = require('dateformat');
+  var mid = process.env.airpay_mid;
+var username = process.env.airpay_username;
+var password = process.env.airpay_password;
+var secret = process.env.airpay_secret;
+var now = new Date();
+   let alldata   = buyerEmail+buyerFirstName+buyerLastName+buyerAddress+buyerCity+buyerState+buyerCountry+cartval+paymentid;
+   let udata = username+':|:'+password;
+   let  privatekey = sha256(secret+'@'+udata);
+   let  aldata = alldata+dateformat(now,'yyyy-mm-dd');
+let	checksum = md5(aldata+privatekey);
+  let fdata = req.body; 
+    var bodyparams = {
+      ...fdata,
+      privatekey : privatekey,
+      mercid: mid,
+      currency: 356,
+      isocurrency: "INR",
+      chmod: "",
+      amount : cartval,
+      checksum: checksum,
+      paymentid
+
+    }
+      console.log(JSON.stringify(bodyparams))
+//   request({
+//     url: 'https://payments.airpay.co.in/pay/index.php',
+//     method: "POST",
+//     headers: {"Content-Type": "application/json"},
+//     body: JSON.stringify(bodyparams)
+// }, function(error, response, body) {
+//   console.log(JSON.stringify(response))
+//   console.log(JSON.stringify(body))
+
+   res.send(200,bodyparams);
+
+//});
+   //res.render('sendtoairpay', { mid : mid,data: fdata,privatekey : privatekey,checksum:checksum});
+};
 
 exports.getsizes = async (req, res) => {
   var prooduct_sizes = await models.trans_sku_lists.findAll({
