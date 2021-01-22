@@ -577,7 +577,19 @@ exports.sendtoairpay = async (req, res) =>
           id : orderid
         }
       })
-      
+      if(cartvalueobj)
+      {
+        if(cartvalueobj.user_profiles)
+        {
+             buyerEmail = cartvalueobj.user_profiles.email ? cartvalueobj.user_profiles.email : "";
+       buyerFirstName = cartvalueobj.user_profiles.first_name ? cartvalueobj.user_profiles.first_name : "";
+       buyerLastName = cartvalueobj.user_profiles.last_name ? cartvalueobj.user_profiles.last_name : "";
+       buyerAddress = cartvalueobj.user_profiles.address ?  cartvalueobj.user_profiles.address : "";
+       buyerCity = cartvalueobj.user_profiles.city ?  cartvalueobj.user_profiles.city : "";
+       buyerState = "";
+       buyerCountry = cartvalueobj.user_profiles.country ? cartvalueobj.user_profiles.country : "";
+        }
+      }
       if(cartvalueobj)
       {
         paymentid = cartvalueobj.payment_id
@@ -606,6 +618,13 @@ let	checksum = md5(aldata+privatekey);
   let fdata = req.body; 
     var bodyparams = {
       ...fdata,
+       buyerEmail,
+     buyerFirstName,
+     buyerLastName,
+     buyerAddress,
+     buyerCity,
+     buyerState,
+     buyerCountry,
       privatekey : privatekey,
       mercid: mid,
       currency: 356,
