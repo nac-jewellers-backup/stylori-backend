@@ -566,7 +566,12 @@ exports.sendtoairpay = async (req, res) =>
       let cartvalueobj = await  models.orders.findOne({
         include:[
           {
-            model: models.shopping_cart
+            model: models.shopping_cart,
+            include : [
+              {
+                model : models.cart_address
+              }
+            ]
           },
           {
             model: models.user_profiles
@@ -579,15 +584,27 @@ exports.sendtoairpay = async (req, res) =>
       })
       if(cartvalueobj)
       {
-        if(cartvalueobj.user_profiles)
+        if(cartvalueobj.shopping_cart)
         {
-             buyerEmail = cartvalueobj.user_profiles.email ? cartvalueobj.user_profiles.email : "";
-       buyerFirstName = cartvalueobj.user_profiles.first_name ? cartvalueobj.user_profiles.first_name : "";
-       buyerLastName = cartvalueobj.user_profiles.last_name ? cartvalueobj.user_profiles.last_name : "";
-       buyerAddress = cartvalueobj.user_profiles.address ?  cartvalueobj.user_profiles.address : "";
-       buyerCity = cartvalueobj.user_profiles.city ?  cartvalueobj.user_profiles.city : "";
-       buyerState = "";
-       buyerCountry = cartvalueobj.user_profiles.country ? cartvalueobj.user_profiles.country : "";
+
+          if(cartvalueobj.shopping_cart.cart_address)
+        {
+          let cartaddres_arr  = cartvalueobj.shopping_cart.cart_address;
+
+          if(cartaddres_arr.length > 0)
+          {
+            let cartaddressobject = cartaddres_arr[0]
+            buyerEmail = cartaddressobject.email ? cartaddressobject.email : "";
+       buyerFirstName = cartaddressobject.firstname ? cartaddressobject.firstname : "";
+       buyerLastName = cartaddressobject.lastname ? cartaddressobject.lastname : "";
+       buyerAddress = cartaddressobject.addressline1 ?  cartaddressobject.addressline1 : "";
+       buyerCity = cartaddressobject.city ?  cartaddressobject.city : "";
+       buyerState =  cartaddressobject.state ?  cartaddressobject.state : "";
+
+       buyerCountry = cartaddressobject.country ? cartaddressobject.country : "";
+          }
+        }
+      
         }
       }
       if(cartvalueobj)
