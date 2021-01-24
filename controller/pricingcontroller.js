@@ -2522,7 +2522,7 @@ exports.getaliasproductlist =  async (req, res) => {
   whereclause = {
     [Op.and]:attrs
   }
- 
+ console.log("XXXXXXXXXXXXXXXXXXATTR"+JSON.stringify(attrs))
   let productlists = await models.product_lists.findAll({
     attributes: ["product_id"],
     include: [{
