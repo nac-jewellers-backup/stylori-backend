@@ -619,7 +619,7 @@ exports.updateproductattribute =  async (req, res) => {
                 name : product_object.product_category
             }
         })
-    attributes_array.push(product_category.short_code)
+    attributes_array.push(product_category.alias)
     let product_type = await  models.master_product_types.findOne({
         where: {
             name : product_object.product_type
