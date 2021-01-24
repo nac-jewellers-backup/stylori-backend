@@ -160,6 +160,7 @@ module.exports = function(app) {
 	app.post('/updateskupriceinfo', productcontroller.updateskupriceinfo);
 	app.post('/editproductgemstone', productcontroller.editproductgemstone);
 	app.post('/updateproductattr', productcontroller.updateproductattr_bk);
+	app.post('/updateproductattribute', productcontroller.updateproductattribute);
 	app.post('/updateproductimage', productcontroller.updateproductimage);
 	app.post('/productdetails', productcontroller.productdetails);
 	
