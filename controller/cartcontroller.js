@@ -440,12 +440,17 @@ exports.resendorderemail = async (req, res) => {
 
 exports.paymentfailure = async (req, res) => {
   console.log(JSON.stringify(req.body))
-  if(req.body && req.body.oid)
+  if(req.body )
   {
+    let transid = req.body.TRANSACTIONID
 
+  
+
+   
+   
     let orderobj = await models.orders.findOne({
       where : {
-          id : req.body.oid
+          payment_id : transid
       }
     })
     const update_cartstatus = {
