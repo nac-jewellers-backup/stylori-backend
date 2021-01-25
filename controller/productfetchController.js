@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 
 exports.filteroptions = async (req, res) => {
 
-const {material,category, offer_min, offer_max, theme,collection, occasion, style, metalpurity, producttype, stoneshape,price, gender, stonecolor,metalcolor,noofstones,availability,sortBy,offset,bydesign,byweight} = req.body
+const {material,category,isJewellery, offer_min, offer_max, theme,collection, occasion, style, metalpurity, producttype, stoneshape,price, gender, stonecolor,metalcolor,noofstones,availability,sortBy,offset,bydesign,byweight} = req.body
 var product_list = [];
 var whereclause = {
   isactive: true
@@ -476,7 +476,15 @@ if(metalpurity)
     // console.log(JSON.stringify(includeclause))
     // whereclause['$product_purities.purity$']
 }
+if(isJewellery)
+{        
+  
 
+ 
+  whereclause['$trans_sku_lists.purity$'] = {
+    [Op.not]:"92.5"
+    }
+}
 if(gender)
 {
 
