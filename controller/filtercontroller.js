@@ -10,7 +10,7 @@ var splitArray = require('split-array');
 var silverpricerange = []
 exports.filteroptions = async (req, res) => {
 
-const {material,category, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability,bydesign,byweight,offer_min,offer_max} = req.body
+const {material,category,isJewellery, theme,collection, occasion, style, metalpurity, producttype, stoneshape, gender, stonecolor,metalcolor,noofstones,availability,bydesign,byweight,offer_min,offer_max} = req.body
 var product_list = [];
 var whereclause = {
   isactive : true
@@ -133,6 +133,17 @@ var seofilterattributevalue = []
 //           {
 //           [Op.eq]:style
 //           },
+if(isJewellery)
+{        
+  
+
+  includeclause.push({
+    model : models.trans_sku_lists
+   })
+  whereclause['$trans_sku_lists.purity$'] = {
+    [Op.neq]:"92.5"
+    }
+}
 if(material)
 {        
   if(material == 'Silver')
@@ -175,6 +186,9 @@ if(material)
     includeclause.push({
       model : models.product_materials
      })
+}else
+{
+ 
 }
 if(collection)
 {
