@@ -2585,7 +2585,7 @@ exports.getproductlist =  async (req, res) => {
                 include:[
                     {
                         model: models.trans_sku_lists,
-                        attributes: ['purity','diamond_type','generated_sku','sku_url'],
+                        attributes: ['purity','diamond_type','generated_sku','sku_url','markup_price','selling_price'],
                         include:[
                             {
                               model:  models.trans_sku_descriptions
