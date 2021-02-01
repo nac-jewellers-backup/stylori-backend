@@ -22,11 +22,17 @@ app.use(express.urlencoded({limit: '50mb'}));
 //   next();
 // });
 
- app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    next();
+app.use(function (req, res, next) {
+  const allowedOrigins = ['https://stylori.com','https://www.stylori.com', 'https://api.stylori.com', 'https://price-runner.stylori.com'];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+       res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  //res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:8020');
+  res.header('Access-Control-Allow-Methods', '*');
+  res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Allow-Credentials', true);
+  return next();
   });
 // const config = {
 //     user: 'mac',
