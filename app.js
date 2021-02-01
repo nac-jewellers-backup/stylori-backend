@@ -23,7 +23,7 @@ app.use(express.urlencoded({limit: '50mb'}));
 // });
 
 app.use(function (req, res, next) {
-  const allowedOrigins = ['https://stylori.com','https://www.stylori.com', 'https://api.stylori.com', 'https://price-runner.stylori.com'];
+  const allowedOrigins = ['https://stylori.com','https://www.stylori.com', 'https://api.stylori.com', 'https://console.stylori.com', 'https://price-runner.stylori.com'];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
        res.setHeader('Access-Control-Allow-Origin', origin);
