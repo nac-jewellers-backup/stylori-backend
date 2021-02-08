@@ -148,15 +148,22 @@ exports.managecategories = async (req, res) => {
     {
 
     }else{
+
+        let categoryobj = await models.master_product_categories.findOne({
+            order: [
+                ['alias_id', 'DESC']
+              ]
+        })
         let taxobj ={
             id:uuidv1(),
             name: name, 
             short_code : shortCode,
             is_filter: isFilter,
             is_active: isActive,
+            alias : 'CAT'+pad(categoryobj.alias_id,3),
             filter_order : filterOrder
             }
-        await   models.master_product_categories.create(   
+        await models.master_product_categories.create(   
                      taxobj
                     )
         res.send(200,{"message":"Created Successfully"})
@@ -197,7 +204,11 @@ exports.managepaymentstatus = async (req, res) => {
     }
 
 }
-
+function pad(num, size) {
+    num = num.toString();
+    while (num.length < size) num = "0" + num;
+    return num;
+}
 exports.manageorderstatus = async (req, res) => {
     const {id,name,isedit,isdelete,isActive} = req.body
     if(isedit)
