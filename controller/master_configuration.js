@@ -148,12 +148,15 @@ exports.managecategories = async (req, res) => {
     {
 
     }else{
+        console.log("i am here1");
 
         let categoryobj = await models.master_product_categories.findOne({
             order: [
                 ['alias_id', 'DESC']
               ]
         })
+        console.log(JSON.stringify(categoryobj));
+
         let taxobj ={
             id:uuidv1(),
             name: name, 
@@ -163,10 +166,10 @@ exports.managecategories = async (req, res) => {
             alias : 'CAT'+pad(categoryobj.alias_id,3),
             filter_order : filterOrder
             }
-        await models.master_product_categories.create(   
-                     taxobj
-                    )
-        res.send(200,{"message":"Created Successfully"})
+        // await models.master_product_categories.create(   
+        //              taxobj
+        //             )
+        res.send(200,{"message":"Created Successfully","category":taxobj})
     }
 
 }
