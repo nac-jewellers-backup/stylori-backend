@@ -163,12 +163,12 @@ exports.managecategories = async (req, res) => {
             short_code : shortCode,
             is_filter: isFilter,
             is_active: isActive,
-            alias : 'CAT'+pad(categoryobj.alias_id,3),
+            alias : 'CAT'+pad((categoryobj.alias_id  + 1),3),
             filter_order : filterOrder
             }
-        // await models.master_product_categories.create(   
-        //              taxobj
-        //             )
+        await models.master_product_categories.create(   
+                     taxobj
+                    )
         res.send(200,{"message":"Created Successfully","category":taxobj})
     }
 
