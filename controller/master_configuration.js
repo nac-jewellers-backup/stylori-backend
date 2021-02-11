@@ -148,14 +148,12 @@ exports.managecategories = async (req, res) => {
     {
 
     }else{
-        console.log("i am here1");
 
         let categoryobj = await models.master_product_categories.findOne({
             order: [
                 ['alias_id', 'DESC']
               ]
         })
-        console.log(JSON.stringify(categoryobj));
 
         let taxobj ={
             id:uuidv1(),
