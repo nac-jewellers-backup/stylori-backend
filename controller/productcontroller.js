@@ -2636,7 +2636,7 @@ exports.getproductlist =  async (req, res) => {
                     "Product Name":prod.product_name,
                     "product_type":prod.product_type,
                     "link": process.env.baseweburl+prod.trans_sku_lists[0].sku_url,
-                    "image_link":process.env.baseimageurl+ prod.product_images.length > 0 ? prod.product_images[0].image_url : "",
+                    "image_link": prod.product_images.length > 0 ? process.env.baseimageurl + prod.product_images[0].image_url : "",
                     "condition":"new",
                     "availability":"In Stock",
                     "price": "INR"+prod.trans_sku_lists[0].discount_price,
