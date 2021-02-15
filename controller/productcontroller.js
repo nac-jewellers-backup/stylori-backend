@@ -2527,7 +2527,13 @@ exports.getproductlist =  async (req, res) => {
                                     model : models.shopping_cart_item,
                                     include:[
                                         {
-                                            model :  models.trans_sku_lists
+                                            model :  models.trans_sku_lists,
+                                            include: [{
+                                               model: models.product_lists,
+                                               include:[{
+                                                   model : models.product_images
+                                               }],
+                                            }]
                                         },
                                         
                                     ]
