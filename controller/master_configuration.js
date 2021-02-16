@@ -874,10 +874,15 @@ exports.manageoccassions = async (req, res) => {
     {
 
     }else{
+        let occassionobj = await models.master_occasions.findOne({
+            order: [
+                ['alias_id', 'DESC']
+              ]
+        })
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name,
+            alias : 'OC'+pad(( parseInt(occassionobj.alias_id)+ 1),3),
             is_filter: isFilter,
                 is_active: isActive,
                 filter_order : filterOrder
@@ -958,10 +963,15 @@ exports.managethemes = async (req, res) => {
     {
 
     }else{
+        let themeobj = await models.master_themes.findOne({
+            order: [
+                ['alias_id', 'DESC']
+              ]
+        })
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name,
+            alias : 'TH'+pad(( parseInt(themeobj.alias_id)+ 1),3),
             is_filter : isFilter,
                 is_active : isActive,
                 filter_order: filterOrder 
@@ -997,10 +1007,15 @@ exports.managestyles = async (req, res) => {
     {
 
     }else{
+        let styleobj = await models.master_styles.findOne({
+            order: [
+                ['alias_id', 'DESC']
+              ]
+        })
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name,
+            alias : 'STY'+pad(( parseInt(styleobj.alias_id)+ 1),3),
             is_filter : isFilter,
             is_active : isActive,
             filter_order: filterOrder 
