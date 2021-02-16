@@ -1121,11 +1121,10 @@ exports.managematerials = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name ,
             filter_order : filterOrder,
                 is_filter : isFilter,
                 is_active : isActive,
-                alias_id: 'MA'+pad(( parseInt(producttypeobj.alias_id)+ 1),3),
+                alias: 'MA'+pad(( parseInt(producttypeobj.alias_id)+ 1),3),
             }
         await   models.master_materials.create(   
                      taxobj
