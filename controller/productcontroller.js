@@ -2577,7 +2577,10 @@ exports.getproductlist =  async (req, res) => {
             let url = `https://www.stylori.com/${sku_details.sku_url}`
             res.status(200).send({url:url })
         }
-
+        Array.prototype.insert = function ( index, item ) {
+            this.splice( index, 0, item );
+        };
+        
         exports.productdetails =  async (req, res) => {
             const {size, offset, productcategory, producttype, searchtext, order, orderby} = req.body
                let whereclause = {
@@ -2635,6 +2638,13 @@ exports.getproductlist =  async (req, res) => {
                             collections.push(col_obj.collection_name)
                         }
                     )
+                    var prod_img_url = ""
+                        if(prod.product_images[0].image_url)
+                        {
+                            let components_arr  = prod.product_images[0].image_url.split('/')
+                            components_arr.insert(2,"1000X1000")
+                            prod_img_url = components_arr.join("/")
+                        }
                 var res_json_obj = {
                     "id": prod.trans_sku_lists[0].generated_sku,
                     "description" : prod.trans_sku_lists[0].trans_sku_description.sku_description,
@@ -2642,7 +2652,7 @@ exports.getproductlist =  async (req, res) => {
                     "Product Name":prod.product_name,
                     "product_type":prod.product_type,
                     "link": process.env.baseweburl+prod.trans_sku_lists[0].sku_url,
-                    "image_link": prod.product_images.length > 0 ? process.env.baseimageurl + prod.product_images[0].image_url : "",
+                    "image_link": prod.product_images.length > 0 ? process.env.baseimageurl + prod_img_url : "",
                     "condition":"new",
                     "availability":"In Stock",
                     "price": "INR"+prod.trans_sku_lists[0].discount_price,

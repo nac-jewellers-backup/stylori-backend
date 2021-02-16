@@ -110,9 +110,15 @@ exports.manageproducttypes = async (req, res) => {
                         }
                     )
     }else{
+        let producttypeobj = await models.master_product_types.findOne({
+            order: [
+                ['alias_id', 'DESC']
+              ]
+        })
         let taxobj ={
             id:uuidv1(),
             name: name, 
+            alias: 'CAT'+pad(( parseInt(categoryobj.alias_id)+ 1),3),
             certificate:certificate,
             display_order:displayOrder,
             short_code : shortCode ,
