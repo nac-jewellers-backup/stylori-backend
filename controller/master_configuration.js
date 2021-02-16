@@ -835,10 +835,15 @@ exports.managedesigns = async (req, res) => {
     {
 
     }else{
+        let designobj = await models.master_designs.findOne({
+            order: [
+                ['alias_id', 'DESC']
+              ]
+        })
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name,
+            alias : 'DE'+pad(( parseInt(designobj.alias_id)+ 1),3),
             is_filter: isFilter,
                 is_active: isActive,
                 filter_order : filterOrder 
