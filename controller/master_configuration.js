@@ -118,7 +118,7 @@ exports.manageproducttypes = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias: 'CAT'+pad(( parseInt(categoryobj.alias_id)+ 1),3),
+            alias: 'PT'+pad(( parseInt(producttypeobj.alias_id)+ 1),3),
             certificate:certificate,
             display_order:displayOrder,
             short_code : shortCode ,
@@ -1113,13 +1113,19 @@ exports.managematerials = async (req, res) => {
     }else if(isdelete)
     {
     }else{
+        let producttypeobj = await models.master_materials.findOne({
+            order: [
+                ['alias_id', 'DESC']
+              ]
+        })
         let taxobj ={
             id:uuidv1(),
             name: name, 
             alias : name ,
             filter_order : filterOrder,
                 is_filter : isFilter,
-                is_active : isActive
+                is_active : isActive,
+                alias_id: 'MA'+pad(( parseInt(producttypeobj.alias_id)+ 1),3),
             }
         await   models.master_materials.create(   
                      taxobj
