@@ -1032,10 +1032,15 @@ exports.managepurities = async (req, res) => {
     {
 
     }else{
+        let metalcolorobj = await models.master_metals_purities.findOne({
+            order: [
+                ['alias_id', 'DESC']
+              ]
+        })
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name,
+            alias : 'PU'+pad(( parseInt(categoryobj.alias_id)+ 1),3),
             is_filter: isFilter,
             is_active : isActive,
             filter_order : filterOrder 

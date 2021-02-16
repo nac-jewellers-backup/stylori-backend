@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     short_code: DataTypes.INTEGER,
     is_filter: DataTypes.BOOLEAN,
     is_active: DataTypes.BOOLEAN,
-    filter_order : DataTypes.INTEGER
+    filter_order : DataTypes.INTEGER,
+    alias_id : DataTypes.INTEGER
   }, {});
   master_metals_purities.associate = function(models) {
     // associations can be defined here
