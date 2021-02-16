@@ -914,10 +914,15 @@ exports.managecollections = async (req, res) => {
     {
 
     }else{
+        let metalcolorobj = await models.master_collections.findOne({
+            order: [
+                ['alias_id', 'DESC']
+              ]
+        })
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name,
+            alias : 'C'+pad(( parseInt(metalcolorobj.alias_id)+ 1),3),
             is_filter: isFilter,
             is_active: isActive,
             filter_order : filterOrder 
@@ -1040,7 +1045,7 @@ exports.managepurities = async (req, res) => {
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : 'PU'+pad(( parseInt(categoryobj.alias_id)+ 1),3),
+            alias : 'PU'+pad(( parseInt(metalcolorobj.alias_id)+ 1),3),
             is_filter: isFilter,
             is_active : isActive,
             filter_order : filterOrder 
