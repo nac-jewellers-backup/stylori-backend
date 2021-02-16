@@ -1073,10 +1073,15 @@ exports.managemetalcolors = async (req, res) => {
     {
 
     }else{
+        let metalcolorobj = await models.master_metals_colors.findOne({
+            order: [
+                ['alias_id', 'DESC']
+              ]
+        })
         let taxobj ={
             id:uuidv1(),
             name: name, 
-            alias : name,
+            alias : 'MC'+pad(( parseInt(metalcolorobj.alias_id)+ 1),3),
             short_code : shortCode,
             is_filter: isFilter,
             is_active: isActive,
