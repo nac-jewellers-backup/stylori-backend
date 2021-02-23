@@ -2231,7 +2231,7 @@ exports.productdetails = async (req, res) => {
 
   let products = await models.product_lists.findAll({
     where: whereclause,
-    limit: 100,
+    limit: 5,
     attributes: ["product_type", "product_category"],
     include: [
       {
