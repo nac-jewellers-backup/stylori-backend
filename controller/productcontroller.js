@@ -2228,7 +2228,7 @@ exports.productdetails = async (req, res) => {
   let whereclause = {
     isactive: true,
   };
-
+  console.log("###### Fetching products #####");
   let products = await models.product_lists.findAll({
     where: whereclause,
     limit: 5,
