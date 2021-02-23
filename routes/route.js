@@ -206,8 +206,17 @@ module.exports = function (app) {
   app.post("/updateproductattr", productcontroller.updateproductattr_bk);
   app.post("/updateproductimage", productcontroller.updateproductimage);
   //app.post("/productdetails", productcontroller.productdetails);
-  app.post("/productdetails", (req, res) => {
-    res.send({ message: "success here!" });
+  app.post("/productdetails", async (req, res) => {
+    try {
+      res.send(200, {
+        res_json: await productcontroller.productdetails(req.body),
+      });
+    } catch (error) {
+      res.send(500, {
+        error: true,
+        message: error.message,
+      });
+    }
   });
 
   app.post("/updatevendor", master_uploaddata_controller.updatevendor);
