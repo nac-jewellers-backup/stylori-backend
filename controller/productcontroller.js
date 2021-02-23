@@ -2490,7 +2490,7 @@ exports.productdetails = async (req, res) => {
     where: {
       isactive: true,
     },
-    limit: 100,
+    limit: 10,
   });
   var res_json = [];
   products.forEach((prod) => {
