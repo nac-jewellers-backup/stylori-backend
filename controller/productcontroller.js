@@ -2433,7 +2433,8 @@ Array.prototype.insert = function (index, item) {
 };
 
 exports.productdetails = async (req, res) => {
-  const {
+  res.send("Trial Checking!!!!");
+  /* const {
     size,
     offset,
     productcategory,
@@ -2448,8 +2449,6 @@ exports.productdetails = async (req, res) => {
       [Op.notILike]: "%SR%",
     },
   };
-  console.log("#########################");
-  console.log("#### Fetching products ####");
   let products = await models.product_lists.findAll({
     where: whereclause,
     attributes: ["product_type", "product_name", "product_category"],
@@ -2496,7 +2495,6 @@ exports.productdetails = async (req, res) => {
     },
     limit: 10,
   });
-  console.log("#### Fetching products completed####");
   var res_json = [];
   products.forEach((prod) => {
     let materials = [];
@@ -2537,5 +2535,5 @@ exports.productdetails = async (req, res) => {
     };
     res_json.push(res_json_obj);
   });
-  res.send(200, { res_json });
+  res.send(200, { res_json }); */
 };
