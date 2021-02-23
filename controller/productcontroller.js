@@ -2433,8 +2433,7 @@ Array.prototype.insert = function (index, item) {
 };
 
 exports.productdetails = async (req, res) => {
-  res.send("Trial Checking!!!!");
-  /* const {
+  const {
     size,
     offset,
     productcategory,
@@ -2535,5 +2534,5 @@ exports.productdetails = async (req, res) => {
     };
     res_json.push(res_json_obj);
   });
-  res.send(200, { res_json }); */
+  res.send(200, { res_json });
 };
