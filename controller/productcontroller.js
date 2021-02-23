@@ -2433,106 +2433,110 @@ Array.prototype.insert = function (index, item) {
 };
 
 exports.productdetails = async (req, res) => {
-  const {
-    size,
-    offset,
-    productcategory,
-    producttype,
-    searchtext,
-    order,
-    orderby,
-  } = req.body;
-  let whereclause = {
-    isactive: true,
-    product_id: {
-      [Op.notILike]: "%SR%",
-    },
-  };
-  let products = await models.product_lists.findAll({
-    where: whereclause,
-    attributes: ["product_type", "product_name", "product_category"],
-    include: [
-      {
-        model: models.trans_sku_lists,
-        attributes: [
-          "purity",
-          "diamond_type",
-          "generated_sku",
-          "sku_url",
-          "markup_price",
-          "selling_price",
-          "discount_price",
-        ],
-        include: [
-          {
-            model: models.trans_sku_descriptions,
-          },
-        ],
-        where: {
-          isdefault: true,
-        },
-      },
-      {
-        model: models.product_images,
-        attributes: ["image_url"],
-        where: {
-          isdefault: true,
-          image_position: 1,
-        },
-      },
-      {
-        model: models.product_collections,
-        attributes: ["collection_name"],
-      },
-      {
-        model: models.product_materials,
-        attributes: ["material_name"],
-      },
-    ],
-    where: {
+  try {
+    const {
+      size,
+      offset,
+      productcategory,
+      producttype,
+      searchtext,
+      order,
+      orderby,
+    } = req.body;
+    let whereclause = {
       isactive: true,
-    },
-    limit: 10,
-  });
-  var res_json = [];
-  products.forEach((prod) => {
-    let materials = [];
-    prod.product_materials.forEach((mat_obj) => {
-      materials.push(mat_obj.material_name);
-    });
-    let collections = [];
-    prod.product_collections.forEach((col_obj) => {
-      collections.push(col_obj.collection_name);
-    });
-    var prod_img_url = "";
-    if (prod.product_images[0].image_url) {
-      let components_arr = prod.product_images[0].image_url.split("/");
-      components_arr.insert(2, "1000X1000");
-      prod_img_url = components_arr.join("/");
-    }
-    var res_json_obj = {
-      id: prod.trans_sku_lists[0].generated_sku,
-      description:
-        prod.trans_sku_lists[0].trans_sku_description.sku_description,
-      google_product_category: prod.product_category,
-      "Product Name": prod.product_name,
-      product_type: prod.product_type,
-      link: process.env.baseweburl + prod.trans_sku_lists[0].sku_url,
-      image_link:
-        prod.product_images.length > 0
-          ? process.env.baseimageurl + prod_img_url
-          : "",
-      condition: "new",
-      availability: "In Stock",
-      price: "INR" + prod.trans_sku_lists[0].discount_price,
-      sale_price: "INR" + prod.trans_sku_lists[0].selling_price,
-      sale_price_effective_date: "2019-06-30T0:00",
-      brand: "Stylori",
-      color: prod.trans_sku_lists[0].metal_color,
-      metal: materials,
-      collections: collections,
+      product_id: {
+        [Op.notILike]: "%SR%",
+      },
     };
-    res_json.push(res_json_obj);
-  });
-  res.send(200, { res_json });
+    let products = await models.product_lists.findAll({
+      where: whereclause,
+      attributes: ["product_type", "product_name", "product_category"],
+      include: [
+        {
+          model: models.trans_sku_lists,
+          attributes: [
+            "purity",
+            "diamond_type",
+            "generated_sku",
+            "sku_url",
+            "markup_price",
+            "selling_price",
+            "discount_price",
+          ],
+          include: [
+            {
+              model: models.trans_sku_descriptions,
+            },
+          ],
+          where: {
+            isdefault: true,
+          },
+        },
+        {
+          model: models.product_images,
+          attributes: ["image_url"],
+          where: {
+            isdefault: true,
+            image_position: 1,
+          },
+        },
+        {
+          model: models.product_collections,
+          attributes: ["collection_name"],
+        },
+        {
+          model: models.product_materials,
+          attributes: ["material_name"],
+        },
+      ],
+      where: {
+        isactive: true,
+      },
+      limit: 10,
+    });
+    var res_json = [];
+    products.forEach((prod) => {
+      let materials = [];
+      prod.product_materials.forEach((mat_obj) => {
+        materials.push(mat_obj.material_name);
+      });
+      let collections = [];
+      prod.product_collections.forEach((col_obj) => {
+        collections.push(col_obj.collection_name);
+      });
+      var prod_img_url = "";
+      if (prod.product_images[0].image_url) {
+        let components_arr = prod.product_images[0].image_url.split("/");
+        components_arr.insert(2, "1000X1000");
+        prod_img_url = components_arr.join("/");
+      }
+      var res_json_obj = {
+        id: prod.trans_sku_lists[0].generated_sku,
+        description:
+          prod.trans_sku_lists[0].trans_sku_description.sku_description,
+        google_product_category: prod.product_category,
+        "Product Name": prod.product_name,
+        product_type: prod.product_type,
+        link: process.env.baseweburl + prod.trans_sku_lists[0].sku_url,
+        image_link:
+          prod.product_images.length > 0
+            ? process.env.baseimageurl + prod_img_url
+            : "",
+        condition: "new",
+        availability: "In Stock",
+        price: "INR" + prod.trans_sku_lists[0].discount_price,
+        sale_price: "INR" + prod.trans_sku_lists[0].selling_price,
+        sale_price_effective_date: "2019-06-30T0:00",
+        brand: "Stylori",
+        color: prod.trans_sku_lists[0].metal_color,
+        metal: materials,
+        collections: collections,
+      };
+      res_json.push(res_json_obj);
+    });
+    res.send(200, { res_json });
+  } catch (error) {
+    res.send(500, { error: error.message });
+  }
 };
