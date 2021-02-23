@@ -2444,11 +2444,12 @@ exports.productdetails = async (req, res) => {
   } = req.body;
   let whereclause = {
     isactive: true,
-    product_id : {
-        [Op.notILike] : "%SR%"
-    }
+    product_id: {
+      [Op.notILike]: "%SR%",
+    },
   };
-
+  console.log("#########################");
+  console.log("#### Fetching products ####");
   let products = await models.product_lists.findAll({
     where: whereclause,
     attributes: ["product_type", "product_name", "product_category"],
@@ -2495,6 +2496,7 @@ exports.productdetails = async (req, res) => {
     },
     limit: 10,
   });
+  console.log("#### Fetching products completed####");
   var res_json = [];
   products.forEach((prod) => {
     let materials = [];
