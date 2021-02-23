@@ -2444,6 +2444,9 @@ exports.productdetails = async (req, res) => {
   } = req.body;
   let whereclause = {
     isactive: true,
+    product_id : {
+        [Op.notILike] : "%SR%"
+    }
   };
 
   let products = await models.product_lists.findAll({
