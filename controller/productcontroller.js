@@ -2239,20 +2239,23 @@ exports.editproduct = async (req, res) => {
 
 exports.disableproduct = async (req, res) => {
   const { productid, isactive } = req.body;
-  await models.product_lists.update(
-    // Values to update
-    {
-      isactive: isactive,
-    },
-    {
-      // Clause
-      where: {
-        product_id: productid,
+  try {
+    await models.product_lists.update(
+      // Values to update
+      {
+        isactive: isactive,
       },
-    }
-  );
-
-  res.send(200, { message: "Updated Successfully" });
+      {
+        // Clause
+        where: {
+          product_id: productid,
+        },
+      }
+    );
+    res.send(200, { message: "Updated Successfully" });
+  } catch (error) {
+    res.status(400).send({ message: error.message });
+  }
 };
 
 exports.getproductlist = async (req, res) => {
