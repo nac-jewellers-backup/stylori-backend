@@ -1470,6 +1470,8 @@ exports.priceupdate = (req, res) => {
                
               }
           }).then(async makingcharge=> {
+          
+
             if(makingcharge)
             {
               sku_component_count++;
@@ -1482,7 +1484,7 @@ exports.priceupdate = (req, res) => {
       
                     }else 
                     {
-                      mkcostprice =   (skuobj.sku_weight * makingcharge_obj.price)
+                      mksellingprice =   (skuobj.sku_weight * makingcharge_obj.price)
                     }
                 }
 
@@ -1537,7 +1539,7 @@ exports.priceupdate = (req, res) => {
                 margin_percentage: makingmargin,
                 product_sku: skuobj.generated_sku
               }  
-              
+            
               models.pricing_sku_metals.findOne({
                 where: {product_sku: skuobj.generated_sku, material_name: 'makingcharge'}
               }).then(price_splitup_model=> {
