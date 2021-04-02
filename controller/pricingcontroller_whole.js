@@ -757,10 +757,11 @@ exports.priceupdate = async (req, res) => {
             },
             selling_price_max:{
               [Op.gte]: sellingprice_val 
-            },
-            category: product_category
+            }
           }
         });
+
+        console.log("===================XXXXXXXXXXXXXXXXX=================")
         return priceMarkup;
   }
 
@@ -1809,6 +1810,8 @@ exports.priceupdate = async (req, res) => {
 
           var gemstonediscountvalue = ((gemstonesellingprice * 100) /(100 - gemstone_discount));
           var diamonddiscountvalue = ((diamondsellingprice * 100) /(100 - diamond_discount));
+          console.log("XXXXXXXXXXMARKUP")
+          console.log(JSON.stringify(markupobj))
           if(markupobj)
           {
 
