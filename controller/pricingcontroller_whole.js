@@ -10,7 +10,7 @@ var fs = require("fs");
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey('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');
-exports.priceupdate = (req, res) => {
+exports.priceupdate = async (req, res) => {
   console.log("test")
   clearlog()
 
@@ -77,6 +77,7 @@ exports.priceupdate = (req, res) => {
       //   product_id : req_product_id
 
       // }
+      console.log("xxxxxxxxxxxxxxxxxxxx")
       whereclause1 = {
         product_id : {
           [Op.in]: product_id_arr1
@@ -239,8 +240,13 @@ exports.priceupdate = (req, res) => {
       html: "<b>started</>"
       };
     //  sgMail.send(msg);
-    models.product_lists.findAll({
+    console.log("============XXXX")
 
+    // let prod_content1 = await models.product_lists.findAll({
+    //     })
+    //     console.log("============")
+   // console.log(JSON.stringify(prod_content1.length))
+    models.product_lists.findAll({
       // include: [{
       //   model: models.trans_sku_lists,
       //   where:{
@@ -273,7 +279,7 @@ exports.priceupdate = (req, res) => {
         }).then(product=> {
      
       products = product;
-      console.log(">>>>>>>"+JSON.stringify(product.length))
+      console.log(">>>>>>>XXXXXXXX"+JSON.stringify(product.length))
 
       // pricingresult()
    //res.send(200, products[0]);
@@ -1491,7 +1497,7 @@ exports.priceupdate = (req, res) => {
       
                     }else 
                     {
-                      mkcostprice =   (skuobj.sku_weight * makingcharge_obj.price)
+                      mksellingprice =   (skuobj.sku_weight * makingcharge_obj.price)
                     }
                 }
 
