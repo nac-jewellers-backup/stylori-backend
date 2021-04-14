@@ -1459,7 +1459,7 @@ exports.priceupdate = (req, res) => {
           models.making_charge_settings.findAll({
               where: {
                 vendor_code: vendorcode,
-                purity: parseInt(skupurity.replace('K','')),
+                purity: parseInt(skupurity.replace('K','').replace('.','')),
                 material: 'Gold',
                 weight_start:{
                   [Op.lte]: skuobj.sku_weight
