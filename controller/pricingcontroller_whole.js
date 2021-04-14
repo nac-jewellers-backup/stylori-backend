@@ -1339,7 +1339,7 @@ exports.priceupdate = (req, res) => {
         models.gold_price_settings.findOne({
             where: {
               vendor_code: product_obj.vendor_code,
-              purity: parseInt(purityval.replace('K',''))
+              purity: parseInt(purityval.replace('K','').replace(".",""))
             }
         }).then(async gold_price=> {
            if(gold_price)
