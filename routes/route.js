@@ -147,6 +147,7 @@ module.exports = function (app) {
   app.post("/addemailsubscription", authcontroller.addemailsubscription);
   app.post("/asktoexport", authcontroller.asktoexport);
   app.post("/getmasterroles", authcontroller.getmasterroles);
+  app.post("/updateuser", authcontroller.updateUser);
   app.post("/getadminusers", authcontroller.getadminusers);
   app.post(
     "/getpageaccess",
