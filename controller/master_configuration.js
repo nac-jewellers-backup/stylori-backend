@@ -681,11 +681,21 @@ exports.managediamondtypes = async (req, res) => {
     res.send(200, { message: "Updated Successfully" });
   } else if (isdelete) {
   } else {
+    let diamondobj = await models.master_diamond_types.findOne({
+      order: [["short_code", "DESC"]],
+    });
+    let shortcode = 1;
+if(diamondobj.short_code)
+{
+  shortcode = shortcode + diamondobj.short_code;
+}
+
+
     let taxobj = {
       id: uuidv1(),
       diamond_clarity: diamondClarity,
       diamond_color: diamondColor,
-      short_code: "",
+      short_code: shortcode,
       is_filter: isFilter,
       is_active: isActive,
       filter_order: filterOrder,
