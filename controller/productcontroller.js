@@ -458,8 +458,9 @@ exports.updateproductattr_bk = async (req, res) => {
         processsku(skucount);
       } else {
         if (products.length > processcount) {
+          let prod_uuid = products[processcount].product_id;
           processcount = processcount + 1;
-          productupdate(processcount);
+          productupdate(prod_uuid);
         } else {
           console.log("update complete");
         }
@@ -755,54 +756,97 @@ exports.updateproductattribute = async (req, res) => {
     // )
   }
 };
+
+
 exports.productattributes = async (req, res) => {
-  const {product_attributes} = req.body
-  let componentarr = [];
-  var attributes_condition = [];
-  let keys = Object.keys(product_attributes);
+  updatediscountsku(["CAT001"],"SE3417",res)
+}
+async function updatediscountsku(category_arr,product_id,res)
+{
+  let shoppingcart1 = await models.sale_discount.findAll({
+    attributes: ["id","product_attributes","product_ids"],
+    where:{
+      is_active : true,
+      attributes:{
+        [Op.contains] : category_arr
+      }
+    }
+  })
+  if(shoppingcart1)
+  {
+    let attr_arr = [];
+    let skus_arr = [];
+    let sku_content = [];
+    shoppingcart1.forEach(async  attr_obj => {
+      let attr_content = attr_obj.product_attributes;
+    let attr_keys = Object.keys(attr_obj.product_attributes);
+   
+    attr_keys.forEach(element_key => {
+      let element_value = attr_content[element_key].alias;
 
-  keys.forEach(key => {
-    let attributeobj = product_attributes[key];
-
-    if(Array.isArray(attributeobj))
-    {
-      let componentarr = [];
-      let attr_values = [];
-      attributeobj.forEach(attr => {
-        if(attr)
-        {
-          attr_values.push(attr)
-        }
-
-       
-      })
-      if(attr_values)
-        {
-          let attr_where = {
-            attributes: {
-              [Op.contains] : attr_values
-            }
+      if(Array.isArray(element_value))
+      {
+               let attr_where = {
+                  attributes: {
+                    [Op.overlap] : element_value
+                     }
           }
-          componentarr.push(attr_where)
-        }
-     if(componentarr.length > 0)
+          attr_arr.push(element_value)
+          skus_arr.push(attr_where)
+
+      }
+
+    })
+     if(skus_arr.length > 0)
      {
       let attrobj = {
-        [Op.or] : componentarr
+        [Op.or] : skus_arr
       }
-      attributes_condition.push(attrobj)
+      sku_content.push(attrobj)
      }
-   
-    }
-
-  })
+     
+     let product_id_where  = {
+          product_id : "SE3417"
+     }
+     sku_content.push(product_id_where)
+     let shoppingcart = await models.trans_sku_lists.findAll({
+    
+      where:{
+        product_id: "SE3417",
+        [Op.and] :skus_arr  
+      }
   
+    })
+    let trans_sku_array = attr_obj.product_ids ? attr_obj.product_ids : [];
+    shoppingcart.forEach(sku_obj => {
+      trans_sku_array.push(sku_obj.generated_sku)
+    })
+
+    await models.sale_discount.update(
+      // Values to update
+      {
+        product_ids : trans_sku_array
+      },
+      {
+        // Clause
+        where: {
+          id: attr_obj.id,
+        },
+      }
+    );
+    //res.send(409,{status: "200",message: shoppingcart})
+
+  });
+}
+
+
+
+
   let shoppingcart = await models.sale_discount.findAll({
     
     where:attributes_condition
 
   })
-  res.send(409,{status: "200",message: shoppingcart})
 
 };
 exports.productupload = async (req, res) => {
@@ -946,7 +990,11 @@ exports.productupload = async (req, res) => {
     product_obj.product_name.replace(" ", "-") +
     "?sku_id=";
 
-  let successmessage = await models.product_lists.create(product_obj);
+  let successmessage = await models.master_product_categories.create(product_obj);
+  let product_category_obj = await models.master_product_categories.findOne({
+    name : product_obj.product_category
+  });
+
   /*************** images list ********************/
   var prod_images = [];
   if (Object.keys(product_images)) {
@@ -1412,7 +1460,7 @@ exports.productupload = async (req, res) => {
     uploaddescriptions.push(sku_desc);
     uploadskus.push(prod_obj);
   });
-
+updatediscountsku(product_category_obj.alias,product_obj.product_id)
   // res.send(200,{skus:uploadskus})
 
   //   res.send(200,{count:product_skus.length});
@@ -1810,6 +1858,7 @@ exports.getproductvarient = async (req, res) => {
       product_skus_description.push(sku_description_obj);
     }
   });
+
   //res.send(200,{message: newskus})
   models.trans_sku_lists
     .bulkCreate(newskus, { individualHooks: true })
