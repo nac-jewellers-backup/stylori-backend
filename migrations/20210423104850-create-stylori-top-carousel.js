@@ -1,39 +1,39 @@
-"use strict";
+'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("stylori_banners", {
+    return queryInterface.createTable('stylori_top_carousels', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       url: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING
       },
       mobile: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING
       },
       web: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING
       },
       position: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       url_param: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("stylori_banners");
-  },
+    return queryInterface.dropTable('stylori_top_carousels');
+  }
 };
