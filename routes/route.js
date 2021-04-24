@@ -197,7 +197,7 @@ module.exports = function (app) {
   );
   app.post("/getproductvarient", productcontroller.getproductvarient);
   app.post("/getproducturl", productcontroller.getproducturl);
-
+  app.post("/productattributes", productcontroller.productattributes)
   app.post("/editproduct", productcontroller.editproduct);
   app.post("/editproductdiamond", productcontroller.editproductdiamond);
   app.post("/updateskuinfo", productcontroller.updateskuinfo);

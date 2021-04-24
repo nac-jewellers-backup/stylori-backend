@@ -2379,6 +2379,33 @@ exports.creatediscount =  async (req, res) => {
   componenets.forEach(compobj =>{
     pricingcomponents.push(compobj.name)
   })
+  let componentarr = [];
+
+  if(product_attributes)
+  {
+    
+
+    let keys = Object.keys(product_attributes);
+
+  keys.forEach(key => {
+    let attributeobj = product_attributes[key].alias;
+
+    if(Array.isArray(attributeobj))
+    {
+      attributeobj.forEach(attr => {
+        if(attr)
+        {
+          componentarr.push(attr)
+        }
+
+       
+      })
+     
+   
+    }
+
+  })
+  }
   console.log("dad")
   console.log(JSON.stringify({
     id:  uuidv1(),
@@ -2393,6 +2420,7 @@ exports.creatediscount =  async (req, res) => {
     discount_title: discounttitle,
     components : pricingcomponents,
     discount_value : discountvalue,
+    attributes : componentarr,
     discount_type : discounttype == 'percentage' ? 2 : 1,
     product_ids : skus,
     is_active: true,

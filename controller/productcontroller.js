@@ -755,7 +755,56 @@ exports.updateproductattribute = async (req, res) => {
     // )
   }
 };
+exports.productattributes = async (req, res) => {
+  const {product_attributes} = req.body
+  let componentarr = [];
+  var attributes_condition = [];
+  let keys = Object.keys(product_attributes);
 
+  keys.forEach(key => {
+    let attributeobj = product_attributes[key];
+
+    if(Array.isArray(attributeobj))
+    {
+      let componentarr = [];
+      let attr_values = [];
+      attributeobj.forEach(attr => {
+        if(attr)
+        {
+          attr_values.push(attr)
+        }
+
+       
+      })
+      if(attr_values)
+        {
+          let attr_where = {
+            attributes: {
+              [Op.contains] : attr_values
+            }
+          }
+          componentarr.push(attr_where)
+        }
+     if(componentarr.length > 0)
+     {
+      let attrobj = {
+        [Op.or] : componentarr
+      }
+      attributes_condition.push(attrobj)
+     }
+   
+    }
+
+  })
+  
+  let shoppingcart = await models.sale_discount.findAll({
+    
+    where:attributes_condition
+
+  })
+  res.send(409,{status: "200",message: shoppingcart})
+
+};
 exports.productupload = async (req, res) => {
   var apidata = req.body;
   var product_skus = [];
