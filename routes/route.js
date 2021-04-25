@@ -65,7 +65,7 @@ module.exports = function (app) {
 
   app.post("/ringpriceupdate", productcontroller.ringpriceupdate);
 
-  app.post("/productupload", productcontroller.productupload);
+  app.post("/productupload", productcontroller.productupload2);
   app.post("/productupdate", productupdatecontroller.updateproduct);
   app.post("/priceupdate", productcontroller.priceupdate);
   app.post("/disableproduct", productcontroller.disableproduct);
