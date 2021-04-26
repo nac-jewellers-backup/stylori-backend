@@ -701,17 +701,29 @@ if(diamondobj.short_code)
       filter_order: filterOrder,
     };
     let diamondclarities = {
+      id : uuidv1(),
       name: diamondClarity,
-      alias_id : diamondClarity,
+      alias : diamondClarity,
+      
+    }
+
+    let diamondcolrs = {
+      id : uuidv1(),
+      name: diamondColor,
+      short_code : diamondColor,
       
     }
     await models.master_diamond_types.create(taxobj);
     await models.master_diamond_clarities
     .findOrCreate({
       where: { name : diamondClarity },
+      defaults: diamondcolrs,
+    })
+    await models.master_diamonds_colors
+    .findOrCreate({
+      where: { name : diamondColor },
       defaults: diamondclarities,
     })
-
     res.send(200, { message: "Created Successfully" });
   }
 };
