@@ -1070,8 +1070,8 @@ async function addproductattributes(category_alias,product_id)
   }
 }
 exports.productattributes = async (req, res) => {
-  //updatediscountsku(["CAT001"],"SE3418",res)
-  updateexistingdiscount();
+  updatediscountsku(["CAT001"],"SE3426",res)
+  //updateexistingdiscount();
 
  
 }
@@ -1088,10 +1088,11 @@ async function updatediscountsku(category_arr,product_id,res)
   })
   if(shoppingcart1)
   {
-    let attr_arr = [];
-    let skus_arr = [];
-    let sku_content = [];
+   
     shoppingcart1.forEach(async  attr_obj => {
+      let attr_arr = [];
+      let skus_arr = [];
+      let sku_content = [];
       let attr_content = attr_obj.product_attributes;
     let attr_keys = Object.keys(attr_obj.product_attributes);
    
@@ -1131,6 +1132,14 @@ async function updatediscountsku(category_arr,product_id,res)
       }
   
     })
+    if(shoppingcart)
+    {
+      console.log("=======")
+
+      console.log(shoppingcart.length)
+      console.log("========")
+
+    }
     let trans_sku_array = attr_obj.product_ids ? attr_obj.product_ids : [];
     shoppingcart.forEach(sku_obj => {
       trans_sku_array.push(sku_obj.generated_sku)
@@ -1156,11 +1165,7 @@ async function updatediscountsku(category_arr,product_id,res)
 
 
 
-  let shoppingcart = await models.sale_discount.findAll({
-    
-    where:attributes_condition
-
-  })
+  
 
 };
 exports.productupload = async (req, res) => {
