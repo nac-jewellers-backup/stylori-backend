@@ -700,7 +700,18 @@ if(diamondobj.short_code)
       is_active: isActive,
       filter_order: filterOrder,
     };
+    let diamondclarities = {
+      name: diamondClarity,
+      alias_id : diamondClarity,
+      
+    }
     await models.master_diamond_types.create(taxobj);
+    await models.master_diamond_clarities
+    .findOrCreate({
+      where: { name : diamondClarity },
+      defaults: diamondclarities,
+    })
+
     res.send(200, { message: "Created Successfully" });
   }
 };
