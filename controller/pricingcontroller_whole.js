@@ -746,18 +746,37 @@ exports.priceupdate = (req, res) => {
 
 
   /********** Material Markup calculation */
- function materialmarkupval( sellingprice_val, product_category)
+ function materialmarkupval( sellingprice_val, product_val)
   {
+    console.log("==============")
+    console.log(product_val.product_type)
+    console.log(product_val.product_materials[0].material_name)
+    console.log("==============")
+    let whereclause = {
+      selling_price_min:{
+        [Op.lte]: sellingprice_val
+      },
+      selling_price_max:{
+        [Op.gte]: sellingprice_val 
+      },
+      category: product_val.product_category
+    };
+    if(product_val.product_type){
+      whereclause['product_type'] = product_val.product_type;
+    }
+    if(product_val.product_materials && product_val.product_materials.length > 0)
+    {
+      let material_content = []
+      product_val.product_materials.forEach(mat_obj=> {
+        material_content.push(mat_obj.material_name)
+      })
+      whereclause['product_material'] = {
+        [Op.in] : material_content
+      }
+
+    }
       const priceMarkup =  models.pricing_markup.findAll({
-          where: {
-            selling_price_min:{
-              [Op.lte]: sellingprice_val
-            },
-            selling_price_max:{
-              [Op.gte]: sellingprice_val 
-            },
-            category: product_category
-          }
+          where: whereclause
         });
         return priceMarkup;
   }
@@ -843,6 +862,7 @@ exports.priceupdate = (req, res) => {
       {
         if(product_obj.iscomponentpricing)
           {
+            console.log("componentproce")
             updateskuprice()
           }else{
             checkisinclude();
@@ -852,6 +872,8 @@ exports.priceupdate = (req, res) => {
       }else{
         if(product_obj.iscomponentpricing)
           {
+            console.log("componentproce")
+
             updateskuprice()
           }else{
         updatediamondprice(productobj.vendor_code, productskus[0])
@@ -1726,7 +1748,7 @@ exports.priceupdate = (req, res) => {
           sku_component_count = coponentarray.length
           let iscontainall = false;
           let sku_margin = ((total_sellingprice - total_costprice)/total_costprice)*100
-          let markupobj =  await materialmarkupval(total_sellingprice,product_obj.product_category)
+          let markupobj =  await materialmarkupval(total_sellingprice,product_obj)
             if(markupobj)
             {
               markupobj.forEach(mItem => {
