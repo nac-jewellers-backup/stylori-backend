@@ -1999,7 +1999,6 @@ exports.priceupdate = (req, res) => {
          
          total_sku_discountvalue = makingchargediscountvalue + golddiscountvalue + gemstonediscountvalue + diamonddiscountvalue;
        
-        
         var mkquery = "UPDATE pricing_sku_metals SET discount_price = ((markup * 100) /(100 - "+mkcharge_discount+") + ("+golddiscount_different+" * ("+discount_price_distribute_percentage+" + "+makingcharge_percentage+" ))) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'makingcharge'" ;
           await models.sequelize.query(mkquery).then(([results, metadata]) => {
              // Results will be an empty array and metadata will contain the number of affected rows.

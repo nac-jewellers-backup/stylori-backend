@@ -717,12 +717,12 @@ if(diamondobj.short_code)
     await models.master_diamond_clarities
     .findOrCreate({
       where: { name : diamondClarity },
-      defaults: diamondcolrs,
+      defaults: diamondclarities,
     })
     await models.master_diamonds_colors
     .findOrCreate({
       where: { name : diamondColor },
-      defaults: diamondclarities,
+      defaults: diamondcolrs,
     })
     res.send(200, { message: "Created Successfully" });
   }
