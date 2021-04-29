@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     markup_value: DataTypes.DOUBLE,
     category: DataTypes.STRING,
     pricing_markup : DataTypes.STRING,
+    product_material : DataTypes.STRING,
     product_type : DataTypes.STRING
   }, {});
   pricing_markup.associate = function(models) {

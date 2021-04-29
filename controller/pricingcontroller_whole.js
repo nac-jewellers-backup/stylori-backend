@@ -319,7 +319,11 @@ exports.priceupdate = (req, res) => {
        {
         if(product_obj.trans_sku_lists.length > 0)
         {
-          processskus(product_obj.trans_sku_lists, product_obj)
+          
+            processskus(product_obj.trans_sku_lists, product_obj)
+
+        
+
 
         }else{
           processed_product_count = processed_product_count  + 1;
@@ -837,11 +841,21 @@ exports.priceupdate = (req, res) => {
       console.log("processlength"+product_obj.trans_sku_lists.length)
       if(pricingcomponent)
       {
-       checkisinclude();
+        if(product_obj.iscomponentpricing)
+          {
+            updateskuprice()
+          }else{
+            checkisinclude();
+
+          }
 
       }else{
+        if(product_obj.iscomponentpricing)
+          {
+            updateskuprice()
+          }else{
         updatediamondprice(productobj.vendor_code, productskus[0])
-
+          }
       }
    //updateskuprice()
    // updategoldprice(productobj.vendor_code, productskus[0])

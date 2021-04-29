@@ -2126,7 +2126,7 @@ exports.addmarkup =  async (req, res) => {
     })
     if(response)
     {
-        res.send(200,{"message": "success"})
+        res.send(200,{"message": "success",response:material_list})
 
     }else{
         res.send(402,{"message": "Try again later"})
