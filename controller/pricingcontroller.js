@@ -2110,7 +2110,19 @@ exports.vendormakingprice =  async (req, res) => {
 
 }
 exports.addmarkup =  async (req, res) => {
-  const {material, sellingPriceMin,sellingPriceMax, markupValue,markuptype,category,producttype,material_list} = req.body
+  const {material, sellingPriceMin,sellingPriceMax, markupValue,markuptype,category,producttype,material_list,purity_list} = req.body
+  let purities = []
+  if(purity_list)
+  {
+    if(Array.isArray(purity_list))
+    {
+      purities = purity_list
+    }else{
+      purities.push(purity_list)
+    }
+
+  }
+
   let response = await models.pricing_markup.create(
     {
       id: uuidv1(),
@@ -2122,6 +2134,7 @@ exports.addmarkup =  async (req, res) => {
         markup_value: markupValue,
         material: material,
         product_material: material_list,
+        purities : purities,
         updatedAt : new Date()
     })
     if(response)

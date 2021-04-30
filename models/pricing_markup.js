@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     category: DataTypes.STRING,
     pricing_markup : DataTypes.STRING,
     product_material : DataTypes.STRING,
-    product_type : DataTypes.STRING
+    product_type : DataTypes.STRING,
+    purities : DataTypes.ARRAY(DataTypes.TEXT)
   }, {});
   pricing_markup.associate = function(models) {
     // associations can be defined here
