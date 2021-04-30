@@ -746,7 +746,7 @@ exports.priceupdate = (req, res) => {
 
 
   /********** Material Markup calculation */
- function materialmarkupval( sellingprice_val, product_val)
+ function materialmarkupval( sellingprice_val, product_val,sku_val)
   {
     console.log("==============")
     console.log(product_val.product_type)
@@ -761,18 +761,30 @@ exports.priceupdate = (req, res) => {
       },
       category: product_val.product_category
     };
+    let product_type = [];
+    let purities = [];
     if(product_val.product_type){
-      whereclause['product_type'] = product_val.product_type;
+      product_type.push(product_val.product_type)
+      whereclause['product_type'] = {
+        [Op.contains] : product_type
+      }
     }
+    if(sku_val.purity){
+      purities.push(sku_val.purity)
+      whereclause['purities'] = {
+        [Op.contains] : purities
+      }
+    }
+    purities
     if(product_val.product_materials && product_val.product_materials.length > 0)
     {
       let material_content = []
       product_val.product_materials.forEach(mat_obj=> {
         material_content.push(mat_obj.material_name)
       })
-      whereclause['product_material'] = {
-        [Op.in] : material_content
-      }
+      // whereclause['product_material'] = {
+      //   [Op.in] : material_content
+      // }
 
     }
       const priceMarkup =  models.pricing_markup.findAll({
@@ -1742,13 +1754,13 @@ exports.priceupdate = (req, res) => {
           })
           console.log("==============")
           console.log(total_costprice)
-          console.log(productskus[skucount].cost_price)
+          console.log(productskus[skucount].purity)
           console.log("==============")
           
           sku_component_count = coponentarray.length
           let iscontainall = false;
           let sku_margin = ((total_sellingprice - total_costprice)/total_costprice)*100
-          let markupobj =  await materialmarkupval(total_sellingprice,product_obj)
+          let markupobj =  await materialmarkupval(total_sellingprice,product_obj,productskus[skucount])
             if(markupobj)
             {
               markupobj.forEach(mItem => {
@@ -1869,7 +1881,7 @@ exports.priceupdate = (req, res) => {
                     await models.sequelize.query(query).then(([results, metadata]) => {
                     
                     })
-                    var query1 = "UPDATE trans_sku_lists SET discount_price = (markup_price + (markup_price *"+alldiscount+"/100))  where generated_sku ='"+productskus[skucount].generated_sku+"'" ;
+                    var query1 = "UPDATE trans_sku_lists SET discount_price = (markup_price - (markup_price *"+alldiscount+"/100))  where generated_sku ='"+productskus[skucount].generated_sku+"'" ;
                     await models.sequelize.query(query1).then(([results, metadata]) => {
                     
                     })
