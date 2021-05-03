@@ -8,7 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      holiday_date: {
+      holiday: {
+        type: Sequelize.STRING,
+        unique: true,
+      },
+      date: {
         type: Sequelize.DATEONLY,
         unique: true,
       },

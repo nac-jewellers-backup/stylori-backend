@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
   const holiday_manager = sequelize.define(
     "holiday_manager",
     {
-      holiday_date: {
+      holiday: DataTypes.STRING,
+      date: {
         type: DataTypes.DATEONLY,
         allowNull: false,
         unique: true,

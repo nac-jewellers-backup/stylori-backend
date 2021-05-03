@@ -13,10 +13,8 @@ let addHolidays = (holidays) => {
         .bulkCreate(
           holidays.map((item) => {
             return {
-              holiday_date: moment(item.holiday_date, [
-                "DD/MM/YYYY",
-                "DD-MM-YYYY",
-              ]),
+              holiday: item.holiday,
+              date: moment(item.date, ["DD/MM/YYYY", "DD-MM-YYYY"]),
             };
           }),
           {
@@ -104,7 +102,7 @@ let getShippingDate = async ({ sku_id, current_datetime }) => {
       models.holiday_manager
         .count({
           where: {
-            holiday_date: {
+            date: {
               [models.Sequelize.Op.gte]: currentDate,
               [models.Sequelize.Op.lt]: shippingDate,
             },
@@ -156,7 +154,7 @@ let getShippingDate = async ({ sku_id, current_datetime }) => {
               result.vendor_delivery_time +
                 warehouse[0].shipping_in_days +
                 duration >
-                  10
+              10
                 ? 0
                 : 1;
             var shippingDate = moment().set("date", totalDaysToShip);
