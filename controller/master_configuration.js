@@ -700,7 +700,30 @@ if(diamondobj.short_code)
       is_active: isActive,
       filter_order: filterOrder,
     };
+    let diamondclarities = {
+      id : uuidv1(),
+      name: diamondClarity,
+      alias : diamondClarity,
+      
+    }
+
+    let diamondcolrs = {
+      id : uuidv1(),
+      name: diamondColor,
+      short_code : diamondColor,
+      
+    }
     await models.master_diamond_types.create(taxobj);
+    await models.master_diamond_clarities
+    .findOrCreate({
+      where: { name : diamondClarity },
+      defaults: diamondclarities,
+    })
+    await models.master_diamonds_colors
+    .findOrCreate({
+      where: { name : diamondColor },
+      defaults: diamondcolrs,
+    })
     res.send(200, { message: "Created Successfully" });
   }
 };

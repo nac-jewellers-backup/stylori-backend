@@ -77,6 +77,9 @@ module.exports = {
       isreorderable: {
         type: Sequelize.BOOLEAN,
       },
+      iscomponentpricing: {
+        type: Sequelize.BOOLEAN
+      },
     });
   },
   down: (queryInterface, Sequelize) => {

@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     selling_qty: DataTypes.INTEGER,
     isreorderable: DataTypes.BOOLEAN,
     hsn_number: DataTypes.STRING,
+    iscomponentpricing: DataTypes.BOOLEAN,
     attributes:{
       type: DataTypes.ARRAY(DataTypes.TEXT)
     },

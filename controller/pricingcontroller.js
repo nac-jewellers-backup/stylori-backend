@@ -2110,7 +2110,31 @@ exports.vendormakingprice =  async (req, res) => {
 
 }
 exports.addmarkup =  async (req, res) => {
-  const {material, sellingPriceMin,sellingPriceMax, markupValue,markuptype,category,producttype} = req.body
+  const {material, sellingPriceMin,sellingPriceMax, markupValue,markuptype,category,producttype,material_list,purity_list} = req.body
+  let purities = []
+  let producttypes = []
+  if(purity_list)
+  {
+    if(Array.isArray(purity_list))
+    {
+      purities = purity_list
+    }else{
+      purities.push(purity_list)
+    }
+
+  }
+
+  if(producttype)
+  {
+    if(Array.isArray(producttype))
+    {
+      producttypes = producttype
+    }else{
+      producttypes.push(producttype)
+    }
+
+  }
+
   let response = await models.pricing_markup.create(
     {
       id: uuidv1(),
@@ -2118,14 +2142,16 @@ exports.addmarkup =  async (req, res) => {
         selling_price_max : sellingPriceMax,
         markup_type: markuptype,
         category: category,
-        product_type : producttype,
+        product_type : producttypes,
         markup_value: markupValue,
         material: material,
+        product_material: material_list,
+        purities : purities,
         updatedAt : new Date()
     })
     if(response)
     {
-        res.send(200,{"message": "success"})
+        res.send(200,{"message": "success",response:material_list})
 
     }else{
         res.send(402,{"message": "Try again later"})
@@ -2379,6 +2405,33 @@ exports.creatediscount =  async (req, res) => {
   componenets.forEach(compobj =>{
     pricingcomponents.push(compobj.name)
   })
+  let componentarr = [];
+
+  if(product_attributes)
+  {
+    
+
+    let keys = Object.keys(product_attributes);
+
+  keys.forEach(key => {
+    let attributeobj = product_attributes[key].alias;
+
+    if(Array.isArray(attributeobj))
+    {
+      attributeobj.forEach(attr => {
+        if(attr)
+        {
+          componentarr.push(attr)
+        }
+
+       
+      })
+     
+   
+    }
+
+  })
+  }
   console.log("dad")
   console.log(JSON.stringify({
     id:  uuidv1(),
@@ -2393,6 +2446,7 @@ exports.creatediscount =  async (req, res) => {
     discount_title: discounttitle,
     components : pricingcomponents,
     discount_value : discountvalue,
+    attributes : componentarr,
     discount_type : discounttype == 'percentage' ? 2 : 1,
     product_ids : skus,
     is_active: true,
