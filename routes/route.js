@@ -32,6 +32,8 @@ module.exports = function (app) {
 
   const productFetchController = require("../controller/productfetchController.js");
 
+  const inventoryController = require("../controller/inventorycontroller");
+
   app.post("/componentpriceupdate", component_price_update.priceupdate);
 
   app.post("/api/auth/signin", authcontroller.signin);
@@ -613,5 +615,34 @@ module.exports = function (app) {
         console.log("err", err);
         return res.json(err);
       });
+  });
+  app.post("/addholidays", async (req, res) => {
+    try {
+      res.status(200).send(await inventoryController.addHolidays(req.body));
+    } catch (error) {
+      res.status(400).send({
+        error: error.message,
+      });
+    }
+  });
+  app.post("/addinventories", async (req, res) => {
+    try {
+      res.status(200).send(await inventoryController.addInventories(req.body));
+    } catch (error) {
+      console.log(error);
+      res.status(400).send({
+        error: error.message,
+      });
+    }
+  });
+  app.post("/getshippingdate", async (req, res) => {
+    try {
+      res.status(200).send(await inventoryController.getShippingDate(req.body));
+    } catch (error) {
+      console.log(error);
+      res.status(400).send({
+        error: error.message,
+      });
+    }
   });
 };
