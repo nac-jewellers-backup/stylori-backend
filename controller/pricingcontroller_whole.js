@@ -1878,7 +1878,7 @@ exports.priceupdate = (req, res) => {
                     {
                       alldiscount =  disscount_obj["All"].value ? disscount_obj["All"].value : 0;
                     }
-                    var query = "UPDATE trans_sku_lists SET markup_price = (selling_price + (selling_price *"+markup.markup_value+"/100)), discount_price = (selling_price + (selling_price *"+markup.markup_value+"/100))  where generated_sku ='"+productskus[skucount].generated_sku+"'" ;
+                    var query = "UPDATE trans_sku_lists SET markup_price = (selling_price + (selling_price *"+markup.markup_value+"/100)) where generated_sku ='"+productskus[skucount].generated_sku+"'" ;
                     await models.sequelize.query(query).then(([results, metadata]) => {
                     
                     })

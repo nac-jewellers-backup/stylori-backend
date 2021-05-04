@@ -653,7 +653,7 @@ exports.updateproductattribute = async (req, res) => {
     });
     console.log(JSON.stringify(diamond_obj));
     purity_arr.forEach((purityobj) => {
-      // attributes_array.push(purity_obj.alias)
+    attributes_array.push(purity_obj.alias)
       purity_obj[purityobj.name] = purityobj.alias;
     });
 
@@ -704,7 +704,10 @@ exports.updateproductattribute = async (req, res) => {
         });
         sku_atter.push(diamond_obj[skuobj.diamond_type]);
         sku_atter.push(purity_obj[skuobj.purity]);
-
+        console.log("=====CCCCCC=====")
+        console.log(skuobj.purity)
+        console.log(purity_obj[skuobj.purity])
+        console.log("=====CCCCCC=====")
         await models.trans_sku_lists.update(
           {
             attributes: sku_atter,
