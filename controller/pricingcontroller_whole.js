@@ -770,7 +770,8 @@ exports.priceupdate = (req, res) => {
       }
     }
     if(sku_val.purity){
-      purities.push(sku_val.purity)
+      let pur = sku_val.purity;
+      purities.push(pur.replace(".",""))
       whereclause['purities'] = {
         [Op.contains] : purities
       }
@@ -1858,7 +1859,7 @@ exports.priceupdate = (req, res) => {
 
           var gemstonediscountvalue = ((gemstonesellingprice * 100) /(100 - gemstone_discount));
           var diamonddiscountvalue = ((diamondsellingprice * 100) /(100 - diamond_discount));
-          if(markupobj)
+          if(markupobj && markupobj.length > 0) 
           {
 
           
@@ -1968,6 +1969,15 @@ exports.priceupdate = (req, res) => {
 
                 }
           });
+        }else{
+          console.log("=====ads=========")
+          console.log(total_costprice)
+          console.log(productskus[skucount].purity)
+          console.log("=======fsdf=======")
+          var query = "UPDATE trans_sku_lists SET markup_price = selling_price, discount_price = selling_price   where generated_sku ='"+productskus[skucount].generated_sku+"'" ;
+                    await models.sequelize.query(query).then(([results, metadata]) => {
+                    
+                    })
         }
 
           var golddiscountvalue = ((goldmarkupvalue * 100) /(100 - metal_discount));
