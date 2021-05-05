@@ -2113,11 +2113,20 @@ exports.addmarkup =  async (req, res) => {
   const {material, sellingPriceMin,sellingPriceMax, markupValue,markuptype,category,producttype,material_list,purity_list} = req.body
   let purities = []
   let producttypes = []
+  let produc_materials = ""
+  if(material_list)
+  {
+    material_list.forEach(matobj =>{
+      produc_materials = matobj.shortCode
+    })
+  }
   if(purity_list)
   {
     if(Array.isArray(purity_list))
     {
-      purities = purity_list
+      purity_list.forEach(puobj =>{
+        purities.push(puobj.shortCode)
+      })
     }else{
       purities.push(purity_list)
     }
@@ -2128,7 +2137,9 @@ exports.addmarkup =  async (req, res) => {
   {
     if(Array.isArray(producttype))
     {
-      producttypes = producttype
+      producttype.forEach(puobj =>{
+        producttypes.push(puobj.name)
+      })
     }else{
       producttypes.push(producttype)
     }
@@ -2145,7 +2156,7 @@ exports.addmarkup =  async (req, res) => {
         product_type : producttypes,
         markup_value: markupValue,
         material: material,
-        product_material: material_list,
+        product_material: produc_materials,
         purities : purities,
         updatedAt : new Date()
     })

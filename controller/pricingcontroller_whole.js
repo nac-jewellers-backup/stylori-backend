@@ -771,7 +771,7 @@ exports.priceupdate = (req, res) => {
     }
     if(sku_val.purity){
       let pur = sku_val.purity;
-      purities.push(pur.replace(".",""))
+      purities.push(pur.replace(".","").replace("K",""))
       whereclause['purities'] = {
         [Op.contains] : purities
       }
