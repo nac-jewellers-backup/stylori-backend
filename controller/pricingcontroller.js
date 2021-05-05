@@ -1926,7 +1926,7 @@ exports.updatevendorgoldprice =  async (req, res) => {
 
 }
 exports.updategemstoneprice =  async (req, res) => {
-  const {isadd,cost_price_id,vendor_code,gemstone_type, selling_price_type,selling_price_id, selling_price, cost_price,weight_start, weight_end} = req.body
+  const {isadd,cost_price_id,vendor_code,gemstone_type, selling_price_type,selling_price_id, selling_price,ratetype, cost_price,weight_start, weight_end} = req.body
   if(isadd)
   {
     let price_arr = [];
@@ -1937,7 +1937,7 @@ exports.updategemstoneprice =  async (req, res) => {
       price: cost_price,
       vendor_code : vendor_code,
       gemstone_type : gemstone_type,
-      rate_type  : 1,
+      rate_type  : ratetype,
       selling_price_type : 1,
       price : cost_price
     }
@@ -1948,7 +1948,7 @@ exports.updategemstoneprice =  async (req, res) => {
       price: cost_price,
       vendor_code : vendor_code,
       gemstone_type : gemstone_type,
-      rate_type  : 1,
+      rate_type  : ratetype,
       selling_price_type : selling_price_type,
       price : selling_price
     }
