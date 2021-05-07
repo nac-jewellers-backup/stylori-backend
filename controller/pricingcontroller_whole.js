@@ -2213,10 +2213,16 @@ exports.priceupdate = (req, res) => {
             {
               checkisinclude()
             }else{
-              updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
+              if(skucount > 0)
+              {
+               updategoldprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
+
+              }else{
+                updatediamondprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
+
+              }
 
             }
-           // updategoldprice(product_obj.vendor_code, product_obj.trans_sku_lists[skucount])
 
 
           }else{
