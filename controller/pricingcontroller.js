@@ -1926,7 +1926,7 @@ exports.updatevendorgoldprice =  async (req, res) => {
 
 }
 exports.updategemstoneprice =  async (req, res) => {
-  const {isadd,cost_price_id,vendor_code,gemstone_type, selling_price_type,selling_price_id, selling_price, cost_price,weight_start, weight_end} = req.body
+  const {isadd,cost_price_id,vendor_code,gemstone_type, selling_price_type,selling_price_id, selling_price,ratetype, cost_price,weight_start, weight_end} = req.body
   if(isadd)
   {
     let price_arr = [];
@@ -1937,7 +1937,7 @@ exports.updategemstoneprice =  async (req, res) => {
       price: cost_price,
       vendor_code : vendor_code,
       gemstone_type : gemstone_type,
-      rate_type  : 1,
+      rate_type  : ratetype,
       selling_price_type : 1,
       price : cost_price
     }
@@ -1948,7 +1948,7 @@ exports.updategemstoneprice =  async (req, res) => {
       price: cost_price,
       vendor_code : vendor_code,
       gemstone_type : gemstone_type,
-      rate_type  : 1,
+      rate_type  : ratetype,
       selling_price_type : selling_price_type,
       price : selling_price
     }
@@ -2113,11 +2113,20 @@ exports.addmarkup =  async (req, res) => {
   const {material, sellingPriceMin,sellingPriceMax, markupValue,markuptype,category,producttype,material_list,purity_list} = req.body
   let purities = []
   let producttypes = []
+  let produc_materials = ""
+  if(material_list)
+  {
+    material_list.forEach(matobj =>{
+      produc_materials = matobj.shortCode
+    })
+  }
   if(purity_list)
   {
     if(Array.isArray(purity_list))
     {
-      purities = purity_list
+      purity_list.forEach(puobj =>{
+        purities.push(puobj.shortCode)
+      })
     }else{
       purities.push(purity_list)
     }
@@ -2128,7 +2137,9 @@ exports.addmarkup =  async (req, res) => {
   {
     if(Array.isArray(producttype))
     {
-      producttypes = producttype
+      producttype.forEach(puobj =>{
+        producttypes.push(puobj.name)
+      })
     }else{
       producttypes.push(producttype)
     }
@@ -2145,7 +2156,7 @@ exports.addmarkup =  async (req, res) => {
         product_type : producttypes,
         markup_value: markupValue,
         material: material,
-        product_material: material_list,
+        product_material: produc_materials,
         purities : purities,
         updatedAt : new Date()
     })
@@ -2575,6 +2586,7 @@ exports.getaliasproductlist =  async (req, res) => {
 
   whereclause = {
     [Op.and]:attrs
+   
   }
  console.log("XXXXXXXXXXXXXXXXXXATTR"+JSON.stringify(attrs))
   let productlists = await models.product_lists.findAll({
