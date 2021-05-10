@@ -4,7 +4,6 @@ module.exports = (sequelize, DataTypes) => {
     "inventory",
     {
       generated_sku: DataTypes.STRING,
-      sku_id: DataTypes.STRING,
       number_of_items: DataTypes.INTEGER,
       warehouse_id: DataTypes.INTEGER,
     },

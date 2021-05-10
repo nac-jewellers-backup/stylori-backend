@@ -89,6 +89,7 @@ app.use(postgraphile(connString,{
     appendPlugins: [MySchemaExtensionPlugin, ConnectionFilterPlugin, PgOrderByRelatedPlugin],
     graphileBuildOptions: {
       connectionFilterRelations: true,
+      connectionFilterAllowNullInput:true,
        // default: false
     },
     // ownerConnectionString: `postgres://${connString.user}:${connString.password}@${connString.host}/${connString.database}`,

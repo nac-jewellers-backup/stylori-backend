@@ -100,3 +100,6 @@ config.json
 !.elasticbeanstalk/*.global.yml
 
 .vscode/
+
+uploads/*.*
+!uploads/.gitkeep
