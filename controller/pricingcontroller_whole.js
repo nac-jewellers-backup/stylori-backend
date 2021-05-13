@@ -1928,7 +1928,10 @@ exports.priceupdate = (req, res) => {
                     {
                       goldmarkupvalue = (goldsellingprice + (goldsellingprice * (markup.markup_value/100)))
                       queryarray = "UPDATE pricing_sku_metals SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)), discount_price = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'goldprice'" ;
-                     
+                      await models.sequelize.query(queryarray).then(([results, metadata]) => {
+                        console.log(JSON.stringify(results))
+                        console.log(metadata)
+                      })
                     }
                     
                   if(markup.material == 'Making Charge')
@@ -1938,18 +1941,18 @@ exports.priceupdate = (req, res) => {
                       makingchargediscountvalue = ((makingchargemarkupvalue * 100) /(100 - mkcharge_discount));
   
                       queryarray = "UPDATE pricing_sku_metals SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'makingcharge'" ;
-                      // await models.sequelize.query(query).then(([results, metadata]) => {
+                      await models.sequelize.query(query).then(([results, metadata]) => {
                        
-                      // })
+                      })
                     } 
                     if(markup.material == 'Gem Stone')
                     {
                       gemstonemarkupvalue = (gemstonesellingprice + (gemstonesellingprice * (markup.markup_value/100)))
                       gemstonediscountvalue = ((gemstonemarkupvalue * 100) /(100 - gemstone_discount));
                       queryarray = "UPDATE pricing_sku_materials SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and component LIKE 'gemstone%'" ;
-                      // await models.sequelize.query(query).then(([results, metadata]) => {
-                      //   // Results will be an empty array and metadata will contain the number of affected rows.
-                      // })
+                      await models.sequelize.query(query).then(([results, metadata]) => {
+                        // Results will be an empty array and metadata will contain the number of affected rows.
+                      })
                     } 
                     
                     if(markup.material == 'Diamond')
@@ -1957,9 +1960,9 @@ exports.priceupdate = (req, res) => {
                       diamondmarkupvalue = (diamondsellingprice + (diamondsellingprice * (markup.markup_value/100)))
                      
                       queryarray = "UPDATE pricing_sku_materials SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_id ='"+productskus[skucount].product_id+"' and component LIKE 'diamond%'" ;                   
-                      // await models.sequelize.query(query12).then(([results, metadata]) => {
-                      //   // Results will be an empty array and metadata will contain the number of affected rows.
-                      // })
+                      await models.sequelize.query(query12).then(([results, metadata]) => {
+                        // Results will be an empty array and metadata will contain the number of affected rows.
+                      })
                     }
   
                   }
@@ -1972,10 +1975,7 @@ exports.priceupdate = (req, res) => {
                     console.log(queryarray)
                     
 
-                    await models.sequelize.query(queryarray).then(([results, metadata]) => {
-                      console.log(JSON.stringify(results))
-                      console.log(metadata)
-                    })
+                    
                     console.log("=======fsdf=======")
                   }
                   processmarkup  = processmarkup + 1;
