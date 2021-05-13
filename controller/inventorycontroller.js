@@ -33,57 +33,39 @@ let addHolidays = (holidays) => {
   });
 };
 
-let addInventories = async (inventoryList) => {
-  var warehouse = await models.warehouse.findAll({
-    attributes: ["id", "name"],
-  });
-
+let addInventories = (inventory, warehouses) => {
   var getWarehouseId = (warehouseName) => {
-    var index = findIndex(warehouse, (item) => {
-      return item.name == warehouseName;
+    var index = findIndex(warehouses, (item) => {
+      return item.name.toLowerCase() == warehouseName.toLowerCase();
     });
-    return warehouse[index].id;
+    return warehouses[index].id;
   };
 
   return new Promise(async (resolve, reject) => {
-    try {
-      if (!Array.isArray(inventoryList) || inventoryList.length < 1) {
-        throw new Error("Please send inventory lists in an array");
-      }
-
-      Promise.all(
-        inventoryList.map(async (element) => {
-          var item = {
-            generated_sku: element.TAGNO,
-            warehouse_id: getWarehouseId(element.warehouse_name),
-          };
-          models.inventory
-            .findOne({ attributes: ["id"], where: { ...item } })
-            .then(async (result) => {
-              if (result) {
-                await models.inventory.update(
-                  { number_of_items: element.quantity },
-                  { where: { id: result.id } }
-                );
-              } else {
-                await models.inventory.create({
-                  id: `${uuidv4()}`,
-                  ...item,
-                  number_of_items: element.quantity,
-                });
-              }
-            });
-        })
-      ).then(async (_) => {
-        await models.sequelize
-          .query(`update inventories set sku_id = tk.sku_id from trans_sku_lists tk 
-                where tk.generated_sku = inventories.generated_sku and inventories.sku_id is null
-            `);
-        resolve("Completed!");
+    var item = {
+      generated_sku: inventory.TAGNO,
+      warehouse_id: getWarehouseId(inventory.warehouse_name),
+    };
+    models.inventory
+      .findOne({ attributes: ["id"], where: { ...item } })
+      .then(async (result) => {
+        if (result) {
+          await models.inventory.update(
+            { number_of_items: inventory.quantity },
+            { where: { id: result.id } }
+          );
+        } else {
+          await models.inventory.create({
+            id: `${uuidv4()}`,
+            ...item,
+            number_of_items: element.quantity,
+          });
+        }
+        resolve("Completed");
+      })
+      .catch((err) => {
+        reject(err);
       });
-    } catch (error) {
-      reject(error);
-    }
   });
 };
 

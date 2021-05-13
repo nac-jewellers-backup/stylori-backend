@@ -14,9 +14,6 @@ module.exports = {
           key: "generated_sku",
         },
       },
-      sku_id: {
-        type: Sequelize.STRING,
-      },
       number_of_items: {
         type: Sequelize.INTEGER,
       },

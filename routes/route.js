@@ -12,6 +12,7 @@ let {
   initIndex,
 } = require("../controller/elasticServices");
 const turl = process.env.apibaseurl + "/productesearch";
+const upload = require("../middlewares/multer").single("file");
 
 module.exports = function (app) {
   const configurationcontroller = require("../controller/master_configuration.js");
@@ -199,7 +200,7 @@ module.exports = function (app) {
   );
   app.post("/getproductvarient", productcontroller.getproductvarient);
   app.post("/getproducturl", productcontroller.getproducturl);
-  app.post("/productattributes", productcontroller.productattributes)
+  app.post("/productattributes", productcontroller.productattributes);
   app.post("/editproduct", productcontroller.editproduct);
   app.post("/editproductdiamond", productcontroller.editproductdiamond);
   app.post("/updateskuinfo", productcontroller.updateskuinfo);
@@ -616,25 +617,70 @@ module.exports = function (app) {
         return res.json(err);
       });
   });
-  app.post("/addholidays", async (req, res) => {
-    try {
-      res.status(200).send(await inventoryController.addHolidays(req.body));
-    } catch (error) {
-      res.status(400).send({
-        error: error.message,
-      });
-    }
+  app.post("/addholidays", (req, res) => {
+    upload(req, res, (err) => {
+      if (err) {
+        res.status(400).send({
+          error: err.message,
+        });
+      }
+      const csv = require("csvtojson");
+
+      csv()
+        .fromFile(req.file.path)
+        .then(async (data) => {
+          try {
+            res.status(200).send(await inventoryController.addHolidays(data));
+          } catch (err) {
+            res.status(400).send({
+              error: err.message,
+            });
+          }
+        })
+        .catch((err) => {
+          res.status(400).send({
+            error: err.message,
+          });
+        });
+    });
   });
-  app.post("/addinventories", async (req, res) => {
-    try {
-      res.status(200).send(await inventoryController.addInventories(req.body));
-    } catch (error) {
-      console.log(error);
-      res.status(400).send({
-        error: error.message,
+  app.post("/addinventories", (req, res) => {
+    upload(req, res, async (err) => {
+      if (err) {
+        res.status(400).send({
+          error: err.message,
+        });
+      }
+      res.send({ status: true, message: "File processing started!" });
+
+      const csv = require("csvtojson");
+
+      var warehouses = await require("../models").warehouse.findAll({
+        attributes: ["id", "name"],
+        raw: true,
       });
-    }
+
+      csv()
+        .fromFile(req.file.path)
+        .subscribe(
+          async (data) => {
+            return await inventoryController.addInventories(data, warehouses);
+          },
+          (err) => {
+            console.log(err);
+          },
+          () => {
+            console.log("Success", req.file.path);
+            try {
+              require("fs").unlink(req.file.path);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        );
+    });
   });
+
   app.post("/getshippingdate", async (req, res) => {
     try {
       res.status(200).send(await inventoryController.getShippingDate(req.body));
