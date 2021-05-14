@@ -3643,3 +3643,285 @@ exports.productupload2 = async (req, res) => {
 
   //  res.send(200, { submitted: true })
 };
+
+
+exports.addvarient = async (req, res) => {
+  const {productId,productPuritiesByProductId,productMetalcoloursByProductId,productDiamondTypes} = req.body
+  let lastsku = await models.trans_sku_lists.findOne({
+    attributes: ["sku_id"],
+    where: {
+      is_active: true,
+    },
+    order: [
+      //  [ sequelize.cast(sequelize.col('sku_id'), 'BIGINT') , 'ASC' ]
+      [sequelize.cast(sequelize.col("sku_id"), "BIGINT"), "DESC"],
+    ],
+  });
+  var product_skus = []
+  var lastsku_id = parseInt(lastsku.sku_id);
+  var skuprefix = productId  + "-";
+  let successmessage = await models.product_lists.findOne({
+    include:[
+      {
+        model: models.product_purities,
+        attributes: ["purity"],
+      }
+    ],
+    where : {
+      product_id  : productId
+    }
+  });
+ let puritylist = [];
+ if(successmessage)
+ {
+   let prod_purities = successmessage.product_purities
+   if(prod_purities)
+   {
+    prod_purities.forEach(pu_element =>{
+      puritylist.push(pu_element.purity)
+    })
+
+   }
+ }
+ if(productPuritiesByProductId)
+ {
+  productPuritiesByProductId.forEach(pu_element => {
+    if(puritylist.indexOf(pu_element.purity) == -1)
+    {
+      puritylist.push(pu_element.purity)
+    }
+  })
+ }
+ let prod_puritylist = await models.master_metals_purities.findAll({
+   where:{
+     name: {
+       [Op.in] : puritylist
+     }
+   }
+ })
+ var purityarr = [];
+ prod_puritylist.forEach((purity) => {
+    const purityobj = {
+      id: uuidv1(),
+      purity: purity.name,
+      product_id: productId,
+      is_active: true,
+    };
+    purityarr.push(purityobj);
+    var sku = skuprefix + purity.short_code;
+    var skuobj = {
+      product_id: successmessage.product_id,
+      product_type: successmessage.product_type,
+      service_name: successmessage.vendor_code,
+      purity: purity.name,
+      generated_sku: sku,
+    };
+    product_skus.push(skuobj);
+  });
+  if (puritylist) {
+    // await models.product_purities.bulkCreate(purityarr, {
+    //   individualHooks: true,
+    // });
+  }
+
+  var skus = product_skus;
+  product_skus = [];
+  var metal_color_arr = [];
+  if (productMetalcoloursByProductId) {
+    productMetalcoloursByProductId.forEach((metalcolorobj) => {
+      const colorobj = {
+        id: uuidv1(),
+        product_color: metalcolorobj.name,
+        product_id: productId,
+        is_active: true,
+      };
+      metal_color_arr.push(colorobj);
+    });
+    // await models.product_metalcolours.bulkCreate(metal_color_arr, {
+    //   individualHooks: true,
+    // });
+  }
+  var prod_colurs  =  await models.product_metalcolours.findAll({
+    where:{
+      product_id : productId
+    }
+  })
+  let color_name = [];
+  prod_colurs.forEach(colorobj => {
+    color_name.push(colorobj.product_color)
+  })
+  var metalcolorlist  =  await models.master_metals_colors.findAll({
+    where:{
+      name : {
+        [Op.in] : color_name
+      }
+    }
+  })
+  skus.forEach((skuvalue) => {
+    var skuval = skuvalue.generated_sku;
+
+    metalcolorlist.forEach((metalcolor) => {
+      var sku = skuval + metalcolor.short_code;
+
+      var skuobj = {
+        ...skuvalue,
+        generated_sku: sku,
+        metal_color: metalcolor.name,
+      };
+      product_skus.push(skuobj);
+    });
+  });
+
+
+    /*************** Diamond Lists ********************/
+    var skus = product_skus;
+
+    product_skus = [];
+    var diamond_sku_clarity = {};
+    let diamondtype = await models.master_diamond_types.findAll({});
+    diamondtype.forEach((diamond_type) => {
+      var claritytype = diamond_type.diamond_color + diamond_type.diamond_clarity;
+      diamond_sku_clarity[claritytype] = diamond_type.short_code;
+    });
+    let new_diamonds = []
+   let existdiamonds = await models.product_diamonds.findAll({
+     where :{
+       product_sku : productId
+     }
+   })
+   let existdiamondtypes = [];
+   existdiamonds.forEach(diamond_obj => {
+    existdiamondtypes.push(diamond_obj.diamond_type)
+   })
+
+   if(productDiamondTypes)
+   {
+    productDiamondTypes.forEach(prod_diamond =>{
+      if(existdiamondtypes.indexOf(prod_diamond.diamondType) == -1)
+      {
+        new_diamonds.push(prod_diamond)
+      }
+    })
+   }
+
+   skus.forEach((skuvalue) => {
+    var skuval = skuvalue.generated_sku;
+
+    productDiamondTypes.forEach((diamond) => {
+      var clarity = diamond.diamondType;
+
+      var sku = skuval + diamond_sku_clarity[clarity];
+
+      var skuobj = {
+        ...skuvalue,
+        generated_sku: sku,
+        
+        diamond_type: clarity,
+      };
+      product_skus.push(skuobj);
+    });
+  });
+
+
+  skus = product_skus;
+var gemstonearr = [];
+var gemstonesku = "";
+var gemstonecolorcode1 = "00";
+var gemstonecolorcode2 = "00";
+var gemstoneshortcode = "00";
+var gemstonecolorcode2 = "00";
+
+let gem_arr =  await models.product_gemstones.findAll({
+   where:{
+    product_sku : productId
+   }
+  })
+  let gem_content_arr = []
+  gem_arr.forEach(gemobj => {
+    gem_content_arr.push(gemobj.gemstone_type)
+  })
+
+  let gemstones = await models.master_gemstones_types.findAll({
+    where:{
+      name : {
+        [Op.in]: gem_content_arr
+      }
+    }
+  })
+
+  if (gemstones.length > 0) {
+    var firstgemobj = gemstones[0];
+    gemstoneshortcode = firstgemobj.short_ode;
+    gemstonesku = firstgemobj.color_code;
+    gemstonecolorcode1 = firstgemobj.color_code;
+  }
+  if (gemstones.length > 1) {
+    var secondgemobj = gemstones[1];
+  
+    gemstonesku = gemstonesku + secondgemobj.color_ode;
+    gemstonecolorcode2 = secondgemobj.color_code;
+  }
+
+product_skus = [];
+skus.forEach((skuvalue) => {
+  var sku = skuvalue.generated_sku + gemstonecolorcode1 + gemstonecolorcode2;
+
+  var skuobj = {
+    ...skuvalue,
+    generated_sku: sku,
+  };
+  product_skus.push(skuobj);
+
+  // product_skus.push(sku)
+});
+
+/*************** Size Lists ********************/
+
+skus = product_skus;
+product_skus = [];
+
+var sizelist = []
+if(successmessage.size_varient)
+{
+  sizelist = successmessage.size_varient.split(",")
+}
+console.log(sizelist.length);
+skus.forEach((skuvalue) => {
+  sizelist.forEach((sizevalue) => {
+    var sku = skuvalue.generated_sku + "_" + sizevalue;
+
+    var skuobj = {
+      ...skuvalue,
+      generated_sku: sku,
+      sku_size: sizevalue,
+    };
+    product_skus.push(skuobj);
+  });
+});
+if (product_skus.length == 0) {
+  product_skus = skus;
+}
+
+let trans_skus = await models.trans_sku_lists.findAll({
+  where : {
+    product_id : productId
+  }
+})
+let existskus = []
+trans_skus.forEach(skuid => {
+  existskus.push(skuid.generated_sku)
+})
+let newskus = []
+console.log("puritylistcount");
+
+product_skus.forEach(skuname => {
+  if(existskus.indexOf(skuname.generated_sku) == -1)
+  {
+    console.log(skuname.generated_sku);
+
+    newskus.push(skuname)
+  }
+})
+ // console.log(JSON.stringify(product_skus))
+  console.log(newskus.length);
+}
