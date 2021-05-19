@@ -3719,9 +3719,9 @@ exports.addvarient = async (req, res) => {
     product_skus.push(skuobj);
   });
   if (puritylist) {
-    // await models.product_purities.bulkCreate(purityarr, {
-    //   individualHooks: true,
-    // });
+    await models.product_purities.bulkCreate(purityarr, {
+      individualHooks: true,
+    });
   }
 
   var skus = product_skus;
@@ -3737,9 +3737,9 @@ exports.addvarient = async (req, res) => {
       };
       metal_color_arr.push(colorobj);
     });
-    // await models.product_metalcolours.bulkCreate(metal_color_arr, {
-    //   individualHooks: true,
-    // });
+    await models.product_metalcolours.bulkCreate(metal_color_arr, {
+      individualHooks: true,
+    });
   }
   var prod_colurs  =  await models.product_metalcolours.findAll({
     where:{
@@ -3924,4 +3924,42 @@ product_skus.forEach(skuname => {
 })
  // console.log(JSON.stringify(product_skus))
   console.log(newskus.length);
+  models.trans_sku_lists
+  .bulkCreate(newskus, { individualHooks: true })
+  .then(function (response) {
+    models.trans_sku_descriptions
+      .bulkCreate(uploaddescriptions, { individualHooks: true })
+      .then(function (response) {
+        // Notice: There are no arguments here, as of right now you'll have to...
+        //   request({
+        //     url: 'htts://api.stylori.net/updatepricelist',
+        //     method: "POST",
+        //     headers: {"Content-Type": "application/json"},
+        //     body: JSON.stringify({req_product_id : product_id})
+        // }, function(error, response, body) {
+        //    console.log(body)
+        //    console.log(response)
+
+        // });
+        //  const _obj = {
+        //         method: "post",
+        //         url: process.env.apibaseurl+"/esearch_forceindex",
+        //         data: {
+        //             product_id : prod_obj.product_id
+        //         }
+        //     };
+
+        // axios(_obj)
+        // 	  .then(async response => {
+        //       }).catch({
+
+        //       })
+        console.log("XXXXXXXXX==")
+        console.log(JSON.stringify(product_category_obj))
+        console.log("XXXXXXXXX==")
+       // addproductattributes([product_category_obj.alias],product_obj.product_id)
+
+        res.json(uploadskus);
+      });
+  });
 }
