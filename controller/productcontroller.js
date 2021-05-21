@@ -3823,7 +3823,7 @@ exports.addvarient = async (req, res) => {
   });
 
 
-  skus = product_skus;
+skus = product_skus;
 var gemstonearr = [];
 var gemstonesku = "";
 var gemstonecolorcode1 = "00";
@@ -3918,8 +3918,11 @@ product_skus.forEach(skuname => {
   if(existskus.indexOf(skuname.generated_sku) == -1)
   {
     console.log(skuname.generated_sku);
-
-    newskus.push(skuname)
+    let sku_val = {
+      id : uuidv1(),
+      ...skuname
+    }
+    newskus.push(sku_val)
   }
 })
  // console.log(JSON.stringify(product_skus))
@@ -3927,39 +3930,17 @@ product_skus.forEach(skuname => {
   models.trans_sku_lists
   .bulkCreate(newskus, { individualHooks: true })
   .then(function (response) {
-    models.trans_sku_descriptions
-      .bulkCreate(uploaddescriptions, { individualHooks: true })
-      .then(function (response) {
-        // Notice: There are no arguments here, as of right now you'll have to...
-        //   request({
-        //     url: 'htts://api.stylori.net/updatepricelist',
-        //     method: "POST",
-        //     headers: {"Content-Type": "application/json"},
-        //     body: JSON.stringify({req_product_id : product_id})
-        // }, function(error, response, body) {
-        //    console.log(body)
-        //    console.log(response)
+    res.json(response);
+    // models.trans_sku_descriptions
+    //   .bulkCreate(uploaddescriptions, { individualHooks: true })
+    //   .then(function (response) {
+        
+    //     console.log("XXXXXXXXX==")
+    //     console.log(JSON.stringify(product_category_obj))
+    //     console.log("XXXXXXXXX==")
+    //    // addproductattributes([product_category_obj.alias],product_obj.product_id)
 
-        // });
-        //  const _obj = {
-        //         method: "post",
-        //         url: process.env.apibaseurl+"/esearch_forceindex",
-        //         data: {
-        //             product_id : prod_obj.product_id
-        //         }
-        //     };
-
-        // axios(_obj)
-        // 	  .then(async response => {
-        //       }).catch({
-
-        //       })
-        console.log("XXXXXXXXX==")
-        console.log(JSON.stringify(product_category_obj))
-        console.log("XXXXXXXXX==")
-       // addproductattributes([product_category_obj.alias],product_obj.product_id)
-
-        res.json(uploadskus);
-      });
+    //     res.json(uploadskus);
+    //   });
   });
 }
