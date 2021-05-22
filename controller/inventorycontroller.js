@@ -77,6 +77,7 @@ let getShippingDate = async ({ sku_id, current_datetime }) => {
   var warehouse = await models.warehouse.findAll({
     attributes: ["shipping_in_days"],
     order: [["shipping_in_days", "asc"]],
+    where: { is_active: true },
   });
 
   var getHolidayCount = (currentDate, shippingDate) => {

@@ -14,6 +14,10 @@ module.exports = {
       shipping_in_days: {
         type: Sequelize.INTEGER,
       },
+      is_active: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
