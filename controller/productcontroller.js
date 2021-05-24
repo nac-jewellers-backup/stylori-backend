@@ -2813,18 +2813,9 @@ exports.getorderdetails = async (req, res) => {
             include: [
               {
                 model: models.trans_sku_lists,
-                include: [
-                  {
-                    model: models.product_lists,
-                    include: [
-                      {
-                        model: models.product_images,
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
+                 
+              }
+            ]
           },
           {
             model: models.giftwrap,
@@ -2840,8 +2831,60 @@ exports.getorderdetails = async (req, res) => {
     ],
     where: whereclause,
   });
+  /*  include: [
+              {
+                model: models.trans_sku_lists,
+                include: [
+                  {
+                    model: models.product_lists,
+                    include: [
+                      {
+                        model: models.product_images,
+                        raw : true,
+                        as : 'productImagesByProductId'
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+            */
+    let skuids = []
+  if(orders)
+  {
+    if(orders.shopping_cart)
+    {
+      if(orders.shopping_cart.shopping_cart_items)
+      {
+        orders.shopping_cart.shopping_cart_items.forEach(cartitem =>{
+            skuids.push(cartitem.product_sku)
+        })
+      }
+    }
+  }
+  let proddetail = []
+  if(skuids.length > 0)
+  {
+    proddetail = await models.trans_sku_lists.findAll({
+      include: [
+        {
+          model: models.product_lists,
+          include: [
+            {
+              model: models.product_images
+            },
+          ],
+        }
+      ],
+      where :{
+        generated_sku : {
+          [Op.in] : skuids
+        }
+      }
+    });
+  }
 
-  res.send(200, { orders });
+  res.send(200, { orders});
 };
 
 exports.getproducturl = async (req, res) => {
