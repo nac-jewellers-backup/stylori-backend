@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       shipping_in_days: DataTypes.INTEGER,
+      is_active: DataTypes.BOOLEAN,
     },
     {}
   );
