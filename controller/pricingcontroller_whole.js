@@ -1784,9 +1784,7 @@ exports.priceupdate = (req, res) => {
               }
             }
             })
-            console.log("==============")
-            console.log(discounts_arr.length)
-            console.log("==============")
+           
             discounts_arr.forEach(discount => {
                            let componentname = discount.components;
                            discounttitle = discount.discount_title
@@ -1829,6 +1827,7 @@ exports.priceupdate = (req, res) => {
               diamond_discount  = disscount_obj["All"].value ? disscount_obj["All"].value : 0;
 
             }
+           
            } 
            if(disscount_obj["Gemstone"] || disscount_obj["All"] )
            {
@@ -1864,10 +1863,10 @@ exports.priceupdate = (req, res) => {
         
           if(markupobj && markupobj.length > 0) 
           {
-            updatemarkup(markupobj[0])
+            //updatemarkup(markupobj[0])
             var processmarkup = 0;
-          async function updatemarkup(markup){
-            // markupobj.forEach(async markup => {
+         // async function updatemarkup(markup){
+           markupobj.forEach(async markup => {
               var queryarray = "";
               if(iscontainall)
               {
@@ -1986,10 +1985,10 @@ exports.priceupdate = (req, res) => {
                   processmarkup  = processmarkup + 1;
                   if(markupobj.length > processmarkup)
                   {
-                    updatemarkup(markupobj[processmarkup])
+                    //updatemarkup(markupobj[processmarkup])
                   }
 
-          }
+          })
          
         }else{
           
