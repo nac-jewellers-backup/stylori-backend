@@ -2038,8 +2038,8 @@ exports.priceupdate = (req, res) => {
          diamonddiscountvalue = diamonddiscountvalue + (golddiscount_different * (discount_price_distribute_percentage + diamond_percentage));
          }
          
-         console.log("==============")
-         console.log(JSON.stringify(diamonddiscountvalue))
+         console.log("=========diamond_discountdiscountvalue=====")
+         console.log(JSON.stringify(diamond_discount))
          console.log("==============")
          total_sku_discountvalue = makingchargediscountvalue + golddiscountvalue + gemstonediscountvalue + diamonddiscountvalue;
        
