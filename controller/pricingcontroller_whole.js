@@ -1944,7 +1944,7 @@ exports.priceupdate = (req, res) => {
                       makingchargemarkupvalue = (makingsellingprice + (makingsellingprice * (markup.markup_value/100)))
                       makingchargediscountvalue = ((makingchargemarkupvalue * 100) /(100 - mkcharge_discount));
   
-                      queryarray = "UPDATE pricing_sku_metals SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)), discount_price = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'makingcharge'" ;
+                      queryarray = "UPDATE pricing_sku_metals SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'makingcharge'" ;
                     
                       await models.sequelize.query(queryarray).then(([results, metadata]) => {
                        
@@ -1964,7 +1964,7 @@ exports.priceupdate = (req, res) => {
                     {
                       diamondmarkupvalue = (diamondsellingprice + (diamondsellingprice * (markup.markup_value/100)))
                      
-                      queryarray = "UPDATE pricing_sku_materials SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)), discount_price = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_id ='"+productskus[skucount].product_id+"' and component LIKE 'diamond%'" ;                   
+                      queryarray = "UPDATE pricing_sku_materials SET markup = (selling_price + (selling_price *"+markup.markup_value+"/100)) where product_id ='"+productskus[skucount].product_id+"' and component LIKE 'diamond%'" ;                   
                       await models.sequelize.query(queryarray).then(([results, metadata]) => {
                         // Results will be an empty array and metadata will contain the number of affected rows.
                       })
@@ -1993,7 +1993,7 @@ exports.priceupdate = (req, res) => {
          
         }else{
           
-          var query = "UPDATE trans_sku_lists SET markup_price = selling_price, discount_price = selling_price   where generated_sku ='"+productskus[skucount].generated_sku+"'" ;
+          var query = "UPDATE trans_sku_lists SET markup_price = selling_price   where generated_sku ='"+productskus[skucount].generated_sku+"'" ;
                     await models.sequelize.query(query).then(([results, metadata]) => {
                     
                     })
@@ -2038,16 +2038,16 @@ exports.priceupdate = (req, res) => {
          diamonddiscountvalue = diamonddiscountvalue + (golddiscount_different * (discount_price_distribute_percentage + diamond_percentage));
          }
          
-         console.log("=========diamond_discountdiscountvalue=====")
-         console.log(JSON.stringify(diamond_discount))
-         console.log("==============")
+  
          total_sku_discountvalue = makingchargediscountvalue + golddiscountvalue + gemstonediscountvalue + diamonddiscountvalue;
        
         var mkquery = "UPDATE pricing_sku_metals SET discount_price = ((markup * 100) /(100 - "+mkcharge_discount+") + ("+golddiscount_different+" * ("+discount_price_distribute_percentage+" + "+makingcharge_percentage+" ))) where product_sku ='"+productskus[skucount].generated_sku+"' and material_name = 'makingcharge'" ;
           await models.sequelize.query(mkquery).then(([results, metadata]) => {
              // Results will be an empty array and metadata will contain the number of affected rows.
            })
-
+           console.log("=========diamond_discountdiscountvalue=====")
+           console.log(JSON.stringify(diamond_component_count))
+           console.log("==============")
            if(diamond_component_count > 0)
                  {
                var materialquery = "UPDATE pricing_sku_materials SET discount_price = ((markup * 100) /(100 - "+diamond_discount+") + ("+golddiscount_different+" * (("+discount_price_distribute_percentage+" + "+diamond_percentage+" )/"+diamond_component_count+"))) where product_sku ='"+productskus[skucount].generated_sku+"' and component ilike '%diamond%'" ;
