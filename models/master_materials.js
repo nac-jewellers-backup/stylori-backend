@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     alias: DataTypes.STRING,
     short_code: DataTypes.STRING,
     filter_order: DataTypes.INTEGER,
+    alias_id: DataTypes.INTEGER,
     is_filter : DataTypes.BOOLEAN,
     is_active : DataTypes.BOOLEAN
   }, {});

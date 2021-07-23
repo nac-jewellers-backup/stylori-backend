@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     alias: DataTypes.STRING,
     is_filter: DataTypes.BOOLEAN,
     is_active : DataTypes.BOOLEAN,
-    filter_order : DataTypes.INTEGER
+    filter_order : DataTypes.INTEGER,
+    alias_id : DataTypes.INTEGER
   }, {});
   master_designs.associate = function(models) {
     // associations can be defined here

@@ -12,7 +12,7 @@ let {
   initIndex,
 } = require("../controller/elasticServices");
 const turl = process.env.apibaseurl + "/productesearch";
-const lturl = "http://localhost:8000/productesearch";
+const upload = require("../middlewares/multer").single("file");
 
 module.exports = function (app) {
   const configurationcontroller = require("../controller/master_configuration.js");
@@ -32,6 +32,8 @@ module.exports = function (app) {
   const productfetchController_esearch = require("../controller/productfetchController_esearch.js");
 
   const productFetchController = require("../controller/productfetchController.js");
+
+  const inventoryController = require("../controller/inventorycontroller");
 
   app.post("/componentpriceupdate", component_price_update.priceupdate);
 
@@ -65,8 +67,8 @@ module.exports = function (app) {
   );
 
   app.post("/ringpriceupdate", productcontroller.ringpriceupdate);
-
-  app.post("/productupload", productcontroller.productupload);
+  app.post("/addvarient", productcontroller.addvarient);
+  app.post("/productupload", productcontroller.productupload2);
   app.post("/productupdate", productupdatecontroller.updateproduct);
   app.post("/priceupdate", productcontroller.priceupdate);
   app.post("/disableproduct", productcontroller.disableproduct);
@@ -148,6 +150,7 @@ module.exports = function (app) {
   app.post("/addemailsubscription", authcontroller.addemailsubscription);
   app.post("/asktoexport", authcontroller.asktoexport);
   app.post("/getmasterroles", authcontroller.getmasterroles);
+  app.post("/updateuser", authcontroller.updateUser);
   app.post("/getadminusers", authcontroller.getadminusers);
   app.post(
     "/getpageaccess",
@@ -197,7 +200,7 @@ module.exports = function (app) {
   );
   app.post("/getproductvarient", productcontroller.getproductvarient);
   app.post("/getproducturl", productcontroller.getproducturl);
-
+  app.post("/productattributes", productcontroller.productattributes);
   app.post("/editproduct", productcontroller.editproduct);
   app.post("/editproductdiamond", productcontroller.editproductdiamond);
   app.post("/updateskuinfo", productcontroller.updateskuinfo);
@@ -218,7 +221,9 @@ module.exports = function (app) {
       });
     }
   });
-
+  app.post("/updateproductattribute", productcontroller.updateproductattribute);
+  app.post("/updateproductimage", productcontroller.updateproductimage);
+  // app.post("/productdetails", productcontroller.productdetails);
   app.post("/updatevendor", master_uploaddata_controller.updatevendor);
   app.post(
     "/getnewvendorcode",
@@ -321,7 +326,6 @@ module.exports = function (app) {
   app.post("/managepermissions", configurationcontroller.managepermissions);
   app.post("/getrolepermissions", configurationcontroller.getrolepermissions);
   app.post("/getwebusers", configurationcontroller.getwebusers);
-  app.post("/managetaxattributes", configurationcontroller.managetaxattributes);
   app.post("/managetaxattributes", configurationcontroller.managetaxattributes);
   app.post(
     "/silverproductpriceupdate",
@@ -767,8 +771,7 @@ module.exports = function (app) {
     };
     const _obj = {
       method: "post",
-      url:
-        "https://search-elastic-server-uguyslt53rg63cttm2b4hgwkb4.ap-south-1.es.amazonaws.com/sku_search/_delete_by_query",
+      url: "https://search-elastic-server-uguyslt53rg63cttm2b4hgwkb4.ap-south-1.es.amazonaws.com/sku_search/_delete_by_query",
       data: datapaylod,
     };
     axios(_obj)
@@ -843,5 +846,79 @@ module.exports = function (app) {
         console.log("err", err);
         return res.json(err);
       });
+  });
+  app.post("/addholidays", (req, res) => {
+    upload(req, res, (err) => {
+      if (err) {
+        res.status(400).send({
+          error: err.message,
+        });
+      }
+      const csv = require("csvtojson");
+
+      csv()
+        .fromFile(req.file.path)
+        .then(async (data) => {
+          try {
+            res.status(200).send(await inventoryController.addHolidays(data));
+          } catch (err) {
+            res.status(400).send({
+              error: err.message,
+            });
+          }
+        })
+        .catch((err) => {
+          res.status(400).send({
+            error: err.message,
+          });
+        });
+    });
+  });
+  app.post("/addinventories", (req, res) => {
+    upload(req, res, async (err) => {
+      if (err) {
+        res.status(400).send({
+          error: err.message,
+        });
+      }
+      res.send({ status: true, message: "File processing started!" });
+
+      const csv = require("csvtojson");
+
+      var warehouses = await require("../models").warehouse.findAll({
+        attributes: ["id", "name"],
+        raw: true,
+      });
+
+      csv()
+        .fromFile(req.file.path)
+        .subscribe(
+          async (data) => {
+            return await inventoryController.addInventories(data, warehouses);
+          },
+          (err) => {
+            console.log(err);
+          },
+          () => {
+            console.log("Success", req.file.path);
+            try {
+              require("fs").unlink(req.file.path);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        );
+    });
+  });
+
+  app.post("/getshippingdate", async (req, res) => {
+    try {
+      res.status(200).send(await inventoryController.getShippingDate(req.body));
+    } catch (error) {
+      console.log(error);
+      res.status(400).send({
+        error: error.message,
+      });
+    }
   });
 };

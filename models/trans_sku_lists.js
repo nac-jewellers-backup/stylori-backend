@@ -5,13 +5,6 @@ module.exports = (sequelize, DataTypes) => {
   const trans_sku_lists = sequelize.define(
     "trans_sku_lists",
     {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        type: DataTypes.UUID,
-        defaultValue: uuidv1(),
-        primaryKey: true,
-      },
       purity: {
         type: DataTypes.STRING,
       },
@@ -125,6 +118,10 @@ module.exports = (sequelize, DataTypes) => {
     models.trans_sku_lists.belongsTo(models.master_metals_purities, {
       foreignKey: "purity",
       targetKey: "name",
+    });
+    models.trans_sku_lists.hasMany(models.inventory, {
+      foreignKey: "generated_sku",
+      sourceKey: "generated_sku",
     });
   };
   return trans_sku_lists;

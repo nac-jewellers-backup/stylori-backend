@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     short_code: DataTypes.STRING,
     certificate: DataTypes.TEXT,
     display_order: DataTypes.INTEGER,
+    alias_id: DataTypes.INTEGER,
     is_filter: DataTypes.BOOLEAN,
     is_active: DataTypes.BOOLEAN
   }, {});
