@@ -543,23 +543,17 @@ exports.generatepaymenturl = async (req, res) => {
   // });
 };
 exports.sendtoairpay = async (req, res) => {
-  let {
-    buyerEmail,
-    buyerPhone,
-    buyerFirstName,
-    buyerLastName,
-    buyerAddress,
-    buyerCity,
-    buyerState,
-    buyerCountry,
-    buyerPinCode,
-    orderid,
-    amount,
-    customvar,
-    subtype,
-  } = req.body;
+  const { buyerPhone, buyerPinCode, orderid, amount, customvar, subtype } =
+    req.body;
   var paymentid = 0;
   var cartval = 1.0;
+  var buyerEmail = "";
+  var buyerFirstName = "";
+  var buyerLastName = "";
+  var buyerAddress = "";
+  var buyerCity = "";
+  var buyerState = "";
+  var buyerCountry = "";
   if (orderid) {
     let cartvalueobj = await models.orders.findOne({
       include: [
