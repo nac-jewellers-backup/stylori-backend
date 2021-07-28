@@ -543,7 +543,7 @@ exports.generatepaymenturl = async (req, res) => {
   // });
 };
 exports.sendtoairpay = async (req, res) => {
-  const {
+  let {
     buyerEmail,
     buyerPhone,
     buyerFirstName,
@@ -565,19 +565,28 @@ exports.sendtoairpay = async (req, res) => {
       include: [
         {
           model: models.shopping_cart,
+          include: [
+            {
+              model: models.cart_address,
+            },
+          ],
+        },
+        {
+          model: models.user_profiles,
         },
       ],
       where: {
         id: orderid,
       },
     });
+    cartvalueobj = JSON.parse(JSON.stringify(cartvalueobj));
     if (cartvalueobj) {
       if (cartvalueobj.shopping_cart) {
-        if (cartvalueobj.shopping_cart.cart_address) {
-          let cartaddres_arr = cartvalueobj.shopping_cart.cart_address;
-
+        if (cartvalueobj.shopping_cart.cart_addresses) {
+          let cartaddres_arr = cartvalueobj.shopping_cart.cart_addresses;
           if (cartaddres_arr.length > 0) {
             let cartaddressobject = cartaddres_arr[0];
+            console.log(cartaddressobject);
             buyerEmail = cartaddressobject.email ? cartaddressobject.email : "";
             buyerFirstName = cartaddressobject.firstname
               ? cartaddressobject.firstname
