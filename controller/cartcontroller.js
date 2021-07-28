@@ -575,7 +575,9 @@ exports.sendtoairpay = async (req, res) => {
       paymentid = cartvalueobj.payment_id;
     }
     if (cartvalueobj.shopping_cart) {
-      cartval = cartvalueobj.shopping_cart.discounted_price;
+      if (process.env.NODE_ENV == "production") {
+        cartval = cartvalueobj.shopping_cart.discounted_price; //Cart Value To Be greater than 1 in production!
+      }
     }
   } else {
   }
