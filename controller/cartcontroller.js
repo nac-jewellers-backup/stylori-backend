@@ -575,13 +575,15 @@ exports.sendtoairpay = async (req, res) => {
     });
     cartvalueobj = JSON.parse(JSON.stringify(cartvalueobj));
     if (cartvalueobj) {
+      if (cartvalueobj.user_profile) {
+        buyerEmail = cartvalueobj.user_profile.email || "";
+      }
       if (cartvalueobj.shopping_cart) {
         if (cartvalueobj.shopping_cart.cart_addresses) {
           let cartaddres_arr = cartvalueobj.shopping_cart.cart_addresses;
           if (cartaddres_arr.length > 0) {
             let cartaddressobject = cartaddres_arr[0];
-            console.log(cartaddressobject);
-            buyerEmail = cartaddressobject.email ? cartaddressobject.email : "";
+            // buyerEmail = cartaddressobject.email ? cartaddressobject.email : "";
             buyerFirstName = cartaddressobject.firstname
               ? cartaddressobject.firstname
               : "";
@@ -629,6 +631,7 @@ exports.sendtoairpay = async (req, res) => {
     buyerCountry +
     cartval +
     paymentid;
+  console.log(alldata);
   let udata = username + ":|:" + password;
   let privatekey = sha256(secret + "@" + udata);
   let aldata = alldata + dateformat(now, "yyyy-mm-dd");
@@ -636,6 +639,15 @@ exports.sendtoairpay = async (req, res) => {
   let fdata = req.body;
   var bodyparams = {
     ...fdata,
+    buyerEmail,
+    buyerFirstName,
+    buyerLastName,
+    buyerAddress,
+    buyerCity,
+    buyerState,
+    buyerCountry,
+    cartval,
+    paymentid,
     privatekey: privatekey,
     mercid: mid,
     currency: 356,
