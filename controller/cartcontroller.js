@@ -575,7 +575,7 @@ exports.sendtoairpay = async (req, res) => {
       paymentid = cartvalueobj.payment_id;
     }
     if (cartvalueobj.shopping_cart) {
-      // cartval = cartvalueobj.shopping_cart.discounted_price
+      cartval = cartvalueobj.shopping_cart.discounted_price;
     }
   } else {
   }
@@ -802,7 +802,7 @@ exports.addtocart = async (req, res) => {
         console.log(reason);
       });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 exports.uploadimage = (req, res) => {
@@ -1499,15 +1499,8 @@ async function sendorderconformationemail(order_id, res) {
 }
 
 exports.addproductreview = async (req, res) => {
-  let {
-    user_id,
-    username,
-    rate,
-    product_id,
-    product_sku,
-    title,
-    message,
-  } = req.body;
+  let { user_id, username, rate, product_id, product_sku, title, message } =
+    req.body;
   let userreviews = await models.customer_reviews.findAll({
     where: {
       product_sku,
