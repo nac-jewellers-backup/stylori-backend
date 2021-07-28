@@ -572,10 +572,39 @@ exports.sendtoairpay = async (req, res) => {
       },
     });
     if (cartvalueobj) {
+      if (cartvalueobj.shopping_cart) {
+        if (cartvalueobj.shopping_cart.cart_address) {
+          let cartaddres_arr = cartvalueobj.shopping_cart.cart_address;
+
+          if (cartaddres_arr.length > 0) {
+            let cartaddressobject = cartaddres_arr[0];
+            buyerEmail = cartaddressobject.email ? cartaddressobject.email : "";
+            buyerFirstName = cartaddressobject.firstname
+              ? cartaddressobject.firstname
+              : "";
+            buyerLastName = cartaddressobject.lastname
+              ? cartaddressobject.lastname
+              : "";
+            buyerAddress = cartaddressobject.addressline1
+              ? cartaddressobject.addressline1
+              : "";
+            buyerCity = cartaddressobject.city ? cartaddressobject.city : "";
+            buyerState = cartaddressobject.state ? cartaddressobject.state : "";
+
+            buyerCountry = cartaddressobject.country
+              ? cartaddressobject.country
+              : "";
+          }
+        }
+      }
+    }
+    if (cartvalueobj) {
       paymentid = cartvalueobj.payment_id;
     }
     if (cartvalueobj.shopping_cart) {
-      // cartval = cartvalueobj.shopping_cart.discounted_price
+      if (process.env.NODE_ENV == "production") {
+        cartval = cartvalueobj.shopping_cart.discounted_price; //Cart Value To Be greater than 1 in production!
+      }
     }
   } else {
   }
