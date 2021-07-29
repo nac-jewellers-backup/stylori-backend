@@ -116,14 +116,12 @@ let getShippingDate = async ({ sku_id, current_datetime }) => {
         ],
       })
       .then(async (result) => {
-        // resolve(result);
+        result = JSON.parse(JSON.stringify(result));
         if (!result) {
           resolve({ status: "Enquire Now", shipping_date: null });
         }
         var duration = moment
-          .duration(
-            moment(new Date(current_datetime)).diff(moment({ hour: 14 }))
-          )
+          .duration(moment(current_datetime).diff(moment({ hour: 14 })))
           .as("minutes");
 
         if (!result.is_active) {
@@ -134,14 +132,17 @@ let getShippingDate = async ({ sku_id, current_datetime }) => {
           if (Array.isArray(result.inventories)) {
             if (result.inventories.length == 0) {
               var totalDaysToShip =
-                result.vendor_delivery_time + duration > 10 ? 0 : 1;
-              var shippingDate = moment().set("date", totalDaysToShip);
+                result.vendor_delivery_time + (duration > 10 ? 0 : 1);
+              var shippingDate = moment(current_datetime).set(
+                totalDaysToShip,
+                "days"
+              );
               var holidayCount = getHolidayCount(
                 moment(current_datetime),
                 shippingDate
               );
               if (holidayCount > 0) {
-                shippingDate.set("date", holidayCount);
+                shippingDate.add(holidayCount, "days");
               }
               if (result.is_ready_to_ship) {
                 resolve({ status: "Buy Now", shipping_date: shippingDate });
@@ -155,31 +156,38 @@ let getShippingDate = async ({ sku_id, current_datetime }) => {
             } else {
               if (sumBy(result.inventories, "number_of_items") == 0) {
                 var totalDaysToShip =
-                  result.vendor_delivery_time + duration > 10 ? 0 : 1;
-                var shippingDate = moment().set("date", totalDaysToShip);
+                  result.vendor_delivery_time + (duration > 10 ? 0 : 1);
+                var shippingDate = moment(current_datetime).add(
+                  totalDaysToShip,
+                  "d"
+                );
                 var holidayCount = getHolidayCount(
                   moment(current_datetime),
                   shippingDate
                 );
                 if (holidayCount > 0) {
-                  shippingDate.set("date", holidayCount);
+                  shippingDate.add(holidayCount, "days");
                 }
                 resolve({ status: "Buy Now", shipping_date: shippingDate });
               } else {
                 let inventory = filter(result.inventories, (item) => {
                   return item.number_of_items > 0;
                 });
+
                 var totalDaysToShip =
-                  inventory[0].warehouse.shipping_in_days + duration > 10
-                    ? 0
-                    : 1;
-                var shippingDate = moment().set("date", totalDaysToShip);
+                  inventory[0].warehouse.shipping_in_days +
+                  (duration > 10 ? 0 : 1);
+                var shippingDate = moment(current_datetime).add(
+                  totalDaysToShip,
+                  "d"
+                );
+                console.log(shippingDate);
                 var holidayCount = getHolidayCount(
                   moment(current_datetime),
                   shippingDate
                 );
                 if (holidayCount > 0) {
-                  shippingDate.set("date", holidayCount);
+                  shippingDate.add(holidayCount, "days");
                 }
                 resolve({ status: "Buy Now", shipping_date: shippingDate });
               }
