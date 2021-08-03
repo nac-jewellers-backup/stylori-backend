@@ -2358,6 +2358,7 @@ exports.editproduct = async (req, res) => {
     stonecount,
     stonecolour,
     gender,
+    earingBacking
   } = req.body;
 
   var product_object = await models.product_lists.findOne({
@@ -2647,6 +2648,7 @@ exports.editproduct = async (req, res) => {
     {
       product_name: productName,
       gender: genders_arr.join(),
+      earring_backing: earingBacking,
     },
     {
       // Clause
