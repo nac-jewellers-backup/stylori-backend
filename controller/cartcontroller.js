@@ -1572,7 +1572,7 @@ exports.updatecart_latestprice = async (req, res) => {
   let { cart_id, user_id } = req.body;
   try {
     let cart = await models.shopping_cart.findOne({
-      where: { userprofile_id: user_id },
+      where: { userprofile_id: user_id, status: "pending" },
       raw: true,
     });
     if (!cart) {
