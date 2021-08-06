@@ -175,6 +175,7 @@ module.exports = function (app) {
 
   app.post("/addgiftwrap", cartcontroller.addgiftwrap);
   app.post("/addtocart", cartcontroller.addtocart);
+  app.post("/updatecart_latestprice", cartcontroller.updatecart_latestprice);
   app.post("/addaddress", cartcontroller.addaddress);
   app.post("/adduseraddress", cartcontroller.adduseraddress);
   app.post("/resendorderemail", cartcontroller.resendorderemail);
@@ -540,8 +541,7 @@ module.exports = function (app) {
     };
     const _obj = {
       method: "post",
-      url:
-        "https://search-elastic-server-uguyslt53rg63cttm2b4hgwkb4.ap-south-1.es.amazonaws.com/sku_search/_delete_by_query",
+      url: "https://search-elastic-server-uguyslt53rg63cttm2b4hgwkb4.ap-south-1.es.amazonaws.com/sku_search/_delete_by_query",
       data: datapaylod,
     };
     axios(_obj)
