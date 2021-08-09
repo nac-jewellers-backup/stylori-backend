@@ -2254,10 +2254,12 @@ exports.updateskuinfo = async (req, res) => {
     isdefault,
     isActive,
     isReadyToShip,
+    approxMetalWeight,
   } = req.body;
   let response_obj1 = await models.trans_sku_lists.update(
     // Values to update
     {
+      sku_weight: approxMetalWeight,
       vendor_delivery_time: vendorDeliveryTime,
       isdefault: isdefault,
       is_active: isActive,
