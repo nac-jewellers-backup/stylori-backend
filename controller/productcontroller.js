@@ -725,7 +725,7 @@ exports.updateproductattribute = async (req, res) => {
         skucount = skucount + 1;
         processsku(skucount);
       } else {
-        if (products.length > processcount) {
+        if (processcount > products.length) {
           processcount = processcount + 1;
           productupdate(processcount);
         } else {
