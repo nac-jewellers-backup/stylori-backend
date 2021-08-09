@@ -2625,7 +2625,6 @@ exports.editproduct = async (req, res) => {
       where: { product_id: productId },
     }
   );
-
   await models.product_lists.update(
     // Values to update
     {
