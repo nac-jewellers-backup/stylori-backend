@@ -730,6 +730,7 @@ exports.updateproductattribute = async (req, res) => {
           productupdate(processcount);
         } else {
           console.log("update complete");
+          updatediscountsku([attributes_array[0]], product_id);
         }
       }
     }
