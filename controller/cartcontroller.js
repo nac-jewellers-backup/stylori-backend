@@ -1515,3 +1515,30 @@ exports.addproductreview = async (req, res) => {
     res.send(409, { message: "You have reviewed this product already." });
   }
 };
+exports.updatecart_latestprice = async (req, res) => {
+  let { cart_id, user_id } = req.body;
+  try {
+    let cart = await models.shopping_cart.findOne({
+      where: { userprofile_id: user_id, status: "pending" },
+      raw: true,
+    });
+    if (!cart) {
+      res.status(403).send({ message: "No Cart Found!" });
+      return;
+    }
+    /* Update Cart Items to latest price based on SKUs*/
+    await models.sequelize.query(`update shopping_cart_items i 
+  set price = qty * (select markup_price from trans_sku_lists t
+  where i.product_sku = t.generated_sku)
+  where shopping_cart_id = '${cart.id}'`);
+    /* Update Cart with latest prices*/
+    await models.sequelize.query(`update shopping_carts c set 
+  gross_amount = (select sum(price) from public.shopping_cart_items i where i.shopping_cart_id = '${cart.id}'),
+  discounted_price = (select sum(price) from public.shopping_cart_items i where i.shopping_cart_id = '${cart.id}')`);
+
+    res.status(200).send({ message: "Cart Updated Successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+};
