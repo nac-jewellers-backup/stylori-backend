@@ -2,7 +2,6 @@ const models = require("./../models");
 import "dotenv/config";
 import { sendMail } from "./notify/user_notify";
 import { write } from "fs";
-import { Query } from "pg";
 const Op = require("sequelize").Op;
 var Sequelize = require("sequelize");
 const uuidv1 = require("uuid/v1");
@@ -12,7 +11,7 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(
   "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"
 );
-exports.priceupdate = async (req, res) => {
+exports.priceupdate = (req, res) => {
   console.log("test");
   clearlog();
 
@@ -83,7 +82,6 @@ exports.priceupdate = async (req, res) => {
     //   product_id : req_product_id
 
     // }
-    console.log("xxxxxxxxxxxxxxxxxxxx");
     whereclause1 = {
       product_id: {
         [Op.in]: product_id_arr1,
@@ -229,12 +227,6 @@ exports.priceupdate = async (req, res) => {
     html: "<b>started</>",
   };
   //  sgMail.send(msg);
-  console.log("============XXXX");
-
-  // let prod_content1 = await models.product_lists.findAll({
-  //     })
-  //     console.log("============")
-  // console.log(JSON.stringify(prod_content1.length))
   models.product_lists
     .findAll({
       // include: [{
@@ -269,7 +261,7 @@ exports.priceupdate = async (req, res) => {
     })
     .then((product) => {
       products = product;
-      console.log(">>>>>>>XXXXXXXX" + JSON.stringify(product.length));
+      console.log(">>>>>>>" + JSON.stringify(product.length));
 
       // pricingresult()
       //res.send(200, products[0]);
@@ -485,14 +477,12 @@ exports.priceupdate = async (req, res) => {
           //  diamondsellingprice = calculatesellingmarkup(diamondmarkup,diamondsellingprice)
           //  let diamonddiscount =  await materialdiscountval('Diamond',diamondsellingprice)
           //  diamondsellingprice = await calculatediscountmarkup(diamonddiscount,diamondsellingprice)
-          console.log("product_prices");
-          console.log(JSON.stringify(product_obj));
           var diamondmargin =
             ((diamondsellingprice - diamondcost) / diamondcost) * 100;
           var diamondprice = {
             component: "diamond" + processcount + "_" + product_obj.product_id,
             material_name:
-              diamondobj.diamond_clarity + "" + diamondobj.diamond_colour,
+              diamondobj.diamond_clarity + " " + diamondobj.diamond_colour,
             id: uuidv1(),
             margin_percentage: diamondmargin,
             cost_price: diamondcost,
@@ -747,8 +737,6 @@ exports.priceupdate = async (req, res) => {
     const priceMarkup = await models.pricing_markup.findAll({
       where: whereclause,
     });
-
-    console.log("===================XXXXXXXXXXXXXXXXX=================");
     return priceMarkup;
   }
 
@@ -811,8 +799,6 @@ exports.priceupdate = async (req, res) => {
     var gemstone_component_count = 0;
 
     console.log("processlength" + product_obj.trans_sku_lists.length);
-    console.log("processlength" + pricingcomponent);
-
     if (pricingcomponent) {
       if (product_obj.iscomponentpricing) {
         console.log("componentproce");
@@ -832,8 +818,6 @@ exports.priceupdate = async (req, res) => {
     //updateskuprice()
     // updategoldprice(productobj.vendor_code, productskus[0])
     function checkisinclude() {
-      console.log(pricingcomponent);
-
       if (pricingcomponent === "Diamond") {
         updatediamondprice(productobj.vendor_code, productskus[0]);
       }
@@ -869,7 +853,6 @@ exports.priceupdate = async (req, res) => {
       if (product_diamonds.length > 0) {
         diamond_process(product_diamonds[0], vendor_code);
       } else {
-        console.log(pricingcomponent);
         if (pricingcomponent === "Diamond") {
           isskuexist();
         } else {
@@ -1985,8 +1968,8 @@ exports.priceupdate = async (req, res) => {
           diamond_percentage +
           " )/" +
           diamond_component_count +
-          "))) where product_id ='" +
-          productskus[skucount].product_id +
+          "))) where product_sku ='" +
+          productskus[skucount].generated_sku +
           "' and component ilike '%diamond%'";
         await models.sequelize
           .query(materialquery)
@@ -2111,10 +2094,6 @@ exports.priceupdate = async (req, res) => {
       // res.send(200,{materialsum, matalsum})
       const costpricetax = (total_costprice * taxval) / 100;
       const sellingpricetax = (total_sellingprice * taxval) / 100;
-      console.log("test selling price");
-      console.log(sellingpricetax);
-      console.log(total_sellingprice);
-      console.log(productskus[skucount].generated_sku);
 
       let skumarkup = materialsum.markup + matalsum.markup;
       let skudiscount = materialsum.discount_price + matalsum.discount_price;
@@ -2199,7 +2178,7 @@ exports.priceupdate = async (req, res) => {
         let price_update_query =
           "update trans_sku_lists set cost_price = ROUND(cost_price::numeric,2),selling_price = ROUND(selling_price::numeric,2), markup_price = ROUND(markup_price::numeric,2),cost_price_tax = ROUND(cost_price_tax::numeric,2),selling_price_tax = ROUND(selling_price_tax::numeric,2),markup_price_tax = ROUND(markup_price_tax::numeric,2),discount_price_tax = ROUND(discount_price_tax::numeric,2), discount_price = ROUND(discount_price::numeric,2),discount= ROUND(((discount_price-markup_price)/discount_price) * 100)   where product_id ='" +
           product_obj.product_id +
-          "' and discount_price > 0";
+          "' and discount_price >= 0";
 
         await models.sequelize
           .query(price_update_query)

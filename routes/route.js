@@ -175,6 +175,7 @@ module.exports = function (app) {
 
   app.post("/addgiftwrap", cartcontroller.addgiftwrap);
   app.post("/addtocart", cartcontroller.addtocart);
+  app.post("/updatecart_latestprice", cartcontroller.updatecart_latestprice);
   app.post("/addaddress", cartcontroller.addaddress);
   app.post("/adduseraddress", cartcontroller.adduseraddress);
   app.post("/resendorderemail", cartcontroller.resendorderemail);
