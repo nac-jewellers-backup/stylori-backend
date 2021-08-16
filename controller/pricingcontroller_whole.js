@@ -693,7 +693,7 @@ exports.priceupdate = (req, res) => {
   }
 
   /********** Material Markup calculation */
-  function materialmarkupval(sellingprice_val, product_val, sku_val) {
+  async function materialmarkupval(sellingprice_val, product_val, sku_val) {
     console.log("==============");
     console.log(product_val.product_type);
     console.log(product_val.product_materials[0].material_name);
@@ -735,7 +735,7 @@ exports.priceupdate = (req, res) => {
       //   [Op.in] : material_content
       // }
     }
-    const priceMarkup = models.pricing_markup.findAll({
+    const priceMarkup = await models.pricing_markup.findAll({
       where: whereclause,
     });
     return priceMarkup;
