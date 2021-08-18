@@ -2328,9 +2328,17 @@ exports.editproduct = async (req, res) => {
     stonecount,
     stonecolour,
     gender,
-    earingBacking,
+    length,
+    width,
+    height,
+    description,
     minOrderQty,
     maxOrderQty,
+    productType,
+    productMetalColor,
+    vendorCode,
+    earingBacking,
+    productSize,
   } = req.body;
 
   var product_object = await models.product_lists.findOne({
@@ -2619,7 +2627,7 @@ exports.editproduct = async (req, res) => {
     {
       min_order_qty: minOrderQty,
       max_order_qty: maxOrderQty,
-      // sku_size: productSize,
+      sku_size: productSize,
     },
     {
       returning: true,
@@ -2632,6 +2640,11 @@ exports.editproduct = async (req, res) => {
     // Values to update
     {
       product_name: productName,
+      length,
+      width,
+      height,
+      product_type: productType.toLowerCase(),
+      vendor_code: vendorCode,
       gender: genders_arr.join(),
       earring_backing: earingBacking,
     },

@@ -543,21 +543,8 @@ exports.generatepaymenturl = async (req, res) => {
   // });
 };
 exports.sendtoairpay = async (req, res) => {
-  const {
-    buyerEmail,
-    buyerPhone,
-    buyerFirstName,
-    buyerLastName,
-    buyerAddress,
-    buyerCity,
-    buyerState,
-    buyerCountry,
-    buyerPinCode,
-    orderid,
-    amount,
-    customvar,
-    subtype,
-  } = req.body;
+  const { buyerPhone, buyerPinCode, orderid, amount, customvar, subtype } =
+    req.body;
   var paymentid = 0;
   var cartval = 1.0;
   if (orderid) {
@@ -565,20 +552,31 @@ exports.sendtoairpay = async (req, res) => {
       include: [
         {
           model: models.shopping_cart,
+          include: [
+            {
+              model: models.cart_address,
+            },
+          ],
+        },
+        {
+          model: models.user_profiles,
         },
       ],
       where: {
         id: orderid,
       },
     });
+    cartvalueobj = JSON.parse(JSON.stringify(cartvalueobj));
     if (cartvalueobj) {
+      if (cartvalueobj.user_profile) {
+        buyerEmail = cartvalueobj.user_profile.email || "";
+      }
       if (cartvalueobj.shopping_cart) {
-        if (cartvalueobj.shopping_cart.cart_address) {
-          let cartaddres_arr = cartvalueobj.shopping_cart.cart_address;
-
+        if (cartvalueobj.shopping_cart.cart_addresses) {
+          let cartaddres_arr = cartvalueobj.shopping_cart.cart_addresses;
           if (cartaddres_arr.length > 0) {
             let cartaddressobject = cartaddres_arr[0];
-            buyerEmail = cartaddressobject.email ? cartaddressobject.email : "";
+            // buyerEmail = cartaddressobject.email ? cartaddressobject.email : "";
             buyerFirstName = cartaddressobject.firstname
               ? cartaddressobject.firstname
               : "";
@@ -626,6 +624,7 @@ exports.sendtoairpay = async (req, res) => {
     buyerCountry +
     cartval +
     paymentid;
+  console.log(alldata);
   let udata = username + ":|:" + password;
   let privatekey = sha256(secret + "@" + udata);
   let aldata = alldata + dateformat(now, "yyyy-mm-dd");
@@ -1570,24 +1569,34 @@ exports.addproductreview = async (req, res) => {
 };
 exports.updatecart_latestprice = async (req, res) => {
   let { cart_id, user_id } = req.body;
+  let condition = {};
+  if (cart_id) {
+    condition["id"] = cart_id;
+  }
+  if (user_id) {
+    condition["userprofile_id"] = user_id;
+  }
   try {
     let cart = await models.shopping_cart.findOne({
-      where: { userprofile_id: user_id, status: "pending" },
+      where: { ...condition, status: "pending" },
       raw: true,
+      order: [["createdAt", "desc"]],
     });
     if (!cart) {
       res.status(403).send({ message: "No Cart Found!" });
       return;
     }
+
     /* Update Cart Items to latest price based on SKUs*/
     await models.sequelize.query(`update shopping_cart_items i 
-  set price = qty * (select markup_price from trans_sku_lists t
-  where i.product_sku = t.generated_sku)
-  where shopping_cart_id = '${cart.id}'`);
+      set price = qty * (select markup_price from trans_sku_lists t
+      where i.product_sku = t.generated_sku)
+      where shopping_cart_id = '${cart.id}'`);
     /* Update Cart with latest prices*/
     await models.sequelize.query(`update shopping_carts c set 
-  gross_amount = (select sum(price) from public.shopping_cart_items i where i.shopping_cart_id = '${cart.id}'),
-  discounted_price = (select sum(price) from public.shopping_cart_items i where i.shopping_cart_id = '${cart.id}')`);
+      gross_amount = (select sum(price) from shopping_cart_items i where i.shopping_cart_id = '${cart.id}'),
+      discounted_price = (select sum(price) from shopping_cart_items i where i.shopping_cart_id = '${cart.id}')
+      where id = '${cart.id}'`);
 
     res.status(200).send({ message: "Cart Updated Successfully!" });
   } catch (error) {
