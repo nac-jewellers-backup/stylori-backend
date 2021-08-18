@@ -2644,7 +2644,6 @@ exports.editproduct = async (req, res) => {
       length,
       width,
       height,
-      product_type: productType.toLowerCase(),
       vendor_code: vendorCode,
       gender: genders_arr.join(),
       earring_backing: earingBacking,
@@ -2996,7 +2995,7 @@ exports.productdetails = async (req, res) => {
             : "",
         condition:
           moment
-            .duration(now.diff(moment(prod.trans_sku_lists[0].updatedAt)))
+            .duration(now.diff(moment(prod.trans_sku_lists[0].createdAt)))
             .as("days") >= 10
             ? "old"
             : "new",
