@@ -96,7 +96,7 @@ connString = {
 
 app.use(
   postgraphile(connString, {
-    graphiql: false,
+    graphiql: true,
     live: true,
     watchPg: true,
     appendPlugins: [
