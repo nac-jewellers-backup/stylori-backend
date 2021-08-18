@@ -4026,3 +4026,213 @@ exports.addvarient = async (req, res) => {
     res.json({ message: "success" });
   }
 };
+exports.csvDownload = (req, res) => {
+  let query = `query($after: Cursor) {
+    sku: allTransSkuLists(
+      first: 100
+      after: $after
+      filter: { productListByProductId: { isactive: { equalTo: true } } }
+      orderBy: CREATED_AT_DESC
+    ) {
+      nodes {
+        tagNo: generatedSku
+        diamondType
+        metalColor
+        product: productListByProductId {
+          productId
+          productName
+          productCategory
+          productType
+          length
+          height
+          width
+          defaultWeight
+          sizeVarient
+          colourVarient
+          earringBacking
+          gender
+          vendor: masterVendorByVendorCode {
+            name
+          }
+          productVendorCode
+          isactive
+          materials: productMaterialsByProductSku {
+            nodes {
+              name: materialName
+            }
+          }
+          collections: productCollectionsByProductId(
+            condition: { isActive: true }
+          ) {
+            nodes {
+              name: collectionName
+            }
+          }
+          occasions: productOccassionsByProductId(condition: { isActive: true }) {
+            nodes {
+              name: occassionName
+            }
+          }
+          themes: productThemesByProductId(condition: { isActive: true }) {
+            nodes {
+              name: themeName
+            }
+          }
+          stoneColor: productStonecolorsByProductId {
+            nodes {
+              color: stonecolor
+            }
+          }
+          styles: productStylesByProductId(condition: { isActive: true }) {
+            nodes {
+              name: styleName
+            }
+          }
+          stoneCount: productStonecountsByProductId {
+            nodes {
+              count: stonecount
+            }
+          }
+          diamonds: productDiamondsByProductSku {
+            nodes {
+              diamondClarity
+              diamondColour
+              diamondSettings
+              diamondShape
+              diamondType
+              id
+              stoneCount
+              stoneWeight
+            }
+          }
+          gemstones: productGemstonesByProductSku {
+            nodes {
+              gemstoneSetting
+              gemstoneShape
+              gemstoneSize
+              gemstoneType
+              gemstonsSize
+              id
+              stoneCount
+              stoneWeight
+            }
+          }
+        }
+        purity
+        isdefault
+        isReadyToShip
+        costPrice
+        sellingPrice
+        markupPrice
+        discountPrice
+        discount
+        discountDesc
+        skuWeight
+        vendorDeliveryTime
+        transSkuDescriptionsBySkuId {
+          nodes {
+            skuDescription
+            certificate
+            ringsizeImage
+          }
+        }
+        createdAt
+        updatedAt
+        minOrderQty
+        maxOrderQty
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+  `;
+  let responseArrays = [];
+  const axios = require("axios");
+  function loadData({ cursor }) {
+    axios
+      .post("http://localhost:8000/graphql", {
+        query,
+        variables: { after: cursor },
+      })
+      .then(
+        ({
+          data: {
+            data: { sku },
+          },
+        }) => {
+          if (sku && sku.nodes.length > 0) {
+            for (let index = 0; index < sku.nodes.length; index++) {
+              const item = sku.nodes[index];
+              let diamonds = JSON.stringify(item.product.diamonds.nodes);
+              let gemstones = JSON.stringify(item.product.gemstones.nodes);
+              responseArrays.push({
+                name: item.product.productName,
+                product_id: item.product.productId,
+                tag_no: item.tagNo,
+                categories: item.product.productCategory,
+                type: item.product.productType,
+                gender: item.product.gender,
+                purity: item.purity,
+                weight: item.skuWeight,
+                cost_price: item.costPrice,
+                selling_price: item.sellingPrice,
+                markup_price: item.markupPrice,
+                discount_price: item.discountPrice,
+                discount: item.discount,
+                discount_description: item.discountDesc,
+                vendor: item.product.vendor.name,
+                vendor_product_code: item.product.productVendorCode,
+                vendor_delivery_time: item.vendorDeliveryTime,
+                height: item.product.height,
+                width: item.product.width,
+                length: item.product.length,
+                created_at: moment(item.created_at).format("DD-MM-YYYY"),
+                last_updated_at: moment(item.updatedAt).format("DD-MM-YYYY"),
+                is_active: item.product.isactive,
+                is_ready_to_ship: item.isReadyToShip,
+                is_default: item.isdefault,
+                diamond_type: item.diamondType,
+                metal_color: item.metalColor,
+                materials: item.product.materials.nodes
+                  .map((i) => i.name)
+                  .join(","),
+                collections: item.product.collections.nodes
+                  .map((i) => i.name)
+                  .join(","),
+                occasions: item.product.occasions.nodes
+                  .map((i) => i.name)
+                  .join(","),
+                themes: item.product.themes.nodes.map((i) => i.name).join(","),
+                styles: item.product.styles.nodes.map((i) => i.name).join(","),
+                stone_color: item.product.stoneColor.nodes
+                  .map((i) => i.color)
+                  .join(","),
+                stone_count: item.product.stoneCount.nodes
+                  .map((i) => i.count)
+                  .join(","),
+                diamonds,
+                gemstones,
+                minimum_order_quantity: item.minOrderQty,
+                maximum_order_quantity: item.maxOrderQty,
+                size_varient: item.product.sizeVarient,
+                color_varient: item.product.colourVarient,
+                earring_backing: item.product.earingBacking,
+              });
+            }
+          }
+          if (sku.pageInfo.hasNextPage) {
+            loadData({ cursor: sku.pageInfo.endCursor });
+          } else {
+            return res.status(200).send(responseArrays);
+          }
+        }
+      )
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send(error);
+      });
+  }
+  loadData({ cursor: null });
+};
