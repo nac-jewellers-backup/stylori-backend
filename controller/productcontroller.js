@@ -1,5 +1,6 @@
 const models = require("./../models");
 import "dotenv/config";
+import moment from "moment";
 var request = require("request");
 const sequelize = require("sequelize");
 const Op = require("sequelize").Op;
@@ -2930,6 +2931,8 @@ exports.productdetails = async (req, res) => {
             "markup_price",
             "selling_price",
             "discount_price",
+            "createdAt",
+            "updatedAt",
           ],
           include: [
             {
@@ -2960,9 +2963,10 @@ exports.productdetails = async (req, res) => {
       where: {
         isactive: true,
       },
-      limit: 10,
+      //limit: 10,
     });
     var res_json = [];
+    let now = new moment();
     products.forEach((prod) => {
       let materials = [];
       prod.product_materials.forEach((mat_obj) => {
@@ -2990,11 +2994,16 @@ exports.productdetails = async (req, res) => {
           prod.product_images.length > 0
             ? process.env.baseimageurl + prod_img_url
             : "",
-        condition: "new",
+        condition:
+          moment
+            .duration(now.diff(moment(prod.trans_sku_lists[0].updatedAt)))
+            .as("days") >= 10
+            ? "old"
+            : "new",
         availability: "In Stock",
         price: "INR" + prod.trans_sku_lists[0].discount_price,
         sale_price: "INR" + prod.trans_sku_lists[0].selling_price,
-        sale_price_effective_date: "2019-06-30T0:00",
+        sale_price_effective_date: moment(prod.trans_sku_lists[0].updatedAt),
         brand: "Stylori",
         color: prod.trans_sku_lists[0].metal_color,
         metal: materials,
