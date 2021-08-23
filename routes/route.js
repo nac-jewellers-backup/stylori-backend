@@ -691,5 +691,5 @@ module.exports = function (app) {
       });
     }
   });
-  app.get("/getcsvdata", productcontroller.csvDownload);
+  app.post("/getcsvdata", productcontroller.csvDownload);
 };
