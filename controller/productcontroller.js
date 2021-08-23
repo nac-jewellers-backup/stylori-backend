@@ -3894,7 +3894,7 @@ exports.csvDownload = (req, res) => {
   }
   let query = `query($after: Cursor,$type: String!) {
     product: allProductLists(
-      first: 10
+      first: 10000
       after: $after
       condition: { isactive: true }
       filter: { productType: { likeInsensitive: $type } }
