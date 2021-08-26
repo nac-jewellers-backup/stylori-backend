@@ -3962,7 +3962,6 @@ exports.csvDownload = (req, res) => {
             diamondSettings
             diamondShape
             diamondType
-            id
             stoneCount
             stoneWeight
           }
@@ -3974,7 +3973,6 @@ exports.csvDownload = (req, res) => {
             gemstoneSize
             gemstoneType
             gemstonsSize
-            id
             stoneCount
             stoneWeight
           }
@@ -4110,4 +4108,20 @@ exports.csvDownload = (req, res) => {
       });
   }
   loadData({ cursor: null });
+};
+
+exports.imageHoverUpdate = async (req, res) => {
+  try {
+    let { product_images } = req.body;
+    for (let index = 0; index < product_images.length; index++) {
+      const element = product_images[index];
+      await models.product_images.update(element, {
+        where: { id: element.id, product_id: element.product_id },
+      });
+    }
+    res.status(200).send({ message: "Product images updated successfully!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
 };
