@@ -26,10 +26,7 @@ app.use(express.urlencoded({ limit: "50mb" }));
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   next();
 });
 // const config = {
@@ -53,7 +50,7 @@ app.use(function (req, res, next) {
 
 app.get("/", (req, res) => {
   console.log("running");
-  res.send("NAC Auth running");
+  res.send("Stylori Staging Backend running");
 });
 app.use(cors());
 app.use(express.json());
@@ -90,12 +87,7 @@ app.use(
     graphiql: true,
     live: true,
 
-    appendPlugins: [
-      MySchemaExtensionPlugin,
-      ConnectionFilterPlugin,
-      PgOrderByRelatedPlugin,
-      PgAggregatesPlugin,
-    ],
+    appendPlugins: [MySchemaExtensionPlugin, ConnectionFilterPlugin, PgOrderByRelatedPlugin, PgAggregatesPlugin],
     graphileBuildOptions: {
       connectionFilterRelations: true,
       connectionFilterAllowNullInput: true,
@@ -105,6 +97,4 @@ app.use(
   })
 );
 
-app.listen(process.env.PORT, () =>
-  console.log(`NAC Ecommerce unning ${process.env.PORT}!`)
-);
+app.listen(process.env.PORT, () => console.log(`NAC Ecommerce unning ${process.env.PORT}!`));
