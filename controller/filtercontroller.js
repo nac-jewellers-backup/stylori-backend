@@ -833,7 +833,7 @@ exports.filteroptions = async (req, res) => {
       "No Of Stones": master_stonecount,
       // price_range,
       "By Design": product_bydesign_masters,
-      Offers: ["Up to  20%", "Up to  30%", "Up to  40%", "Up to  50%"],
+      Offers: ["Up to  5%", "Up to  10%", "Up to  15%", "Up to  20%"],
       Availability: ["1 Day Shipping", "10 & Above Days Shipping"],
 
       "By Weight": product_byweight_masters,
