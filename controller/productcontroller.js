@@ -2723,12 +2723,15 @@ exports.getorderdetails = async (req, res) => {
   let proddetail = [];
   if (skuids.length > 0) {
     proddetail = await models.trans_sku_lists.findAll({
+      attributes: ["generated_sku"],
       include: [
         {
           model: models.product_lists,
+          attributes: ["product_name", "product_id"],
           include: [
             {
               model: models.product_images,
+              attributes: ["image_url", "image_position"],
             },
           ],
         },
@@ -2737,11 +2740,21 @@ exports.getorderdetails = async (req, res) => {
         generated_sku: {
           [Op.in]: skuids,
         },
+        metal_color: {
+          [Op.eq]: models.sequelize.literal(
+            `"product_list->product_images"."product_color"`
+          ),
+        },
       },
+      order: [
+        models.sequelize.literal(
+          `"product_list->product_images"."image_position"`
+        ),
+      ],
     });
   }
 
-  res.send(200, { orders });
+  res.send(200, { orders, product_detail: proddetail });
 };
 
 exports.getproducturl = async (req, res) => {
