@@ -547,13 +547,6 @@ exports.sendtoairpay = async (req, res) => {
     req.body;
   var paymentid = 0;
   var cartval = 1.0;
-  var buyerEmail = "";
-  var buyerFirstName = "";
-  var buyerLastName = "";
-  var buyerAddress = "";
-  var buyerCity = "";
-  var buyerState = "";
-  var buyerCountry = "";
   if (orderid) {
     let cartvalueobj = await models.orders.findOne({
       include: [
