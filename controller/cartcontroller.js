@@ -621,6 +621,7 @@ exports.sendtoairpay = async (req, res) => {
   var password = process.env.airpay_password;
   var secret = process.env.airpay_secret;
   var now = new Date();
+  cartval = Math.round(cartval, 2);
   let alldata =
     buyerEmail +
     buyerFirstName +
@@ -639,6 +640,15 @@ exports.sendtoairpay = async (req, res) => {
   let fdata = req.body;
   var bodyparams = {
     ...fdata,
+    buyerEmail,
+    buyerFirstName,
+    buyerLastName,
+    buyerAddress,
+    buyerCity,
+    buyerState,
+    buyerCountry,
+    cartval,
+    paymentid,
     privatekey: privatekey,
     mercid: mid,
     currency: 356,
