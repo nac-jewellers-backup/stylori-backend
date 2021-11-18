@@ -132,10 +132,10 @@ let getShippingDate = async ({ sku_id, current_datetime }) => {
           if (Array.isArray(result.inventories)) {
             if (result.inventories.length == 0) {
               var totalDaysToShip =
-                result.vendor_delivery_time + (duration > 10 ? 0 : 1);
-              var shippingDate = moment(current_datetime).set(
+                result.vendor_delivery_time + (duration > 10 ? 1 : 0);
+              var shippingDate = moment(current_datetime).add(
                 totalDaysToShip,
-                "days"
+                "d"
               );
               var holidayCount = getHolidayCount(
                 moment(current_datetime),
@@ -156,7 +156,7 @@ let getShippingDate = async ({ sku_id, current_datetime }) => {
             } else {
               if (sumBy(result.inventories, "number_of_items") == 0) {
                 var totalDaysToShip =
-                  result.vendor_delivery_time + (duration > 10 ? 0 : 1);
+                  result.vendor_delivery_time + (duration > 10 ? 1 : 0);
                 var shippingDate = moment(current_datetime).add(
                   totalDaysToShip,
                   "d"
@@ -176,7 +176,7 @@ let getShippingDate = async ({ sku_id, current_datetime }) => {
 
                 var totalDaysToShip =
                   inventory[0].warehouse.shipping_in_days +
-                  (duration > 10 ? 0 : 1);
+                  (duration > 10 ? 1 : 0);
                 var shippingDate = moment(current_datetime).add(
                   totalDaysToShip,
                   "d"
