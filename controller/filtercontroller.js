@@ -834,7 +834,11 @@ exports.filteroptions = async (req, res) => {
       // price_range,
       "By Design": product_bydesign_masters,
       Offers: ["Up to  5%", "Up to  10%", "Up to  15%", "Up to  20%"],
-      Availability: ["1 Day Shipping", "10 & Above Days Shipping"],
+      Availability: [
+        "1 Day Shipping",
+        "10 & Above Days Shipping",
+        "Out of Stock",
+      ],
 
       "By Weight": product_byweight_masters,
       price: silverpricerange,
