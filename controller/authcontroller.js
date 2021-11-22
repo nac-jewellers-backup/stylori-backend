@@ -123,15 +123,8 @@ exports.fbsignup = async (req, res) => {
   }
 };
 exports.signup = (req, res) => {
-  let {
-    username,
-    password,
-    email,
-    firstname,
-    lastname,
-    roles,
-    salutation,
-  } = req.body;
+  let { username, password, email, firstname, lastname, roles, salutation } =
+    req.body;
   var uservalue = {
     id: uuidv1(),
     username: username,
@@ -498,10 +491,10 @@ exports.guestlogin = (req, res) => {
             returning: true,
           })
           .then((guestuser) => {
-            sendMail(
-              emilreceipiants,
-              emailTemp.guestloginTemp("", "manokarantk@gmail.com", otp)
-            );
+            // sendMail(
+            //   emilreceipiants,
+            //   emailTemp.guestloginTemp("", "manokarantk@gmail.com", otp)
+            // );
 
             res.status(200).json({
               description: "User Content Page",
@@ -514,10 +507,10 @@ exports.guestlogin = (req, res) => {
         });
         var emilreceipiants = [{ to: email, subject: "Verify user" }];
 
-        sendMail(
-          emilreceipiants,
-          emailTemp.guestloginTemp("", "manokarantk@gmail.com", otp)
-        );
+        // sendMail(
+        //   emilreceipiants,
+        //   emailTemp.guestloginTemp("", "manokarantk@gmail.com", otp)
+        // );
 
         res.status(200).json({
           description: "User Content Page",
