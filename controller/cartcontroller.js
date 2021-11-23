@@ -248,7 +248,12 @@ exports.applyvoucher = async (req, res) => {
           message: "This promocode already used",
         });
       }
-      if (isloggedin && giftwrapobj && giftwrapobj.discount_amount && eligible_amount > 0) {
+      if (
+        isloggedin &&
+        giftwrapobj &&
+        giftwrapobj.discount_amount &&
+        eligible_amount > 0
+      ) {
         var discountvalue = giftwrapobj.discount_amount;
         message_response = "You have applied promo code successfully";
         var discountpercent = discountvalue / 100;
@@ -377,7 +382,15 @@ exports.paymentsuccess = async (req, res) => {
   return res.redirect(redirectionurl);
 };
 exports.updateorderstatus = async (req, res) => {
-  const { orderstatus, paymentstatus, cartid, orderid, awbNumber, comments, giftmessage } = req.body;
+  const {
+    orderstatus,
+    paymentstatus,
+    cartid,
+    orderid,
+    awbNumber,
+    comments,
+    giftmessage,
+  } = req.body;
   var payment_current_status = "";
   if (paymentstatus) {
     if (paymentstatus.name) {
@@ -446,7 +459,8 @@ exports.paymentfailure = async (req, res) => {
     let new_cart = await models.payment_details.create(paymentcontent, {
       returning: true,
     });
-    let redirectionurl = process.env.baseurl + "/paymentfail/a08368f0-54e6-11eb-939a-ad9261576e22";
+    let redirectionurl =
+      process.env.baseurl + "/paymentfail/a08368f0-54e6-11eb-939a-ad9261576e22";
     return res.redirect(redirectionurl);
   } else {
     let redirectionurl = process.env.baseurl + "/paymentfail/" + 1;
@@ -529,7 +543,8 @@ exports.generatepaymenturl = async (req, res) => {
   // });
 };
 exports.sendtoairpay = async (req, res) => {
-  const { buyerPhone, buyerPinCode, orderid, amount, customvar, subtype } = req.body;
+  const { buyerPhone, buyerPinCode, orderid, amount, customvar, subtype } =
+    req.body;
   var paymentid = 0;
   var cartval = 1.0;
   var buyerEmail = "";
@@ -569,13 +584,21 @@ exports.sendtoairpay = async (req, res) => {
           if (cartaddres_arr.length > 0) {
             let cartaddressobject = cartaddres_arr[0];
             // buyerEmail = cartaddressobject.email ? cartaddressobject.email : "";
-            buyerFirstName = cartaddressobject.firstname ? cartaddressobject.firstname : "";
-            buyerLastName = cartaddressobject.lastname ? cartaddressobject.lastname : "";
-            buyerAddress = cartaddressobject.addressline1 ? cartaddressobject.addressline1 : "";
+            buyerFirstName = cartaddressobject.firstname
+              ? cartaddressobject.firstname
+              : "";
+            buyerLastName = cartaddressobject.lastname
+              ? cartaddressobject.lastname
+              : "";
+            buyerAddress = cartaddressobject.addressline1
+              ? cartaddressobject.addressline1
+              : "";
             buyerCity = cartaddressobject.city ? cartaddressobject.city : "";
             buyerState = cartaddressobject.state ? cartaddressobject.state : "";
 
-            buyerCountry = cartaddressobject.country ? cartaddressobject.country : "";
+            buyerCountry = cartaddressobject.country
+              ? cartaddressobject.country
+              : "";
           }
         }
       }
@@ -600,7 +623,15 @@ exports.sendtoairpay = async (req, res) => {
   var now = new Date();
   cartval = Math.round(cartval, 2);
   let alldata =
-    buyerEmail + buyerFirstName + buyerLastName + buyerAddress + buyerCity + buyerState + buyerCountry + cartval + paymentid;
+    buyerEmail +
+    buyerFirstName +
+    buyerLastName +
+    buyerAddress +
+    buyerCity +
+    buyerState +
+    buyerCountry +
+    cartval +
+    paymentid;
   console.log(alldata);
   let udata = username + ":|:" + password;
   let privatekey = sha256(secret + "@" + udata);
@@ -828,7 +859,12 @@ exports.uploadimage = (req, res) => {
     basefolder = foldername;
   }
   const s3 = new aws.S3(); // Create a new instance of S3
-  const fileName = basefolder + "/" + req.body.filename + "." + extension.replace("jpeg", "jpg").toLowerCase();
+  const fileName =
+    basefolder +
+    "/" +
+    req.body.filename +
+    "." +
+    extension.replace("jpeg", "jpg").toLowerCase();
   const fileType = req.body.image;
   console.log(fileName);
 
@@ -1228,7 +1264,9 @@ exports.addaddress = async (req, res) => {
       console.log(JSON.stringify(address_arr));
 
       if (add_user_address.length > 0) {
-        await models.user_address.bulkCreate(add_user_address, { individualHooks: true }).then(function (response) {});
+        await models.user_address
+          .bulkCreate(add_user_address, { individualHooks: true })
+          .then(function (response) {});
       }
       models.cart_address
         .bulkCreate(address_arr, { individualHooks: true })
@@ -1352,7 +1390,10 @@ exports.addorder = async (req, res) => {
       if (voucher_code) {
         // let discountendamount  = eligible_amount * discountpercent;
 
-        var query = "UPDATE vouchers SET uses = (uses + 1) where code ='" + voucher_code.toUpperCase() + "'";
+        var query =
+          "UPDATE vouchers SET uses = (uses + 1) where code ='" +
+          voucher_code.toUpperCase() +
+          "'";
         console.log("-------");
         console.log(query);
         await models.sequelize.query(query).then(([results, metadata]) => {
@@ -1371,7 +1412,9 @@ exports.addorder = async (req, res) => {
     });
 };
 exports.testorderemail = async (req, res) => {
-  var emilreceipiants = [{ to: "manokarantk@gmail.com", subject: "Password Reset Successfully" }];
+  var emilreceipiants = [
+    { to: "manokarantk@gmail.com", subject: "Password Reset Successfully" },
+  ];
   // sendMail(emilreceipiants,emailTemp.changepasswordTemp("Manokaran"))
   sendorderconformationemail("9cb91100-b083-11ea-82de-63badb42bd5b", res);
 };
@@ -1408,7 +1451,9 @@ async function sendorderconformationemail(order_id, res) {
   });
   var day = "";
   if (orderdetails) {
-    day = moment.tz(orderdetails.updatedAt, "Asia/Kolkata").format("DD MMM YYYY HH:mm:ss");
+    day = moment
+      .tz(orderdetails.updatedAt, "Asia/Kolkata")
+      .format("DD MMM YYYY HH:mm:ss");
   }
   var trans_sku_lists = [];
   var prod_image_condition = [];
@@ -1445,16 +1490,26 @@ async function sendorderconformationemail(order_id, res) {
 
   var imagelist = {};
   let prodimages = await models.product_images.findAll({
-    attributes: ["product_id", "product_color", "image_url", "image_position", "isdefault"],
+    attributes: [
+      "product_id",
+      "product_color",
+      "image_url",
+      "image_position",
+      "isdefault",
+    ],
     where: {
       [Op.or]: prod_image_condition,
     },
     order: [["image_position", "ASC"]],
   });
   prodimages.forEach((element) => {
-    var imagename = element.image_url.replace(element.product_id, element.product_id + "/1000X1000");
+    var imagename = element.image_url.replace(
+      element.product_id,
+      element.product_id + "/1000X1000"
+    );
 
-    imagelist[element.product_id] = "https://styloriimages.s3.ap-south-1.amazonaws.com/" + imagename;
+    imagelist[element.product_id] =
+      "https://styloriimages.s3.ap-south-1.amazonaws.com/" + imagename;
   });
 
   var emilreceipiants = [
@@ -1466,18 +1521,31 @@ async function sendorderconformationemail(order_id, res) {
   ];
   // var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
   var isloggedin = false;
-  if (orderdetails.user_profile.facebookid || orderdetails.user_profile.user_id) {
+  if (
+    orderdetails.user_profile.facebookid ||
+    orderdetails.user_profile.user_id
+  ) {
     isloggedin = true;
   }
   sendMail(
     emilreceipiants,
-    emailTemp.orderConformation("", process.env.adminemail, orderdetails, skudetails, imagelist, day, isloggedin, skuqty)
+    emailTemp.orderConformation(
+      "",
+      process.env.adminemail,
+      orderdetails,
+      skudetails,
+      imagelist,
+      day,
+      isloggedin,
+      skuqty
+    )
   );
   //return res.send(200,{orderdetails,skudetails,prodimages,imagelist})
 }
 
 exports.addproductreview = async (req, res) => {
-  let { user_id, username, rate, product_id, product_sku, title, message } = req.body;
+  let { user_id, username, rate, product_id, product_sku, title, message } =
+    req.body;
   let userreviews = await models.customer_reviews.findAll({
     where: {
       product_sku,
@@ -1504,7 +1572,8 @@ exports.addproductreview = async (req, res) => {
       })
       .then(function (response) {
         res.send(200, {
-          message: "Your review has been sent to our team. Will post it soon. Thanks!",
+          message:
+            "Your review has been sent to our team. Will post it soon. Thanks!",
         });
       })
       .catch((reason) => {
@@ -1517,24 +1586,34 @@ exports.addproductreview = async (req, res) => {
 };
 exports.updatecart_latestprice = async (req, res) => {
   let { cart_id, user_id } = req.body;
+  let condition = {};
+  if (cart_id) {
+    condition["id"] = cart_id;
+  }
+  if (user_id) {
+    condition["userprofile_id"] = user_id;
+  }
   try {
     let cart = await models.shopping_cart.findOne({
-      where: { userprofile_id: user_id, status: "pending" },
+      where: { ...condition, status: "pending" },
       raw: true,
+      order: [["createdAt", "desc"]],
     });
     if (!cart) {
       res.status(403).send({ message: "No Cart Found!" });
       return;
     }
+
     /* Update Cart Items to latest price based on SKUs*/
     await models.sequelize.query(`update shopping_cart_items i 
-  set price = qty * (select markup_price from trans_sku_lists t
-  where i.product_sku = t.generated_sku)
-  where shopping_cart_id = '${cart.id}'`);
+      set price = qty * (select markup_price from trans_sku_lists t
+      where i.product_sku = t.generated_sku)
+      where shopping_cart_id = '${cart.id}'`);
     /* Update Cart with latest prices*/
     await models.sequelize.query(`update shopping_carts c set 
-  gross_amount = (select sum(price) from public.shopping_cart_items i where i.shopping_cart_id = '${cart.id}'),
-  discounted_price = (select sum(price) from public.shopping_cart_items i where i.shopping_cart_id = '${cart.id}')`);
+      gross_amount = (select sum(price) from shopping_cart_items i where i.shopping_cart_id = '${cart.id}'),
+      discounted_price = (select sum(price) from shopping_cart_items i where i.shopping_cart_id = '${cart.id}')
+      where id = '${cart.id}'`);
 
     res.status(200).send({ message: "Cart Updated Successfully!" });
   } catch (error) {

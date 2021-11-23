@@ -24,17 +24,24 @@ app.use(express.urlencoded({ limit: "50mb" }));
 // });
 
 app.use(function (req, res, next) {
-  const allowedOrigins = ['https://stylori.com','https://www.stylori.com', 'https://api.stylori.com', 'https://console.stylori.com', 'https://price-runner.stylori.com'];
+  const allowedOrigins = [
+    "https://stylori.com",
+    "https://www.stylori.com",
+    "https://api.stylori.com",
+    "https://console.stylori.com",
+    "https://price-runner.stylori.com",
+  ];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
-       res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader("Access-Control-Allow-Origin", origin);
   }
   //res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:8020');
-  res.header('Access-Control-Allow-Methods', '*');
-  res.header('Access-Control-Allow-Headers', '*');  
-  res.header('Access-Control-Allow-Credentials', true);
+  res.header("Access-Control-Allow-Methods", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  res.header("Access-Control-Allow-Credentials", true);
   return next();
-  });
+});
+
 // const config = {
 //     user: 'mac',
 //     password: '12345',
@@ -56,7 +63,7 @@ app.use(function (req, res, next) {
 
 app.get("/", (req, res) => {
   console.log("running");
-  res.send("NAC Auth running");
+  res.send("Stylori Staging Backend running");
 });
 app.use(cors());
 app.use(express.json());
