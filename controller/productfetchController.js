@@ -11,6 +11,7 @@ exports.filteroptions = async (req, res) => {
   const {
     material,
     category,
+    isJewellery,
     offer_min,
     offer_max,
     theme,
