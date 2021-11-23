@@ -911,4 +911,6 @@ module.exports = function (app) {
       });
     }
   });
+  app.post("/getcsvdata", productcontroller.csvDownload);
+  app.post("/updateimagehover", productcontroller.imageHoverUpdate);
 };

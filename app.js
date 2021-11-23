@@ -62,7 +62,7 @@ app.use(function (req, res, next) {
 
 app.get("/", (req, res) => {
   console.log("running");
-  res.send("NAC Auth running");
+  res.send("Stylori Staging Backend running");
 });
 app.use(cors());
 app.use(express.json());

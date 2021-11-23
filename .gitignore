@@ -103,3 +103,5 @@ config.json
 
 uploads/*.*
 !uploads/.gitkeep
+
+env-staging
