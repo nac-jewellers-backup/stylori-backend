@@ -10,7 +10,7 @@
   "dependencies": {
     "@graphile-contrib/pg-order-by-related": "^1.0.0-beta.6",
     "@graphile/pg-aggregates": "^0.1.0",
-    "@sendgrid/mail": "^6.5.5",
+    "@sendgrid/mail": "^7.6.0",
     "array-chunk": "^1.0.0",
     "aws-sdk": "^2.903.0",
     "axios": "^0.21.1",
@@ -45,10 +45,10 @@
     "uuid": "^3.4.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.0",
-    "@babel/node": "^7.13.13",
-    "@babel/preset-env": "^7.14.1",
-    "eslint": "^6.8.0",
-    "nodemon": "^1.19.4"
+    "@babel/core": "^7.15.8",
+    "@babel/node": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "eslint": "^8.3.0",
+    "nodemon": "^2.0.15"
   }
 }
