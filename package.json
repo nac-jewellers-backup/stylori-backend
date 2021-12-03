@@ -26,6 +26,7 @@
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "graphile-utils": "^4.11.2",
+    "graphql": "^15.7.2",
     "jsonwebtoken": "^8.5.1",
     "loadash": "^1.0.0",
     "log4js": "^6.3.0",
