@@ -210,7 +210,7 @@ module.exports = function (app) {
   app.post("/updateproductattr", productcontroller.updateproductattr_bk);
   app.post("/updateproductimage", productcontroller.updateproductimage);
   app.post("/productdetails", productcontroller.productdetails);
-  
+
   app.post("/updateproductattribute", productcontroller.updateproductattribute);
   app.post("/updateproductimage", productcontroller.updateproductimage);
   // app.post("/productdetails", productcontroller.productdetails);
@@ -912,5 +912,5 @@ module.exports = function (app) {
     }
   });
   app.post("/getcsvdata", productcontroller.csvDownload);
-  app.post("/updateimagehover", productcontroller.imageHoverUpdate);
+  app.post("/updateimagehover", productcontroller.imageHoverUpdate);  
 };
