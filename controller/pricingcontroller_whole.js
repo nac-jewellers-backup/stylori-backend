@@ -348,6 +348,19 @@ exports.priceupdate = (req, res) => {
       };
       //  sgMail.send(msg);
     }
+    if (products.length == processed_product_count) {
+      await models.sequelize.query(`update shopping_cart_items i 
+      set price = qty * (select markup_price from trans_sku_lists t
+      where i.product_sku = t.generated_sku)
+      where shopping_cart_id not in (select cart_id from public.orders)`);
+      await models.sequelize
+        .query(`update shopping_carts c set gross_amount = sub.total,discounted_price=sub.total
+      from
+      (select sum(price) as total,shopping_cart_id from shopping_cart_items 
+      where shopping_cart_id not in (select cart_id from public.orders)
+      group by shopping_cart_id ) as sub
+      where c.id = sub.shopping_cart_id`);
+    }
   }
 
   async function pricingresult() {

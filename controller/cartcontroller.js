@@ -376,6 +376,12 @@ exports.paymentsuccess = async (req, res) => {
   let new_cart = await models.payment_details.create(paymentcontent, {
     returning: true,
   });
+  //update inventory post successfull payment
+  let updateInventory = await models.sequelize
+    .query(`update inventories i set number_of_items = (number_of_items - sub.qty) from 
+  (select product_sku,qty from shopping_cart_items where shopping_cart_id in (
+    select cart_id from public.orders where id = '${orderobj.id}'
+  )) as sub where i.generated_sku = sub.product_sku and i.number_of_items > 0`);
   sendorderconformationemail(orderobj.id);
   let redirectionurl = process.env.baseurl + "/paymentsuccess/" + orderobj.id;
 
