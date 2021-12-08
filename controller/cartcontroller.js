@@ -17,8 +17,8 @@ import { sendMail } from "./notify/user_notify";
 dotenv.config();
 aws.config.update({
   region: "ap-south-1", // Put your aws region here
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_KEY,
+  accessKeyId: "AKIAYVE5B6KQCKH53MLK", //process.env.AWS_ACCESS_KEY,
+  secretAccessKey: "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", //process.env.AWS_SECRET_KEY,
 });
 const S3_BUCKET = process.env.AWS_IMAGE_BUCKET_NAME;
 
