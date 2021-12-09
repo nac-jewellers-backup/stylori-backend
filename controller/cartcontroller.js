@@ -703,31 +703,54 @@ exports.removecartitem = async (req, res) => {
     },
   });
 
-  let gross_amount = await models.shopping_cart_item.findOne({
-    attributes: [[squelize.literal("SUM(price)"), "price"]],
+  let totalCartItems = await models.shopping_cart_item.count({
     where: {
       shopping_cart_id: cart_id,
     },
   });
-  console.log("cartline length");
 
-  await models.shopping_cart
-    .update(
-      {
-        gross_amount: gross_amount.price,
-        discounted_price: gross_amount.price,
-        discount: 0,
+  if (totalCartItems) {
+    let gross_amount = await models.shopping_cart_item.findOne({
+      attributes: [[squelize.literal("SUM(price)"), "price"]],
+      where: {
+        shopping_cart_id: cart_id,
       },
-      {
-        where: { id: cart_id },
-      }
-    )
-    .then((price_splitup_model) => {
-      res.send(200, { message: "You removed this product successfully" });
-    })
-    .catch((reason) => {
-      console.log(reason);
     });
+    console.log("cartline length");
+
+    await models.shopping_cart
+      .update(
+        {
+          gross_amount: gross_amount.price,
+          discounted_price: gross_amount.price,
+          discount: 0,
+        },
+        {
+          where: { id: cart_id },
+        }
+      )
+      .then((price_splitup_model) => {
+        res.send(200, { message: "You removed this product successfully" });
+      })
+      .catch((reason) => {
+        console.log(reason);
+        res.status(500).send(reason);
+      });
+  } else {
+    models.shopping_cart
+      .destroy({
+        where: {
+          id: cart_id,
+        },
+      })
+      .then((price_splitup_model) => {
+        res.send(200, { message: "You removed this product successfully" });
+      })
+      .catch((reason) => {
+        console.log(reason);
+        res.status(500).send(reason);
+      });
+  }
 };
 exports.updatecartitem = async (req, res) => {
   let { cart_id, product } = req.body;
@@ -773,20 +796,36 @@ exports.updatecartitem = async (req, res) => {
     });
 };
 exports.addtocart = async (req, res) => {
+  let createNewCart = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const cartobj = {
+          id: uuidv1(),
+          userprofile_id: user_id,
+          status: "pending",
+        };
+        let new_cart = await models.shopping_cart.create(cartobj, {
+          returning: true,
+        });
+        resolve(new_cart.id);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  };
+
   let { user_id, products, cart_id } = req.body;
-  console.log(JSON.stringify(req.body));
+
   try {
-    if (!cart_id) {
-      const cartobj = {
-        id: uuidv1(),
-        userprofile_id: user_id,
-        status: "pending",
-      };
-      let new_cart = await models.shopping_cart.create(cartobj, {
-        returning: true,
-      });
-      cart_id = new_cart.id;
+    if (cart_id) {
+      let cartStatus = await models.shopping_cart.findByPk(cart_id);
+      if (!cartStatus) {
+        return res.status(500).send({ message: "Something went wrong!" });
+      }
+    } else {
+      cart_id = await createNewCart();
     }
+
     let product_in_cart = await models.shopping_cart_item.findAll({
       where: {
         shopping_cart_id: cart_id,
