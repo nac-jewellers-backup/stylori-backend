@@ -2274,10 +2274,35 @@ exports.updateskuinfo = async (req, res) => {
       where: {
         generated_sku: generatedSku,
       },
+      returning: true,
+      raw: true,
     }
   );
   if (response_obj1[0] > 0) {
-    res.send(200, { message: "success" });
+    let productId = response_obj1[1][0].product_id;
+    let product = await models.product_lists.findAll({
+      where: {
+        product_type: {
+          [models.Sequelize.Op.iLike]: "rings",
+        },
+        product_id: productId,
+      },
+    });
+    if (product.length > 0) {
+      await models.sequelize
+        .query(`update product_lists p set size_varient = sizes,colour_varient = color
+    from 
+    (
+    select 
+      string_agg(distinct(sku_size),',') as sizes,
+      string_agg(distinct(purity||' '||metal_color),',') as color,
+      product_id
+    from trans_sku_lists where product_id = '${productId}' and is_active is true
+    group by product_id 
+    ) as sub 
+    where p.product_id = sub.product_id`);
+    }
+    res.send(200, { message: "success", productId });
   } else {
     res.send(402, { message: "Try again later" });
   }
