@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Nac authentication server",
   "scripts": {
-    "start": "nodemon --expose-gc --max-old-space-size=4096 --exec  babel-node app.js"
+    "start": "npx babel-node --expose-gc --max-old-space-size=4096 app.js"
   },
   "author": "sandeep",
   "license": "ISC",
