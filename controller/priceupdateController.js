@@ -796,8 +796,8 @@ exports.silverPriceUpload = (req, res) => {
           {
             ...trans_sku,
             margin_on_sale_percentage:
-              ((trans_sku.margin_price - trans_sku.selling_price) * 100) /
-              trans_sku.margin_price,
+              ((trans_sku.markup_price - trans_sku.selling_price) * 100) /
+              trans_sku.markup_price,
             discount: Math.round(
               ((trans_sku.discount_price - trans_sku.markup_price) * 100) /
                 trans_sku.discount_price,
