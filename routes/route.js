@@ -912,5 +912,6 @@ module.exports = function (app) {
     }
   });
   app.post("/getcsvdata", productcontroller.csvDownload);
-  app.post("/updateimagehover", productcontroller.imageHoverUpdate);  
+  app.post("/updateimagehover", productcontroller.imageHoverUpdate);
+  app.post("/silverpriceupload", component_price_update.silverPriceUpload);
 };

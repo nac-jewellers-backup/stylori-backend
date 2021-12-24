@@ -26,6 +26,7 @@ app.use(express.urlencoded({ limit: "50mb" }));
 app.use(function (req, res, next) {
   const allowedOrigins = [
     "https://stylori.com",
+    "https://stylori.com/",
     "https://www.stylori.com",
     "https://api.stylori.com",
     "https://console.stylori.com",
