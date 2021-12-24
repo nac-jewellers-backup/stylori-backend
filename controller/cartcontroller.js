@@ -385,7 +385,7 @@ exports.paymentsuccess = async (req, res) => {
   sendorderconformationemail(orderobj.id, res);
   let redirectionurl = process.env.baseurl + "/paymentsuccess/" + orderobj.id;
 
-  return res.redirect(redirectionurl);  
+  return res.redirect(redirectionurl);
 };
 exports.updateorderstatus = async (req, res) => {
   const {
@@ -1448,8 +1448,12 @@ exports.addorder = async (req, res) => {
 
       if (payment_mode === "COD") {
         sendorderconformationemail(order_bj.id, res);
+      } else {
+        res.send(200, {
+          message: "Order placed successfully",
+          order: response,
+        });
       }
-      res.send(200, { message: "Order placed successfully", order: response });
     })
     .catch((reason) => {
       res.send(500, { message: "Error Please try again" });
