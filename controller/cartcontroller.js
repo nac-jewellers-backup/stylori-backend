@@ -1589,7 +1589,13 @@ async function sendorderconformationemail(order_id, res) {
       skuqty
     )
   );
-  return res.send(200, { orderdetails, skudetails, prodimages, imagelist });
+  return res.send(200, {
+    order: orderdetails,
+    orderdetails,
+    skudetails,
+    prodimages,
+    imagelist,
+  });
 }
 
 exports.addproductreview = async (req, res) => {
