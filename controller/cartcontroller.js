@@ -1591,7 +1591,7 @@ async function sendorderconformationemail(order_id, res) {
   );
   return res.send(200, {
     order: orderdetails,
-    orderdetails,
+    // orderdetails,
     skudetails,
     prodimages,
     imagelist,
