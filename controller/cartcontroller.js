@@ -1468,134 +1468,138 @@ exports.testorderemail = async (req, res) => {
   sendorderconformationemail("9cb91100-b083-11ea-82de-63badb42bd5b", res);
 };
 async function sendorderconformationemail(order_id, res) {
-  var addresstypes = [1, 3];
-  let orderdetails = await models.orders.findOne({
-    include: [
-      { model: models.user_profiles },
-      {
-        model: models.shopping_cart,
-        include: [
-          {
-            model: models.cart_address,
-            where: {
-              address_type: {
-                [Op.in]: addresstypes,
+  try {
+    var addresstypes = [1, 3];
+    let orderdetails = await models.orders.findOne({
+      include: [
+        { model: models.user_profiles },
+        {
+          model: models.shopping_cart,
+          include: [
+            {
+              model: models.cart_address,
+              where: {
+                address_type: {
+                  [Op.in]: addresstypes,
+                },
               },
             },
-          },
-          {
-            model: models.shopping_cart_item,
-            include: [
-              {
-                model: models.trans_sku_lists,
-              },
-            ],
-          },
-        ],
+            {
+              model: models.shopping_cart_item,
+              include: [
+                {
+                  model: models.trans_sku_lists,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      where: {
+        id: order_id,
       },
-    ],
-    where: {
-      id: order_id,
-    },
-  });
-  var day = "";
-  if (orderdetails) {
-    day = moment
-      .tz(orderdetails.updatedAt, "Asia/Kolkata")
-      .format("DD MMM YYYY HH:mm:ss");
-  }
-  var trans_sku_lists = [];
-  var prod_image_condition = [];
-  console.log("orderinfodetails");
-  console.log(JSON.stringify(orderdetails));
-  let skuqty = {};
-  orderdetails.shopping_cart.shopping_cart_items.forEach((element) => {
-    trans_sku_lists.push(element.product_sku);
-    skuqty[element.product_sku] = element.qty;
-    prod_image_condition.push({
-      product_color: element.trans_sku_list.metal_color,
-      product_id: element.trans_sku_list.product_id,
-      image_position: 1,
     });
-    // console.log(element.metal_color)
-  });
-  let skudetails = await models.trans_sku_lists.findAll({
-    include: [
+    var day = "";
+    if (orderdetails) {
+      day = moment
+        .tz(orderdetails.updatedAt, "Asia/Kolkata")
+        .format("DD MMM YYYY HH:mm:ss");
+    }
+    var trans_sku_lists = [];
+    var prod_image_condition = [];
+    console.log("orderinfodetails");
+    console.log(JSON.stringify(orderdetails));
+    let skuqty = {};
+    orderdetails.shopping_cart.shopping_cart_items.forEach((element) => {
+      trans_sku_lists.push(element.product_sku);
+      skuqty[element.product_sku] = element.qty;
+      prod_image_condition.push({
+        product_color: element.trans_sku_list.metal_color,
+        product_id: element.trans_sku_list.product_id,
+        image_position: 1,
+      });
+      // console.log(element.metal_color)
+    });
+    let skudetails = await models.trans_sku_lists.findAll({
+      include: [
+        {
+          model: models.product_lists,
+          include: [
+            {
+              model: models.product_gemstones,
+            },
+          ],
+        },
+      ],
+      where: {
+        generated_sku: {
+          [Op.in]: trans_sku_lists,
+        },
+      },
+    });
+
+    var imagelist = {};
+    let prodimages = await models.product_images.findAll({
+      attributes: [
+        "product_id",
+        "product_color",
+        "image_url",
+        "image_position",
+        "isdefault",
+      ],
+      where: {
+        [Op.or]: prod_image_condition,
+      },
+      order: [["image_position", "ASC"]],
+    });
+    prodimages.forEach((element) => {
+      var imagename = element.image_url.replace(
+        element.product_id,
+        element.product_id + "/1000X1000"
+      );
+
+      imagelist[element.product_id] =
+        "https://styloriimages.s3.ap-south-1.amazonaws.com/" + imagename;
+    });
+
+    var emilreceipiants = [
       {
-        model: models.product_lists,
-        include: [
-          {
-            model: models.product_gemstones,
-          },
-        ],
+        to: orderdetails.user_profile.email,
+        subject: "Order Placed Successfully",
       },
-    ],
-    where: {
-      generated_sku: {
-        [Op.in]: trans_sku_lists,
-      },
-    },
-  });
-
-  var imagelist = {};
-  let prodimages = await models.product_images.findAll({
-    attributes: [
-      "product_id",
-      "product_color",
-      "image_url",
-      "image_position",
-      "isdefault",
-    ],
-    where: {
-      [Op.or]: prod_image_condition,
-    },
-    order: [["image_position", "ASC"]],
-  });
-  prodimages.forEach((element) => {
-    var imagename = element.image_url.replace(
-      element.product_id,
-      element.product_id + "/1000X1000"
+      { to: process.env.adminemail, subject: "Order Placed Successfully" },
+    ];
+    // var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
+    var isloggedin = false;
+    if (
+      orderdetails.user_profile.facebookid ||
+      orderdetails.user_profile.user_id
+    ) {
+      isloggedin = true;
+    }
+    sendMail(
+      emilreceipiants,
+      emailTemp.orderConformation(
+        "",
+        process.env.adminemail,
+        orderdetails,
+        skudetails,
+        imagelist,
+        day,
+        isloggedin,
+        skuqty
+      )
     );
-
-    imagelist[element.product_id] =
-      "https://styloriimages.s3.ap-south-1.amazonaws.com/" + imagename;
-  });
-
-  var emilreceipiants = [
-    {
-      to: orderdetails.user_profile.email,
-      subject: "Order Placed Successfully",
-    },
-    { to: process.env.adminemail, subject: "Order Placed Successfully" },
-  ];
-  // var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
-  var isloggedin = false;
-  if (
-    orderdetails.user_profile.facebookid ||
-    orderdetails.user_profile.user_id
-  ) {
-    isloggedin = true;
-  }
-  sendMail(
-    emilreceipiants,
-    emailTemp.orderConformation(
-      "",
-      process.env.adminemail,
-      orderdetails,
+    return res.send(200, {
+      order: orderdetails,
+      // orderdetails,
       skudetails,
+      prodimages,
       imagelist,
-      day,
-      isloggedin,
-      skuqty
-    )
-  );
-  return res.send(200, {
-    order: orderdetails,
-    // orderdetails,
-    skudetails,
-    prodimages,
-    imagelist,
-  });
+    });
+  } catch (err) {
+    console.log("Error while sending email : ", err);
+  }
 }
 
 exports.addproductreview = async (req, res) => {
