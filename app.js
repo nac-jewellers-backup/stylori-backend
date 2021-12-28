@@ -62,7 +62,7 @@ app.use(function (req, res, next) {
 // });
 
 app.get("/", (req, res) => {
-  console.log("running");
+  // console.log("running");
   res.send("Stylori Staging Backend running");
 });
 app.use(cors());
@@ -74,7 +74,7 @@ require("./routes/route.js")(app);
 
 //Configuring postgraphile middleware
 let connString;
-console.log("dasd");
+// console.log("dasd");
 console.log(process.env.LOCAL_DB_PORT);
 // if(dotenv === "local")
 // {

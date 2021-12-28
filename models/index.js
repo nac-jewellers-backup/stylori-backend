@@ -7,8 +7,8 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "staging";
 const config = require(__dirname + "/../config/config");
 const db = {};
-console.log("env variable1");
-console.log(env);
+// console.log("env variable1");
+// console.log(env);
 // let sequelize;
 // if (config.use_env_variable) {
 //   sequelize = new Sequelize(process.env[config.use_env_variable], config);
@@ -19,7 +19,7 @@ var sequelize_logging = new Function();
 
 let sequelize;
 if (env === "production") {
-  console.log(env);
+  // console.log(env);
 
   sequelize = new Sequelize(
     config.production.database,
@@ -28,12 +28,12 @@ if (env === "production") {
     config.production,
     {
       host: config.production.host,
-      logging: sequelize_logging(),
+      logging: false, // sequelize_logging(),
       dialect: config.production.dialect,
     }
   );
 } else if (env === "staging") {
-  console.log("i am");
+  // console.log("i am");
   sequelize = new Sequelize(
     config.staging.database,
     config.staging.username,
@@ -41,12 +41,12 @@ if (env === "production") {
     //config.staging,
     {
       host: config.staging.host,
-      logging: console.log,
+      logging: false,
       dialect: config.staging.dialect,
     }
   );
 } else if (env === "local") {
-  console.log("dsadasd" + config.local.database);
+  // console.log("dsadasd" + config.local.database);
 
   sequelize = new Sequelize(
     config.local.database,
