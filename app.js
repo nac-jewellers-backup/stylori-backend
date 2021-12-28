@@ -75,7 +75,7 @@ require("./routes/route.js")(app);
 //Configuring postgraphile middleware
 let connString;
 // console.log("dasd");
-console.log(process.env.LOCAL_DB_PORT);
+// console.log(process.env.LOCAL_DB_PORT);
 // if(dotenv === "local")
 // {
 // connString={
