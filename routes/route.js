@@ -333,572 +333,636 @@ module.exports = function (app) {
 
   app.post("/managetaxsetup2", configurationcontroller.managetaxsetup2);
   app.post("/forceindex", async function (req, res) {
-    const _obj = {
-      method: "post",
-      url: lturl,
-      data: {},
-    };
+    try {
+      const _obj = {
+        method: "post",
+        url: lturl,
+        data: {},
+      };
 
-    const py1 = {
-      properties: {
-        autocomplete: {
-          type: "text",
-          analyzer: "autocomplete",
-          search_analyzer: "autocomplete_search",
+      const py1 = {
+        properties: {
+          autocomplete: {
+            type: "text",
+            analyzer: "autocomplete",
+            search_analyzer: "autocomplete_search",
+          },
+          sku_url: { type: "text" },
+          product_name: { type: "text" },
         },
-        sku_url: { type: "text" },
-        product_name: { type: "text" },
-      },
-    };
+      };
 
-    const _py1s = {
-      settings: {
-        analysis: {
-          analyzer: {
-            autocomplete: {
-              tokenizer: "autocomplete",
-              filter: ["lowercase"],
+      const _py1s = {
+        settings: {
+          analysis: {
+            analyzer: {
+              autocomplete: {
+                tokenizer: "autocomplete",
+                filter: ["lowercase"],
+              },
+              autocomplete_search: {
+                tokenizer: "lowercase",
+              },
             },
-            autocomplete_search: {
-              tokenizer: "lowercase",
+            tokenizer: {
+              autocomplete: {
+                type: "edge_ngram",
+                min_gram: 2,
+                max_gram: 20,
+                token_chars: ["letter"],
+              },
             },
           },
-          tokenizer: {
-            autocomplete: {
-              type: "edge_ngram",
-              min_gram: 2,
-              max_gram: 20,
-              token_chars: ["letter"],
-            },
+        },
+      };
+
+      const py2 = {
+        properties: {
+          sku_code: {
+            type: "text",
+          },
+          sku_url: {
+            type: "text",
+          },
+          sku_code_prefix: {
+            type: "text",
+          },
+          sku_code_search: {
+            type: "completion",
+            analyzer: "simple",
+            preserve_separators: true,
+            preserve_position_increments: true,
+            max_input_length: 50,
           },
         },
-      },
-    };
+      };
 
-    const py2 = {
-      properties: {
-        sku_code: {
-          type: "text",
+      const py3 = {
+        properties: {
+          seo_url: {
+            type: "text",
+          },
+          seo_search: {
+            type: "completion",
+          },
         },
-        sku_url: {
-          type: "text",
-        },
-        sku_code_prefix: {
-          type: "text",
-        },
-        sku_code_search: {
-          type: "completion",
-          analyzer: "simple",
-          preserve_separators: true,
-          preserve_position_increments: true,
-          max_input_length: 50,
-        },
-      },
-    };
+      };
 
-    const py3 = {
-      properties: {
-        seo_url: {
-          type: "text",
-        },
-        seo_search: {
-          type: "completion",
-        },
-      },
-    };
+      let _index = ["product_search", "sku_search", "seo_search"];
 
-    let _index = ["product_search", "sku_search", "seo_search"];
-
-    Promise.all([
-      deleteIndex(_index[0]),
-      deleteIndex(_index[1]),
-      deleteIndex(_index[2]),
-    ])
-      .then((response) => {
-        console.log("» » » Index deleted");
-        Promise.all([
-          initIndex(_index[0], _py1s),
-          initIndex(_index[1], false),
-
-          initIndex(_index[2], _py1s),
-        ]).then((init_index) => {
-          console.log("» » » Index created");
-
+      Promise.all([
+        deleteIndex(_index[0]),
+        deleteIndex(_index[1]),
+        deleteIndex(_index[2]),
+      ])
+        .then((response) => {
+          console.log("» » » Index deleted");
           Promise.all([
-            initMapping(_index[0], "_doc", py1),
-            initMapping(_index[1], "_doc", py2),
-            initMapping(_index[2], "_doc", py3),
-          ])
-            .then((_mapp) => {
-              console.log("» » » Mapping created");
-              axios(_obj)
-                .then(async (response) => {
-                  let productSearch = response["data"]["product_list"];
-                  let skuSearch = response["data"]["sku_list"];
-                  let seoSearch = response["data"]["seo_list"];
+            initIndex(_index[0], _py1s),
+            initIndex(_index[1], false),
 
-                  let productArray = [];
-                  let skuArray = [];
-                  let seoArray = [];
-                  let doc_array = [];
+            initIndex(_index[2], _py1s),
+          ]).then((init_index) => {
+            console.log("» » » Index created");
 
-                  /* filter response Array to new-one */
+            Promise.all([
+              initMapping(_index[0], "_doc", py1),
+              initMapping(_index[1], "_doc", py2),
+              initMapping(_index[2], "_doc", py3),
+            ])
+              .then((_mapp) => {
+                console.log("» » » Mapping created");
+                axios(_obj)
+                  .then(async (response) => {
+                    let productSearch = response["data"]["product_list"];
+                    let skuSearch = response["data"]["sku_list"];
+                    let seoSearch = response["data"]["seo_list"];
 
-                  /*product_search mapper */
-                  (async function () {
-                    await Promise.all(
-                      productSearch.map(async (li) => {
-                        productArray.push({
-                          index: {
-                            _index: "product_search",
-                            _type: "_doc",
-                            _id: uuidv4(),
-                          },
-                        });
-                        productArray.push({
-                          product_name: li.product_name ? li.product_name : "",
-                          sku_url:
-                            li.trans_sku_lists.length > 0
-                              ? li.trans_sku_lists[0]["sku_url"]
+                    let productArray = [];
+                    let skuArray = [];
+                    let seoArray = [];
+                    let doc_array = [];
+
+                    /* filter response Array to new-one */
+
+                    /*product_search mapper */
+                    (async function () {
+                      await Promise.all(
+                        productSearch.map(async (li) => {
+                          productArray.push({
+                            index: {
+                              _index: "product_search",
+                              _type: "_doc",
+                              _id: uuidv4(),
+                            },
+                          });
+                          productArray.push({
+                            product_name: li.product_name
+                              ? li.product_name
                               : "",
-                          autocomplete: li.product_name ? li.product_name : "",
-                        });
+                            sku_url:
+                              li.trans_sku_lists.length > 0
+                                ? li.trans_sku_lists[0]["sku_url"]
+                                : "",
+                            autocomplete: li.product_name
+                              ? li.product_name
+                              : "",
+                          });
+                        })
+                      );
+                    })();
+
+                    /*sku_code search mapper*/
+                    (async function () {
+                      await Promise.all(
+                        skuSearch.map(async (li) => {
+                          skuArray.push({
+                            index: {
+                              _index: "sku_search",
+                              _type: "_doc",
+                              _id: uuidv4(),
+                            },
+                          });
+                          skuArray.push({
+                            sku_code: li.generated_sku,
+                            sku_url: li.sku_url,
+                            sku_code_prefix: li.generated_sku,
+                            sku_code_search: li.generated_sku
+                              ? li.generated_sku.split(/[ ,]+/)
+                              : "",
+                          });
+                        })
+                      );
+                    })();
+
+                    /*seo_url search mapper*/
+                    (async function () {
+                      await Promise.all(
+                        seoSearch.map(async (yl) => {
+                          seoArray.push({
+                            index: {
+                              _index: "seo_search",
+                              _type: "_doc",
+                              _id: uuidv4(),
+                            },
+                          });
+                          seoArray.push({
+                            seo_url: yl.seo_url ? yl.seo_url : "",
+                            seo_name: yl.seo_text ? yl.seo_text : "",
+                            autocomplete: yl.seo_text ? yl.seo_text : "",
+                          });
+                        })
+                      );
+                    })();
+
+                    skuArray = arrayChunk(skuArray, 30000);
+
+                    skuArray.map((el) => doc_array.push(docBulk(el)));
+
+                    doc_array.push(docBulk(productArray));
+
+                    doc_array.push(docBulk(seoArray));
+
+                    console.info("totalPromises", doc_array.length);
+
+                    Promise.all(doc_array)
+                      .then((response) => {
+                        console.log("» » » Docs Uploaded");
+                        console.log("Promises Resolved ", response.length);
                       })
-                    );
-                  })();
-
-                  /*sku_code search mapper*/
-                  (async function () {
-                    await Promise.all(
-                      skuSearch.map(async (li) => {
-                        skuArray.push({
-                          index: {
-                            _index: "sku_search",
-                            _type: "_doc",
-                            _id: uuidv4(),
-                          },
-                        });
-                        skuArray.push({
-                          sku_code: li.generated_sku,
-                          sku_url: li.sku_url,
-                          sku_code_prefix: li.generated_sku,
-                          sku_code_search: li.generated_sku
-                            ? li.generated_sku.split(/[ ,]+/)
-                            : "",
-                        });
-                      })
-                    );
-                  })();
-
-                  /*seo_url search mapper*/
-                  (async function () {
-                    await Promise.all(
-                      seoSearch.map(async (yl) => {
-                        seoArray.push({
-                          index: {
-                            _index: "seo_search",
-                            _type: "_doc",
-                            _id: uuidv4(),
-                          },
-                        });
-                        seoArray.push({
-                          seo_url: yl.seo_url ? yl.seo_url : "",
-                          seo_name: yl.seo_text ? yl.seo_text : "",
-                          autocomplete: yl.seo_text ? yl.seo_text : "",
-                        });
-                      })
-                    );
-                  })();
-
-                  skuArray = arrayChunk(skuArray, 30000);
-
-                  skuArray.map((el) => doc_array.push(docBulk(el)));
-
-                  doc_array.push(docBulk(productArray));
-
-                  doc_array.push(docBulk(seoArray));
-
-                  console.info("totalPromises", doc_array.length);
-
-                  Promise.all(doc_array)
-                    .then((response) => {
-                      console.log("» » » Docs Uploaded");
-                      console.log("Promises Resolved ", response.length);
-                    })
-                    .catch((_e) => {
-                      console.log(_e.message);
-                      console.log("Errror");
-                    });
-                })
-                .catch((fetch_err) => {
-                  console.error(fetch_err);
-                });
-            })
-            .catch((init_err) => {
-              console.log(init_err);
-              console.log("Error In Init Index");
-            });
+                      .catch((_e) => {
+                        console.log(_e.message);
+                        console.log("Errror");
+                      });
+                  })
+                  .catch((fetch_err) => {
+                    console.error(fetch_err);
+                  });
+              })
+              .catch((init_err) => {
+                console.log(init_err);
+                console.log("Error In Init Index");
+              });
+          });
+        })
+        .catch((err_del) => {
+          console.log(err_del);
+          console.log("Error In Delete-Index");
         });
-      })
-      .catch((err_del) => {
-        console.log(err_del);
-        console.log("Error In Delete-Index");
-      });
+    } catch (err) {
+      console.log(
+        new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Calcutta",
+        }) +
+          " - Error message : " +
+          err
+      );
+    }
   });
   app.post("/esearch_forceindex", async function (req, res) {
-    let datapaylod = {};
-    if (req.body.product_id) {
-      datapaylod["product_id"] = req.body.product_id;
-    }
-    res.status(200).send({ message: "Success" });
+    try {
+      let datapaylod = {};
+      if (req.body.product_id) {
+        datapaylod["product_id"] = req.body.product_id;
+      }
+      res.status(200).send({ message: "Success" });
 
-    const _obj = {
-      method: "post",
-      url: turl,
-      data: datapaylod,
-    };
-    const py1 = {
-      properties: {
-        autocomplete: {
-          type: "text",
-          analyzer: "autocomplete",
-          search_analyzer: "autocomplete_search",
+      const _obj = {
+        method: "post",
+        url: turl,
+        data: datapaylod,
+      };
+      const py1 = {
+        properties: {
+          autocomplete: {
+            type: "text",
+            analyzer: "autocomplete",
+            search_analyzer: "autocomplete_search",
+          },
+          sku_url: { type: "text" },
+          product_name: { type: "text" },
         },
-        sku_url: { type: "text" },
-        product_name: { type: "text" },
-      },
-    };
-    const _py1s = {
-      settings: {
-        analysis: {
-          analyzer: {
-            autocomplete: {
-              tokenizer: "autocomplete",
-              filter: ["lowercase"],
+      };
+      const _py1s = {
+        settings: {
+          analysis: {
+            analyzer: {
+              autocomplete: {
+                tokenizer: "autocomplete",
+                filter: ["lowercase"],
+              },
+              autocomplete_search: {
+                tokenizer: "lowercase",
+              },
             },
-            autocomplete_search: {
-              tokenizer: "lowercase",
+            tokenizer: {
+              autocomplete: {
+                type: "edge_ngram",
+                min_gram: 2,
+                max_gram: 20,
+                token_chars: ["letter"],
+              },
             },
           },
-          tokenizer: {
-            autocomplete: {
-              type: "edge_ngram",
-              min_gram: 2,
-              max_gram: 20,
-              token_chars: ["letter"],
-            },
+        },
+      };
+      const py2 = {
+        properties: {
+          sku_code: {
+            type: "text",
+          },
+          sku_url: {
+            type: "text",
+          },
+          sku_code_prefix: {
+            type: "text",
+          },
+          sku_code_search: {
+            type: "completion",
+            analyzer: "simple",
+            preserve_separators: true,
+            preserve_position_increments: true,
+            max_input_length: 50,
           },
         },
-      },
-    };
-    const py2 = {
-      properties: {
-        sku_code: {
-          type: "text",
+      };
+      const py3 = {
+        properties: {
+          seo_url: {
+            type: "text",
+          },
+          seo_search: {
+            type: "completion",
+          },
         },
-        sku_url: {
-          type: "text",
-        },
-        sku_code_prefix: {
-          type: "text",
-        },
-        sku_code_search: {
-          type: "completion",
-          analyzer: "simple",
-          preserve_separators: true,
-          preserve_position_increments: true,
-          max_input_length: 50,
-        },
-      },
-    };
-    const py3 = {
-      properties: {
-        seo_url: {
-          type: "text",
-        },
-        seo_search: {
-          type: "completion",
-        },
-      },
-    };
-    let _index = ["product_search", "sku_search", "seo_search"];
-    //   Promise.all([
-    // 	deleteIndex(_index[0]),
-    // 	deleteIndex(_index[1]),
-    // 	deleteIndex(_index[2])
-    //   ])
-    // 	.then(response => {
-    // 	  console.log("» » » Index deleted");
-    // 	  Promise.all([
-    // 		initIndex(_index[0], _py1s),
-    // 		initIndex(_index[1], false),
-    // 		initIndex(_index[2], _py1s)
-    // 	  ]).then(init_index => {
-    // 		console.log("» » » Index created");
-    Promise.all([
-      initMapping(_index[0], "_doc", py1),
-      initMapping(_index[1], "_doc", py2),
-      initMapping(_index[2], "_doc", py3),
-    ])
-      .then((_mapp) => {
-        console.log("» » » Mapping created");
-        axios(_obj)
-          .then(async (response) => {
-            console.log(response["data"]["product_list"].length);
-            let productSearch = response["data"]["product_list"];
-            let skuSearch = response["data"]["sku_list"];
-            let seoSearch = response["data"]["seo_list"];
-            let productArray = [];
-            let skuArray = [];
-            let seoArray = [];
-            let doc_array = [];
-            /* filter response Array to new-one */
-            /*product_search mapper */
-            (async function () {
-              await Promise.all(
-                productSearch.map(async (li) => {
-                  productArray.push({
-                    index: {
-                      _index: "product_search",
-                      _type: "_doc",
-                      _id: uuidv4(),
-                    },
-                  });
-                  productArray.push({
-                    product_name: li.product_name ? li.product_name : "",
-                    sku_url:
-                      li.trans_sku_lists.length > 0
-                        ? li.trans_sku_lists[0]["sku_url"]
+      };
+      let _index = ["product_search", "sku_search", "seo_search"];
+      //   Promise.all([
+      // 	deleteIndex(_index[0]),
+      // 	deleteIndex(_index[1]),
+      // 	deleteIndex(_index[2])
+      //   ])
+      // 	.then(response => {
+      // 	  console.log("» » » Index deleted");
+      // 	  Promise.all([
+      // 		initIndex(_index[0], _py1s),
+      // 		initIndex(_index[1], false),
+      // 		initIndex(_index[2], _py1s)
+      // 	  ]).then(init_index => {
+      // 		console.log("» » » Index created");
+      Promise.all([
+        initMapping(_index[0], "_doc", py1),
+        initMapping(_index[1], "_doc", py2),
+        initMapping(_index[2], "_doc", py3),
+      ])
+        .then((_mapp) => {
+          console.log("» » » Mapping created");
+          axios(_obj)
+            .then(async (response) => {
+              console.log(response["data"]["product_list"].length);
+              let productSearch = response["data"]["product_list"];
+              let skuSearch = response["data"]["sku_list"];
+              let seoSearch = response["data"]["seo_list"];
+              let productArray = [];
+              let skuArray = [];
+              let seoArray = [];
+              let doc_array = [];
+              /* filter response Array to new-one */
+              /*product_search mapper */
+              (async function () {
+                await Promise.all(
+                  productSearch.map(async (li) => {
+                    productArray.push({
+                      index: {
+                        _index: "product_search",
+                        _type: "_doc",
+                        _id: uuidv4(),
+                      },
+                    });
+                    productArray.push({
+                      product_name: li.product_name ? li.product_name : "",
+                      sku_url:
+                        li.trans_sku_lists.length > 0
+                          ? li.trans_sku_lists[0]["sku_url"]
+                          : "",
+                      autocomplete: li.product_name ? li.product_name : "",
+                    });
+                  })
+                );
+              })();
+              /*sku_code search mapper*/
+              (async function () {
+                await Promise.all(
+                  skuSearch.map(async (li) => {
+                    skuArray.push({
+                      index: {
+                        _index: "sku_search",
+                        _type: "_doc",
+                        _id: uuidv4(),
+                      },
+                    });
+                    skuArray.push({
+                      sku_code: li.generated_sku,
+                      sku_url: li.sku_url,
+                      sku_code_prefix: li.generated_sku,
+                      sku_code_search: li.generated_sku
+                        ? li.generated_sku.split(/[ ,]+/)
                         : "",
-                    autocomplete: li.product_name ? li.product_name : "",
-                  });
-                })
-              );
-            })();
-            /*sku_code search mapper*/
-            (async function () {
-              await Promise.all(
-                skuSearch.map(async (li) => {
-                  skuArray.push({
-                    index: {
-                      _index: "sku_search",
-                      _type: "_doc",
-                      _id: uuidv4(),
-                    },
-                  });
-                  skuArray.push({
-                    sku_code: li.generated_sku,
-                    sku_url: li.sku_url,
-                    sku_code_prefix: li.generated_sku,
-                    sku_code_search: li.generated_sku
-                      ? li.generated_sku.split(/[ ,]+/)
-                      : "",
-                  });
-                })
-              );
-            })();
-            /*seo_url search mapper*/
-            (async function () {
-              await Promise.all(
-                seoSearch.map(async (yl) => {
-                  seoArray.push({
-                    index: {
-                      _index: "seo_search",
-                      _type: "_doc",
-                      _id: uuidv4(),
-                    },
-                  });
-                  seoArray.push({
-                    seo_url: yl.seo_url ? yl.seo_url : "",
-                    seo_name: yl.seo_text ? yl.seo_text : "",
-                    autocomplete: yl.seo_text ? yl.seo_text : "",
-                  });
-                })
-              );
-            })();
-            skuArray = arrayChunk(skuArray, 30000);
+                    });
+                  })
+                );
+              })();
+              /*seo_url search mapper*/
+              (async function () {
+                await Promise.all(
+                  seoSearch.map(async (yl) => {
+                    seoArray.push({
+                      index: {
+                        _index: "seo_search",
+                        _type: "_doc",
+                        _id: uuidv4(),
+                      },
+                    });
+                    seoArray.push({
+                      seo_url: yl.seo_url ? yl.seo_url : "",
+                      seo_name: yl.seo_text ? yl.seo_text : "",
+                      autocomplete: yl.seo_text ? yl.seo_text : "",
+                    });
+                  })
+                );
+              })();
+              skuArray = arrayChunk(skuArray, 30000);
 
-            skuArray.map((el) => doc_array.push(docBulk(el)));
-            //doc_array.push(deleteIndex(skuArray))
-            doc_array.push(docBulk(productArray));
-            doc_array.push(docBulk(seoArray));
-            console.info("totalPromises12", productArray.length);
-            Promise.all(doc_array)
-              .then((response) => {
-                console.log("» » » Docs Uploaded");
-                console.log("Promises Resolved ", response.length);
-              })
-              .catch((_e) => {
-                console.log(_e.message);
-                console.log("Errror");
-              });
-          })
-          .catch((fetch_err) => {
-            console.error(fetch_err);
-          });
-        // 	  })
-        // 	  .catch(init_err => {
-        // 		console.log(init_err);
-        // 		console.log("Error In Init Index");
-        // 	  });
-        //   });
-      })
-      .catch((err_del) => {
-        console.log(err_del);
-        console.log("Error In Delete-Index");
-      });
+              skuArray.map((el) => doc_array.push(docBulk(el)));
+              //doc_array.push(deleteIndex(skuArray))
+              doc_array.push(docBulk(productArray));
+              doc_array.push(docBulk(seoArray));
+              console.info("totalPromises12", productArray.length);
+              Promise.all(doc_array)
+                .then((response) => {
+                  console.log("» » » Docs Uploaded");
+                  console.log("Promises Resolved ", response.length);
+                })
+                .catch((_e) => {
+                  console.log(_e.message);
+                  console.log("Errror");
+                });
+            })
+            .catch((fetch_err) => {
+              console.error(fetch_err);
+            });
+          // 	  })
+          // 	  .catch(init_err => {
+          // 		console.log(init_err);
+          // 		console.log("Error In Init Index");
+          // 	  });
+          //   });
+        })
+        .catch((err_del) => {
+          console.log(err_del);
+          console.log("Error In Delete-Index");
+        });
+    } catch (err) {
+      console.log(
+        new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Calcutta",
+        }) +
+          " - Error message : " +
+          err
+      );
+    }
   });
   app.post("/reindex", async function (req, res) {
-    const { product_id } = req.body;
-    let datapaylod = {
-      query: {
-        match_phrase_prefix: {
-          sku_code_prefix: {
-            query: product_id,
+    try {
+      const { product_id } = req.body;
+      let datapaylod = {
+        query: {
+          match_phrase_prefix: {
+            sku_code_prefix: {
+              query: product_id,
+            },
           },
         },
-      },
-    };
-    const _obj = {
-      method: "post",
-      url: "https://search-elastic-server-uguyslt53rg63cttm2b4hgwkb4.ap-south-1.es.amazonaws.com/sku_search/_delete_by_query",
-      data: datapaylod,
-    };
-    axios(_obj)
-      .then(async (response) => {
-        res.status(200).send({ message: "Success" });
-      })
-      .catch((err) => {
-        res.status(500).send({ message: "Please try again later" });
-      });
-  });
-  app.post("/auto_complete", async function (req, res) {
-    let { search_text } = req.body;
-    console.log("====", search_text);
-    let product_search = {
-      query: {
-        match: {
-          autocomplete: {
-            query: search_text,
-            operator: "and",
-            fuzziness: 2,
-          },
-        },
-      },
-    };
-    let sku_search = {
-      from: 0,
-      size: 10,
-      query: {
-        match_phrase_prefix: {
-          sku_code_prefix: {
-            query: search_text,
-            max_expansions: 15,
-          },
-        },
-      },
-    };
-    let seo_search = {
-      query: {
-        match: {
-          autocomplete: {
-            query: search_text,
-            operator: "and",
-            fuzziness: 2,
-          },
-        },
-      },
-    };
-    let p1 = esSearch("product_search", "_doc", product_search);
-    let p2 = esSearch("sku_search", "_doc", sku_search);
-    let p3 = esSearch("seo_search", "_doc", seo_search);
-    Promise.all([p1, p2, p3])
-      .then(async (es_response) => {
-        let product_results = es_response[0]["message"]["hits"]["hits"];
-        let sku_results = es_response[1]["message"]["hits"]["hits"];
-        let seo_results = es_response[2]["message"]["hits"]["hits"];
-        product_results = product_results.map((_obj) => {
-          return _obj._source;
-        });
-        sku_results = sku_results.map((_obj) => {
-          return _obj._source;
-        });
-        seo_results = seo_results.map((_obj) => {
-          return _obj._source;
-        });
-        return res.json({
-          product_results,
-          sku_results,
-          seo_results,
-        });
-      })
-      .catch((err) => {
-        console.log("err", err);
-        return res.json(err);
-      });
-  });
-  app.post("/addholidays", (req, res) => {
-    upload(req, res, (err) => {
-      if (err) {
-        res.status(400).send({
-          error: err.message,
-        });
-      }
-      const csv = require("csvtojson");
-
-      csv()
-        .fromFile(req.file.path)
-        .then(async (data) => {
-          try {
-            res.status(200).send(await inventoryController.addHolidays(data));
-          } catch (err) {
-            res.status(400).send({
-              error: err.message,
-            });
-          }
+      };
+      const _obj = {
+        method: "post",
+        url: "https://search-elastic-server-uguyslt53rg63cttm2b4hgwkb4.ap-south-1.es.amazonaws.com/sku_search/_delete_by_query",
+        data: datapaylod,
+      };
+      axios(_obj)
+        .then(async (response) => {
+          res.status(200).send({ message: "Success" });
         })
         .catch((err) => {
+          res.status(500).send({ message: "Please try again later" });
+        });
+    } catch (err) {
+      console.log(
+        new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Calcutta",
+        }) +
+          " - Error message : " +
+          err
+      );
+    }
+  });
+  app.post("/auto_complete", async function (req, res) {
+    try {
+      let { search_text } = req.body;
+      console.log("====", search_text);
+      let product_search = {
+        query: {
+          match: {
+            autocomplete: {
+              query: search_text,
+              operator: "and",
+              fuzziness: 2,
+            },
+          },
+        },
+      };
+      let sku_search = {
+        from: 0,
+        size: 10,
+        query: {
+          match_phrase_prefix: {
+            sku_code_prefix: {
+              query: search_text,
+              max_expansions: 15,
+            },
+          },
+        },
+      };
+      let seo_search = {
+        query: {
+          match: {
+            autocomplete: {
+              query: search_text,
+              operator: "and",
+              fuzziness: 2,
+            },
+          },
+        },
+      };
+      let p1 = esSearch("product_search", "_doc", product_search);
+      let p2 = esSearch("sku_search", "_doc", sku_search);
+      let p3 = esSearch("seo_search", "_doc", seo_search);
+      Promise.all([p1, p2, p3])
+        .then(async (es_response) => {
+          let product_results = es_response[0]["message"]["hits"]["hits"];
+          let sku_results = es_response[1]["message"]["hits"]["hits"];
+          let seo_results = es_response[2]["message"]["hits"]["hits"];
+          product_results = product_results.map((_obj) => {
+            return _obj._source;
+          });
+          sku_results = sku_results.map((_obj) => {
+            return _obj._source;
+          });
+          seo_results = seo_results.map((_obj) => {
+            return _obj._source;
+          });
+          return res.json({
+            product_results,
+            sku_results,
+            seo_results,
+          });
+        })
+        .catch((err) => {
+          console.log("err", err);
+          return res.json(err);
+        });
+    } catch (err) {
+      console.log(
+        new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Calcutta",
+        }) +
+          " - Error message : " +
+          err
+      );
+    }
+  });
+  app.post("/addholidays", (req, res) => {
+    try {
+      upload(req, res, (err) => {
+        if (err) {
           res.status(400).send({
             error: err.message,
           });
-        });
-    });
+        }
+        const csv = require("csvtojson");
+
+        csv()
+          .fromFile(req.file.path)
+          .then(async (data) => {
+            try {
+              res.status(200).send(await inventoryController.addHolidays(data));
+            } catch (err) {
+              res.status(400).send({
+                error: err.message,
+              });
+            }
+          })
+          .catch((err) => {
+            res.status(400).send({
+              error: err.message,
+            });
+          });
+      });
+    } catch (err) {
+      console.log(
+        new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Calcutta",
+        }) +
+          " - Error message : " +
+          err
+      );
+    }
   });
   app.post("/addinventories", (req, res) => {
-    upload(req, res, async (err) => {
-      if (err) {
-        res.status(400).send({
-          error: err.message,
+    try {
+      upload(req, res, async (err) => {
+        if (err) {
+          res.status(400).send({
+            error: err.message,
+          });
+        }
+        res.send({ status: true, message: "File processing started!" });
+
+        const csv = require("csvtojson");
+
+        var warehouses = await require("../models").warehouse.findAll({
+          attributes: ["id", "name"],
+          raw: true,
         });
-      }
-      res.send({ status: true, message: "File processing started!" });
 
-      const csv = require("csvtojson");
-
-      var warehouses = await require("../models").warehouse.findAll({
-        attributes: ["id", "name"],
-        raw: true,
-      });
-
-      csv()
-        .fromFile(req.file.path)
-        .subscribe(
-          async (data) => {
-            return await inventoryController.addInventories(data, warehouses);
-          },
-          (err) => {
-            console.log(err);
-          },
-          () => {
-            console.log("Success", req.file.path);
-            try {
-              require("fs").unlink(req.file.path);
-            } catch (error) {
-              console.log(error);
+        csv()
+          .fromFile(req.file.path)
+          .subscribe(
+            async (data) => {
+              return await inventoryController.addInventories(data, warehouses);
+            },
+            (err) => {
+              console.log(err);
+            },
+            () => {
+              console.log("Success", req.file.path);
+              try {
+                require("fs").unlink(req.file.path);
+              } catch (error) {
+                console.log(error);
+              }
             }
-          }
-        );
-    });
+          );
+      });
+    } catch (err) {
+      console.log(
+        new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Calcutta",
+        }) +
+          " - Error message : " +
+          err
+      );
+    }
   });
 
   app.post("/getshippingdate", async (req, res) => {

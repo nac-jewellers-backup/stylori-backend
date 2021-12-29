@@ -1,17 +1,16 @@
-const moment = require('moment');
+const moment = require("moment");
 
 const getName = (username) => {
-    if(!username)
-    {
-      username = "User"
-    }
-    return `<html>
+  if (!username) {
+    username = "User";
+  }
+  return `<html>
       <head>
         <title>Registration Success</title>
       </head>
       <body>
         <p>
-          <span>${'Welcome ' + username}</span>
+          <span>${"Welcome " + username}</span>
         </p>
         <br />
         <ul
@@ -31,7 +30,7 @@ const getName = (username) => {
             >
               <li style="display: inline; padding: 0px 3px; text-decoration: none;">
                 <a
-                  href=${process.env.baseurl+"/pendants-jewellery"}
+                  href=${process.env.baseurl + "/pendants-jewellery"}
                   target="_blank"
                   style="text-decoration:none;color:#4F4C4C;"
                   >Pendants</a
@@ -40,7 +39,7 @@ const getName = (username) => {
               <li style="display: inline; padding: 0px 2px;">|</li>
               <li style="display: inline; padding: 0px 2px;">
                 <a
-                  href=${process.env.baseurl+"/earrings-jewellery"}
+                  href=${process.env.baseurl + "/earrings-jewellery"}
                   target="_blank"
                   style="text-decoration:none;color:#4F4C4C;"
                   >Earrings</a
@@ -49,7 +48,7 @@ const getName = (username) => {
               <li style="display: inline; padding: 0px 2px;">|</li>
               <li style="display: inline; padding: 0px 2px;">
                 <a
-                  href=${process.env.baseurl+"/bangles-jewellery"}
+                  href=${process.env.baseurl + "/bangles-jewellery"}
                   target="_blank"
                   style="text-decoration:none;color:#4F4C4C;"
                   >Bangles</a
@@ -58,7 +57,7 @@ const getName = (username) => {
               <li style="display: inline; padding: 0px 2px;">|</li>
               <li style="display: inline; padding: 0px 2px;">
                 <a
-                  href=${process.env.baseurl+"/bangles-jewellery"}
+                  href=${process.env.baseurl + "/bangles-jewellery"}
                   target="_blank"
                   style="text-decoration:none;color:#4F4C4C;"
                   >Bracelets</a
@@ -67,7 +66,7 @@ const getName = (username) => {
               <li style="display: inline; padding: 0px 2px;">|</li>
               <li style="display: inline; padding: 0px 2px;">
                 <a
-                  href=${process.env.baseurl+"/rings-jewellery"}
+                  href=${process.env.baseurl + "/rings-jewellery"}
                   target="_blank"
                   style="text-decoration:none;color:#4F4C4C;"
                   >Rings</a
@@ -76,7 +75,7 @@ const getName = (username) => {
               <li style="display: inline; padding: 0px 2px;">|</li>
               <li style="display: inline; padding: 0px 2px;">
                 <a
-                  href=${process.env.baseurl+"/nose+pin+online-jewellery"}
+                  href=${process.env.baseurl + "/nose+pin+online-jewellery"}
                   target="_blank"
                   style="text-decoration:none;color:#4F4C4C;"
                   >Nose Pins</a
@@ -136,7 +135,7 @@ const getName = (username) => {
               style="list-style-type: none; list-style: none; padding: 10px 5px; margin: 20px 63px; text-align: center; border-style: solid; border-color: #CC1E53;"
             >
               <li style="display: inline;">
-                <a href=${process.env.baseurl+"/stories"} target="_blank"
+                <a href=${process.env.baseurl + "/stories"} target="_blank"
                   ><img
                     src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/text.png"
                     style="margin-bottom:13px;"
@@ -232,14 +231,13 @@ const getName = (username) => {
       </body>
     </html>
     `;
-  };
-  
-  const forgotpasswordTemp = (username, email, token) => {
-    if(!username)
-      {
-        username = "User"
-      }
-    return `<!doctype html>
+};
+
+const forgotpasswordTemp = (username, email, token) => {
+  if (!username) {
+    username = "User";
+  }
+  return `<!doctype html>
       <html>
       <head>
       
@@ -296,14 +294,13 @@ const getName = (username) => {
       </body>
       </html>
       `;
-  };
-  
-  const guestloginTemp = (username, email, token) => {
-    if(!username)
-      {
-        username = "User"
-      }
-    return `<!doctype html>
+};
+
+const guestloginTemp = (username, email, token) => {
+  if (!username) {
+    username = "User";
+  }
+  return `<!doctype html>
       <html>
       <head>
       
@@ -351,13 +348,12 @@ const getName = (username) => {
       </body>
       </html>
       `;
-  };
-  const changepasswordTemp = (username, email, token) => {
-      if(!username)
-      {
-        username = "User"
-      }
-    return `<!doctype html>
+};
+const changepasswordTemp = (username, email, token) => {
+  if (!username) {
+    username = "User";
+  }
+  return `<!doctype html>
       <html>
       <head>
       
@@ -406,11 +402,9 @@ const getName = (username) => {
       </body>
       </html>
       `;
-  };
-  
+};
 
-  const asktoexpertTemp = (userobj, email, token) => {
-    
+const asktoexpertTemp = (userobj, email, token) => {
   return `<!doctype html>
     <html>
     <head>
@@ -449,7 +443,6 @@ const getName = (username) => {
 };
 
 const contactusTemp = (userobj, email, token) => {
-    
   return `<!doctype html>
     <html>
     <head>
@@ -486,10 +479,7 @@ const contactusTemp = (userobj, email, token) => {
     `;
 };
 
-
-
 const subscribeTemp = (userobj, email, token) => {
-    
   return `<!doctype html>
     <html>
     <head>
@@ -542,76 +532,81 @@ const subscribeTemp = (userobj, email, token) => {
     `;
 };
 
+const orderconformation = (
+  username,
+  email,
+  paymentcontent,
+  skudetail,
+  imagelist,
+  day,
+  isloggedin,
+  skuqty
+) => {
+  var productlist = [];
+  var prod_content = "";
+  var grossamt = 0;
+  var discount = 0;
+  var discounted_price = 0;
+  var address_obj = {};
+  if (paymentcontent.shopping_cart.gross_amount) {
+    grossamt = paymentcontent.shopping_cart.gross_amount;
+  }
 
-  const orderconformation = (username,email,paymentcontent,skudetail,imagelist,day,isloggedin,skuqty) => {
-    var productlist = [];
-    var prod_content = ""
-    var grossamt = 0;
-    var discount  = 0;
-    var discounted_price = 0;
-    var  address_obj = {}
-    if(paymentcontent.shopping_cart.gross_amount)
-    {
-        grossamt = paymentcontent.shopping_cart.gross_amount
+  if (paymentcontent.shopping_cart.discount) {
+    discount = paymentcontent.shopping_cart.discount;
+  }
+  if (paymentcontent.shopping_cart.cart_addresses) {
+    if (paymentcontent.shopping_cart.cart_addresses.length > 0) {
+      address_obj = paymentcontent.shopping_cart.cart_addresses[0];
     }
-
-    if(paymentcontent.shopping_cart.discount)
-    {
-        discount = paymentcontent.shopping_cart.discount
+  }
+  if (paymentcontent.shopping_cart.discounted_price) {
+    discounted_price = paymentcontent.shopping_cart.discounted_price;
+  }
+  var products = paymentcontent.shopping_cart.shopping_cart_items;
+  var allorders = `<p style="padding:0px 15px;line-height:1.5; font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding-top: 15px;">
+    Should you find the details of the order incorrect, please feel free to call us at 18001020330 or email us at hello@stylori.com </p>`;
+  var username_val = "Hello";
+  if (isloggedin) {
+    username_val = `Hello <span > ${paymentcontent.user_profile.first_name}</span>`;
+    allorders = `<p style="padding:0px 15px;line-height:1.5; font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding-top: 15px;"> You can visit <a href=${
+      process.env.baseurl + "/account-allorders"
+    }>${
+      process.env.baseurl + "/account-allorders"
+    }</a> to view your order status and to contact us regarding this order.<br />
+      Should you find the details of the order incorrect, please feel free to call us at 18001020330 or email us at hello@stylori.com </p>`;
+  }
+  skudetail.forEach((element) => {
+    var deliverytime = 0;
+    var deliverdate = "";
+    var gemstones_arr = "";
+    var quality_str = "";
+    if (element.diamond_type) {
+      quality_str = `<span >Quality: ${element.diamond_type} <br /></span>`;
     }
-    if(paymentcontent.shopping_cart.cart_addresses)
-    {
-      if(paymentcontent.shopping_cart.cart_addresses.length > 0)
-      {
-         address_obj = paymentcontent.shopping_cart.cart_addresses [0]
-
-      }
-    }
-    if(paymentcontent.shopping_cart.discounted_price)
-    {
-        discounted_price = paymentcontent.shopping_cart.discounted_price
-    }
-    var products = paymentcontent.shopping_cart.shopping_cart_items;
-    var allorders = `<p style="padding:0px 15px;line-height:1.5; font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding-top: 15px;">
-    Should you find the details of the order incorrect, please feel free to call us at 18001020330 or email us at hello@stylori.com </p>`
-    var username_val = "Hello"
-    if(isloggedin)
-    {
-      username_val = `Hello <span > ${paymentcontent.user_profile.first_name}</span>`
-      allorders = `<p style="padding:0px 15px;line-height:1.5; font-family: ‘Arial’, sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;padding-top: 15px;"> You can visit <a href=${process.env.baseurl+"/account-allorders"}>${process.env.baseurl+"/account-allorders"}</a> to view your order status and to contact us regarding this order.<br />
-      Should you find the details of the order incorrect, please feel free to call us at 18001020330 or email us at hello@stylori.com </p>`
-    }
-    skudetail.forEach(element => {
-        var deliverytime = 0
-        var deliverdate = ""
-        var gemstones_arr = ""
-        var quality_str  =""
-        if(element.diamond_type)
-        {
-          quality_str =  `<span >Quality: ${element.diamond_type} <br /></span>`
-
-        }
-        if(element.product_list.product_gemstones)
-        {
-          let gems = element.product_list.product_gemstones
-          gems.forEach(gemelement => {
-            gemstones_arr = gemstones_arr + `<span
+    if (element.product_list.product_gemstones) {
+      let gems = element.product_list.product_gemstones;
+      gems.forEach((gemelement) => {
+        gemstones_arr =
+          gemstones_arr +
+          `<span
             >Stone: ${gemelement.stone_weight}</span> 
             <span >Number Of Stones: ${gemelement.stone_count}<br />
-        </span> <br />`
-          })
-        }
-        if(element.is_ready_to_ship)
-        {
-            deliverytime = 1;
-        }else{
-            deliverytime = element.vendor_delivery_time
-        }
-        var todayDate = moment();
+        </span> <br />`;
+      });
+    }
+    if (element.is_ready_to_ship) {
+      deliverytime = 1;
+    } else {
+      deliverytime = element.vendor_delivery_time;
+    }
+    var todayDate = moment();
 
-        deliverdate = todayDate.add(deliverytime, 'days').format("DD MMM YYYY");
+    deliverdate = todayDate.add(deliverytime, "days").format("DD MMM YYYY");
 
-        prod_content = prod_content + `<tr>
+    prod_content =
+      prod_content +
+      `<tr>
         <td style="vertical-align: top;padding-left:0px;padding-top: 10px;width: 150px;">
         <img  src='${imagelist[element.product_id]}' width="150px" />	
        </td> 
@@ -631,15 +626,17 @@ const subscribeTemp = (userobj, email, token) => {
             Expected Ship Date: <span >${deliverdate}</span>                      
             </p>
         </td>
-       <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;" >${skuqty[element.generated_sku]}</p></td>
-        <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;"><!-- <i class="fa fa-inr" aria-hidden="true"></i>--><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span >${element.markup_price}</span></p>
+       <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;" >${
+         skuqty[element.generated_sku]
+       }</p></td>
+        <td style="vertical-align: top;padding-top: 10px;"><p style="font-family: 'Arial', sans-serif;font-size: 12px;font-weight: 400;color: rgba(86,86,86,1.00);margin:0;text-align:right;"><!-- <i class="fa fa-inr" aria-hidden="true"></i>--><img src="https://styloriimages.s3.ap-south-1.amazonaws.com/images/templates/rupee.png"/><span >${
+          element.markup_price
+        }</span></p>
         </td>
-    </tr>`
-    
-    })
+    </tr>`;
+  });
 
-    
-    return  `<!doctype html>
+  return `<!doctype html>
     <html>
     <head>
     <meta charset="utf-8"/>
@@ -774,17 +771,16 @@ const subscribeTemp = (userobj, email, token) => {
     </html>
        
     `;
-  };
+};
 
-  const emailTemplate = {};
-  emailTemplate.getName = getName;
-  emailTemplate.forgotpasswordTemp = forgotpasswordTemp;
-  emailTemplate.changepasswordTemp = changepasswordTemp
-  emailTemplate.orderConformation = orderconformation
-  emailTemplate.guestloginTemp = guestloginTemp
-  emailTemplate.asktoexpertTemp = asktoexpertTemp
-  emailTemplate.contactusTemp = contactusTemp
-  emailTemplate.subscribeTemp = subscribeTemp
+const emailTemplate = {};
+emailTemplate.getName = getName;
+emailTemplate.forgotpasswordTemp = forgotpasswordTemp;
+emailTemplate.changepasswordTemp = changepasswordTemp;
+emailTemplate.orderConformation = orderconformation;
+emailTemplate.guestloginTemp = guestloginTemp;
+emailTemplate.asktoexpertTemp = asktoexpertTemp;
+emailTemplate.contactusTemp = contactusTemp;
+emailTemplate.subscribeTemp = subscribeTemp;
 
-
-module.exports = emailTemplate
+module.exports = emailTemplate;
