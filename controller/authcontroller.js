@@ -52,7 +52,7 @@ exports.signin = (req, res) => {
             res.status(200).send({ accessToken: token, userprofile });
           })
           .catch((err) => {
-            res.status(500).json({
+            res.status(401).json({
               description: "Can not access User Page",
               error: err,
             });
@@ -477,7 +477,7 @@ exports.forgotpassword = (req, res) => {
         }
       })
       .catch((error) => {
-        res.status(500).send({
+        res.status(401).send({
           message: "Email ID not Registered with us",
           status: "failure",
         });
@@ -515,7 +515,7 @@ exports.userContent = (req, res) => {
         });
       })
       .catch((err) => {
-        res.status(500).json({
+        res.status(401).json({
           description: "Can not access User Page",
           error: err,
         });
@@ -631,7 +631,7 @@ exports.guestlogin = (req, res) => {
       })
       .catch((err) => {
         // console.log(JSON.stringify(err));
-        res.status(500).json({
+        res.status(401).json({
           description: "Can not access User Page",
           error: err,
         });
@@ -669,7 +669,7 @@ exports.verifyotp = (req, res) => {
         }
       })
       .catch((err) => {
-        res.status(500).json({
+        res.status(401).json({
           description: "Can not access User Page",
           error: err,
         });
@@ -717,7 +717,7 @@ exports.addquestion = (req, res) => {
         }
       })
       .catch((err) => {
-        res.status(500).json({
+        res.status(401).json({
           description: "Can't access User Page",
           error: err,
         });
@@ -765,7 +765,7 @@ exports.asktoexport = (req, res) => {
         }
       })
       .catch((err) => {
-        res.status(500).json({
+        res.status(401).json({
           description: "Can not access User Page",
           error: err,
         });
@@ -821,7 +821,7 @@ exports.addemailsubscription = (req, res) => {
               }
             })
             .catch((err) => {
-              res.status(500).json({
+              res.status(401).json({
                 description: "Can not access User Page",
                 error: err,
               });
