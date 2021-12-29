@@ -45,7 +45,7 @@ exports.ringpriceupdate = async (req, res) => {
   try {
     // const {skuprice} = req.body;
     let skus_arr = req.body;
-    console.log(JSON.stringify(req.body.length));
+    // console.log(JSON.stringify(req.body.length));
     processskuprice(0);
     async function processskuprice(indexval) {
       let processsku = skus_arr[indexval];
@@ -87,7 +87,7 @@ exports.updateproductattr = async (req, res) => {
     productupdate(processcount);
     async function productupdate(processcount) {
       let product_id = products[processcount].product_id;
-      console.log(product_id);
+      // console.log(product_id);
       var product_object = await models.product_lists.findOne({
         attributes: ["product_type", "product_category"],
         include: [
@@ -282,11 +282,11 @@ exports.updateproductattr_bk = async (req, res) => {
     var processcount = 0;
 
     res.send(200, { response: products.length });
-    console.log(products.length);
+    // console.log(products.length);
     productupdate(processcount);
     async function productupdate(processcount) {
       let product_id = products[processcount].product_id;
-      console.log(product_id);
+      // console.log(product_id);
       var product_object = await models.product_lists.findOne({
         attributes: ["product_type", "product_category"],
         include: [
@@ -414,15 +414,15 @@ exports.updateproductattr_bk = async (req, res) => {
           },
         },
       });
-      console.log(JSON.stringify(diamonds_clarity_arr));
-      console.log(JSON.stringify(diamonds_color_arr));
+      // console.log(JSON.stringify(diamonds_clarity_arr));
+      // console.log(JSON.stringify(diamonds_color_arr));
 
       master_diamonds.forEach((diamond) => {
         let diamond_val = diamond.diamond_color + diamond.diamond_clarity;
         let diamond_shortcode = diamond.short_code;
         diamond_obj[diamond_val] = diamond_shortcode;
       });
-      console.log(JSON.stringify(diamond_obj));
+      // console.log(JSON.stringify(diamond_obj));
       purity_arr.forEach((purityobj) => {
         // attributes_array.push(purity_obj.alias)
         purity_obj[purityobj.name] = purityobj.alias;
@@ -553,11 +553,11 @@ exports.updateproductattribute = async (req, res) => {
     var processcount = 0;
 
     res.send(200, { response: products.length });
-    console.log(products.length);
+    // console.log(products.length);
     productupdate(processcount);
     async function productupdate(processcount) {
       let product_id = products[processcount].product_id;
-      console.log(product_id);
+      // console.log(product_id);
       var product_object = await models.product_lists.findOne({
         attributes: ["product_type", "product_category"],
         include: [
@@ -685,8 +685,8 @@ exports.updateproductattribute = async (req, res) => {
           },
         },
       });
-      console.log(JSON.stringify(diamonds_clarity_arr));
-      console.log(JSON.stringify(diamonds_color_arr));
+      // console.log(JSON.stringify(diamonds_clarity_arr));
+      // console.log(JSON.stringify(diamonds_color_arr));
 
       master_diamonds.forEach((diamond) => {
         let diamond_val = diamond.diamond_color + diamond.diamond_clarity;
@@ -694,10 +694,10 @@ exports.updateproductattribute = async (req, res) => {
         diamond_obj[diamond_val] = diamond_shortcode;
       });
       purity_arr.forEach((purityobj) => {
-        console.log("***********");
-        console.log(JSON.stringify(purityobj));
+        // console.log("***********");
+        // console.log(JSON.stringify(purityobj));
 
-        console.log("***********");
+        // console.log("***********");
 
         attributes_array.push(purityobj.alias);
         purity_obj[purityobj.name] = purityobj.alias;
@@ -750,10 +750,10 @@ exports.updateproductattribute = async (req, res) => {
           });
           sku_atter.push(diamond_obj[skuobj.diamond_type]);
           sku_atter.push(purity_obj[skuobj.purity]);
-          console.log("=====CCCCCC=====");
-          console.log(skuobj.purity);
-          console.log(purity_obj[skuobj.purity]);
-          console.log("=====CCCCCC=====");
+          // console.log("=====CCCCCC=====");
+          // console.log(skuobj.purity);
+          // console.log(purity_obj[skuobj.purity]);
+          // console.log("=====CCCCCC=====");
           await models.trans_sku_lists.update(
             {
               attributes: sku_atter,
@@ -771,7 +771,7 @@ exports.updateproductattribute = async (req, res) => {
             processcount = processcount + 1;
             productupdate(processcount);
           } else {
-            console.log("update complete");
+            // console.log("update complete");
             updatediscountsku([attributes_array[0]], product_id);
           }
         }
@@ -839,7 +839,7 @@ async function updateexistingdiscount() {
         });
       }
 
-      console.log(JSON.stringify(attributesarr));
+      // console.log(JSON.stringify(attributesarr));
 
       await models.sale_discount.update(
         // Values to update
@@ -870,10 +870,10 @@ async function updateexistingdiscount() {
 }
 async function addproductattributes(category_alias, product_id) {
   try {
-    console.log("XX++X+X+X+X+X+X");
-    console.log(category_alias);
-    console.log(product_id);
-    console.log("XX++X+X+X+X+X+X");
+    // console.log("XX++X+X+X+X+X+X");
+    // console.log(category_alias);
+    // console.log(product_id);
+    // console.log("XX++X+X+X+X+X+X");
     let products = await models.trans_sku_lists.findAll({
       attributes: ["product_id"],
       group: ["product_id"],
@@ -883,11 +883,11 @@ async function addproductattributes(category_alias, product_id) {
     });
     var processcount = 0;
 
-    console.log(products.length);
+    // console.log(products.length);
     productupdate(processcount);
     async function productupdate(processcount) {
       let product_id = products[processcount].product_id;
-      console.log(product_id);
+      // console.log(product_id);
       var product_object = await models.product_lists.findOne({
         attributes: ["product_type", "product_category"],
         include: [
@@ -1015,15 +1015,15 @@ async function addproductattributes(category_alias, product_id) {
           },
         },
       });
-      console.log(JSON.stringify(diamonds_clarity_arr));
-      console.log(JSON.stringify(diamonds_color_arr));
+      // console.log(JSON.stringify(diamonds_clarity_arr));
+      // console.log(JSON.stringify(diamonds_color_arr));
 
       master_diamonds.forEach((diamond) => {
         let diamond_val = diamond.diamond_color + diamond.diamond_clarity;
         let diamond_shortcode = diamond.short_code;
         diamond_obj[diamond_val] = diamond_shortcode;
       });
-      console.log(JSON.stringify(diamond_obj));
+      // console.log(JSON.stringify(diamond_obj));
       purity_arr.forEach((purityobj) => {
         // attributes_array.push(purity_obj.alias)
         purity_obj[purityobj.name] = purityobj.alias;
@@ -1193,10 +1193,9 @@ async function updatediscountsku(category_arr, product_id, res) {
           },
         });
         if (shoppingcart) {
-          console.log("=======");
-
-          console.log(shoppingcart.length);
-          console.log("========");
+          // console.log("=======");
+          // console.log(shoppingcart.length);
+          // console.log("========");
         }
         let trans_sku_array = attr_obj.product_ids ? attr_obj.product_ids : [];
         shoppingcart.forEach((sku_obj) => {
@@ -1233,17 +1232,17 @@ exports.productupload = async (req, res) => {
     var apidata = req.body;
     var product_skus = [];
     var skuurl = "";
-    console.log(JSON.stringify(apidata));
+    // console.log(JSON.stringify(apidata));
     var categoryobj = apidata.product_categoy;
     var categoryval = categoryobj.charAt(0);
     var producttypeobj = apidata.product_type;
     var producttypeval = producttypeobj.shortCode;
     var seriesvalue = apidata.startcode + 1;
-    console.log("i am here");
-    console.log(seriesvalue);
+    // console.log("i am here");
+    // console.log(seriesvalue);
     skuurl = categoryobj;
     if (Number.isNaN(seriesvalue)) {
-      console.log("i am here");
+      // console.log("i am here");
       seriesvalue = 3000;
     }
     if (categoryobj !== producttypeobj.name) {
@@ -1405,7 +1404,7 @@ exports.productupload = async (req, res) => {
           prod_images.push(image_obj);
         });
       });
-      console.log(JSON.stringify(prod_images));
+      // console.log(JSON.stringify(prod_images));
       await models.product_images.bulkCreate(prod_images, {
         individualHooks: true,
       });
@@ -1448,8 +1447,8 @@ exports.productupload = async (req, res) => {
         individualHooks: true,
       });
     }
-    console.log("puritylistcount");
-    console.log(product_skus.length);
+    // console.log("puritylistcount");
+    // console.log(product_skus.length);
     /************ product stone colour */
     var stonecolourarr = [];
 
@@ -1617,8 +1616,8 @@ exports.productupload = async (req, res) => {
         product_skus.push(skuobj);
       });
     });
-    console.log("metalcolorlistcount");
-    console.log(product_skus.length);
+    // console.log("metalcolorlistcount");
+    // console.log(product_skus.length);
 
     /*************** Diamond Lists ********************/
     var skus = product_skus;
@@ -1671,8 +1670,8 @@ exports.productupload = async (req, res) => {
     await models.product_diamonds.bulkCreate(diamondsarr, {
       individualHooks: true,
     });
-    console.log("diamndlistcount");
-    console.log(product_skus.length);
+    // console.log("diamndlistcount");
+    // console.log(product_skus.length);
 
     /*************** gemstone Lists ********************/
 
@@ -1727,8 +1726,8 @@ exports.productupload = async (req, res) => {
 
       // product_skus.push(sku)
     });
-    console.log("gemslistcount");
-    console.log(product_skus.length);
+    // console.log("gemslistcount");
+    // console.log(product_skus.length);
     if (product_skus.length == 0) {
       product_skus = skus;
     }
@@ -1737,7 +1736,7 @@ exports.productupload = async (req, res) => {
     skus = product_skus;
     product_skus = [];
     var sizelist = apidata.selected_sizes;
-    console.log(sizelist.length);
+    // console.log(sizelist.length);
     skus.forEach((skuvalue) => {
       sizelist.forEach((sizevalue) => {
         var sku = skuvalue.generated_sku + "_" + sizevalue;
@@ -1753,20 +1752,20 @@ exports.productupload = async (req, res) => {
     if (product_skus.length == 0) {
       product_skus = skus;
     }
-    console.log("size" + product_skus.length);
-    console.log("sizelistcount");
-    console.log(product_skus.length);
+    // console.log("size" + product_skus.length);
+    // console.log("sizelistcount");
+    // console.log(product_skus.length);
 
     var uploadskus = [];
     var uploaddescriptions = [];
     product_skus.forEach((prodkt) => {
       var isdefault = false;
       var keyvalue = prodkt.purity + "_metal_weight";
-      console.log("productweight");
-      console.log(keyvalue);
+      // console.log("productweight");
+      // console.log(keyvalue);
 
       var sku_weight = apidata[keyvalue];
-      console.log(sku_weight);
+      // console.log(sku_weight);
 
       if (
         prodkt.metal_color === default_metal_color &&
@@ -1782,8 +1781,8 @@ exports.productupload = async (req, res) => {
       ) {
         const sizedifferent =
           parseFloat(prodkt.sku_size) - parseFloat(default_metal_size);
-        console.log(">sizedifference" + sizedifferent);
-        console.log(">sku_weight" + parseFloat(sku_weight));
+        // console.log(">sizedifference" + sizedifferent);
+        // console.log(">sku_weight" + parseFloat(sku_weight));
 
         sku_weight =
           parseFloat(sku_weight) + Math.round(sizedifferent * 0.1 * 100) / 100;
@@ -1905,7 +1904,7 @@ exports.updateproductimage = async (req, res) => {
   try {
     const { imageobj, isedit } = req.body;
 
-    console.log(JSON.stringify(req.body));
+    // console.log(JSON.stringify(req.body));
     let imgurl = imageobj.imageUrl;
     if (isedit) {
       let response_obj1 = await models.product_images.update(
@@ -2063,7 +2062,7 @@ exports.getproductvarient = async (req, res) => {
       colorobj[color.name] = color.short_code;
     });
     var metalcolorlist = product_object.product_metalcolours;
-    console.log("colorlist" + metalcolorlist.length);
+    // console.log("colorlist" + metalcolorlist.length);
 
     skus.forEach((skuvalue) => {
       var skuval = skuvalue.generated_sku;
@@ -2105,7 +2104,7 @@ exports.getproductvarient = async (req, res) => {
     if (diamondlist.length > 0) {
       product_skus = [];
     }
-    console.log("diamondlength" + diamondlist.length);
+    // console.log("diamondlength" + diamondlist.length);
     var diamond_sku_clarity = {};
     let diamondtype = await models.master_diamond_types.findAll({});
     diamondtype.forEach((diamond_type) => {
@@ -2119,11 +2118,11 @@ exports.getproductvarient = async (req, res) => {
 
     skus.forEach((skuvalue) => {
       var skuval = skuvalue.generated_sku;
-      console.log(JSON.stringify(diamondlist));
+      // console.log(JSON.stringify(diamondlist));
       //diamond.diamond_type
       prod_diamonds.forEach((diamond) => {
         var clarity = diamond;
-        console.log("claritycolor" + JSON.stringify(diamond));
+        // console.log("claritycolor" + JSON.stringify(diamond));
         var sku = skuval + diamond_sku_clarity[diamond];
 
         var skuobj = {
@@ -2139,9 +2138,9 @@ exports.getproductvarient = async (req, res) => {
       diamonds_arr.forEach((diamond) => {
         //            var clarity = diamond.diamondType
         var clarity = diamond.diamondColor + diamond.diamondClarity;
-        console.log("diamondvarient" + clarity);
+        // console.log("diamondvarient" + clarity);
         var sku = skuval + diamond_sku_clarity[clarity];
-        console.log("diamondvarient" + sku);
+        // console.log("diamondvarient" + sku);
 
         var skuobj = {
           ...skuvalue,
@@ -2154,7 +2153,7 @@ exports.getproductvarient = async (req, res) => {
     });
 
     /********************* */
-    console.log("product_skusvarient" + JSON.stringify(product_skus));
+    // console.log("product_skusvarient" + JSON.stringify(product_skus));
 
     //     /**************gemstonelist ***********/
     var gemstonecolorcode1 = "00";
@@ -2274,7 +2273,7 @@ exports.getproductvarient = async (req, res) => {
         models.trans_sku_descriptions
           .bulkCreate(product_skus_description, { individualHooks: true })
           .then(function (response) {
-            console.log("porductskudescsuccess");
+            // console.log("porductskudescsuccess");
             // if(product_sku_arr.length > skuproceecount)
             // {
             //     insertsku(skuproceecount);
@@ -2315,7 +2314,7 @@ exports.editproductdiamond = async (req, res) => {
       stoneCount,
       stoneWeight,
     } = req.body;
-    console.log(diamondid);
+    // console.log(diamondid);
     let response_obj1 = await models.product_diamonds.update(
       // Values to update
       {
@@ -2356,7 +2355,7 @@ exports.editproductgemstone = async (req, res) => {
       stoneCount,
       stoneWeight,
     } = req.body;
-    console.log(id);
+    // console.log(id);
     let response_obj1 = await models.product_gemstones.update(
       // Values to update
       {
@@ -3140,17 +3139,17 @@ exports.productupload2 = async (req, res) => {
     var apidata = req.body;
     var product_skus = [];
     var skuurl = "";
-    console.log(JSON.stringify(apidata));
+    // console.log(JSON.stringify(apidata));
     var categoryobj = apidata.product_categoy;
     var categoryval = categoryobj.charAt(0);
     var producttypeobj = apidata.product_type;
     var producttypeval = producttypeobj.shortCode;
     var seriesvalue = apidata.startcode + 1;
-    console.log("i am here");
-    console.log(seriesvalue);
+    // console.log("i am here");
+    // console.log(seriesvalue);
     skuurl = categoryobj;
     if (Number.isNaN(seriesvalue)) {
-      console.log("i am here");
+      // console.log("i am here");
       seriesvalue = 3000;
     }
     if (categoryobj !== producttypeobj.name) {
@@ -3283,9 +3282,9 @@ exports.productupload2 = async (req, res) => {
         name: product_category,
       },
     });
-    console.log("XXXXXXXXX");
-    console.log(JSON.stringify(product_category_obj));
-    console.log("XXXXXXXXX");
+    // console.log("XXXXXXXXX");
+    // console.log(JSON.stringify(product_category_obj));
+    // console.log("XXXXXXXXX");
     /*************** images list ********************/
     var prod_images = [];
     if (Object.keys(product_images)) {
@@ -3314,7 +3313,7 @@ exports.productupload2 = async (req, res) => {
           prod_images.push(image_obj);
         });
       });
-      console.log(JSON.stringify(prod_images));
+      // console.log(JSON.stringify(prod_images));
       await models.product_images.bulkCreate(prod_images, {
         individualHooks: true,
       });
@@ -3327,9 +3326,9 @@ exports.productupload2 = async (req, res) => {
         product_id: product_obj.product_id,
         is_active: true,
       };
-      console.log("XXXXXXXXX");
-      console.log(JSON.stringify(genderobj));
-      console.log("XXXXXXXXX");
+      // console.log("XXXXXXXXX");
+      // console.log(JSON.stringify(genderobj));
+      // console.log("XXXXXXXXX");
       await models.product_gender.create(genderobj);
     }
 
@@ -3360,8 +3359,8 @@ exports.productupload2 = async (req, res) => {
         individualHooks: true,
       });
     }
-    console.log("puritylistcount");
-    console.log(product_skus.length);
+    // console.log("puritylistcount");
+    // console.log(product_skus.length);
     /************ product stone colour */
     var stonecolourarr = [];
 
@@ -3529,8 +3528,8 @@ exports.productupload2 = async (req, res) => {
         product_skus.push(skuobj);
       });
     });
-    console.log("metalcolorlistcount");
-    console.log(product_skus.length);
+    // console.log("metalcolorlistcount");
+    // console.log(product_skus.length);
 
     /*************** Diamond Lists ********************/
     var skus = product_skus;
@@ -3583,8 +3582,8 @@ exports.productupload2 = async (req, res) => {
     await models.product_diamonds.bulkCreate(diamondsarr, {
       individualHooks: true,
     });
-    console.log("diamndlistcount");
-    console.log(product_skus.length);
+    // console.log("diamndlistcount");
+    // console.log(product_skus.length);
 
     /*************** gemstone Lists ********************/
 
@@ -3639,8 +3638,8 @@ exports.productupload2 = async (req, res) => {
 
       // product_skus.push(sku)
     });
-    console.log("gemslistcount");
-    console.log(product_skus.length);
+    // console.log("gemslistcount");
+    // console.log(product_skus.length);
     if (product_skus.length == 0) {
       product_skus = skus;
     }
@@ -3649,7 +3648,7 @@ exports.productupload2 = async (req, res) => {
     skus = product_skus;
     product_skus = [];
     var sizelist = apidata.selected_sizes;
-    console.log(sizelist.length);
+    // console.log(sizelist.length);
     skus.forEach((skuvalue) => {
       sizelist.forEach((sizevalue) => {
         var sku = skuvalue.generated_sku + "_" + sizevalue;
@@ -3665,20 +3664,20 @@ exports.productupload2 = async (req, res) => {
     if (product_skus.length == 0) {
       product_skus = skus;
     }
-    console.log("size" + product_skus.length);
-    console.log("sizelistcount");
-    console.log(product_skus.length);
+    // console.log("size" + product_skus.length);
+    // console.log("sizelistcount");
+    // console.log(product_skus.length);
 
     var uploadskus = [];
     var uploaddescriptions = [];
     product_skus.forEach((prodkt) => {
       var isdefault = false;
       var keyvalue = prodkt.purity + "_metal_weight";
-      console.log("productweight");
-      console.log(keyvalue);
+      // console.log("productweight");
+      // console.log(keyvalue);
 
       var sku_weight = apidata[keyvalue];
-      console.log(sku_weight);
+      // console.log(sku_weight);
 
       if (
         prodkt.metal_color === default_metal_color &&
@@ -3694,8 +3693,8 @@ exports.productupload2 = async (req, res) => {
       ) {
         const sizedifferent =
           parseFloat(prodkt.sku_size) - parseFloat(default_metal_size);
-        console.log(">sizedifference" + sizedifferent);
-        console.log(">sku_weight" + parseFloat(sku_weight));
+        // console.log(">sizedifference" + sizedifferent);
+        // console.log(">sku_weight" + parseFloat(sku_weight));
 
         sku_weight =
           parseFloat(sku_weight) + Math.round(sizedifferent * 0.1 * 100) / 100;
@@ -3796,9 +3795,9 @@ exports.productupload2 = async (req, res) => {
             //       }).catch({
 
             //       })
-            console.log("XXXXXXXXX==");
-            console.log(JSON.stringify(product_category_obj));
-            console.log("XXXXXXXXX==");
+            // console.log("XXXXXXXXX==");
+            // console.log(JSON.stringify(product_category_obj));
+            // console.log("XXXXXXXXX==");
             addproductattributes(
               [product_category_obj.alias],
               product_obj.product_id
@@ -4008,10 +4007,10 @@ exports.addvarient = async (req, res) => {
         newdiamondprops.push(diamondobj_props);
       });
     });
-    console.log("--------------------");
-    console.log(newdiamondprops);
+    // console.log("--------------------");
+    // console.log(newdiamondprops);
 
-    console.log("--------------------");
+    // console.log("--------------------");
 
     if (newdiamondprops) {
       await models.product_diamonds.bulkCreate(newdiamondprops, {
@@ -4098,7 +4097,7 @@ exports.addvarient = async (req, res) => {
     if (successmessage.size_varient) {
       sizelist = successmessage.size_varient.split(",");
     }
-    console.log(sizelist.length);
+    // console.log(sizelist.length);
     skus.forEach((skuvalue) => {
       sizelist.forEach((sizevalue) => {
         var sku = skuvalue.generated_sku + "_" + sizevalue;
@@ -4125,11 +4124,11 @@ exports.addvarient = async (req, res) => {
       existskus.push(skuid.generated_sku);
     });
     let newskus = [];
-    console.log("puritylistcount");
+    // console.log("puritylistcount");
 
     product_skus.forEach((skuname) => {
       if (existskus.indexOf(skuname.generated_sku) == -1) {
-        console.log(skuname.generated_sku);
+        // console.log(skuname.generated_sku);
         let sku_val = {
           id: uuidv1(),
           ...skuname,
@@ -4138,7 +4137,7 @@ exports.addvarient = async (req, res) => {
       }
     });
     // console.log(JSON.stringify(product_skus))
-    console.log(newskus.length);
+    // console.log(newskus.length);
     if (newskus.length > 0) {
       models.trans_sku_lists
         .bulkCreate(newskus, { individualHooks: true })
