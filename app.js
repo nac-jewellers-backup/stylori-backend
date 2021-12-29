@@ -4,6 +4,8 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { postgraphile, makePluginHook } from "postgraphile";
 import PgAggregatesPlugin from "@graphile/pg-aggregates";
+import morgan from "morgan";
+
 //import Myusers from '../controller/sortbyprice.js';
 const MySchemaExtensionPlugin = require("./controller/sortbyprice.js");
 const user = require("./controller/notify/Emailtemplate");
@@ -22,6 +24,8 @@ app.use(express.urlencoded({ limit: "50mb" }));
 //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 //   next();
 // });
+
+app.use(morgan("common"));
 
 app.use(function (req, res, next) {
   const allowedOrigins = [
