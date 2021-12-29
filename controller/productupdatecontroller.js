@@ -22,7 +22,7 @@ exports.updateattributes = async (req, res) => {
           };
           attributes_arr.push(atr_obj);
         });
-        console.log(JSON.stringify(attributes_arr));
+        // console.log(JSON.stringify(attributes_arr));
 
         await models.attribute_mapping.bulkCreate(attributes_arr, {
           individualHooks: true,
@@ -30,7 +30,7 @@ exports.updateattributes = async (req, res) => {
         res.status(200).send({ message: "success" });
       })
       .catch((err) => {
-        console.log(JSON.stringify(err));
+        // console.log(JSON.stringify(err));
         res.status(500).send({ message: "something went wring" });
       });
   } catch (err) {
@@ -61,7 +61,7 @@ exports.updateproduct = (req, res) => {
     // update_diamondpricesettings(gemstones_obj);
     //update_gemstonesetup(gemstones_obj);
     //  update_makingcharge(gemstones_obj);
-    console.log(req.body.length);
+    // console.log(req.body.length);
     // update_markup(req.body);
 
     /*  var product_json_obj = req.body.Product
@@ -106,7 +106,7 @@ exports.updateproduct = (req, res) => {
           console.log("updated")
         )
         .error((err) => console.log("error"));
-      console.log("one days shipping sku" + skus_array.length);
+      // console.log("one days shipping sku" + skus_array.length);
     }
     function updatebestsellers(bestsellers) {
       // models .find({ where: { title: 'aProject' } })
@@ -135,7 +135,7 @@ exports.updateproduct = (req, res) => {
     }
     function update_product_images(product_images) {
       var image_count = 0;
-      console.log(product_images.length);
+      // console.log(product_images.length);
       var product_images_arr = [];
       product_images.forEach((imgobj) => {
         let hoverval = false;
@@ -182,7 +182,7 @@ exports.updateproduct = (req, res) => {
         };
         markup_arr.push(mkupobj);
       });
-      console.log(JSON.stringify(markup_arr));
+      // console.log(JSON.stringify(markup_arr));
       // models.pricing_markup.bulkCreate(
       //     markup_arr, {individualHooks: true}).then(function(response){
       //              console.log("porductskudescsuccess" )
@@ -214,7 +214,7 @@ exports.updateproduct = (req, res) => {
       models.diamond_price_settings
         .bulkCreate(diamond_arr, { individualHooks: true })
         .then(function (response) {
-          console.log("porductskudescsuccess");
+          // console.log("porductskudescsuccess");
 
           res.send(200, { message: "success" });
         })
@@ -225,7 +225,7 @@ exports.updateproduct = (req, res) => {
     function update_makingcharge(gsprice) {
       var makingchargearr = [];
       gsprice.forEach((makingchargeobj) => {
-        console.log("$$$$$" + JSON.stringify(makingchargeobj.vendor_code));
+        // console.log("$$$$$" + JSON.stringify(makingchargeobj.vendor_code));
 
         // [24,22,18,14].forEach(purityobj => {
         var making_chargeobj_14 = {
@@ -296,7 +296,7 @@ exports.updateproduct = (req, res) => {
       models.making_charge_settings
         .bulkCreate(makingchargearr, { individualHooks: true })
         .then(function (response) {
-          console.log("porductskudescsuccess");
+          // console.log("porductskudescsuccess");
 
           res.send(200, { message: "success" });
         })
@@ -307,7 +307,7 @@ exports.updateproduct = (req, res) => {
     function update_gemstonesetup(gsprice) {
       models.master_vendors.findAll({}).then((vendors) => {
         var insertgemstonearr = [];
-        console.log(JSON.stringify(vendors));
+        // console.log(JSON.stringify(vendors));
         vendors.forEach((vendorobj) => {
           var vendorid = vendorobj.short_code;
           // gsprice.forEach(goldobj => {
@@ -346,16 +346,16 @@ exports.updateproduct = (req, res) => {
         models.gemstone_price_settings
           .bulkCreate(insertgemstonearr, { individualHooks: true })
           .then(function (response) {
-            console.log("porductskudescsuccess");
+            // console.log("porductskudescsuccess");
 
             res.send(200, { message: "success" });
           })
           .catch((error) => {
             console.log("errorresponse" + error.message);
           });
-        console.log(
-          "porductskudescsuccess" + JSON.stringify(insertgemstonearr[1])
-        );
+        // console.log(
+        //   "porductskudescsuccess" + JSON.stringify(insertgemstonearr[1])
+        // );
         //   var goldarr = [];
         //   goldarr.push(insertgemstonearr[2])
         //   goldarr.push(insertgemstonearr[3])
@@ -373,7 +373,7 @@ exports.updateproduct = (req, res) => {
     }
     function creategemstone(gemstonearr) {
       var insertgemstonearr = [];
-      console.log(JSON.stringify(gemstonearr));
+      // console.log(JSON.stringify(gemstonearr));
       gemstonearr.forEach((gemstone) => {
         var gemstonobj = {
           id: uuidv1(),
@@ -387,7 +387,7 @@ exports.updateproduct = (req, res) => {
       models.master_gemstones_types
         .bulkCreate(insertgemstonearr, { individualHooks: true })
         .then(function (response) {
-          console.log("porductskudescsuccess");
+          // console.log("porductskudescsuccess");
 
           res.send(200, { message: "success" });
         })
@@ -430,7 +430,7 @@ exports.updateproduct = (req, res) => {
         product_name: product_obj[processed_product_count].product_name,
       };
 
-      console.log("--======" + JSON.stringify(product_model_obj));
+      // console.log("--======" + JSON.stringify(product_model_obj));
       models.product_lists
         .create(product_model_obj)
         .then(function (response) {
@@ -442,7 +442,7 @@ exports.updateproduct = (req, res) => {
           }
         })
         .catch((error) => {
-          console.log("errorresponse" + error);
+          // console.log("errorresponse" + error);
         });
     }
     /************** product material content ****************/
@@ -450,7 +450,7 @@ exports.updateproduct = (req, res) => {
       var product_material_array = [];
       var materials_arr = materialobj;
       materials_arr.forEach(async (metal) => {
-        console.log("update");
+        // console.log("update");
         let response = await models.product_materials.findOne({
           where: {
             material_name: metal.material_name,
@@ -503,7 +503,7 @@ exports.updateproduct = (req, res) => {
           addproductmaterial();
         }
       });
-      console.log("new product material" + product_material_array.length);
+      // console.log("new product material" + product_material_array.length);
       function addproductmaterial() {
         models.product_materials
           .bulkCreate(product_material_array, { individualHooks: true })
@@ -514,8 +514,8 @@ exports.updateproduct = (req, res) => {
     }
 
     function update_product_diamonds(diamondobj) {
-      console.log(JSON.stringify(apidata.diamond_types));
-      console.log(JSON.stringify(apidata.product_diamonds));
+      // console.log(JSON.stringify(apidata.diamond_types));
+      // console.log(JSON.stringify(apidata.product_diamonds));
       var product_diamonds = [];
       var diamond_types_arr = diamondobj;
 
@@ -538,7 +538,7 @@ exports.updateproduct = (req, res) => {
       models.product_diamonds
         .bulkCreate(product_diamonds, { individualHooks: true })
         .then(function (response) {
-          console.log("diamond success");
+          // console.log("diamond success");
           update_product_gemstones(product_gemstones_obj);
         });
     }
@@ -585,11 +585,11 @@ exports.updateproduct = (req, res) => {
       models.product_occassions
         .bulkCreate(product_occassions, { individualHooks: true })
         .then(function (response) {
-          console.log("occassions succes");
+          // console.log("occassions succes");
           //  update_product_collections(product_collections_obj)
         })
         .catch((error) => {
-          console.log("errorresponse" + error);
+          // console.log("errorresponse" + error);
         });
     }
     function update_product_collections(collection_obj) {
@@ -608,7 +608,7 @@ exports.updateproduct = (req, res) => {
       models.product_collections
         .bulkCreate(product_collections, { individualHooks: true })
         .then(function (response) {
-          console.log("collection success");
+          // console.log("collection success");
           // update_product_styles(product_style_obj)
         })
         .catch((error) => {
@@ -631,7 +631,7 @@ exports.updateproduct = (req, res) => {
       models.product_styles
         .bulkCreate(product_styles, { individualHooks: true })
         .then(function (response) {
-          console.log("style success");
+          // console.log("style success");
           // update_product_themes(product_theme_obj)
         })
         .catch((error) => {
@@ -643,7 +643,7 @@ exports.updateproduct = (req, res) => {
       var product_themes_arr = themeobject;
 
       product_themes_arr.forEach((theme) => {
-        console.log(theme.product_id);
+        // console.log(theme.product_id);
         var gemstoneobj = {
           id: uuidv1(),
           theme_name: theme.theme_name,
@@ -655,8 +655,7 @@ exports.updateproduct = (req, res) => {
       models.product_themes
         .bulkCreate(product_themes, { individualHooks: true })
         .then(function (response) {
-          console.log("upload success");
-
+          // console.log("upload success");
           //   update_product_sku(product_sku_obj);
         })
         .catch((error) => {
@@ -723,18 +722,18 @@ exports.updateproduct = (req, res) => {
         skuproceecount++;
       });
 
-      console.log("productskulength" + product_skus.length);
+      // console.log("productskulength" + product_skus.length);
 
-      console.log("productskulength" + product_skus_description.length);
+      // console.log("productskulength" + product_skus_description.length);
       models.trans_sku_lists
         .bulkCreate(product_skus, { individualHooks: true })
         .then(function (response) {
-          console.log("porductskusuccess");
+          // console.log("porductskusuccess");
 
           models.trans_sku_descriptions
             .bulkCreate(product_skus_description, { individualHooks: true })
             .then(function (response) {
-              console.log("porductskudescsuccess");
+              // console.log("porductskudescsuccess");
               // if(product_sku_arr.length > skuproceecount)
               // {
               //     insertsku(skuproceecount);
@@ -787,8 +786,8 @@ exports.getpriceupdatestatus = async (req, res) => {
         sizes,
         diamondtypes,
       } = bodycontent;
-      console.log("MMMMM");
-      console.log(JSON.stringify(bodycontent));
+      // console.log("MMMMM");
+      // console.log(JSON.stringify(bodycontent));
       if (req_product_id) {
         isfirstime = true;
         var product_id_arr1 = req_product_id.split(",");
@@ -802,7 +801,7 @@ exports.getpriceupdatestatus = async (req, res) => {
       let vendor_arr = [];
 
       if (vendorcode && vendorcode.length > 0) {
-        console.log(JSON.stringify(vendorcode));
+        // console.log(JSON.stringify(vendorcode));
 
         isfirstime = true;
         vendorcode.forEach((element) => {
@@ -897,8 +896,8 @@ exports.getpriceupdatestatus = async (req, res) => {
           },
         },
       });
-      console.log(">>>>>>");
-      console.log(products_list.length);
+      // console.log(">>>>>>");
+      // console.log(products_list.length);
       response_message = products_list.length + " /";
 
       var gemstones_obj = JSON.parse(lastsearchcontent.params);

@@ -176,8 +176,8 @@ exports.applyvoucher = async (req, res) => {
         },
       },
     });
-    console.log(">>>><<<<<<<<");
-    console.log(JSON.stringify(coupon_info));
+    // console.log(">>>><<<<<<<<");
+    // console.log(JSON.stringify(coupon_info));
     if (coupon_info) {
       // attributes_condition.push({
       //   attributes:{
@@ -240,14 +240,14 @@ exports.applyvoucher = async (req, res) => {
         shopping_cart_id: cart_id,
       },
     });
-    console.log(">>>><<<<<<<<");
+    // console.log(">>>><<<<<<<<");
     var eligible_amount = 0;
     shoppingcart.forEach((element) => {
       if (element.trans_sku_list) {
         eligible_amount = eligible_amount + element.trans_sku_list.markup_price;
       }
 
-      console.log(JSON.stringify(eligible_amount));
+      // console.log(JSON.stringify(eligible_amount));
     });
 
     models.vouchers
@@ -264,11 +264,11 @@ exports.applyvoucher = async (req, res) => {
       })
       .then(async (giftwrapobj) => {
         var message_response = "";
-        console.log("_____userstatus");
-        console.log(isloggedin);
-        console.log(giftwrapobj.isloginneeded);
+        // console.log("_____userstatus");
+        // console.log(isloggedin);
+        // console.log(giftwrapobj.isloginneeded);
 
-        console.log("_______________");
+        // console.log("_______________");
         if (!giftwrapobj.isloginneeded) {
           isloggedin = true;
         }
@@ -323,11 +323,11 @@ exports.applyvoucher = async (req, res) => {
               cart_id +
               "'";
           }
-          console.log(JSON.stringify(query));
+          // console.log(JSON.stringify(query));
 
           await models.sequelize.query(query).then(([results, metadata]) => {
             // Results will be an empty array and metadata will contain the number of affected rows.
-            console.log(JSON.stringify(metadata));
+            // console.log(JSON.stringify(metadata));
             models.shopping_cart
               .findOne({
                 where: {
@@ -344,7 +344,7 @@ exports.applyvoucher = async (req, res) => {
               });
           });
         } else {
-          console.log("voucher invalid");
+          // console.log("voucher invalid");
           if (!isloggedin) {
             res.send(409, {
               status: "409",
@@ -390,8 +390,8 @@ exports.applyvoucher = async (req, res) => {
 exports.paymentsuccess = async (req, res) => {
   try {
     const { TRANSACTIONID } = req.body;
-    console.log("???XXXXXXXXXXXXXXXXXXX");
-    console.log(JSON.stringify(req.body));
+    // console.log("???XXXXXXXXXXXXXXXXXXX");
+    // console.log(JSON.stringify(req.body));
     // if(txndata.TRANSACTIONSTATUS == '200')
     // {
     let transid = req.body.TRANSACTIONID;
@@ -512,7 +512,7 @@ exports.resendorderemail = async (req, res) => {
 
 exports.paymentfailure = async (req, res) => {
   try {
-    console.log(JSON.stringify(req.body));
+    // console.log(JSON.stringify(req.body));
     if (req.body && req.body.oid) {
       let orderobj = await models.orders.findOne({
         where: {
@@ -734,7 +734,7 @@ exports.sendtoairpay = async (req, res) => {
       buyerCountry +
       cartval +
       paymentid;
-    console.log(alldata);
+    // console.log(alldata);
     let udata = username + ":|:" + password;
     let privatekey = sha256(secret + "@" + udata);
     let aldata = alldata + dateformat(now, "yyyy-mm-dd");
@@ -760,7 +760,7 @@ exports.sendtoairpay = async (req, res) => {
       checksum: checksum,
       paymentid,
     };
-    console.log(JSON.stringify(bodyparams));
+    // console.log(JSON.stringify(bodyparams));
     //   request({
     //     url: 'https://payments.airpay.co.in/pay/index.php',
     //     method: "POST",
@@ -832,7 +832,7 @@ exports.removecartitem = async (req, res) => {
           shopping_cart_id: cart_id,
         },
       });
-      console.log("cartline length");
+      // console.log("cartline length");
 
       await models.shopping_cart
         .update(
@@ -849,7 +849,7 @@ exports.removecartitem = async (req, res) => {
           res.send(200, { message: "You removed this product successfully" });
         })
         .catch((reason) => {
-          console.log(reason);
+          // console.log(reason);
           res.status(500).send(reason);
         });
     } else {
@@ -863,7 +863,7 @@ exports.removecartitem = async (req, res) => {
           res.send(200, { message: "You removed this product successfully" });
         })
         .catch((reason) => {
-          console.log(reason);
+          // console.log(reason);
           res.status(500).send(reason);
         });
     }
@@ -901,7 +901,7 @@ exports.updatecartitem = async (req, res) => {
         shopping_cart_id: cart_id,
       },
     });
-    console.log("cartline length");
+    // console.log("cartline length");
 
     await models.shopping_cart
       .update(
@@ -918,7 +918,7 @@ exports.updatecartitem = async (req, res) => {
         res.send(200, { message: "Update product successfully" });
       })
       .catch((reason) => {
-        console.log(reason);
+        // console.log(reason);
       });
   } catch (err) {
     console.log(
@@ -973,11 +973,11 @@ exports.addtocart = async (req, res) => {
       });
       let cartlines = [];
       products.forEach((element) => {
-        console.log("productscart");
-        console.log(product_in_cart.length);
+        // console.log("productscart");
+        // console.log(product_in_cart.length);
 
         if (cartproducts.indexOf(element.sku_id) == -1) {
-          console.log("updated");
+          // console.log("updated");
           if (element.sku_id) {
             let prod_count = parseInt(element.qty);
             const lineobj = {
@@ -987,7 +987,7 @@ exports.addtocart = async (req, res) => {
               qty: element.qty,
               price: prod_count * element.price,
             };
-            console.log(JSON.stringify(lineobj));
+            // console.log(JSON.stringify(lineobj));
 
             cartlines.push(lineobj);
           }
@@ -995,21 +995,21 @@ exports.addtocart = async (req, res) => {
         console.log("cartline length" + cartlines.length);
       });
 
-      console.log("cartline length");
+      // console.log("cartline length");
       if (cartlines.length > 0) {
         await models.shopping_cart_item.bulkCreate(cartlines, {
           individualHooks: true,
         });
       }
 
-      console.log("cartline length212");
+      // console.log("cartline length212");
       let gross_amount = await models.shopping_cart_item.findOne({
         attributes: [[squelize.literal("SUM(price)"), "price"]],
         where: {
           shopping_cart_id: cart_id,
         },
       });
-      console.log("cartline length");
+      // console.log("cartline length");
 
       await models.shopping_cart
         .update(
@@ -1042,7 +1042,7 @@ exports.addtocart = async (req, res) => {
 };
 exports.uploadimage = (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     const { foldername } = req.body;
     let extension = req.body.image;
     let basefolder = "base_images";
@@ -1057,7 +1057,7 @@ exports.uploadimage = (req, res) => {
       "." +
       extension.replace("jpeg", "jpg").toLowerCase();
     const fileType = req.body.image;
-    console.log(fileName);
+    // console.log(fileName);
 
     const s3Params = {
       Bucket: S3_BUCKET,
@@ -1068,7 +1068,7 @@ exports.uploadimage = (req, res) => {
     };
     s3.getSignedUrl("putObject", s3Params, (err, data) => {
       if (err) {
-        console.log(data);
+        // console.log(data);
         res.json({ success: false, error: err });
         return false;
       }
@@ -1136,7 +1136,7 @@ exports.adduseraddress = async (req, res) => {
           default_shipping: false,
         };
       }
-      console.log(JSON.stringify(address_obj));
+      // console.log(JSON.stringify(address_obj));
       if (id) {
         let branchobj = await models.user_address.update(address_obj, {
           returning: true,
@@ -1376,7 +1376,7 @@ async function updateshippingcharge(cart_id, res) {
         let attributeobj = attributes[key];
         if (Array.isArray(attributeobj)) {
           if (attributeobj.length > 0) {
-            console.log(attributeobj);
+            // console.log(attributeobj);
             let attrobj = {
               [Op.or]: attributeobj,
             };
@@ -1501,8 +1501,8 @@ exports.addaddress = async (req, res) => {
       if (address.length > addresscount) {
         processaddress(addresscount);
       } else {
-        console.log(address_arr.length);
-        console.log(JSON.stringify(address_arr));
+        // console.log(address_arr.length);
+        // console.log(JSON.stringify(address_arr));
 
         if (add_user_address.length > 0) {
           await models.user_address
@@ -1665,8 +1665,8 @@ exports.addorder = async (req, res) => {
             "UPDATE vouchers SET uses = (uses + 1) where code ='" +
             voucher_code.toUpperCase() +
             "'";
-          console.log("-------");
-          console.log(query);
+          // console.log("-------");
+          // console.log(query);
           await models.sequelize.query(query).then(([results, metadata]) => {
             // Results will be an empty array and metadata will contain the number of affected rows.
           });
@@ -1752,8 +1752,8 @@ async function sendorderconformationemail(order_id, res) {
     }
     var trans_sku_lists = [];
     var prod_image_condition = [];
-    console.log("orderinfodetails");
-    console.log(JSON.stringify(orderdetails));
+    // console.log("orderinfodetails");
+    // console.log(JSON.stringify(orderdetails));
     let skuqty = {};
     orderdetails.shopping_cart.shopping_cart_items.forEach((element) => {
       trans_sku_lists.push(element.product_sku);

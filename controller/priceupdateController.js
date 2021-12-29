@@ -142,7 +142,7 @@ exports.priceupdate = (req, res) => {
         where: product_whereclause,
       })
       .then((product) => {
-        console.log("total product ------- " + product.length);
+        // console.log("total product ------- " + product.length);
         //    writelog("total product ------- "+ product.length)
         products = product;
 
@@ -154,7 +154,7 @@ exports.priceupdate = (req, res) => {
     async function processproduct() {
       try {
         if (products.length > processed_product_count) {
-          console.log("sku count ------- ");
+          // console.log("sku count ------- ");
 
           start = new Date();
 
@@ -255,7 +255,7 @@ exports.priceupdate = (req, res) => {
             if (product_diamonds && product_diamonds.length > 0) {
               diamond_process(product_diamonds[0]);
             } else {
-              console.log("diamond price complete");
+              // console.log("diamond price complete");
               /*********** update next component */
               updategemstone_price(product_obj.vendor_code, productsku);
             }
@@ -345,7 +345,7 @@ exports.priceupdate = (req, res) => {
                   if (product_diamonds.length > processcount) {
                     diamond_process(product_diamonds[processcount]);
                   } else {
-                    console.log("diamond price complete with " + processcount);
+                    // console.log("diamond price complete with " + processcount);
                     /*********** update nextcomponent */
                   }
                 }
@@ -725,22 +725,22 @@ exports.priceupdate = (req, res) => {
             isskuexist();
           })
           .catch((reason) => {
-            console.log(reason);
+            // console.log(reason);
           });
       }
       async function isskuexist() {
         skucount = skucount + 1;
-        console.log("processsku" + skucount);
+        // console.log("processsku" + skucount);
 
         writelog("processsku" + skucount);
         if (product_obj.trans_sku_lists.length > skucount) {
           updateskuprice();
         } else {
-          console.log("i am here1");
+          // console.log("i am here1");
           var endDate = new Date();
           var seconds = (endDate.getTime() - startDate.getTime()) / 1000;
           startDate = new Date();
-          console.log(seconds);
+          // console.log(seconds);
 
           processed_product_count = processed_product_count + 1;
           await sleep(1000);
@@ -755,7 +755,7 @@ exports.priceupdate = (req, res) => {
 
             sendMail(emilreceipiants, JSON.stringify(product_ids));
           }
-          console.log(JSON.stringify(product_ids));
+          // console.log(JSON.stringify(product_ids));
 
           processproduct();
         }
@@ -870,8 +870,8 @@ exports.priceupdate = (req, res) => {
 exports.silverproductpriceupdate = (req, res) => {
   try {
     const { prodlist } = req.body;
-    console.log("CCCCCCC");
-    console.log(req.hostname);
+    // console.log("CCCCCCC");
+    // console.log(req.hostname);
 
     // prodlist.forEach(async (priceobj, index) => {
     //   // if(index == 0)

@@ -33,14 +33,14 @@ exports.splitdiamondpriceupdate = (req, res) => {
         if (prod_trans) {
           product_skus = prod_trans.trans_sku_lists;
           if (product_skus.length > 0) {
-            console.log(JSON.stringify(prod_trans.product_id));
+            // console.log(JSON.stringify(prod_trans.product_id));
             diamondpricesetup(product_skus[processed_sku_count], prod_trans);
           } else {
           }
         }
 
         async function diamondpricesetup(skuobj, product_obj) {
-          console.log(JSON.stringify(product_obj));
+          // console.log(JSON.stringify(product_obj));
           var diamondsetups = [];
           if (skuobj) {
             let sku_diamonds = await splitprice.skudiamond(
@@ -54,7 +54,7 @@ exports.splitdiamondpriceupdate = (req, res) => {
             async function processdiamond(process_diamond_count) {
               if (sku_diamonds.length > process_diamond_count) {
                 let diamondobj = sku_diamonds[process_diamond_count];
-                console.log(JSON.stringify(product_obj));
+                // console.log(JSON.stringify(product_obj));
                 var conditionobj = {
                   vendor_code: product_obj.vendor_code,
                   diamond_colour: diamondobj.diamond_clarity,
@@ -178,7 +178,7 @@ exports.splitgoldpriceupdate = (req, res) => {
       if (products.length > processed_product_count) {
         let product_id = products[processed_product_count];
         let prod_trans = await splitprice.producttransskus(product_id);
-        console.log(JSON.stringify(prod_trans));
+        // console.log(JSON.stringify(prod_trans));
         if (prod_trans) {
           product_skus = prod_trans.trans_sku_lists;
           if (product_skus.length > 0) {
@@ -466,7 +466,7 @@ exports.splitgemstonepriceupdate = (req, res) => {
         if (prod_trans) {
           product_skus = prod_trans.trans_sku_lists;
           if (product_skus.length > 0) {
-            console.log(JSON.stringify(prod_trans.product_id));
+            // console.log(JSON.stringify(prod_trans.product_id));
             gemstonepricesetup(product_skus[processed_sku_count], prod_trans);
           } else {
           }
@@ -481,10 +481,10 @@ exports.splitgemstonepriceupdate = (req, res) => {
               product_obj.product_id
             );
             gemstone_component_count = sku_gemstones.length;
-            console.log("gemstonsesval");
-            console.log(sku_gemstones.length);
+            // console.log("gemstonsesval");
+            // console.log(sku_gemstones.length);
             if (sku_gemstones.length > 0) {
-              console.log("gemstone");
+              // console.log("gemstone");
 
               gemstone_component_count++;
               gemstone_process(sku_gemstones[0], product_obj.vendor_code);
@@ -508,9 +508,9 @@ exports.splitgemstonepriceupdate = (req, res) => {
               } else {
                 whereclause["rate_type"] = 2;
               }
-              console.log(JSON.stringify(whereclause));
-              console.log(JSON.stringify(gemstoneobj.gemstone_type));
-              console.log(JSON.stringify(stoneweight));
+              // console.log(JSON.stringify(whereclause));
+              // console.log(JSON.stringify(gemstoneobj.gemstone_type));
+              // console.log(JSON.stringify(stoneweight));
 
               models.gemstone_price_settings
                 .findAll({

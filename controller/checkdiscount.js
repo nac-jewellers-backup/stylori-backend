@@ -39,7 +39,7 @@ exports.checkdiscount = (req, res) => {
       },
     })
     .then((product) => {
-      console.log("======>");
+      // console.log("======>");
 
       product_type = product.product_type;
       product.product_occassions.forEach(function (element) {
@@ -51,9 +51,9 @@ exports.checkdiscount = (req, res) => {
       product.product_themes.forEach(function (element) {
         product_themes.push(element.theme_name);
       });
-      console.log(JSON.stringify(product_themes));
-      console.log(JSON.stringify(product_occassions));
-      console.log(JSON.stringify(product_styles));
+      // console.log(JSON.stringify(product_themes));
+      // console.log(JSON.stringify(product_occassions));
+      // console.log(JSON.stringify(product_styles));
       models.pricing_discount_setup
         .findAll({
           include: [

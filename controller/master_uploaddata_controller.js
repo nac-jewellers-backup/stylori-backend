@@ -39,14 +39,14 @@ exports.updateproduct_gender = async (req, res) => {
         if (product_msters.length > product_count) {
           updatemetalcolor(product_count);
         } else {
-          console.log("finished");
+          // console.log("finished");
         }
       } else {
         product_count++;
         if (product_msters.length > product_count) {
           updatemetalcolor(product_count);
         } else {
-          console.log("finished");
+          // console.log("finished");
         }
       }
     }
@@ -97,7 +97,7 @@ exports.updateproduct_color = async (req, res) => {
       if (product_msters.length > product_count) {
         updatemetalcolor(product_count);
       } else {
-        console.log("finished");
+        // console.log("finished");
       }
     }
   } catch (err) {
@@ -112,7 +112,7 @@ exports.updateproduct_color = async (req, res) => {
 };
 exports.updategemstonepricemaster = async (req, res) => {
   try {
-    console.log("iamhere");
+    // console.log("iamhere");
     var stonelist_str = req.body.gemstone;
     var stonelist_obj = JSON.parse(stonelist_str);
     var stones_arr = [];
@@ -132,7 +132,7 @@ exports.updategemstonepricemaster = async (req, res) => {
       };
       stones_arr.push(occassion);
     });
-    console.log(stones_arr.length);
+    // console.log(stones_arr.length);
     await models.gemstone_price_settings.bulkCreate(stones_arr, {
       individualHooks: true,
     });
@@ -184,7 +184,7 @@ exports.updateproductcreatedate = async (req, res) => {
         "' where generated_sku ='" +
         product_sku +
         "'";
-      console.log(query);
+      // console.log(query);
 
       await models.sequelize.query(query).then(([results, metadata]) => {
         // Results will be an empty array and metadata will contain the number of affected rows.
@@ -195,7 +195,7 @@ exports.updateproductcreatedate = async (req, res) => {
       }
     }
     // })
-    console.log("finished");
+    // console.log("finished");
   } catch (err) {
     console.log(
       new Date().toLocaleString("en-US", {
@@ -249,7 +249,7 @@ exports.updatedefaultimage = async (req, res) => {
       if (product_msters.length > product_count) {
         updatemetalcolor(product_count);
       } else {
-        console.log("finished");
+        // console.log("finished");
       }
     }
   } catch (err) {
@@ -300,7 +300,7 @@ exports.updateproduct_purity = async (req, res) => {
       if (product_msters.length > product_count) {
         updatemetalcolor(product_count);
       } else {
-        console.log("finished");
+        // console.log("finished");
       }
     }
   } catch (err) {
@@ -377,13 +377,13 @@ exports.viewskupricesummary = async (req, res) => {
               if (materialobj.component.includes("diamond")) {
                 if (diamondetaial[diamond_count]) {
                   diamondcount = diamondcount + 1;
-                  console.log("dasdasdas");
+                  // console.log("dasdasdas");
                   let diamond_name =
                     "Diamond " +
                     diamondetaial[diamond_count].diamond_type +
                     " " +
                     diamondcount;
-                  console.log(JSON.stringify(diamondetaial[diamond_count]));
+                  // console.log(JSON.stringify(diamondetaial[diamond_count]));
                   materialobj["material_name"] =
                     diamond_name +
                     " (" +
@@ -500,7 +500,7 @@ exports.updateproduct_stonecolor = async (req, res) => {
     res.send(200, { message: stonecolor_obj.length });
 
     stonecolor_obj.forEach(async (element) => {
-      console.log(JSON.stringify(element));
+      // console.log(JSON.stringify(element));
       const product_stonecount = {
         id: uuidv1(),
         stonecount: element.stonecount,
@@ -524,7 +524,7 @@ exports.updateproduct_stonecolor = async (req, res) => {
 
 exports.updatecodpincodes = async (req, res) => {
   try {
-    console.log("I ma here");
+    // console.log("I ma here");
     var pincodes = req.body.cod_pincode;
     var pincodes_obj = JSON.parse(pincodes);
     var process_pincode_count = 0;
@@ -533,7 +533,7 @@ exports.updatecodpincodes = async (req, res) => {
     processpincode(process_pincode_count);
     async function processpincode(process_pincode_count) {
       var pincode = pincodes_obj[process_pincode_count];
-      console.log("I ma here" + pincode.pincode);
+      // console.log("I ma here" + pincode.pincode);
 
       await models.pincode_master.update(
         {
@@ -551,7 +551,7 @@ exports.updatecodpincodes = async (req, res) => {
       if (pincodes_obj.length > process_pincode_count) {
         processpincode(process_pincode_count);
       } else {
-        console.log("finished");
+        // console.log("finished");
       }
     }
   } catch (err) {
@@ -592,7 +592,7 @@ exports.updateurlparams = async (req, res) => {
       if (pincodes_obj.length > process_pincode_count) {
         processpincode(process_pincode_count);
       } else {
-        console.log("finished");
+        // console.log("finished");
       }
     }
   } catch (err) {
@@ -616,7 +616,7 @@ exports.updatepincode = async (req, res) => {
     processpincode(process_pincode_count);
     function processpincode(process_pincode_count) {
       var pincode = pincodes_obj[process_pincode_count].pincode;
-      console.log(pincode);
+      // console.log(pincode);
       request(
         {
           url: "http://www.postalpincode.in/api/pincode/" + pincode,
@@ -629,7 +629,7 @@ exports.updatepincode = async (req, res) => {
           if (res_obj && res_obj.PostOffice) {
             var post_offices = res_obj.PostOffice;
 
-            console.log(JSON.stringify(res_obj.PostOffice));
+            // console.log(JSON.stringify(res_obj.PostOffice));
             var postoffices_arr = [];
             post_offices.forEach((element) => {
               const post_off_obj = {
@@ -656,14 +656,14 @@ exports.updatepincode = async (req, res) => {
             if (pincodes_obj.length > process_pincode_count) {
               processpincode(process_pincode_count);
             } else {
-              console.log("finished");
+              // console.log("finished");
             }
           } else {
             process_pincode_count++;
             if (pincodes_obj.length > process_pincode_count) {
               processpincode(process_pincode_count);
             } else {
-              console.log("finished");
+              // console.log("finished");
             }
           }
         }
@@ -694,13 +694,13 @@ exports.updatereadytoship = async (req, res) => {
         "UPDATE trans_sku_lists SET  is_ready_to_ship = true where generated_sku ='" +
         product_sku +
         "'";
-      console.log(query);
+      // console.log(query);
 
       await models.sequelize.query(query).then(([results, metadata]) => {
         // Results will be an empty array and metadata will contain the number of affected rows.
       });
     });
-    console.log("finished");
+    // console.log("finished");
   } catch (err) {
     console.log(
       new Date().toLocaleString("en-US", {
@@ -728,13 +728,13 @@ exports.updatebestseller = async (req, res) => {
         " where product_id ='" +
         product_sku +
         "'";
-      console.log(query);
+      // console.log(query);
 
       await models.sequelize.query(query).then(([results, metadata]) => {
         // Results will be an empty array and metadata will contain the number of affected rows.
       });
     });
-    console.log("finished");
+    // console.log("finished");
   } catch (err) {
     console.log(
       new Date().toLocaleString("en-US", {
@@ -753,9 +753,9 @@ exports.updatecustomerreviews = async (req, res) => {
 
     var review_arr = [];
     reviews_array.forEach((reviewobj) => {
-      console.log(reviewobj.customer_name);
+      // console.log(reviewobj.customer_name);
 
-      console.log(reviewobj.product_code);
+      // console.log(reviewobj.product_code);
 
       const review_content = {
         id: uuidv1(),

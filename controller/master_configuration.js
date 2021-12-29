@@ -19,8 +19,8 @@ exports.managetaxsetup = async (req, res) => {
       isedit,
       isdelete,
     } = req.body;
-    console.log("sgstvalue");
-    console.log(sgst);
+    // console.log("sgstvalue");
+    // console.log(sgst);
     if (isedit) {
       await models.master_tax_settings.update(
         {
@@ -426,7 +426,7 @@ exports.manageshipmentsettings = async (req, res) => {
       isedit,
       isdelete,
     } = req.body;
-    console.log(JSON.stringify(rangetype));
+    // console.log(JSON.stringify(rangetype));
     if (isedit) {
       await models.shipping_charges.update(
         {
@@ -582,7 +582,7 @@ exports.manageshippingattributes = async (req, res) => {
       }
     });
 
-    console.log(product_attributes);
+    // console.log(product_attributes);
     await models.shipping_charges.update(
       {
         product_attributes: componentarr,
@@ -628,7 +628,7 @@ exports.managetaxattributes = async (req, res) => {
       }
     });
 
-    console.log(product_attributes);
+    // console.log(product_attributes);
     await models.master_tax_settings.update(
       {
         product_attributes: componentarr,
@@ -1652,7 +1652,7 @@ exports.manageroles = async (req, res) => {
         );
         res.send(200, { message: "Updated Successfully" });
       } catch (error) {
-        console.log("Error", error);
+        // console.log("Error", error);
         res.send(400, { message: "Some Error Occured!" });
       }
     } else {
@@ -1745,15 +1745,15 @@ exports.managepermissions = async (req, res) => {
               is_write: permissions[element].iswrite,
             };
             newpermissions.push(per_obj);
-            console.log(newpermissions);
+            // console.log(newpermissions);
           }
           if (index === permission_ids.length - 1) resolve();
         });
       });
 
       bar.then(async () => {
-        console.log("All done!");
-        console.log(newpermissions);
+        // console.log("All done!");
+        // console.log(newpermissions);
 
         let response = await models.role_permissions.bulkCreate(
           newpermissions,

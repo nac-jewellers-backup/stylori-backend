@@ -181,7 +181,7 @@ let getShippingDate = async ({ sku_id, current_datetime }) => {
                   totalDaysToShip,
                   "d"
                 );
-                console.log(shippingDate);
+                // console.log(shippingDate);
                 var holidayCount = getHolidayCount(
                   moment(current_datetime),
                   shippingDate

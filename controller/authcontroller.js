@@ -24,7 +24,7 @@ exports.signin = (req, res) => {
         ],
       })
       .then((user) => {
-        console.log(user);
+        // console.log(user);
         if (!user) {
           return res.status(404).send({ message: "User Does Not Exist" });
         }
@@ -82,7 +82,7 @@ exports.fbsignin = async (req, res) => {
         },
       })
       .then((user) => {
-        console.log(user);
+        // console.log(user);
         if (!user) {
           return res.status(404).send({ message: "User Does Not Exist" });
         }
@@ -189,7 +189,7 @@ exports.signup = (req, res) => {
             };
             userroles.push(roleobj);
           });
-          console.log(JSON.stringify(userroles));
+          // console.log(JSON.stringify(userroles));
           await models.user_roles.bulkCreate(userroles, {
             individualHooks: true,
           });
@@ -257,7 +257,7 @@ exports.changepassword = (req, res) => {
           });
         }
         if (newpassword) {
-          console.log(JSON.stringify(user));
+          // console.log(JSON.stringify(user));
           user
             .update({ password: bcrypt.hashSync(req.body.newpassword, 8) })
             .then(async (updatedUser) => {
@@ -298,7 +298,7 @@ exports.changepassword = (req, res) => {
 
 exports.verification = (req, res) => {
   try {
-    console.log(req.params.email);
+    // console.log(req.params.email);
     return models.User.findOne({
       where: { email: req.params.email },
     })
@@ -353,7 +353,7 @@ exports.verification = (req, res) => {
 };
 exports.resetpassword = (req, res) => {
   try {
-    console.log("usertokenval " + req.userName);
+    // console.log("usertokenval " + req.userName);
     return models.users
       .findOne({
         where: { email: req.userName },
@@ -429,13 +429,13 @@ exports.verifypasswordtoken = (req, res) => {
 };
 exports.forgotpassword = (req, res) => {
   try {
-    console.log(JSON.stringify(req.body.email));
+    // console.log(JSON.stringify(req.body.email));
     models.users
       .findOne({
         where: { email: req.body.email },
       })
       .then(async (user) => {
-        console.log(user.id);
+        // console.log(user.id);
         // if user email already exists
         if (user) {
           // if(!user.isVerified) {
@@ -494,7 +494,7 @@ exports.forgotpassword = (req, res) => {
 };
 exports.userContent = (req, res) => {
   try {
-    console.log(req.userName);
+    // console.log(req.userName);
     models.User.findOne({
       where: { userName: req.userName },
       attributes: ["userName"],
@@ -532,7 +532,7 @@ exports.userContent = (req, res) => {
 };
 exports.updateuserprofile = (req, res) => {
   try {
-    console.log(req.userName);
+    // console.log(req.userName);
     const {
       contactno,
       pincode,
@@ -588,7 +588,7 @@ exports.guestlogin = (req, res) => {
       .then((user) => {
         if (!user) {
           //  otp = '000000'
-          console.log(otp);
+          // console.log(otp);
           const guest = {
             id: uuidv1(),
             email: email,
@@ -630,7 +630,7 @@ exports.guestlogin = (req, res) => {
         }
       })
       .catch((err) => {
-        console.log(JSON.stringify(err));
+        // console.log(JSON.stringify(err));
         res.status(500).json({
           description: "Can not access User Page",
           error: err,
@@ -1003,7 +1003,7 @@ exports.getadminusers = async (req, res) => {
 exports.getpageaccess = async (req, res) => {
   try {
     const { userName } = req;
-    console.log(userName);
+    // console.log(userName);
     let userobj = await models.users.findOne({
       attributes: ["id"],
       where: {
@@ -1128,10 +1128,10 @@ exports.getuserinfo = async (req, res) => {
         addressess.push(addresobj);
       });
     }
-    console.log("+XXXXXXXX+");
+    // console.log("+XXXXXXXX+");
 
     if (!useraddressobj.city && addressess.length > 0) {
-      console.log("+XXXXXXXX+");
+      // console.log("+XXXXXXXX+");
       useraddressobj = addressess[0];
     }
     userprofile["address"] = useraddressobj;

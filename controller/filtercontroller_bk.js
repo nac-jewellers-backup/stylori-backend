@@ -478,10 +478,10 @@ exports.filteroptions = async (req, res) => {
     //   "max":price_range1.selling_price
     // }
 
-    console.log("seoparams");
-    console.log(JSON.stringify(seofilterattribute));
-    console.log(JSON.stringify(seofilterattributevalue));
-    console.log("==========");
+    // console.log("seoparams");
+    // console.log(JSON.stringify(seofilterattribute));
+    // console.log(JSON.stringify(seofilterattributevalue));
+    // console.log("==========");
     var seooptions = await models.seo_url_priorities.findAll({
       where: {
         attribute_name: {

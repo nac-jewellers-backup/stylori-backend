@@ -63,9 +63,9 @@ exports.updatesize = async (req, res) => {
           prod_id +
           "'";
         await models.sequelize.query(query).then(([results, metadata]) => {
-          console.log("completed" + processcount);
-          console.log("completed" + JSON.stringify(results));
-          console.log("completed" + JSON.stringify(metadata));
+          // console.log("completed" + processcount);
+          // console.log("completed" + JSON.stringify(results));
+          // console.log("completed" + JSON.stringify(metadata));
 
           prod_size_varient = [];
           processcount++;
@@ -108,7 +108,7 @@ exports.updatesize = async (req, res) => {
         //             // Results will be an empty array and metadata will contain the number of affected rows.
         //              })
       } else {
-        console.log("request completed");
+        // console.log("request completed");
         res.send(200, { message: "success" });
       }
     }

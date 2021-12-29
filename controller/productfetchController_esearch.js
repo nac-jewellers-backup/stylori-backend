@@ -115,18 +115,18 @@ exports.filteroptions = async (req, res) => {
 
         sortelement = [["selling_qty", "asc"]];
       }
-      console.log("sort issue");
-      console.log(JSON.stringify(sortelement));
+      // console.log("sort issue");
+      // console.log(JSON.stringify(sortelement));
       //  [{ model: models.trans_sku_lists },  'selling_price', 'desc']
-      console.log("updatedatavalue");
-      console.log(JSON.stringify(sortBy));
+      // console.log("updatedatavalue");
+      // console.log(JSON.stringify(sortBy));
 
-      console.log(JSON.stringify(sortelement));
+      // console.log(JSON.stringify(sortelement));
     }
 
     if (metalcolor) {
-      console.log("metal colur image");
-      console.log(JSON.stringify(metalcolor));
+      // console.log("metal colur image");
+      // console.log(JSON.stringify(metalcolor));
       includeclause.push({
         attributes: ["product_color", "product_id", "is_active"],
         model: models.product_metalcolours,
@@ -427,10 +427,10 @@ exports.filteroptions = async (req, res) => {
         };
       }
     }
-    console.log("><><<><><");
-    console.log(metalpurity);
+    // console.log("><><<><><");
+    // console.log(metalpurity);
     if (metalpurity) {
-      console.log("metalpurity class set");
+      // console.log("metalpurity class set");
       // includeclause.push({
       //   model : models.trans_sku_lists,
       //   attributes:[
@@ -471,7 +471,7 @@ exports.filteroptions = async (req, res) => {
       });
     }
 
-    console.log(JSON.stringify(includeclause));
+    // console.log(JSON.stringify(includeclause));
     // var products_all = await models.product_lists.findAll({
     //       attributes:[['product_name','productName'],
     //     ['product_id','productId'],
@@ -576,8 +576,8 @@ exports.filteroptions = async (req, res) => {
       //   ]
       // ]
     });
-    console.log("XXXXXXXXX");
-    console.log(JSON.stringify(whereclause));
+    // console.log("XXXXXXXXX");
+    // console.log(JSON.stringify(whereclause));
     products_all = await models.product_lists.findAll({
       include: includeclause,
       where: whereclause,

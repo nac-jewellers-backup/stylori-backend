@@ -129,13 +129,13 @@ exports.filteroptions = async (req, res) => {
 
         sortelement = [["selling_qty", "asc"]];
       }
-      console.log("sort issue");
-      console.log(JSON.stringify(sortelement));
+      // console.log("sort issue");
+      // console.log(JSON.stringify(sortelement));
       //  [{ model: models.trans_sku_lists },  'selling_price', 'desc']
-      console.log("updatedatavalue");
-      console.log(JSON.stringify(sortBy));
+      // console.log("updatedatavalue");
+      // console.log(JSON.stringify(sortBy));
 
-      console.log(JSON.stringify(sortelement));
+      // console.log(JSON.stringify(sortelement));
     }
     if (byweight) {
       includeclause.push({
@@ -169,8 +169,8 @@ exports.filteroptions = async (req, res) => {
       });
     }
     if (metalcolor) {
-      console.log("metal colur image");
-      console.log(JSON.stringify(metalcolor));
+      // console.log("metal colur image");
+      // console.log(JSON.stringify(metalcolor));
       // includeclause.push({
       //   model : models.product_metalcolours,
       //   where: {
@@ -397,10 +397,10 @@ exports.filteroptions = async (req, res) => {
         };
       }
     }
-    console.log("><><<><><");
-    console.log(metalpurity);
+    // console.log("><><<><><");
+    // console.log(metalpurity);
     if (metalpurity) {
-      console.log("metalpurity class set");
+      // console.log("metalpurity class set");
       // includeclause.push({
       //   model : models.trans_sku_lists,
       //   attributes:[
@@ -423,7 +423,7 @@ exports.filteroptions = async (req, res) => {
       delete skuwhereclause["isdefault"];
 
       skuwhereclause["purity"] = metalpurity;
-      // console.log(JSON.stringify(includeclause))
+      // // console.log(JSON.stringify(includeclause))
       // whereclause['$product_purities.purity$']
     }
     if (isJewellery) {
@@ -443,7 +443,7 @@ exports.filteroptions = async (req, res) => {
       });
     }
 
-    console.log(JSON.stringify(includeclause));
+    // console.log(JSON.stringify(includeclause));
     // var products_all = await models.product_lists.findAll({
     //       attributes:[['product_name','productName'],
     //     ['product_id','productId'],
@@ -498,8 +498,8 @@ exports.filteroptions = async (req, res) => {
       });
     }
     var products_all = [];
-    console.log("skucontentwhereclause");
-    console.log("skuwhereclause", JSON.stringify(skuwhereclause));
+    // console.log("skucontentwhereclause");
+    // console.log("skuwhereclause", JSON.stringify(skuwhereclause));
 
     // if(isproduct_query)
     // {
@@ -536,8 +536,8 @@ exports.filteroptions = async (req, res) => {
       //   ]
       // ]
     });
-    console.log("XXXXXXXXX");
-    console.log(JSON.stringify(whereclause));
+    // console.log("XXXXXXXXX");
+    // console.log(JSON.stringify(whereclause));
     const { count, rows } = await models.product_lists.findAndCountAll({
       include: includeclause,
       where: whereclause,
@@ -547,12 +547,12 @@ exports.filteroptions = async (req, res) => {
       distinct: "product_lists.product_id",
       order: sortelement,
     });
-    console.log("count value" + count);
-    console.log("rows value" + rows.length);
+    // console.log("count value" + count);
+    // console.log("rows value" + rows.length);
 
     var product_ids = [];
     rows.forEach((element) => {
-      console.log("rows value" + element.product_id);
+      // console.log("rows value" + element.product_id);
 
       product_ids.push(element.product_id);
     });
