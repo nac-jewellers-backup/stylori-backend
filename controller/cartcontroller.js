@@ -424,7 +424,7 @@ exports.paymentsuccess = async (req, res) => {
   (select product_sku,qty from shopping_cart_items where shopping_cart_id in (
     select cart_id from public.orders where id = '${orderobj.id}'
   )) as sub where i.generated_sku = sub.product_sku and i.number_of_items > 0`);
-    SendOrderConfirmationEmailNoReturn(orderobj.id, res);
+    SendOrderConfirmationEmailNoReturn(orderobj.id);
     let redirectionurl = process.env.baseurl + "/paymentsuccess/" + orderobj.id;
 
     return res.redirect(redirectionurl);
@@ -1853,7 +1853,7 @@ async function sendorderconformationemail(order_id, res) {
     );
   }
 }
-async function SendOrderConfirmationEmailNoReturn(order_id, res) {
+async function SendOrderConfirmationEmailNoReturn(order_id) {
   try {
     var addresstypes = [1, 3];
     let orderdetails = await models.orders.findOne({
