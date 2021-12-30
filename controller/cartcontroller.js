@@ -424,7 +424,7 @@ exports.paymentsuccess = async (req, res) => {
   (select product_sku,qty from shopping_cart_items where shopping_cart_id in (
     select cart_id from public.orders where id = '${orderobj.id}'
   )) as sub where i.generated_sku = sub.product_sku and i.number_of_items > 0`);
-    successSendorderconformationemail(orderobj.id);
+    sendorderconformationemail(orderobj.id, res);
     let redirectionurl = process.env.baseurl + "/paymentsuccess/" + orderobj.id;
 
     return res.redirect(redirectionurl);
