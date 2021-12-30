@@ -424,7 +424,7 @@ exports.paymentsuccess = async (req, res) => {
   (select product_sku,qty from shopping_cart_items where shopping_cart_id in (
     select cart_id from public.orders where id = '${orderobj.id}'
   )) as sub where i.generated_sku = sub.product_sku and i.number_of_items > 0`);
-    sendorderconformationemail(orderobj.id, res);
+    SendOrderConfirmationEmailNoReturn(orderobj.id, res);
     let redirectionurl = process.env.baseurl + "/paymentsuccess/" + orderobj.id;
 
     return res.redirect(redirectionurl);
@@ -1844,11 +1844,16 @@ async function sendorderconformationemail(order_id, res) {
       imagelist,
     });
   } catch (err) {
-    console.log("Error while sending email : ", err);
+    console.log(
+      new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Calcutta",
+      }) +
+        " - Error while sending mail : " +
+        err
+    );
   }
 }
-
-async function successSendorderconformationemail(order_id) {
+async function SendOrderConfirmationEmailNoReturn(order_id, res) {
   try {
     var addresstypes = [1, 3];
     let orderdetails = await models.orders.findOne({
@@ -1974,13 +1979,13 @@ async function successSendorderconformationemail(order_id) {
     console.log(
       "Email has been sent successfully after a successfull payment!"
     );
-    resolve({
-      order: orderdetails,
-      // orderdetails,
-      skudetails,
-      prodimages,
-      imagelist,
-    });
+    // resolve({
+    //   order: orderdetails,
+    //   // orderdetails,
+    //   skudetails,
+    //   prodimages,
+    //   imagelist,
+    // });
     // return res.send(200, {
     //   order: orderdetails,
     //   // orderdetails,
@@ -1989,8 +1994,14 @@ async function successSendorderconformationemail(order_id) {
     //   imagelist,
     // });
   } catch (err) {
-    reject(err);
-    console.log("Error while sending email : ", err);
+    console.log(
+      new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Calcutta",
+      }) +
+        " - Error while sending mail : " +
+        err
+    );
+    // reject(err);
   }
 }
 
