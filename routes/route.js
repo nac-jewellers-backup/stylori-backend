@@ -336,7 +336,7 @@ module.exports = function (app) {
     try {
       const _obj = {
         method: "post",
-        url: lturl,
+        url: "http://localhost:8000/productesearch", //turl,
         data: {},
       };
 
@@ -420,7 +420,6 @@ module.exports = function (app) {
           Promise.all([
             initIndex(_index[0], _py1s),
             initIndex(_index[1], false),
-
             initIndex(_index[2], _py1s),
           ]).then((init_index) => {
             console.log("» » » Index created");
@@ -434,6 +433,7 @@ module.exports = function (app) {
                 console.log("» » » Mapping created");
                 axios(_obj)
                   .then(async (response) => {
+                    console.log("» »", response.status);
                     let productSearch = response["data"]["product_list"];
                     let skuSearch = response["data"]["sku_list"];
                     let seoSearch = response["data"]["seo_list"];
@@ -514,40 +514,58 @@ module.exports = function (app) {
                         })
                       );
                     })();
+                    skuArray = arrayChunk(skuArray, 8);
+                    for (let index = 0; index < skuArray.length; index++) {
+                      const element = skuArray[index];
+                      await docBulk(element);
+                    }
+                    productArray = arrayChunk(productArray, 8);
+                    for (let index = 0; index < productArray.length; index++) {
+                      const element = productArray[index];
+                      await docBulk(element);
+                    }
+                    seoArray = arrayChunk(seoArray, 8);
+                    for (let index = 0; index < seoArray.length; index++) {
+                      const element = seoArray[index];
+                      await docBulk(element);
+                    }
+                    res
+                      .status(200)
+                      .send({ message: "Successfully reindexed all data!" });
+                    // skuArray.map((el) => doc_array.push(docBulk(el)));
 
-                    skuArray = arrayChunk(skuArray, 30000);
+                    // doc_array.push(docBulk(productArray));
 
-                    skuArray.map((el) => doc_array.push(docBulk(el)));
+                    // doc_array.push(docBulk(seoArray));
 
-                    doc_array.push(docBulk(productArray));
+                    // console.info("totalPromises", doc_array.length);
 
-                    doc_array.push(docBulk(seoArray));
-
-                    console.info("totalPromises", doc_array.length);
-
-                    Promise.all(doc_array)
-                      .then((response) => {
-                        console.log("» » » Docs Uploaded");
-                        console.log("Promises Resolved ", response.length);
-                      })
-                      .catch((_e) => {
-                        console.log(_e.message);
-                        console.log("Errror");
-                      });
+                    // Promise.all(doc_array)
+                    //   .then((response) => {
+                    //     console.log("» » » Docs Uploaded");
+                    //     console.log("Promises Resolved ", response.length);
+                    //   })
+                    //   .catch((_e) => {
+                    //     console.log(_e);
+                    //     console.log("Errror");
+                    //   });
                   })
                   .catch((fetch_err) => {
                     console.error(fetch_err);
+                    res.status(500).send({ ...fetch_err });
                   });
               })
               .catch((init_err) => {
                 console.log(init_err);
                 console.log("Error In Init Index");
+                res.status(500).send({ ...init_err });
               });
           });
         })
         .catch((err_del) => {
           console.log(err_del);
           console.log("Error In Delete-Index");
+          res.status(500).send({ ...err_del });
         });
     } catch (err) {
       console.log(
@@ -557,6 +575,7 @@ module.exports = function (app) {
           " - Error message : " +
           err
       );
+      res.status(500).send({ ...err });
     }
   });
   app.post("/esearch_forceindex", async function (req, res) {

@@ -135,6 +135,7 @@ module.exports = {
             });
           },
           function (_err) {
+            console.log(_err);
             return reject({ data: false, status: 500, message: _err.message });
           }
         );
