@@ -674,8 +674,10 @@ exports.sendtoairpay = async (req, res) => {
         where: {
           id: orderid,
         },
+        logging: console.log,
       });
       cartvalueobj = JSON.parse(JSON.stringify(cartvalueobj));
+      console.log(JSON.stringify(cartvalueobj));
       if (cartvalueobj) {
         if (cartvalueobj.user_profile) {
           buyerEmail = cartvalueobj.user_profile.email || "";
