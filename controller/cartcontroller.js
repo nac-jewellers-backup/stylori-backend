@@ -773,7 +773,7 @@ exports.sendtoairpay = async (req, res) => {
     // }, function(error, response, body) {
     //   console.log(JSON.stringify(response))
     //   console.log(JSON.stringify(body))
-    console.log(JSON.stringify("responseData", bodyparams));
+    console.log("responseData", JSON.stringify(bodyparams));
     res.send(200, bodyparams);
 
     //});
