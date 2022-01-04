@@ -336,7 +336,7 @@ module.exports = function (app) {
     try {
       const _obj = {
         method: "post",
-        url: "http://localhost:8000/productesearch", //turl,
+        url: turl,
         data: {},
       };
 
