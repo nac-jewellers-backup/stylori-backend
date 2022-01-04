@@ -646,6 +646,7 @@ exports.sendtoairpay = async (req, res) => {
   try {
     const { buyerPhone, buyerPinCode, orderid, amount, customvar, subtype } =
       req.body;
+    console.log("Creating AIRPAY request for Order_ID", orderid);
     var paymentid = 0;
     var cartval = 1.0;
     var buyerEmail = "";
