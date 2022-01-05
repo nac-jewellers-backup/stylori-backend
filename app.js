@@ -101,7 +101,7 @@ connString = {
 
 app.use(
   postgraphile(connString, {
-    graphiql: true,
+    graphiql: process.env.NODE_ENV.toLowerCase() !== "production",
     live: true,
     watchPg: true,
     appendPlugins: [
