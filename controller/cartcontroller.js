@@ -274,7 +274,9 @@ exports.applyvoucher = async (req, res) => {
             discountval +
             ", discounted_price = (gross_amount - " +
             discountval +
-            ") where id ='" +
+            "), voucher_code = '" +
+            vouchercode +
+            "' where id ='" +
             cart_id +
             "'";
         } else {
@@ -288,7 +290,9 @@ exports.applyvoucher = async (req, res) => {
             discountvalue +
             " , discounted_price = (gross_amount -" +
             discountvalue +
-            ") where id ='" +
+            "), voucher_code = '" +
+            vouchercode +
+            "' where id ='" +
             cart_id +
             "'";
         }

@@ -26,7 +26,10 @@ app.use(express.urlencoded({ limit: "50mb" }));
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
   next();
 });
 // const config = {
@@ -84,10 +87,14 @@ connString = {
 
 app.use(
   postgraphile(connString, {
-    graphiql: true,
+    graphiql: process.env.NODE_ENV.toLowerCase() !== "production",
     live: true,
-
-    appendPlugins: [MySchemaExtensionPlugin, ConnectionFilterPlugin, PgOrderByRelatedPlugin, PgAggregatesPlugin],
+    appendPlugins: [
+      MySchemaExtensionPlugin,
+      ConnectionFilterPlugin,
+      PgOrderByRelatedPlugin,
+      PgAggregatesPlugin,
+    ],
     graphileBuildOptions: {
       connectionFilterRelations: true,
       connectionFilterAllowNullInput: true,
@@ -97,4 +104,6 @@ app.use(
   })
 );
 
-app.listen(process.env.PORT, () => console.log(`NAC Ecommerce unning ${process.env.PORT}!`));
+app.listen(process.env.PORT, () =>
+  console.log(`NAC Ecommerce unning ${process.env.PORT}!`)
+);
