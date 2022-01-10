@@ -352,12 +352,12 @@ exports.applyvoucher = async (req, res) => {
   // res.send(200,{message:"Applied Succesfully","discounted_price":1000,"tax_price":320})
 };
 exports.paymentsuccess = async (req, res) => {
-  const { TRANSACTIONID } = req.body;
+  const { TRANSACTIONID, TRANSACTIONPAYMENTSTATUS } = req.body;
   console.log("???XXXXXXXXXXXXXXXXXXX");
   console.log(JSON.stringify(req.body));
   // if(txndata.TRANSACTIONSTATUS == '200')
   // {
-  let transid = req.body.TRANSACTIONID;
+  let transid = TRANSACTIONID;
 
   let orderobj = await models.orders.findOne({
     where: {
@@ -368,26 +368,32 @@ exports.paymentsuccess = async (req, res) => {
     order_id: orderobj.id,
     payment_response: JSON.stringify(req.body),
   };
-  const update_cartstatus = {
-    status: "paid",
-  };
-  let updatecart = await models.shopping_cart.update(update_cartstatus, {
-    returning: true,
-    where: {
-      id: orderobj.cart_id,
-    },
-  });
+  let redirectionurl = process.env.baseurl;
+  if (TRANSACTIONPAYMENTSTATUS == "SUCCESS") {
+    const update_cartstatus = {
+      status: "paid",
+    };
+    let updatecart = await models.shopping_cart.update(update_cartstatus, {
+      returning: true,
+      where: {
+        id: orderobj.cart_id,
+      },
+    });
+    //update inventory post successfull payment
+    let updateInventory = await models.sequelize
+      .query(`update inventories i set number_of_items = (number_of_items - sub.qty) from 
+(select product_sku,qty from shopping_cart_items where shopping_cart_id in (
+  select cart_id from public.orders where id = '${orderobj.id}'
+)) as sub where i.generated_sku = sub.product_sku and i.number_of_items > 0`);
+    sendorderconformationemail(orderobj.id);
+    redirectionurl = redirectionurl + "/paymentsuccess/" + orderobj.id;
+  } else {
+    redirectionurl = redirectionurl + "/cart";
+  }
+
   let new_cart = await models.payment_details.create(paymentcontent, {
     returning: true,
   });
-  //update inventory post successfull payment
-  let updateInventory = await models.sequelize
-    .query(`update inventories i set number_of_items = (number_of_items - sub.qty) from 
-  (select product_sku,qty from shopping_cart_items where shopping_cart_id in (
-    select cart_id from public.orders where id = '${orderobj.id}'
-  )) as sub where i.generated_sku = sub.product_sku and i.number_of_items > 0`);
-  sendorderconformationemail(orderobj.id);
-  let redirectionurl = process.env.baseurl + "/paymentsuccess/" + orderobj.id;
 
   return res.redirect(redirectionurl);
 };
