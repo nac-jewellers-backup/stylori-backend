@@ -101,6 +101,7 @@ module.exports = function (app) {
   app.post("/generatepaymenturl", cartcontroller.generatepaymenturl);
   app.post("/paymentsuccess", cartcontroller.paymentsuccess);
   app.post("/paymentfailure", cartcontroller.paymentfailure);
+  app.post("/paymentipn", cartcontroller.payment_ipn_callback);
 
   app.post("/updateattributes", productupdatecontroller.updateattributes);
 

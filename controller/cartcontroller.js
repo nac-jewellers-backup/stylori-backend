@@ -465,15 +465,13 @@ exports.paymentfailure = async (req, res) => {
       order_id: req.body.oid,
       payment_response: JSON.stringify(req.body),
     };
-
     let new_cart = await models.payment_details.create(paymentcontent, {
       returning: true,
     });
-    let redirectionurl =
-      process.env.baseurl + "/paymentfail/a08368f0-54e6-11eb-939a-ad9261576e22";
+    let redirectionurl = process.env.baseurl + "/cart";
     return res.redirect(redirectionurl);
   } else {
-    let redirectionurl = process.env.baseurl + "/paymentfail/" + 1;
+    let redirectionurl = process.env.baseurl + "/cart";
     return res.redirect(redirectionurl);
   }
 };
@@ -1669,4 +1667,23 @@ exports.updatecart_latestprice = async (req, res) => {
     console.error(error);
     res.status(500).send({ error: error.message });
   }
+};
+
+exports.payment_ipn_callback = async (req, res) => {
+  let { TRANSACTIONID } = req.body;
+  let { id: order_id } = await models.orders.findOne({
+    where: {
+      payment_id: TRANSACTIONID,
+    },
+  });
+  if (order_id) {
+    let paymentcontent = {
+      order_id: order_id,
+      payment_response: JSON.stringify(req.body),
+    };
+    let new_cart = await models.payment_details.create(paymentcontent, {
+      returning: true,
+    });
+  }
+  res.status(200).send({ message: "Added Payment Details successfully!" });
 };
