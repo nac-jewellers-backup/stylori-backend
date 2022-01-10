@@ -14,6 +14,8 @@ var dateFormat = require("dateformat");
 const moment = require("moment");
 const emailTemp = require("./notify/Emailtemplate");
 import { sendMail } from "./notify/user_notify";
+import { getShippingDate } from "./inventorycontroller";
+const { createTemplate } = require("./notify/email_templates");
 dotenv.config();
 aws.config.update({
   region: "ap-south-1", // Put your aws region here
@@ -1473,127 +1475,145 @@ exports.testorderemail = async (req, res) => {
 };
 async function sendorderconformationemail(order_id, res) {
   var addresstypes = [1, 3];
-  let orderdetails = await models.orders.findOne({
-    include: [
-      { model: models.user_profiles },
-      {
-        model: models.shopping_cart,
-        include: [
-          {
-            model: models.cart_address,
-            where: {
-              address_type: {
-                [Op.in]: addresstypes,
+  try {
+    let orderdetails = await models.orders.findOne({
+      attributes: ["id", "createdAt", "payment_mode"],
+      include: [
+        { model: models.user_profiles, attributes: ["email"] },
+        {
+          model: models.shopping_cart,
+          attributes: ["gross_amount", "discount", "discounted_price"],
+          include: [
+            {
+              model: models.shopping_cart_item,
+              attributes: ["price"],
+              include: [
+                {
+                  model: models.trans_sku_lists,
+                  attributes: [
+                    "discount_price",
+                    "sku_id",
+                    "metal_color",
+                    "product_id",
+                  ],
+                },
+              ],
+            },
+            {
+              model: models.cart_address,
+              attributes: [
+                "firstname",
+                "lastname",
+                "addressline1",
+                "addressline2",
+                "city",
+                "state",
+                "country",
+                "pincode",
+              ],
+              where: {
+                address_type: {
+                  [Op.in]: addresstypes,
+                },
               },
             },
-          },
-          {
-            model: models.shopping_cart_item,
-            include: [
-              {
-                model: models.trans_sku_lists,
-              },
-            ],
-          },
-        ],
+          ],
+        },
+      ],
+      where: {
+        id: order_id,
       },
-    ],
-    where: {
-      id: order_id,
-    },
-  });
-  var day = "";
-  if (orderdetails) {
-    day = moment
-      .tz(orderdetails.updatedAt, "Asia/Kolkata")
-      .format("DD MMM YYYY HH:mm:ss");
-  }
-  var trans_sku_lists = [];
-  var prod_image_condition = [];
-  console.log("orderinfodetails");
-  console.log(JSON.stringify(orderdetails));
-  let skuqty = {};
-  orderdetails.shopping_cart.shopping_cart_items.forEach((element) => {
-    trans_sku_lists.push(element.product_sku);
-    skuqty[element.product_sku] = element.qty;
-    prod_image_condition.push({
-      product_color: element.trans_sku_list.metal_color,
-      product_id: element.trans_sku_list.product_id,
-      image_position: 1,
     });
-    // console.log(element.metal_color)
-  });
-  let skudetails = await models.trans_sku_lists.findAll({
-    include: [
+
+    var emilreceipiants = [
       {
-        model: models.product_lists,
-        include: [
-          {
-            model: models.product_gemstones,
+        to: orderdetails.user_profile.email,
+        subject: "Order Placed Successfully",
+      },
+      { to: process.env.adminemail, subject: "Order Placed Successfully" },
+    ];
+    // var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
+    // var isloggedin = false;
+    // if (
+    //   orderdetails.user_profile.facebookid ||
+    //   orderdetails.user_profile.user_id
+    // ) {
+    //   isloggedin = true;
+    // }
+
+    let order_items = [];
+    for (
+      let i = 0;
+      i < orderdetails.shopping_cart.shopping_cart_items.length;
+      i++
+    ) {
+      let element = orderdetails.shopping_cart.shopping_cart_items[i];
+      let product = await models.product_lists.findOne({
+        where: { product_id: element.trans_sku_list.product_id },
+        attributes: ["product_name"],
+        include: {
+          model: models.product_images,
+          attributes: [
+            [
+              models.sequelize.fn(
+                "concat",
+                process.env.baseimageurl,
+                models.sequelize.col("image_url")
+              ),
+              "image_url",
+            ],
+          ],
+          where: {
+            product_color: element.trans_sku_list.metal_color,
+            image_position: 1,
           },
-        ],
-      },
-    ],
-    where: {
-      generated_sku: {
-        [Op.in]: trans_sku_lists,
-      },
-    },
-  });
+        },
+      });
+      let ships_by = moment
+        .tz(
+          await getShippingDate({
+            sku_id: element.trans_sku_list.sku_id,
+            current_datetime: orderdetails.createdAt,
+          }).shipping_date
+        )
+        .format("DD MMMM YYYY");
+      order_items.push({
+        price: element.price,
+        sku_id: element.trans_sku_list.sku_id,
+        image_url: product.product_images[0].image_url.replace(
+          `/product/${element.trans_sku_list.product_id}`,
+          `/product/${element.trans_sku_list.product_id}/500X500`
+        ),
+        name: product.product_name,
+        discount_price: element.trans_sku_list.discount_price,
+        ships_by,
+      });
+    }
 
-  var imagelist = {};
-  let prodimages = await models.product_images.findAll({
-    attributes: [
-      "product_id",
-      "product_color",
-      "image_url",
-      "image_position",
-      "isdefault",
-    ],
-    where: {
-      [Op.or]: prod_image_condition,
-    },
-    order: [["image_position", "ASC"]],
-  });
-  prodimages.forEach((element) => {
-    var imagename = element.image_url.replace(
-      element.product_id,
-      element.product_id + "/1000X1000"
+    let email_template_body = {
+      payment_mode: orderdetails.payment_mode,
+      order_id: orderdetails.id,
+      order_time: moment
+        .tz(orderdetails.createdAt, "Asia/Kolkata")
+        .format("DD MMM YYYY HH:mm:ss"),
+      order_items,
+      address: orderdetails.shopping_cart.cart_addresses[0],
+      gross_total: orderdetails.shopping_cart.gross_amount,
+      discount: orderdetails.shopping_cart.discount,
+      discounted_price: orderdetails.shopping_cart.discounted_price,
+    };
+    sendMail(
+      emilreceipiants,
+      await createTemplate({
+        type: "order_confirmed",
+        data: email_template_body,
+      })
     );
-
-    imagelist[element.product_id] =
-      "https://styloriimages.s3.ap-south-1.amazonaws.com/" + imagename;
-  });
-
-  var emilreceipiants = [
-    {
-      to: orderdetails.user_profile.email,
-      subject: "Order Placed Successfully",
-    },
-    { to: process.env.adminemail, subject: "Order Placed Successfully" },
-  ];
-  // var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
-  var isloggedin = false;
-  if (
-    orderdetails.user_profile.facebookid ||
-    orderdetails.user_profile.user_id
-  ) {
-    isloggedin = true;
+    return res.send(200, { orderdetails });
+  } catch (error) {
+    console.error(error);
+    return res.send(500, { ...error });
   }
-  sendMail(
-    emilreceipiants,
-    emailTemp.orderConformation(
-      "",
-      process.env.adminemail,
-      orderdetails,
-      skudetails,
-      imagelist,
-      day,
-      isloggedin,
-      skuqty
-    )
-  );
-  return res.send(200, { orderdetails, skudetails, prodimages, imagelist });
 }
 
 exports.addproductreview = async (req, res) => {
