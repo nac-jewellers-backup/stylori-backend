@@ -401,11 +401,13 @@
             color: #D85163;
             margin-top: -16px;
             font-family: 'Noto Serif' !important;
+            font-size: 14px;
         }
 
         .data {
             color: black;
             margin-top: -16px;
+            font-size: 14px;
         }
 
         .datasright {
@@ -495,6 +497,18 @@
             .footersm {
                 display: block;
             }
+
+            .price {
+                width: 50%;
+            }
+
+            .details {
+                width: 100%;
+            }
+
+            .pdimg {
+                width: 50%;
+            }
         }
 
         @media screen and (max-width: 500px) {}
@@ -510,7 +524,7 @@
             style="display: none; font-size: 1px;max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all;">
             &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
         </div>
-        <div style="max-width: 800px; margin: 0 auto;" class="email-container">
+        <div style="max-width: 800px; margin: 0 auto;overflow: hidden;" class="email-container">
             <!-- BEGIN BODY -->
             <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
                 style="margin: auto;">
@@ -536,7 +550,7 @@
                                     <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
                                         <td valign="middle" style="width: 45%;">
                                             <img src="https://styloriimages.s3.ap-south-1.amazonaws.com/stylori_email_template/BAGG.png"
-                                                alt="" style="width: 100%; height: 100%;">
+                                                alt="" style="width: 100%; height: 100%;object-fit: contain;">
                                         </td>
                                         <td valign="middle" width="100%">
                                             <div class="text-blog">
@@ -581,7 +595,7 @@
                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                             <tr>
                                 <td align="left">
-                                    <p class="summary">ORDER SUMMARY</p>
+                                    <p class="summary" style="white-space: nowrap;">ORDER SUMMARY</p>
 
                                 </td>
                                 <td align="right">
@@ -592,9 +606,11 @@
                             <tr>
                                 <td></td>
                                 <td align="right">
-                                    <p class="data">Payment Method:<%= payment_mode %>
+                                    <p class="data" style="white-space: nowrap;">Payment Method:<%= payment_mode %>
                                     </p>
-                                    <p class="data">Order Number:#<%= order_id %>
+                                    <p class="data">Order&nbsp;Number:
+
+                                        #<%= order_id %>
                                     </p>
                                 </td>
 
@@ -612,7 +628,7 @@
                                         style="border-bottom: 1px solid #c1c1c1">
                                         <% order_items.forEach(function(item){ %>
                                             <tr>
-                                                <td valign="middle" align="right" width="100%">
+                                                <td valign="middle" align="right" class="pdimg">
                                                     <div style="border:1px solid #c1c1c1;margin-right: 12px;"
                                                         class="image">
                                                         <img src=<%- item.image_url %>
@@ -622,7 +638,7 @@
                                                     </div>
                                                     <br />
                                                 </td>
-                                                <td valign="middle" width="100%">
+                                                <td valign="middle" class="details">
                                                     <div class="text-blog" style="text-align: left; padding-left:25px;">
                                                         <p class="datas">
                                                             <%- item.name %>
@@ -633,7 +649,7 @@
                                                         </p>
                                                     </div>
                                                 </td>
-                                                <td valign="middle" width="100%">
+                                                <td valign="middle" class="price">
                                                     <p class="datas">&nbsp;&nbsp;&nbsp;&#8377;<%- item.price%>
                                                     </p>
                                                     <p class="datas">&nbsp;&nbsp;&nbsp;<strike>&#8377;<%-
@@ -657,11 +673,12 @@
 
                                         </td>
                                         <td valign="middle" align="left" width="100%">
-                                            <p class="datas">SUB TOTAL</p>
+                                            <p class="datas" style="white-space: nowrap;">SUB TOTAL</p>
                                             <% if (discount) { %>
                                                 <p class="datas" style="margin-top: 12px;">CART DISCOUNT</p>
                                                 <% } %>
-                                                    <p class="datas">SHIPPING CHARGES(Standard)</p>
+                                                    <p class="datas" style="white-space: nowrap;">SHIPPING
+                                                        CHARGES(Standard)</p>
 
                                         </td>
                                         <td valign="middle" class="show">
@@ -685,8 +702,9 @@
                                         </td>
                                         <td valign="middle" align="left" width="100%">
                                             <p class="datas">&nbsp;</p>
-                                            <h3 class="datas"><b>TOTAL COST</b></h3>
-                                            <h3 class="datas" style="margin-top: 12px;color: #D85163;"><b>GRAND
+                                            <h3 class="datas" style="white-space: nowrap;"><b>TOTAL COST</b></h3>
+                                            <h3 class="datas"
+                                                style="margin-top: 12px;color: #D85163;white-space:nowrap;"><b>GRAND
                                                     TOTAL</b></h3>
                                             <br />
                                         </td>
@@ -696,11 +714,11 @@
 
                                         <td valign="middle" width="100%">
                                             <h3 class="datasright"><b>
-                                                    <%= discounted_price %>
+                                                    &#8377; <%= discounted_price %>
                                                 </b></h3>
                                             <h3 class="datasright" style="margin-top: 12px;color: #D85163;">
                                                 <b>
-                                                    <%= discounted_price %>
+                                                    &#8377; <%= discounted_price %>
                                                 </b>
                                             </h3>
                                         </td>
