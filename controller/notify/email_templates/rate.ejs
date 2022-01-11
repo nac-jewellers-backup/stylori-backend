@@ -153,8 +153,7 @@
 
         .header {
             padding: 0.4rem 1.5em;
-            background-image: url("https://styloriimages.s3.ap-south-1.amazonaws.com/stylori_email_template/Back-Ground.png");
-            background-repeat: no-repeat;
+            background-image: url("https://styloriimages.s3.ap-south-1.amazonaws.com/stylori_email_template/Bg_3rd-page.png");
             background-position: 40%;
 
         }
@@ -404,25 +403,12 @@
             }
 
             .sub {
-                font-size: 1em;
+                font-size: auto;
             }
-
-            .price {
-                width: 50%;
-            }
-
-            .details {
-                width: 100%;
-            }
-
-            .pdimg {
-                width: 50%;
-            }
-
         }
 
         .heading {
-            color: #2F348B;
+            color: #D85163;
 
             font-family: 'Noto Serif' !important;
 
@@ -431,19 +417,18 @@
         .sub {
             color: #D85163;
             margin-top: -14px;
+            font-size: 3rem;
         }
 
         .summary {
-            color: #D85163;
+            color: #2F348B;
             margin-top: -16px;
             font-family: 'Noto Serif' !important;
-            font-size: 14px;
         }
 
         .data {
             color: black;
             margin-top: -16px;
-            font-size: 14px;
         }
 
         .datasright {
@@ -459,7 +444,7 @@
 
         .data:last-child {
 
-            color: #D85163;
+            color: #2F348B;
 
         }
 
@@ -477,7 +462,7 @@
 
         .padd {
             padding: 40px;
-            background-color: #3f4491e3;
+            background-color: #30328C;
             color: white;
         }
 
@@ -544,11 +529,8 @@
 <body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #222222;">
     <center style="width: 100%; background-color: #f1f1f1;">
 
-        <div
-            style="display: none; font-size: 1px;max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all;">
-            &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-        </div>
-        <div style="max-width: 800px; margin: 0 auto;overflow: hidden;" class="email-container">
+
+        <div style="max-width: 800px; margin: 0 auto;" class="email-container">
             <!-- BEGIN BODY -->
             <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
                 style="margin: auto;">
@@ -573,244 +555,62 @@
                                 <td style="padding-bottom: 30px;">
                                     <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
                                         <td valign="middle" style="width: 45%;">
-                                            <img src="https://styloriimages.s3.ap-south-1.amazonaws.com/stylori_email_template/Truck.png"
-                                                alt="" style="width: 100%; height: 100%;">
-                                        </td>
-                                        <td valign="middle" width="100%">
-                                            <div class="text-blog">
-
-                                                <h1 class="heading" style="display: inline-block;">Your Order is On its
-                                                    Way!</h1>
-                                                <h2 class="sub" style="text-align: center;">We're happy to tell you that
-                                                    <br />
-                                                    your order has been shipped
-                                                </h2>
-
-
-                                            </div>
-                                        </td>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="bg_white padds">
-                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-                            <tr>
-                                <td style="padding-bottom: 0px;">
-                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-
-                                        <td valign="middle" width="100%">
-                                            <div class="text-blog">
-                                                <h1 style="display: inline-block;font-family: 'Noto Serif'">Hello
-                                                    <%= address.firstname %>,
-                                                </h1>
-
-                                                <p style="color: black;margin-top: -20px;">Lorem
-                                                    Ipsum has been
-                                                    the industry's standard
-                                                    dummy text ever since the 1500s, when an unknown
-                                                </p>
-
-
-
-                                            </div>
-                                        </td>
-                                    </table>
-                                </td>
-                            </tr>
-
-                        </table>
-                        <br />
-                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                            <tr>
-                                <td align="left">
-                                    <p class="summary">ORDER SUMMARY</p>
-
-                                </td>
-                                <td align="right">
-                                    <p class="data" style="color: black;">Order Placed On: <%= order_time %>
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td align="right">
-                                    <p class="data" style="white-space: nowrap;">Payment Method:<%= payment_mode %>
-                                    </p>
-                                    <p class="data" style="white-space: nowrap;">Order Number:#<%= order_id %>9</p>
-                                </td>
-
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-
-                    <td class="bg_white email-section">
-                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-                            <tr>
-                                <td class="padds">
-                                    <% order_items.forEach(function(item){ %>
-                                        <table role="presentation" border="0" cellpadding="0" cellspacing="0"
-                                            width="100%" style="border-bottom: 1px solid #c1c1c1">
-
-                                            <td valign="middle" align="right" class="pdimg">
-                                                <div style="border:1px solid #c1c1c1;margin-right: 12px;" class="image">
-                                                    <img src=<%- item.image_url %>
-                                                    alt=""
-                                                    style="width: 100%; max-width: 600px; height: 100px;object-fit:
-                                                    contain; margin: auto; display: block;">
-                                                </div>
-                                                <br />
-                                            </td>
-                                            <td valign="middle" class="details">
-                                                <div class="text-blog" style="text-align: left; padding-left:25px;">
-
-                                                    <p class="datas">
-                                                        <%- item.name %>
-                                                    </p>
-                                                    <p class="datas">#<%- item.sku_id %>
-                                                    </p>
-                                                    <p class="datas">
-                                                        <%- item.ships_by%>
-                                                    </p>
-
-                                                </div>
-                                            </td>
-                                            <td valign="middle" class="price">
-                                                <p class="datas">&nbsp;&nbsp;&nbsp;&#8377;<%- item.price%>
-                                                </p>
-                                                <p class="datas">&nbsp;&nbsp;&nbsp;<strike>&#8377;<%-
-                                                            item.discount_price%></strike>
-                                                </p>
-                                            </td>
-
-                                        </table>
-                                        <% }); %>
-                                </td>
-
-                            </tr>
-
-                            <tr>
-                                <td class="padds">
-                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"
-                                        style="border-bottom: 1px solid #c1c1c1">
-                                        <td valign="middle" class="none">
-
-                                        </td>
-                                        <td valign="middle" align="left" width="100%">
-                                            <p class="datas">&nbsp;</p>
-                                            <p class="datas">SUB TOTAL</p>
-                                            <% if (discount) { %>
-                                                <p class="datas" style="margin-top: 12px;white-space: nowrap;">CART
-                                                    DISCOUNT
-                                                </p>
-                                                <% } %>
-                                                    <p class="datas" style="white-space: nowrap;">SHIPPING
-                                                        CHARGES(Standard)
-                                                    </p>
-                                                    <br />
-                                        </td>
-                                        <td valign="middle" class="show">
-
-                                        </td>
-
-
-                                        <td valign="middle" align="left" width="100%">
-                                            <p class="datasright">&#8377;<%= gross_total %>
-                                            </p>
-                                            <% if (discount) { %>
-                                                <p class="datasright" style="margin-top: 12px;">
-                                                    <%= discount %>
-                                                </p>
-                                                <% } %>
-                                                    <p class="datasright">FREE</p>
-                                        </td>
-
-
-                                    </table>
-                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"
-                                        style="border-bottom: 1px solid #c1c1c1">
-                                        <td valign="middle" class="none">
-
-                                        </td>
-                                        <td valign="middle" align="left" width="100%">
-                                            <p class="datas">&nbsp;</p>
-                                            <h3 class="datas"><b>TOTAL COST</b></h3>
-                                            <h3 class="datas" style="margin-top: 12px;color: #D85163;"><b>GRAND
-                                                    TOTAL</b></h3>
+                                            <h2 class="heading"
+                                                style="text-align: center;margin-top: 16px;color: #30328C;">Thank You
+                                                for shopping with
+                                                Stylori!</h2>
                                             <br />
-                                        </td>
-                                        <td valign="middle" class="show">
+                                            <h1 class="sub" style="text-align: center;">Love your order?</h1>
+                                            <br />
+                                            <img src="https://styloriimages.s3.ap-south-1.amazonaws.com/stylori_email_template/Girl.png"
+                                                height="100%" width="100%" alt="" />
 
-                                        </td>
-
-                                        <td valign="middle" width="100%">
-                                            <h3 class="datasright"><b>&#8377; <%= discounted_price %></b></h3>
-                                            <h3 class="datasright" style="margin-top: 12px;color: #D85163;"><b>&#8377;
-                                                    <%= discounted_price %>
-                                                </b>
-                                            </h3>
+                                            <h2 class="heading" style="text-align: center;;margin-top: -16px;">We would
+                                                love to hear your
+                                                feedback.
+                                            </h2>
+                                            <h2 class="heading" style="text-align: center;margin-top: -16px;">Please
+                                                rate
+                                                your experience
+                                                with the product.
+                                            </h2>
                                         </td>
 
                                     </table>
-                                    <span style="color: black;">*Inclusive of all taxes.</span>
                                 </td>
-
-
                             </tr>
-
-
                         </table>
                     </td>
-
                 </tr>
+
+
 
                 <br />
 
             </table>
+
+
             <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
                 style="margin: auto;">
                 <tr>
-                    <td class="bg_white padd">
-                        <h2 style="color: white;font-family: 'Noto Serif' ;font-weight: bold;margin-bottom: -6px;">
-                            SHIPPING ADDRESS:</h2>
-                        <p
-                            style="text-transform: capitalize;line-height: 15px;margin-top: -8px;text-decoration: none;color: white;">
-                            <%= address.firstname %>
-                                <%= address.lastname %>
-                                    <br />
-                                    <%= address.addressline1 %><br />
-                                        <% if (address.addressline2) { %>
-                                            <%= address.addressline2 %><br />
-                                                <% } %>
-                                                    <%= address.city %>,<%= address.state %><br />
-                                                            <%= address.country %> - <%= address.pincode %>.
-                                                                    <br />
-                                                                    <br />
-                                                                    You can visit
-                                                                    https://www.stylori.com/account-allorders to view
-                                                                    your order status
-                                                                    and to
-                                                                    contact us
-                                                                    regarding this order.
-                                                                    <br />
-                                                                    <br />
-                                                                    Should you find the details of the order incorrect,
-                                                                    please feel free to call us at
-                                                                    99526
-                                                                    25252 or email us at
-                                                                    hello@stylori.com
-                        </p>
-                        <br />
-                        <h3 style="color: white;font-weight: bold;margin-bottom: -6px;">TEAM NAC,</h3>
-                        <h3 style="color: white;font-weight: bold;margin-bottom: -6px;">WITH LOVE</h3>
+                    <td class="bg_white padd" align="center">
+                        <img src="https://styloriimages.s3.ap-south-1.amazonaws.com/stylori_email_template/Star.png"
+                            style="object-fit: contain;" height="100px" width="100%" />
+                        <h3 style="text-transform: capitalize;color: white;margin-bottom: -1px;">
+                            Please feel free to call us at <b> +91 99526 25252 </b> or email<b> hello@stylori.com</b>
+
+                        </h3>
+
+                        <h2 style="color: white;margin-bottom: -6px;">
+                            Tag us and get featured on our page
+                        </h2>
+                        <h1 style="color: white;font-weight: bold;margin-bottom: -6px;">@stylorilove | @stylorisilver
+                        </h1>
                     </td>
                 </tr>
             </table>
+
+
             <div class="footerlg">
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
                     style="margin: auto;">
