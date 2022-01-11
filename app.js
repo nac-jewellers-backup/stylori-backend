@@ -61,7 +61,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 require("./routes/route.js")(app);
-app.set("view engine", "ejs");
 //Configuring postgraphile middleware
 let connString;
 console.log("dasd");
