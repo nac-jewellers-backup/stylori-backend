@@ -1491,8 +1491,9 @@ async function sendorderconformationemail(order_id, res) {
                 {
                   model: models.trans_sku_lists,
                   attributes: [
-                    "discount_price",
                     "sku_id",
+                    "discount_price",
+                    "generated_sku",
                     "metal_color",
                     "product_id",
                   ],
@@ -1579,7 +1580,7 @@ async function sendorderconformationemail(order_id, res) {
         .format("DD MMMM YYYY");
       order_items.push({
         price: element.price,
-        sku_id: element.trans_sku_list.sku_id,
+        sku_id: element.trans_sku_list.generated_sku,
         image_url: product.product_images[0].image_url.replace(
           `/product/${element.trans_sku_list.product_id}`,
           `/product/${element.trans_sku_list.product_id}/500X500`
