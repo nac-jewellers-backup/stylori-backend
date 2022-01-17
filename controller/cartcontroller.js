@@ -14,8 +14,11 @@ var dateFormat = require("dateformat");
 const moment = require("moment");
 const emailTemp = require("./notify/Emailtemplate");
 import { sendMail } from "./notify/user_notify";
-import { getShippingDate } from "./inventorycontroller";
-const { createTemplate } = require("./notify/email_templates");
+const {
+  sendOrderConfirmation,
+  sendShippingConfirmation,
+  sendRateProduct,
+} = require("./notify/email_templates");
 dotenv.config();
 aws.config.update({
   region: "ap-south-1", // Put your aws region here
@@ -851,10 +854,10 @@ exports.addtocart = async (req, res) => {
       let trans_sku_list = await models.trans_sku_lists.findOne({
         attributes: ["markup_price"],
         where: { generated_sku: product.sku_id },
-      });      
+      });
       let cart_item = await models.shopping_cart_item.findOne({
         where: { shopping_cart_id: cart_id, product_sku: product.sku_id },
-      });      
+      });
       if (cart_item) {
         await models.shopping_cart_item.update(
           {
@@ -1502,147 +1505,16 @@ exports.testorderemail = async (req, res) => {
   sendorderconformationemail("9cb91100-b083-11ea-82de-63badb42bd5b", res);
 };
 async function sendorderconformationemail(order_id, res) {
-  var addresstypes = [1, 3];
-  try {
-    let orderdetails = await models.orders.findOne({
-      attributes: ["id", "createdAt", "payment_mode"],
-      include: [
-        { model: models.user_profiles, attributes: ["email"] },
-        {
-          model: models.shopping_cart,
-          attributes: ["gross_amount", "discount", "discounted_price"],
-          include: [
-            {
-              model: models.shopping_cart_item,
-              attributes: ["price"],
-              include: [
-                {
-                  model: models.trans_sku_lists,
-                  attributes: [
-                    "sku_id",
-                    "discount_price",
-                    "generated_sku",
-                    "metal_color",
-                    "product_id",
-                  ],
-                },
-              ],
-            },
-            {
-              model: models.cart_address,
-              attributes: [
-                "firstname",
-                "lastname",
-                "addressline1",
-                "addressline2",
-                "city",
-                "state",
-                "country",
-                "pincode",
-              ],
-              where: {
-                address_type: {
-                  [Op.in]: addresstypes,
-                },
-              },
-            },
-          ],
-        },
-      ],
-      where: {
-        id: order_id,
-      },
+  sendOrderConfirmation({ order_id: order_id })
+    .then((orderdetails) => {
+      if (res) {
+        return res.send(200, { orderdetails });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      if (res) return res.send(500, { ...error });
     });
-
-    var emilreceipiants = [
-      {
-        to: orderdetails.user_profile.email,
-        subject: "Order Placed Successfully",
-      },
-      { to: process.env.adminemail, subject: "Order Placed Successfully" },
-    ];
-    // var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
-    // var isloggedin = false;
-    // if (
-    //   orderdetails.user_profile.facebookid ||
-    //   orderdetails.user_profile.user_id
-    // ) {
-    //   isloggedin = true;
-    // }
-
-    let order_items = [];
-    for (
-      let i = 0;
-      i < orderdetails.shopping_cart.shopping_cart_items.length;
-      i++
-    ) {
-      let element = orderdetails.shopping_cart.shopping_cart_items[i];
-      let product = await models.product_lists.findOne({
-        where: { product_id: element.trans_sku_list.product_id },
-        attributes: ["product_name"],
-        include: {
-          model: models.product_images,
-          attributes: [
-            [
-              models.sequelize.fn(
-                "concat",
-                process.env.baseimageurl,
-                models.sequelize.col("image_url")
-              ),
-              "image_url",
-            ],
-          ],
-          where: {
-            product_color: element.trans_sku_list.metal_color,
-            image_position: 1,
-          },
-        },
-      });
-      let ships_by = moment
-        .tz(
-          await getShippingDate({
-            sku_id: element.trans_sku_list.sku_id,
-            current_datetime: orderdetails.createdAt,
-          }).shipping_date
-        )
-        .format("DD MMMM YYYY");
-      order_items.push({
-        price: element.price,
-        sku_id: element.trans_sku_list.generated_sku,
-        image_url: product.product_images[0].image_url.replace(
-          `/product/${element.trans_sku_list.product_id}`,
-          `/product/${element.trans_sku_list.product_id}/500X500`
-        ),
-        name: product.product_name,
-        discount_price: element.trans_sku_list.discount_price,
-        ships_by,
-      });
-    }
-
-    let email_template_body = {
-      payment_mode: orderdetails.payment_mode,
-      order_id: orderdetails.id,
-      order_time: moment
-        .tz(orderdetails.createdAt, "Asia/Kolkata")
-        .format("DD MMM YYYY HH:mm:ss"),
-      order_items,
-      address: orderdetails.shopping_cart.cart_addresses[0],
-      gross_total: orderdetails.shopping_cart.gross_amount,
-      discount: orderdetails.shopping_cart.discount,
-      discounted_price: orderdetails.shopping_cart.discounted_price,
-    };
-    sendMail(
-      emilreceipiants,
-      await createTemplate({
-        type: "order_confirmed",
-        data: email_template_body,
-      })
-    );
-    return res.send(200, { orderdetails });
-  } catch (error) {
-    console.error(error);
-    return res.send(500, { ...error });
-  }
 }
 
 exports.addproductreview = async (req, res) => {
@@ -1741,4 +1613,23 @@ exports.payment_ipn_callback = async (req, res) => {
     });
   }
   res.status(200).send({ message: "Added Payment Details successfully!" });
+};
+
+exports.trigger_mail = async (req, res) => {
+  let { order_id, type } = req.body;
+  try {
+    if (type === "order") {
+      await sendOrderConfirmation({ order_id });
+    }
+    if (type === "shipping") {
+      await sendShippingConfirmation({ order_id });
+    }
+    if (type === "rate") {
+      await sendRateProduct({ order_id });
+    }
+    res.status(200).send({ message: "mail triggered successfully!" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ ...error });
+  }
 };
