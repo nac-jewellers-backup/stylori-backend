@@ -13,7 +13,7 @@ var request = require("request");
 var dateFormat = require("dateformat");
 const moment = require("moment");
 const emailTemp = require("./notify/Emailtemplate");
-import { sendMail } from "./notify/user_notify";
+const { send_sms } = require("../controller/notify/user_notify");
 const {
   sendOrderConfirmation,
   sendShippingConfirmation,
@@ -1506,7 +1506,22 @@ exports.testorderemail = async (req, res) => {
 };
 async function sendorderconformationemail(order_id, res) {
   sendOrderConfirmation({ order_id: order_id })
-    .then((orderdetails) => {
+    .then(async (orderdetails) => {
+      let {
+        id,
+        shopping_cart: { cart_addresses, discounted_price },
+      } = orderdetails;
+
+      let msg_txt = `Hey ${cart_addresses[0].firstname}. Your order ID ${id
+        .split("-")
+        .pop()} is confirmed. Total Amount, ${discounted_price}. Thanks for shopping with Stylori, from the House of NAC. Customer care: 9952625252`;
+
+      console.log(msg_txt);
+      await send_sms({
+        mobile_no: `91${cart_addresses[0].contact_number}`,
+        msg_txt,
+        sender_id: "NACSTY",
+      });
       if (res) {
         return res.send(200, { orderdetails });
       }

@@ -53,6 +53,7 @@ let sendOrderConfirmation = ({ order_id }) => {
                   "state",
                   "country",
                   "pincode",
+                  "contact_number"
                 ],
                 where: {
                   address_type: {
