@@ -13,8 +13,12 @@ var request = require("request");
 var dateFormat = require("dateformat");
 const moment = require("moment");
 const emailTemp = require("./notify/Emailtemplate");
-import { sendMail } from "./notify/user_notify";
-import { resolve } from "path";
+const { send_sms } = require("../controller/notify/user_notify");
+const {
+  sendOrderConfirmation,
+  sendShippingConfirmation,
+  sendRateProduct,
+} = require("./notify/email_templates");
 dotenv.config();
 aws.config.update({
   region: "ap-south-1", // Put your aws region here
@@ -177,8 +181,8 @@ exports.applyvoucher = async (req, res) => {
         },
       },
     });
-    // console.log(">>>><<<<<<<<");
-    // console.log(JSON.stringify(coupon_info));
+    console.log(">>>><<<<<<<<");
+    console.log(JSON.stringify(coupon_info));
     if (coupon_info) {
       // attributes_condition.push({
       //   attributes:{
@@ -241,14 +245,14 @@ exports.applyvoucher = async (req, res) => {
         shopping_cart_id: cart_id,
       },
     });
-    // console.log(">>>><<<<<<<<");
+    console.log(">>>><<<<<<<<");
     var eligible_amount = 0;
     shoppingcart.forEach((element) => {
       if (element.trans_sku_list) {
         eligible_amount = eligible_amount + element.trans_sku_list.markup_price;
       }
 
-      // console.log(JSON.stringify(eligible_amount));
+      console.log(JSON.stringify(eligible_amount));
     });
 
     models.vouchers
@@ -265,11 +269,11 @@ exports.applyvoucher = async (req, res) => {
       })
       .then(async (giftwrapobj) => {
         var message_response = "";
-        // console.log("_____userstatus");
-        // console.log(isloggedin);
-        // console.log(giftwrapobj.isloginneeded);
+        console.log("_____userstatus");
+        console.log(isloggedin);
+        console.log(giftwrapobj.isloginneeded);
 
-        // console.log("_______________");
+        console.log("_______________");
         if (!giftwrapobj.isloginneeded) {
           isloggedin = true;
         }
@@ -306,7 +310,9 @@ exports.applyvoucher = async (req, res) => {
               discountval +
               ", discounted_price = (gross_amount - " +
               discountval +
-              ") where id ='" +
+              "), voucher_code = '" +
+              vouchercode +
+              "' where id ='" +
               cart_id +
               "'";
           } else {
@@ -320,15 +326,17 @@ exports.applyvoucher = async (req, res) => {
               discountvalue +
               " , discounted_price = (gross_amount -" +
               discountvalue +
-              ") where id ='" +
+              "), voucher_code = '" +
+              vouchercode +
+              "' where id ='" +
               cart_id +
               "'";
           }
-          // console.log(JSON.stringify(query));
+          console.log(JSON.stringify(query));
 
           await models.sequelize.query(query).then(([results, metadata]) => {
             // Results will be an empty array and metadata will contain the number of affected rows.
-            // console.log(JSON.stringify(metadata));
+            console.log(JSON.stringify(metadata));
             models.shopping_cart
               .findOne({
                 where: {
@@ -345,7 +353,7 @@ exports.applyvoucher = async (req, res) => {
               });
           });
         } else {
-          // console.log("voucher invalid");
+          console.log("voucher invalid");
           if (!isloggedin) {
             res.send(409, {
               status: "409",
@@ -390,12 +398,12 @@ exports.applyvoucher = async (req, res) => {
 };
 exports.paymentsuccess = async (req, res) => {
   try {
-    const { TRANSACTIONID } = req.body;
-    // console.log("???XXXXXXXXXXXXXXXXXXX");
-    // console.log(JSON.stringify(req.body));
+    const { TRANSACTIONID, TRANSACTIONPAYMENTSTATUS } = req.body;
+    console.log("???XXXXXXXXXXXXXXXXXXX");
+    console.log(JSON.stringify(req.body));
     // if(txndata.TRANSACTIONSTATUS == '200')
     // {
-    let transid = req.body.TRANSACTIONID;
+    let transid = TRANSACTIONID;
 
     let orderobj = await models.orders.findOne({
       where: {
@@ -406,26 +414,32 @@ exports.paymentsuccess = async (req, res) => {
       order_id: orderobj.id,
       payment_response: JSON.stringify(req.body),
     };
-    const update_cartstatus = {
-      status: "paid",
-    };
-    let updatecart = await models.shopping_cart.update(update_cartstatus, {
-      returning: true,
-      where: {
-        id: orderobj.cart_id,
-      },
-    });
+    let redirectionurl = process.env.baseurl;
+    if (TRANSACTIONPAYMENTSTATUS == "SUCCESS") {
+      const update_cartstatus = {
+        status: "paid",
+      };
+      let updatecart = await models.shopping_cart.update(update_cartstatus, {
+        returning: true,
+        where: {
+          id: orderobj.cart_id,
+        },
+      });
+      //update inventory post successfull payment
+      let updateInventory = await models.sequelize
+        .query(`update inventories i set number_of_items = (number_of_items - sub.qty) from 
+              (select product_sku,qty from shopping_cart_items where shopping_cart_id in (
+                select cart_id from public.orders where id = '${orderobj.id}'
+              )) as sub where i.generated_sku = sub.product_sku and i.number_of_items > 0`);
+      sendorderconformationemail(orderobj.id);
+      redirectionurl = redirectionurl + "/paymentsuccess/" + orderobj.id;
+    } else {
+      redirectionurl = redirectionurl + "/cart";
+    }
+
     let new_cart = await models.payment_details.create(paymentcontent, {
       returning: true,
     });
-    //update inventory post successfull payment
-    let updateInventory = await models.sequelize
-      .query(`update inventories i set number_of_items = (number_of_items - sub.qty) from 
-  (select product_sku,qty from shopping_cart_items where shopping_cart_id in (
-    select cart_id from public.orders where id = '${orderobj.id}'
-  )) as sub where i.generated_sku = sub.product_sku and i.number_of_items > 0`);
-    SendOrderConfirmationEmailNoReturn(orderobj.id);
-    let redirectionurl = process.env.baseurl + "/paymentsuccess/" + orderobj.id;
 
     return res.redirect(redirectionurl);
   } catch (err) {
@@ -513,7 +527,7 @@ exports.resendorderemail = async (req, res) => {
 
 exports.paymentfailure = async (req, res) => {
   try {
-    // console.log(JSON.stringify(req.body));
+    console.log(JSON.stringify(req.body));
     if (req.body && req.body.oid) {
       let orderobj = await models.orders.findOne({
         where: {
@@ -533,16 +547,13 @@ exports.paymentfailure = async (req, res) => {
         order_id: req.body.oid,
         payment_response: JSON.stringify(req.body),
       };
-
       let new_cart = await models.payment_details.create(paymentcontent, {
         returning: true,
       });
-      let redirectionurl =
-        process.env.baseurl +
-        "/paymentfail/a08368f0-54e6-11eb-939a-ad9261576e22";
+      let redirectionurl = process.env.baseurl + "/cart";
       return res.redirect(redirectionurl);
     } else {
-      let redirectionurl = process.env.baseurl + "/paymentfail/" + 1;
+      let redirectionurl = process.env.baseurl + "/cart";
       return res.redirect(redirectionurl);
     }
   } catch (err) {
@@ -885,20 +896,75 @@ exports.updatecartitem = async (req, res) => {
   try {
     let { cart_id, product } = req.body;
 
-    let prod_count = parseInt(product.qty);
-    await models.shopping_cart_item.update(
-      {
-        qty: product.qty,
-        price: prod_count * product.price,
-      },
-      {
-        where: {
+    // let product_in_cart = await models.shopping_cart_item.findAll({
+    //   where: {
+    //     shopping_cart_id: cart_id,
+    //   },
+    // });
+    // var cartproducts = [];
+    // product_in_cart.forEach((prod_element) => {
+    //   cartproducts.push(prod_element.product_sku);
+    // });
+    // let cartlines = [];
+    for (let i = 0; i < products.length; i++) {
+      let product = products[i];
+      let trans_sku_list = await models.trans_sku_lists.findOne({
+        attributes: ["markup_price"],
+        where: { generated_sku: product.sku_id },
+      });
+      let cart_item = await models.shopping_cart_item.findOne({
+        where: { shopping_cart_id: cart_id, product_sku: product.sku_id },
+      });
+      if (cart_item) {
+        await models.shopping_cart_item.update(
+          {
+            shopping_cart_id: cart_id,
+            product_sku: product.sku_id,
+            qty: product.qty,
+            price: Number(product.qty || 1) * trans_sku_list.markup_price,
+          },
+          { where: { shopping_cart_id: cart_id, product_sku: product.sku_id } }
+        );
+      } else {
+        await models.shopping_cart_item.create({
+          id: uuidv1(),
           shopping_cart_id: cart_id,
           product_sku: product.sku_id,
-        },
+          qty: product.qty,
+          price: Number(product.qty || 1) * trans_sku_list.markup_price,
+        });
       }
-    );
+    }
+    // products.forEach((element) => {
+    //   console.log("productscart");
+    //   console.log(product_in_cart.length);
 
+    //   if (cartproducts.indexOf(element.sku_id) == -1) {
+    //     console.log("updated");
+    //     if (element.sku_id) {
+    //       let prod_count = parseInt(element.qty);
+    //       const lineobj = {
+    //         id: uuidv1(),
+    //         shopping_cart_id: cart_id,
+    //         product_sku: element.sku_id,
+    //         qty: element.qty,
+    //         price: prod_count * element.price,
+    //       };
+    //       console.log(JSON.stringify(lineobj));
+
+    //       cartlines.push(lineobj);
+    //     }
+    //   }
+    //   console.log("cartline length" + cartlines.length);
+    // });
+
+    // console.log("cartline length");
+    // if (cartlines.length > 0) {
+    //   await models.shopping_cart_item.bulkCreate(cartlines, {
+    //     individualHooks: true,
+    //   });
+    // }
+    console.log("cartline length212");
     let gross_amount = await models.shopping_cart_item.findOne({
       attributes: [[squelize.literal("SUM(price)"), "price"]],
       where: {
@@ -1716,296 +1782,39 @@ exports.testorderemail = async (req, res) => {
     );
   }
 };
+exports.testorderemail = async (req, res) => {
+  var emilreceipiants = [
+    { to: "manokarantk@gmail.com", subject: "Password Reset Successfully" },
+  ];
+  // sendMail(emilreceipiants,emailTemp.changepasswordTemp("Manokaran"))
+  sendorderconformationemail("9cb91100-b083-11ea-82de-63badb42bd5b", res);
+};
 async function sendorderconformationemail(order_id, res) {
-  try {
-    var addresstypes = [1, 3];
-    let orderdetails = await models.orders.findOne({
-      include: [
-        { model: models.user_profiles },
-        {
-          model: models.shopping_cart,
-          include: [
-            {
-              model: models.cart_address,
-              where: {
-                address_type: {
-                  [Op.in]: addresstypes,
-                },
-              },
-            },
-            {
-              model: models.shopping_cart_item,
-              include: [
-                {
-                  model: models.trans_sku_lists,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      where: {
-        id: order_id,
-      },
-    });
-    var day = "";
-    if (orderdetails) {
-      day = moment
-        .tz(orderdetails.updatedAt, "Asia/Kolkata")
-        .format("DD MMM YYYY HH:mm:ss");
-    }
-    var trans_sku_lists = [];
-    var prod_image_condition = [];
-    // console.log("orderinfodetails");
-    // console.log(JSON.stringify(orderdetails));
-    let skuqty = {};
-    orderdetails.shopping_cart.shopping_cart_items.forEach((element) => {
-      trans_sku_lists.push(element.product_sku);
-      skuqty[element.product_sku] = element.qty;
-      prod_image_condition.push({
-        product_color: element.trans_sku_list.metal_color,
-        product_id: element.trans_sku_list.product_id,
-        image_position: 1,
+  sendOrderConfirmation({ order_id: order_id })
+    .then(async (orderdetails) => {
+      let {
+        id,
+        shopping_cart: { cart_addresses, discounted_price },
+      } = orderdetails;
+
+      let msg_txt = `Hey ${cart_addresses[0].firstname}. Your order ID ${id
+        .split("-")
+        .pop()} is confirmed. Total Amount, ${discounted_price}. Thanks for shopping with Stylori, from the House of NAC. Customer care: 9952625252`;
+
+      console.log(msg_txt);
+      await send_sms({
+        mobile_no: `91${cart_addresses[0].contact_number}`,
+        msg_txt,
+        sender_id: "NACSTY",
       });
-      // console.log(element.metal_color)
+      if (res) {
+        return res.send(200, { orderdetails });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      if (res) return res.send(500, { ...error });
     });
-    let skudetails = await models.trans_sku_lists.findAll({
-      include: [
-        {
-          model: models.product_lists,
-          include: [
-            {
-              model: models.product_gemstones,
-            },
-          ],
-        },
-      ],
-      where: {
-        generated_sku: {
-          [Op.in]: trans_sku_lists,
-        },
-      },
-    });
-
-    var imagelist = {};
-    let prodimages = await models.product_images.findAll({
-      attributes: [
-        "product_id",
-        "product_color",
-        "image_url",
-        "image_position",
-        "isdefault",
-      ],
-      where: {
-        [Op.or]: prod_image_condition,
-      },
-      order: [["image_position", "ASC"]],
-    });
-    prodimages.forEach((element) => {
-      var imagename = element.image_url.replace(
-        element.product_id,
-        element.product_id + "/1000X1000"
-      );
-
-      imagelist[element.product_id] =
-        "https://styloriimages.s3.ap-south-1.amazonaws.com/" + imagename;
-    });
-
-    var emilreceipiants = [
-      {
-        to: orderdetails.user_profile.email,
-        subject: "Order Placed Successfully",
-      },
-      { to: process.env.adminemail, subject: "Order Placed Successfully" },
-    ];
-    // var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
-    var isloggedin = false;
-    if (
-      orderdetails.user_profile.facebookid ||
-      orderdetails.user_profile.user_id
-    ) {
-      isloggedin = true;
-    }
-    sendMail(
-      emilreceipiants,
-      emailTemp.orderConformation(
-        "",
-        process.env.adminemail,
-        orderdetails,
-        skudetails,
-        imagelist,
-        day,
-        isloggedin,
-        skuqty
-      )
-    );
-    return res.send(200, {
-      order: orderdetails,
-      // orderdetails,
-      skudetails,
-      prodimages,
-      imagelist,
-    });
-  } catch (err) {
-    console.log(
-      new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Calcutta",
-      }) +
-        " - Error while sending mail : " +
-        err
-    );
-  }
-}
-async function SendOrderConfirmationEmailNoReturn(order_id) {
-  try {
-    var addresstypes = [1, 3];
-    let orderdetails = await models.orders.findOne({
-      include: [
-        { model: models.user_profiles },
-        {
-          model: models.shopping_cart,
-          include: [
-            {
-              model: models.cart_address,
-              where: {
-                address_type: {
-                  [Op.in]: addresstypes,
-                },
-              },
-            },
-            {
-              model: models.shopping_cart_item,
-              include: [
-                {
-                  model: models.trans_sku_lists,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      where: {
-        id: order_id,
-      },
-    });
-    var day = "";
-    if (orderdetails) {
-      day = moment
-        .tz(orderdetails.updatedAt, "Asia/Kolkata")
-        .format("DD MMM YYYY HH:mm:ss");
-    }
-    var trans_sku_lists = [];
-    var prod_image_condition = [];
-    // console.log("orderinfodetails");
-    // console.log(JSON.stringify(orderdetails));
-    let skuqty = {};
-    orderdetails.shopping_cart.shopping_cart_items.forEach((element) => {
-      trans_sku_lists.push(element.product_sku);
-      skuqty[element.product_sku] = element.qty;
-      prod_image_condition.push({
-        product_color: element.trans_sku_list.metal_color,
-        product_id: element.trans_sku_list.product_id,
-        image_position: 1,
-      });
-      // console.log(element.metal_color)
-    });
-    let skudetails = await models.trans_sku_lists.findAll({
-      include: [
-        {
-          model: models.product_lists,
-          include: [
-            {
-              model: models.product_gemstones,
-            },
-          ],
-        },
-      ],
-      where: {
-        generated_sku: {
-          [Op.in]: trans_sku_lists,
-        },
-      },
-    });
-
-    var imagelist = {};
-    let prodimages = await models.product_images.findAll({
-      attributes: [
-        "product_id",
-        "product_color",
-        "image_url",
-        "image_position",
-        "isdefault",
-      ],
-      where: {
-        [Op.or]: prod_image_condition,
-      },
-      order: [["image_position", "ASC"]],
-    });
-    prodimages.forEach((element) => {
-      var imagename = element.image_url.replace(
-        element.product_id,
-        element.product_id + "/1000X1000"
-      );
-
-      imagelist[element.product_id] =
-        "https://styloriimages.s3.ap-south-1.amazonaws.com/" + imagename;
-    });
-
-    var emilreceipiants = [
-      {
-        to: orderdetails.user_profile.email,
-        subject: "Order Placed Successfully",
-      },
-      { to: process.env.adminemail, subject: "Order Placed Successfully" },
-    ];
-    // var emilreceipiants = [{to :"manokarantk@gmail.com" ,subject:"Order Placed Successfully"}]
-    var isloggedin = false;
-    if (
-      orderdetails.user_profile.facebookid ||
-      orderdetails.user_profile.user_id
-    ) {
-      isloggedin = true;
-    }
-    sendMail(
-      emilreceipiants,
-      emailTemp.orderConformation(
-        "",
-        process.env.adminemail,
-        orderdetails,
-        skudetails,
-        imagelist,
-        day,
-        isloggedin,
-        skuqty
-      )
-    );
-    console.log(
-      "Email has been sent successfully after a successfull payment!"
-    );
-    // resolve({
-    //   order: orderdetails,
-    //   // orderdetails,
-    //   skudetails,
-    //   prodimages,
-    //   imagelist,
-    // });
-    // return res.send(200, {
-    //   order: orderdetails,
-    //   // orderdetails,
-    //   skudetails,
-    //   prodimages,
-    //   imagelist,
-    // });
-  } catch (err) {
-    console.log(
-      new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Calcutta",
-      }) +
-        " - Error while sending mail : " +
-        err
-    );
-    // reject(err);
-  }
 }
 
 exports.addproductreview = async (req, res) => {
@@ -2104,5 +1913,43 @@ exports.updatecart_latestprice = async (req, res) => {
         " - Error message : " +
         err
     );
+  }
+};
+
+exports.payment_ipn_callback = async (req, res) => {
+  let { TRANSACTIONID } = req.body;
+  let { id: order_id } = await models.orders.findOne({
+    where: {
+      payment_id: TRANSACTIONID,
+    },
+  });
+  if (order_id) {
+    let paymentcontent = {
+      order_id: order_id,
+      payment_response: JSON.stringify(req.body),
+    };
+    let new_cart = await models.payment_details.create(paymentcontent, {
+      returning: true,
+    });
+  }
+  res.status(200).send({ message: "Added Payment Details successfully!" });
+};
+
+exports.trigger_mail = async (req, res) => {
+  let { order_id, type } = req.body;
+  try {
+    if (type === "order") {
+      await sendOrderConfirmation({ order_id });
+    }
+    if (type === "shipping") {
+      await sendShippingConfirmation({ order_id });
+    }
+    if (type === "rate") {
+      await sendRateProduct({ order_id });
+    }
+    res.status(200).send({ message: "mail triggered successfully!" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ ...error });
   }
 };

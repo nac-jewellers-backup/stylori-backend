@@ -75,7 +75,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 require("./routes/route.js")(app);
-
 //Configuring postgraphile middleware
 let connString;
 // console.log("dasd");
@@ -101,7 +100,7 @@ connString = {
 
 app.use(
   postgraphile(connString, {
-    graphiql: true,
+    graphiql: process.env.NODE_ENV.toLowerCase() !== "production",
     live: true,
     watchPg: true,
     appendPlugins: [

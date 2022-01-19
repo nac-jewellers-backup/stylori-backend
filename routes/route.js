@@ -11,6 +11,7 @@ let {
   initMapping,
   initIndex,
 } = require("../controller/elasticServices");
+const { send_sms } = require("../controller/notify/user_notify");
 const turl = process.env.apibaseurl + "/productesearch";
 const upload = require("../middlewares/multer").single("file");
 
@@ -101,6 +102,7 @@ module.exports = function (app) {
   app.post("/generatepaymenturl", cartcontroller.generatepaymenturl);
   app.post("/paymentsuccess", cartcontroller.paymentsuccess);
   app.post("/paymentfailure", cartcontroller.paymentfailure);
+  app.post("/paymentipn", cartcontroller.payment_ipn_callback);
 
   app.post("/updateattributes", productupdatecontroller.updateattributes);
 
@@ -997,4 +999,12 @@ module.exports = function (app) {
   app.post("/getcsvdata", productcontroller.csvDownload);
   app.post("/updateimagehover", productcontroller.imageHoverUpdate);
   app.post("/silverpriceupload", component_price_update.silverPriceUpload);
+  app.post("/send_sms", async (req, res) => {
+    try {
+      res.status(200).send(await send_sms(req.body));
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  });
+  app.post("/trigger_mail", cartcontroller.trigger_mail);
 };
