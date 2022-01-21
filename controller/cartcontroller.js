@@ -528,10 +528,10 @@ exports.resendorderemail = async (req, res) => {
 exports.paymentfailure = async (req, res) => {
   try {
     console.log(JSON.stringify(req.body));
-    if (req.body && req.body.oid) {
+    if (req.body && req.body.TRANSACTIONID) {
       let orderobj = await models.orders.findOne({
         where: {
-          id: req.body.oid,
+          payment_id: req.body.TRANSACTIONID,
         },
       });
       const update_cartstatus = {
@@ -544,7 +544,7 @@ exports.paymentfailure = async (req, res) => {
         },
       });
       let paymentcontent = {
-        order_id: req.body.oid,
+        order_id: orderobj.id,
         payment_response: JSON.stringify(req.body),
       };
       let new_cart = await models.payment_details.create(paymentcontent, {
