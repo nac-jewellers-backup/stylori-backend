@@ -1808,7 +1808,7 @@ async function sendorderconformationemail(order_id, res) {
         sender_id: "NACSTY",
       });
       if (res) {
-        return res.send(200, { orderdetails });
+        return res.send(200, { order: orderdetails });
       }
     })
     .catch((error) => {
