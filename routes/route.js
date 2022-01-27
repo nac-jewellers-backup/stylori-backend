@@ -1032,4 +1032,21 @@ module.exports = function (app) {
       res.status(500).send({ message: error.message });
     }
   });
+  app.get("/mail_status", (req, res) => {
+    let { message_id } = req.query;
+    let token =
+      "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";
+    require("axios")
+      .get(`https://api.sendgrid.com/v3/messages/${message_id}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => res.send(response))
+      .catch((err) => {
+        console.log(err.response.data);
+        res.status(err.response.status || 500).send(err.response.data);
+      });
+  });
 };
