@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       awb_number: DataTypes.TEXT,
       comments: DataTypes.TEXT,
       payment_id: DataTypes.INTEGER,
+      email_message_id: DataTypes.STRING,
+      sms_delivered_id: DataTypes.STRING,
     },
     {}
   );

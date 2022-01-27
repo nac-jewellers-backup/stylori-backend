@@ -53,7 +53,7 @@ let sendOrderConfirmation = ({ order_id }) => {
                   "state",
                   "country",
                   "pincode",
-                  "contact_number"
+                  "contact_number",
                 ],
                 where: {
                   address_type: {
@@ -143,7 +143,15 @@ let sendOrderConfirmation = ({ order_id }) => {
           type: "order_confirmed",
           data: email_template_body,
         })
-      );
+      ).then(async (result) => {
+        let { response } = result;
+        await models.orders.update(
+          {
+            email_message_id: response[0].message_id,
+          },
+          { where: { id: order_id } }
+        );
+      });
       resolve(orderdetails);
     } catch (error) {
       console.error(error);

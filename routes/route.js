@@ -1007,4 +1007,29 @@ module.exports = function (app) {
     }
   });
   app.post("/trigger_mail", cartcontroller.trigger_mail);
+  app.post("/send_error_mail", async (req, res) => {
+    try {
+      let moment = require("moment");
+      let email_subject = `Error Observed in ${process.env.NODE_ENV} at ${moment
+        .tz(new Date(), "Asia/Kolkata")
+        .format("DD MMM YYYY HH:mm:ss")}`;
+      const email_recipients = [
+        { to: "dineshtawker@gmail.com", subject: email_subject },
+        { to: "samir@crayond.co", subject: email_subject },
+      ];
+      require("../controller/notify/user_notify")
+        .sendMail(email_recipients, JSON.stringify(req.body))
+        .then((result) => {
+          console.log(result);
+          res.status(200).send({ message: "Successfully mail sent" });
+        })
+        .catch((error) => {
+          console.log(error);
+          res.status(500).send({ message: error.message });
+        });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: error.message });
+    }
+  });
 };

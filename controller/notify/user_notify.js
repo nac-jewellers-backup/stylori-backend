@@ -121,7 +121,11 @@ const SendMail = (mails, bodycontent) => {
             .then((response) => {
               console.log("====Mail Sent to :" + mail.to + "====");
               console.log(response.status, response.statusText);
-              return response;
+              console.log(mail.to, response.headers["x-message-id"]);
+              return Promise.resolve({
+                mail: mail.to,
+                message_id: response.headers["x-message-id"],
+              });
               //   console.log(response.data);
             })
             .catch((err) => {
@@ -131,8 +135,8 @@ const SendMail = (mails, bodycontent) => {
             });
         })
       )
-        .then(() => {
-          resolve({ status: "done" });
+        .then((result) => {
+          resolve({ status: "done", response: result });
         })
         .catch((err) => {
           console.log(err);
