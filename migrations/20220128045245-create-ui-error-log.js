@@ -9,13 +9,13 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       page: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(5000),
       },
       error: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(5000),
       },
       message: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(5000),
       },
       createdAt: {
         allowNull: false,
