@@ -145,12 +145,12 @@ let sendOrderConfirmation = ({ order_id }) => {
         })
       ).then(async (result) => {
         let { response } = result;
-        await models.orders.update(
-          {
-            email_message_id: response[0].message_id,
-          },
-          { where: { id: order_id } }
-        );
+        await models.communication_log.create({
+          order_id,
+          type: "email",
+          message_type: "order",
+          sender_response_id: response[0].message_id,
+        });
       });
       resolve(orderdetails);
     } catch (error) {

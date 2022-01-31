@@ -1816,10 +1816,12 @@ async function sendorderconformationemail(order_id, res) {
         sender_id: "NACSTY",
       });
 
-      await models.orders.update(
-        { sms_delivered_id: smsResponse.data.respid },
-        { where: { id: order_id } }
-      );
+      await models.communication_log.create({
+        order_id,
+        type: "sms",
+        message_type: "order",
+        sender_response_id: smsResponse.data.respid,
+      });
 
       if (res) {
         return res.send(200, { order: orderdetails });
