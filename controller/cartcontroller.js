@@ -416,6 +416,10 @@ exports.paymentsuccess = async (req, res) => {
     };
     let redirectionurl = process.env.baseurl;
     if (TRANSACTIONPAYMENTSTATUS == "SUCCESS") {
+      await models.orders.update(
+        { payment_status: "Paid" },
+        { where: { id: orderobj.id } }
+      );
       const update_cartstatus = {
         status: "paid",
       };
@@ -434,6 +438,10 @@ exports.paymentsuccess = async (req, res) => {
       sendorderconformationemail(orderobj.id);
       redirectionurl = redirectionurl + "/paymentsuccess/" + orderobj.id;
     } else {
+      await models.orders.update(
+        { payment_status: "Failed" },
+        { where: { id: orderobj.id } }
+      );
       redirectionurl = redirectionurl + "/cart";
     }
 
