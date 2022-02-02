@@ -595,7 +595,7 @@
                                                                         <p
                                                                               style="color: black;margin-top: -20px;font-weight: 600;">
                                                                               Your transaction Successful,We received
-                                                                              your payment of <%= amount_payed %>
+                                                                              your payment of <%= discounted_price %>
                                                                         </p>
 
 
@@ -651,47 +651,48 @@
                                           <tr>
                                                 <td class="padds">
                                                       <% order_items.forEach(function(item){ %>
-                                                      <table role="presentation" border="0" cellpadding="0"
-                                                            cellspacing="0" width="100%"
-                                                            style="border-bottom: 1px solid #c1c1c1">
-                                                            <td valign="middle" align="right" class="pdimg">
-                                                                  <div style="border:1px solid #c1c1c1;margin-right: 12px;"
-                                                                        class="image">
-                                                                        <img src=<%- item.image_url %>
-                                                                        alt=""
-                                                                        style="width: 100%; max-width: 600px; height:
-                                                                        100px;object-fit:
-                                                                        contain; margin: auto; display: block;">
-                                                                  </div>
-                                                                  <br />
-                                                            </td>
-                                                            <td valign="middle" class="details">
-                                                                  <div class="text-blog"
-                                                                        style="text-align: left; padding-left:25px;">
+                                                            <table role="presentation" border="0" cellpadding="0"
+                                                                  cellspacing="0" width="100%"
+                                                                  style="border-bottom: 1px solid #c1c1c1">
+                                                                  <td valign="middle" align="right" class="pdimg">
+                                                                        <div style="border:1px solid #c1c1c1;margin-right: 12px;"
+                                                                              class="image">
+                                                                              <img src=<%- item.image_url %>
+                                                                              alt=""
+                                                                              style="width: 100%; max-width: 600px;
+                                                                              height:
+                                                                              100px;object-fit:
+                                                                              contain; margin: auto; display: block;">
+                                                                        </div>
+                                                                        <br />
+                                                                  </td>
+                                                                  <td valign="middle" class="details">
+                                                                        <div class="text-blog"
+                                                                              style="text-align: left; padding-left:25px;">
 
+                                                                              <p class="datas">
+                                                                                    <%- item.name %>
+                                                                              </p>
+                                                                              <p class="datas">#<%- item.sku_id %>
+                                                                              </p>
+                                                                              <p class="datas">Expected Delivery -<%-
+                                                                                          item.ships_by%>
+                                                                              </p>
+
+                                                                        </div>
+                                                                  </td>
+                                                                  <td valign="middle" class="price">
+                                                                        <p class="datas">&nbsp;&nbsp;&nbsp;&#8377;&nbsp;
+                                                                              <%- item.price%>
+                                                                        </p>
                                                                         <p class="datas">
-                                                                              <%- item.name %>
+                                                                              &nbsp;&nbsp;&nbsp;<strike>&#8377;&nbsp;<%-
+                                                                                          item.discount_price%></strike>
                                                                         </p>
-                                                                        <p class="datas">#<%- item.sku_id %>
-                                                                        </p>
-                                                                        <p class="datas">Expected Delivery -<%-
-                                                                                    item.ships_by%>
-                                                                                 </p>
+                                                                  </td>
 
-                                                                  </div>
-                                                            </td>
-                                                            <td valign="middle" class="price">
-                                                                  <p class="datas">&nbsp;&nbsp;&nbsp;&#8377;&nbsp;<%-
-                                                                              item.price%>
-                                                                  </p>
-                                                                  <p class="datas">
-                                                                        &nbsp;&nbsp;&nbsp;<strike>&#8377;&nbsp;<%-
-                                                                                    item.discount_price%></strike>
-                                                                  </p>
-                                                            </td>
-
-                                                      </table>
-                                                      <% }); %>
+                                                            </table>
+                                                            <% }); %>
                                                 </td>
 
                                           </tr>
@@ -708,11 +709,12 @@
                                                                   <p class="datas">&nbsp;</p>
                                                                   <p class="datas">SUB TOTAL</p>
                                                                   <% if (discount) { %>
-                                                                  <p class="datas" style="margin-top: 12px;">
-                                                                        CART&nbsp;DISCOUNT</p>
+                                                                        <p class="datas" style="margin-top: 12px;">
+                                                                              CART&nbsp;DISCOUNT</p>
                                                                         <% } %>
-                                                                  <p class="datas">SHIPPING&nbsp;CHARGES(Standard)</p>
-                                                                  <br />
+                                                                              <p class="datas">
+                                                                                    SHIPPING&nbsp;CHARGES(Standard)</p>
+                                                                              <br />
                                                             </td>
                                                             <td valign="middle" class="show">
 
@@ -720,13 +722,15 @@
 
 
                                                             <td valign="middle" align="left" width="100%">
-                                                                  <p class="datasright">&#8377;&nbsp;<%= gross_total %></p>
-                                                                  <% if (discount) { %>
-                                                                  <p class="datasright" style="margin-top: 12px;">
-                                                                        &#8377;&nbsp;<%= discount %>
+                                                                  <p class="datasright">&#8377;&nbsp;<%= gross_total %>
                                                                   </p>
-                                                                  <% } %>
-                                                                  <p class="datasright">&nbsp;&nbsp;&nbsp;&nbsp;FREE</p>
+                                                                  <% if (discount) { %>
+                                                                        <p class="datasright" style="margin-top: 12px;">
+                                                                              &#8377;&nbsp;<%= discount %>
+                                                                        </p>
+                                                                        <% } %>
+                                                                              <p class="datasright">
+                                                                                    &nbsp;&nbsp;&nbsp;&nbsp;FREE</p>
 
                                                             </td>
 
@@ -751,7 +755,9 @@
                                                             </td>
 
                                                             <td valign="middle" width="100%">
-                                                                  <p class="datasright">&#8377;&nbsp;<%= discounted_price %></p>
+                                                                  <p class="datasright">&#8377;&nbsp;<%=
+                                                                              discounted_price %>
+                                                                  </p>
                                                                   <h3 class="datasright"
                                                                         style="margin-top: 12px;color: #D85163">
                                                                         <b>&#8377;&nbsp;<%= discounted_price %></b>
@@ -781,33 +787,42 @@
                                     <h2
                                           style="color: white;font-family: 'Noto Serif' ;font-weight: bold;margin-bottom: -6px;">
                                           SHIPPING ADDRESS:</h2>
-                                          <p
+                                    <p
                                           style="text-transform: capitalize;line-height: 15px;margin-top: -8px;text-decoration: none;color: white;">
                                           <%= address.firstname %>
-                                              <%= address.lastname %>
-                                                  <br />
-                                                  <%= address.addressline1 %><br />
-                                                      <% if (address.addressline2) { %>
-                                                          <%= address.addressline2 %><br />
-                                                              <% } %>
-                                                                  <%= address.city %>,<%= address.state %><br />
-                                                                          <%= address.country %> - <%= address.pincode %>.
-                                                                                  <br />
-                                                                                  <br />
-                                                                                  You can visit
-                                                                                  https://www.stylori.com/account-allorders to view
-                                                                                  your order status
-                                                                                  and to
-                                                                                  contact us
-                                                                                  regarding this order.
-                                                                                  <br />
-                                                                                  <br />
-                                                                                  Should you find the details of the order incorrect,
-                                                                                  please feel free to call us at
-                                                                                  99526
-                                                                                  25252 or email us at
-                                                                                  hello@stylori.com
-                                      </p>
+                                                <%= address.lastname %>
+                                                      <br />
+                                                      <%= address.addressline1 %><br />
+                                                            <% if (address.addressline2) { %>
+                                                                  <%= address.addressline2 %><br />
+                                                                        <% } %>
+                                                                              <%= address.city %>,<%= address.state %>
+                                                                                          <br />
+                                                                                          <%= address.country %> - <%=
+                                                                                                      address.pincode %>
+                                                                                                      .
+                                                                                                      <br />
+                                                                                                      <br />
+                                                                                                      You can visit
+                                                                                                      https://www.stylori.com/account-allorders
+                                                                                                      to view
+                                                                                                      your order status
+                                                                                                      and to
+                                                                                                      contact us
+                                                                                                      regarding this
+                                                                                                      order.
+                                                                                                      <br />
+                                                                                                      <br />
+                                                                                                      Should you find
+                                                                                                      the details of the
+                                                                                                      order incorrect,
+                                                                                                      please feel free
+                                                                                                      to call us at
+                                                                                                      99526
+                                                                                                      25252 or email us
+                                                                                                      at
+                                                                                                      hello@stylori.com
+                                    </p>
                                     <br />
                                     <h3 style="color: white;font-weight: bold;margin-bottom: -6px;">TEAM NAC,</h3>
                                     <h3 style="color: white;font-weight: bold;margin-bottom: -6px;">WITH LOVE</h3>

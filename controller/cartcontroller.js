@@ -18,6 +18,7 @@ const {
   sendOrderConfirmation,
   sendShippingConfirmation,
   sendRateProduct,
+  sendPaymentConfimed,
 } = require("./notify/email_templates");
 dotenv.config();
 aws.config.update({
@@ -1962,6 +1963,9 @@ exports.trigger_mail = async (req, res) => {
     }
     if (type === "rate") {
       await sendRateProduct({ order_id });
+    }
+    if (type === "payment") {
+      await sendPaymentConfimed({ order_id });
     }
     res.status(200).send({ message: "mail triggered successfully!" });
   } catch (error) {
