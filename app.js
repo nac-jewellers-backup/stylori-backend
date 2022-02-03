@@ -1,18 +1,17 @@
-import "dotenv/config";
 import cors from "cors";
 import express from "express";
 import cookieParser from "cookie-parser";
-import { postgraphile, makePluginHook } from "postgraphile";
+import { postgraphile /* makePluginHook */ } from "postgraphile";
 import PgAggregatesPlugin from "@graphile/pg-aggregates";
 import morgan from "morgan";
 
 //import Myusers from '../controller/sortbyprice.js';
 const MySchemaExtensionPlugin = require("./controller/sortbyprice.js");
-const user = require("./controller/notify/Emailtemplate");
+// const user = require("./controller/notify/Emailtemplate");
 
 const dotenv = require("dotenv");
 dotenv.config();
-const env = process.env.NODE_ENV || "staging";
+// const env = process.env.NODE_ENV || "staging";
 const ConnectionFilterPlugin = require("postgraphile-plugin-connection-filter");
 const PgOrderByRelatedPlugin = require("@graphile-contrib/pg-order-by-related");
 

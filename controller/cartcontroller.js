@@ -19,6 +19,7 @@ const {
   sendShippingConfirmation,
   sendRateProduct,
   sendPaymentConfimed,
+  sendAbandonedCart,
 } = require("./notify/email_templates");
 dotenv.config();
 aws.config.update({
@@ -1956,7 +1957,7 @@ exports.trigger_mail = async (req, res) => {
   let { order_id, type } = req.body;
   try {
     if (type === "order") {
-      await sendOrderConfirmation({ order_id });
+      await sendorderconformationemail(order_id);
     }
     if (type === "shipping") {
       await sendShippingConfirmation({ order_id });
@@ -1966,6 +1967,11 @@ exports.trigger_mail = async (req, res) => {
     }
     if (type === "payment") {
       await sendPaymentConfimed({ order_id });
+    }
+    if (type === "abandoned_cart") {
+      return res
+        .status(200)
+        .send(await sendAbandonedCart({ cart_id: order_id }));
     }
     res.status(200).send({ message: "mail triggered successfully!" });
   } catch (error) {
