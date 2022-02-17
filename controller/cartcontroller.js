@@ -1056,9 +1056,11 @@ exports.addtocart = async (req, res) => {
 
     try {
       if (cart_id) {
-        let cartStatus = await models.shopping_cart.findByPk(cart_id);
-        if (!cartStatus) {
-          return res.status(500).send({ message: "Something went wrong!" });
+        let cart = await models.shopping_cart.findByPk(cart_id);
+        if (!cart) {
+          return res.status(403).send({ message: "Something went wrong!" });
+        } else if (cart.status != "pending") {
+          cart_id = await createNewCart();
         }
       } else {
         cart_id = await createNewCart();
