@@ -837,10 +837,22 @@ exports.getsizes = async (req, res) => {
 exports.removecartitem = async (req, res) => {
   try {
     let { cart_id, product_id } = req.body;
+
+    let cart = await models.shopping_cart.findByPk(cart_id);
+
+    if (!cart) {
+      return res.status(403).send({ message: "No Such Cart ID exists!" });
+    } else if (cart.status != "pending") {
+      return res
+        .status(403)
+        .send({ message: "Please check cart it's already submitted" });
+    }
+
     await models.shopping_cart_item.destroy({
       where: {
         shopping_cart_id: cart_id,
         product_sku: product_id,
+        status: "pending",
       },
     });
 
@@ -905,6 +917,16 @@ exports.removecartitem = async (req, res) => {
 exports.updatecartitem = async (req, res) => {
   try {
     let { cart_id, product } = req.body;
+
+    let cart = await models.shopping_cart.findByPk(cart_id);
+
+    if (!cart) {
+      return res.status(403).send({ message: "No Such Cart ID exists!" });
+    } else if (cart.status != "pending") {
+      return res
+        .status(403)
+        .send({ message: "Please check cart it's already submitted" });
+    }
 
     // let product_in_cart = await models.shopping_cart_item.findAll({
     //   where: {
