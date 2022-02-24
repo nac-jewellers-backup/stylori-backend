@@ -1758,7 +1758,7 @@ exports.removewishlist = async (req, res) => {
 exports.addorder = async (req, res) => {
   try {
     let { user_id, cart_id, payment_mode, voucher_code } = req.body;
-    let orderDetails = models.orders.findOne({
+    let orderDetails = await models.orders.findOne({
       where: {
         cart_id,
         payment_mode,
@@ -1792,7 +1792,7 @@ exports.addorder = async (req, res) => {
     if (orderDetails) {
       if (payment_mode === "COD") {
         sendorderconformationemail(orderDetails.id, res);
-      } else {
+      } else {        
         res.status(200).send({
           message: "Order placed successfully",
           order: orderDetails,
