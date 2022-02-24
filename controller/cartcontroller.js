@@ -1758,6 +1758,13 @@ exports.removewishlist = async (req, res) => {
 exports.addorder = async (req, res) => {
   try {
     let { user_id, cart_id, payment_mode, voucher_code } = req.body;
+    let orderDetails = models.orders.findOne({
+      where: {
+        cart_id,
+        payment_mode,
+        payment_status: "Initiated",
+      },
+    });
     var paymentstatus = "Initiated";
     var orderstatus = "Initiated";
     if (payment_mode === "COD") {
@@ -1781,38 +1788,49 @@ exports.addorder = async (req, res) => {
         id: cart_id,
       },
     });
-    models.orders
-      .create(order_bj, {
-        returning: true,
-      })
-      .then(async function (response) {
-        if (voucher_code) {
-          // let discountendamount  = eligible_amount * discountpercent;
 
-          var query =
-            "UPDATE vouchers SET uses = (uses + 1) where code ='" +
-            voucher_code.toUpperCase() +
-            "'";
-          // console.log("-------");
-          // console.log(query);
-          await models.sequelize.query(query).then(([results, metadata]) => {
-            // Results will be an empty array and metadata will contain the number of affected rows.
-          });
-        }
+    if (orderDetails) {
+      if (payment_mode === "COD") {
+        sendorderconformationemail(orderDetails.id, res);
+      } else {
+        res.status(200).send({
+          message: "Order placed successfully",
+          order: orderDetails,
+        });
+      }
+    } else {
+      models.orders
+        .create(order_bj, {
+          returning: true,
+        })
+        .then(async function (response) {
+          if (voucher_code) {
+            // let discountendamount  = eligible_amount * discountpercent;
 
-        if (payment_mode === "COD") {
-          sendorderconformationemail(order_bj.id, res);
-        } else {
-          res.send(200, {
-            message: "Order placed successfully",
-            order: response,
-          });
-        }
-      })
-      .catch((reason) => {
-        res.send(500, { message: "Error Please try again" });
-        console.log(reason);
-      });
+            var query =
+              "UPDATE vouchers SET uses = (uses + 1) where code ='" +
+              voucher_code.toUpperCase() +
+              "'";
+            // console.log("-------");
+            // console.log(query);
+            await models.sequelize.query(query).then(([results, metadata]) => {
+              // Results will be an empty array and metadata will contain the number of affected rows.
+            });
+          }
+          if (payment_mode === "COD") {
+            sendorderconformationemail(order_bj.id, res);
+          } else {
+            res.send(200, {
+              message: "Order placed successfully",
+              order: response,
+            });
+          }
+        })
+        .catch((reason) => {
+          res.send(500, { message: "Error Please try again" });
+          console.log(reason);
+        });
+    }
   } catch (err) {
     console.log(
       new Date().toLocaleString("en-US", {
