@@ -1761,8 +1761,7 @@ exports.addorder = async (req, res) => {
     let orderDetails = await models.orders.findOne({
       where: {
         cart_id,
-        payment_mode,
-        payment_status: "Initiated",
+        payment_mode        
       },
     });
     var paymentstatus = "Initiated";
