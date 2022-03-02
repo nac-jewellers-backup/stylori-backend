@@ -851,8 +851,7 @@ exports.removecartitem = async (req, res) => {
     await models.shopping_cart_item.destroy({
       where: {
         shopping_cart_id: cart_id,
-        product_sku: product_id,
-        status: "pending",
+        product_sku: product_id,        
       },
     });
 
