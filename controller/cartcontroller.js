@@ -851,7 +851,7 @@ exports.removecartitem = async (req, res) => {
     await models.shopping_cart_item.destroy({
       where: {
         shopping_cart_id: cart_id,
-        product_sku: product_id,        
+        product_sku: product_id,
       },
     });
 
@@ -861,48 +861,40 @@ exports.removecartitem = async (req, res) => {
       },
     });
 
-    if (totalCartItems) {
-      let gross_amount = await models.shopping_cart_item.findOne({
-        attributes: [[squelize.literal("SUM(price)"), "price"]],
-        where: {
-          shopping_cart_id: cart_id,
-        },
-      });
-      // console.log("cartline length");
+    let gross_amount = await models.shopping_cart_item.findOne({
+      attributes: [[squelize.literal("SUM(price)"), "price"]],
+      where: {
+        shopping_cart_id: cart_id,
+      },
+    });
 
-      await models.shopping_cart
-        .update(
-          {
-            gross_amount: gross_amount.price,
-            discounted_price: gross_amount.price,
-            discount: 0,
-          },
-          {
-            where: { id: cart_id },
-          }
-        )
-        .then((price_splitup_model) => {
-          res.send(200, { message: "You removed this product successfully" });
-        })
-        .catch((reason) => {
-          // console.log(reason);
-          res.status(500).send(reason);
-        });
+    let updateCartObj = {};
+
+    if (totalCartItems) {
+      // console.log("cartline length");
+      updateCartObj = {
+        gross_amount: gross_amount.price,
+        discounted_price: gross_amount.price,
+        discount: 0,
+      };
     } else {
-      models.shopping_cart
-        .destroy({
-          where: {
-            id: cart_id,
-          },
-        })
-        .then((price_splitup_model) => {
-          res.send(200, { message: "You removed this product successfully" });
-        })
-        .catch((reason) => {
-          // console.log(reason);
-          res.status(500).send(reason);
-        });
+      updateCartObj = {
+        gross_amount: 0,
+        discounted_price: 0,
+        discount: 0,
+      };
     }
+    await models.shopping_cart
+      .update(updateCartObj, {
+        where: { id: cart_id },
+      })
+      .then((price_splitup_model) => {
+        res.send(200, { message: "You removed this product successfully" });
+      })
+      .catch((reason) => {
+        console.log(reason);
+        res.status(500).send(reason);
+      });
   } catch (err) {
     console.log(
       new Date().toLocaleString("en-US", {
