@@ -1042,6 +1042,14 @@ module.exports = function (app) {
       res.status(500).send({ message: error.message });
     }
   });
+  app.post("/verify_payment", async (req, res) => {
+    try {
+      res.status(200).send(await cartcontroller.verify_payment(req.body));
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ ...error });
+    }
+  });
   app.get("/mail_status", (req, res) => {
     let { message_id } = req.query;
     let token =

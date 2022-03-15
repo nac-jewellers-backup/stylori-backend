@@ -1,4 +1,4 @@
-import crypto from "crypto-random-string";
+import crypto, { async } from "crypto-random-string";
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 const models = require("./../models");
@@ -9,6 +9,7 @@ const uuidv1 = require("uuid/v1");
 import aws from "aws-sdk";
 import dotenv from "dotenv";
 import { sequelize } from "../models";
+import axios from "axios";
 var request = require("request");
 var dateFormat = require("dateformat");
 const moment = require("moment");
@@ -1761,7 +1762,7 @@ exports.addorder = async (req, res) => {
     let orderDetails = await models.orders.findOne({
       where: {
         cart_id,
-        payment_mode        
+        payment_mode,
       },
     });
     var paymentstatus = "Initiated";
@@ -1791,7 +1792,7 @@ exports.addorder = async (req, res) => {
     if (orderDetails) {
       if (payment_mode === "COD") {
         sendorderconformationemail(orderDetails.id, res);
-      } else {        
+      } else {
         res.status(200).send({
           message: "Order placed successfully",
           order: orderDetails,
@@ -2016,6 +2017,73 @@ exports.payment_ipn_callback = async (req, res) => {
     });
   }
   res.status(200).send({ message: "Added Payment Details successfully!" });
+};
+
+exports.verify_payment = ({ order_id }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let order = await models.orders.findByPk(order_id, {
+        attributes: ["payment_id"],
+      });
+
+      if (!order) {
+        return reject({ message: "No such order found" });
+      }
+
+      let { payment_id: merchant_txn_id } = order;
+
+      var md5 = require("md5");
+      var sha256 = require("sha256");
+      var dateformat = require("dateformat");
+      var mid = process.env.airpay_mid;
+      var username = process.env.airpay_username;
+      var password = process.env.airpay_password;
+      var secret = process.env.airpay_secret;
+      var now = new Date();
+
+      let udata = username + ":|:" + password;
+      let privatekey = sha256(secret + "@" + udata);
+      let aldata =
+        mid + merchant_txn_id + "" + "" + "" + dateformat(now, "yyyy-mm-dd");
+      let checksum = md5(aldata + privatekey);
+
+      var FormData = require("form-data");
+      let data = new FormData();
+
+      data.append("mercid", mid);
+      data.append("merchant_txnId", merchant_txn_id);
+      data.append("privatekey", privatekey);
+      data.append("checksum", checksum);
+
+      axios
+        .post(`https://payments.airpay.co.in/order/verify.php`, data, {
+          headers: { ...data.getHeaders(), "Content-Type": "application/json" },
+        })
+        .then(async (result) => {
+          let xmlParser = require("xml2json");
+          let response = JSON.parse(xmlParser.toJson(result.data))?.RESPONSE
+            ?.TRANSACTION;
+          let payment_detail = await models.payment_details.findOne({
+            where: {
+              order_id,
+              payment_response: JSON.stringify(response),
+            },
+          });
+          if (payment_detail) {
+            resolve({ message: "It's already up to date!" });
+          } else {
+            await models.payment_details.create({
+              order_id,
+              payment_response: JSON.stringify(response),
+            });
+            resolve(response);
+          }
+        })
+        .catch(reject);
+    } catch (error) {
+      reject(error);
+    }
+  });
 };
 
 exports.trigger_mail = async (req, res) => {
