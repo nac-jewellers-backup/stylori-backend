@@ -2060,13 +2060,16 @@ exports.verify_payment = ({ order_id }) => {
           headers: { ...data.getHeaders(), "Content-Type": "application/json" },
         })
         .then(async (result) => {
-          let xmlParser = require("xml2json");
-          let response = JSON.parse(xmlParser.toJson(result.data))?.RESPONSE
-            ?.TRANSACTION;
+          let { XMLParser } = require("fast-xml-parser");
+          const parser = new XMLParser();
+          let response = parser.parse(result.data)?.RESPONSE?.TRANSACTION;
+          console.log(JSON.stringify(response));
           let payment_detail = await models.payment_details.findOne({
             where: {
               order_id,
-              payment_response: JSON.stringify(response),
+              [models.sequelize.where]: models.sequelize.literal(
+                `cast(payment_response as json)::jsonb->'TRANSACTIONSTATUS' = '"${response.TRANSACTIONSTATUS}"'`
+              ),
             },
           });
           if (payment_detail) {
