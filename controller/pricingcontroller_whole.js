@@ -1869,10 +1869,11 @@ exports.priceupdate = (req, res) => {
                   productskus[skucount].generated_sku +
                   "' and component LIKE 'gemstone%'";
                 await models.sequelize
-                  .query(query)
+                  .query(queryarray)
                   .then(([results, metadata]) => {
                     // Results will be an empty array and metadata will contain the number of affected rows.
-                  });
+                  })
+                  .catch(console.log);
               }
 
               if (markup.material == "Diamond") {
