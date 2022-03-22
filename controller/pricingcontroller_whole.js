@@ -18,7 +18,7 @@ exports.priceupdate = (req, res) => {
 
     function writelog(message) {
       // console.log("test12");
-
+      console.log(">>>>", message);
       message = message + "\n";
       fs.appendFile("./price_update.txt", message, (err) => {
         if (err) console.log(err);
