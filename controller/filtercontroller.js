@@ -837,7 +837,7 @@ exports.filteroptions = async (req, res) => {
       Availability: [
         "1 Day Shipping",
         "10 & Above Days Shipping",
-        "Out of Stock",
+        // "Out of Stock", Diabled as per Vinoth & Dinesh on March 23,2022 WhatsApp confirmation
       ],
 
       "By Weight": product_byweight_masters,
