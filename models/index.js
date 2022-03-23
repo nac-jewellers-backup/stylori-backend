@@ -41,7 +41,7 @@ if (env === "production") {
     //config.staging,
     {
       host: config.staging.host,
-      logging: false,
+      logging: console.log,
       dialect: config.staging.dialect,
     }
   );

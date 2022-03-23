@@ -1516,8 +1516,8 @@ exports.priceupdate = (req, res) => {
           }
         }
       }
-      function getmaterialmarkupsum(skuvalue) {
-        return models.pricing_sku_materials.findOne({
+      async function getmaterialmarkupsum(skuvalue) {
+        return await models.pricing_sku_materials.findOne({
           attributes: [
             [Sequelize.literal("SUM(markup)"), "markup"],
             [Sequelize.literal("SUM(discount_price)"), "discount_price"],
@@ -1527,8 +1527,8 @@ exports.priceupdate = (req, res) => {
           },
         });
       }
-      function getmetalmarkupsum(skuvalue) {
-        return models.pricing_sku_metals.findOne({
+      async function getmetalmarkupsum(skuvalue) {
+        return await models.pricing_sku_metals.findOne({
           attributes: [
             [Sequelize.literal("SUM(markup)"), "markup"],
             [Sequelize.literal("SUM(discount_price)"), "discount_price"],
@@ -1814,7 +1814,8 @@ exports.priceupdate = (req, res) => {
                     .query(query)
                     .then(([results, metadata]) => {
                       // Results will be an empty array and metadata will contain the number of affected rows.
-                    });
+                    })
+                    .catch(console.log);
                 }
               }
             } else {
@@ -1980,9 +1981,12 @@ exports.priceupdate = (req, res) => {
           " ))) where product_sku ='" +
           productskus[skucount].generated_sku +
           "' and material_name = 'makingcharge'";
-        await models.sequelize.query(mkquery).then(([results, metadata]) => {
-          // Results will be an empty array and metadata will contain the number of affected rows.
-        });
+        await models.sequelize
+          .query(mkquery)
+          .then(([results, metadata]) => {
+            // Results will be an empty array and metadata will contain the number of affected rows.
+          })
+          .catch(console.log);
         // console.log("=========diamond_discountdiscountvalue=====");
         // console.log(JSON.stringify(diamond_component_count));
         // console.log("==============");
@@ -2005,7 +2009,8 @@ exports.priceupdate = (req, res) => {
             .query(materialquery)
             .then(([results, metadata]) => {
               // Results will be an empty array and metadata will contain the number of affected rows.
-            });
+            })
+            .catch(console.log);
         }
         if (gemstone_component_count > 0) {
           var materialquery =
