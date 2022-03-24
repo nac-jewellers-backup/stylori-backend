@@ -1067,4 +1067,27 @@ module.exports = function (app) {
         res.status(err.response.status || 500).send(err.response.data);
       });
   });
+  const otpController = require("../controller/otpController");
+  app.post("/send_otp", async (req, res) => {
+    try {
+      res.status(200).send(await otpController.sendOtp(req.body));
+    } catch (error) {
+      res.status(error.statusCode || 500).send({ error: true, ...error });
+    }
+  });
+  app.post("/resend_otp", async (req, res) => {
+    try {
+      res.status(200).send(await otpController.resendOtp(req.body));
+    } catch (error) {
+      res.status(error.statusCode || 500).send({ error: true, ...error });
+    }
+  });
+  app.post("/verify_otp", async (req, res) => {
+    try {
+      res.status(200).send(await otpController.verifyOtp(req.body));
+    } catch (error) {
+      res.status(error.statusCode || 500).send({ error: true, ...error });
+    }
+  });
+  app.post("/api/auth/mediasignin", authcontroller.mediaSignin);
 };
