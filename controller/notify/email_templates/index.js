@@ -494,7 +494,7 @@ let sendRateProduct = ({ order_id }) => {
 };
 
 let sendAbandonedCart = ({ cart_id, first_name }) => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {    
     try {
       let cart_details = await models.shopping_cart.findOne({
         attributes: [
@@ -523,6 +523,7 @@ let sendAbandonedCart = ({ cart_id, first_name }) => {
           },
           {
             model: models.cart_address,
+            required: false,
             attributes: [
               "firstname",
               "lastname",
@@ -545,7 +546,7 @@ let sendAbandonedCart = ({ cart_id, first_name }) => {
         },
       });
 
-      let order_items = [];
+      let order_items = [];      
       for (let i = 0; i < cart_details.shopping_cart_items.length; i++) {
         let element = cart_details.shopping_cart_items[i];
         let product = await models.product_lists.findOne({
