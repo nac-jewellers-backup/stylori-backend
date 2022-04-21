@@ -12,6 +12,7 @@ let {
   initIndex,
 } = require("../controller/elasticServices");
 const { send_sms } = require("../controller/notify/user_notify");
+const price_engine = require("../controller/price_engine");
 const turl = process.env.apibaseurl + "/productesearch";
 const upload = require("../middlewares/multer").single("file");
 
@@ -1066,5 +1067,36 @@ module.exports = function (app) {
         console.log(err.response.data);
         res.status(err.response.status || 500).send(err.response.data);
       });
+  });
+  const otpController = require("../controller/otpController");
+  app.post("/send_otp", async (req, res) => {
+    try {
+      res.status(200).send(await otpController.sendOtp(req.body));
+    } catch (error) {
+      res.status(error.statusCode || 500).send({ error: true, ...error });
+    }
+  });
+  app.post("/resend_otp", async (req, res) => {
+    try {
+      res.status(200).send(await otpController.resendOtp(req.body));
+    } catch (error) {
+      res.status(error.statusCode || 500).send({ error: true, ...error });
+    }
+  });
+  app.post("/verify_otp", async (req, res) => {
+    try {
+      res.status(200).send(await otpController.verifyOtp(req.body));
+    } catch (error) {
+      res.status(error.statusCode || 500).send({ error: true, ...error });
+    }
+  });
+  app.post("/api/auth/mediasignin", authcontroller.mediaSignin);
+  app.post("/price_run_new", async (req, res) => {
+    try {
+      res.status(200).send(await price_engine(req.body));
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error);
+    }
   });
 };

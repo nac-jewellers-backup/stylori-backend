@@ -1201,3 +1201,79 @@ exports.getuserinfo = async (req, res) => {
     );
   }
 };
+
+exports.mediaSignin = async (req, res) => {
+  let { type, mediaBody } = req.body;
+  let userProfile,
+    token,
+    profileSearch = { email: mediaBody.email };
+  try {
+    //Finding if existing email exists based on social media sigin
+    if (type == "facebook") {
+      profileSearch["facebookid"] = mediaBody.id;
+    } else if (type == "google") {
+      profileSearch["google_id"] = mediaBody.id;
+    }
+    userProfile = await models.user_profiles.findOne({
+      where: {
+        [models.Sequelize.Op.or]: {
+          ...profileSearch,
+        },
+      },
+      order: [["createdAt", "desc"]],
+    });
+    token = jwt.sign({ id: mediaBody.email }, process.env.SECRET, {
+      expiresIn: "1d", // expires in 24 hours
+    });
+    if (userProfile) {
+      if (type == "facebook" && !userProfile.facebookid) {
+        await models.user_profiles.update(
+          { facebookid: mediaBody.id },
+          { where: { id: userProfile.id } }
+        );
+      }
+      if (type == "google" && !userProfile.google_id) {
+        await models.user_profiles.update(
+          { google_id: mediaBody.id },
+          { where: { id: userProfile.id } }
+        );
+      }
+      return res.status(200).send({
+        accessToken: token,
+        userprofile: { id: userProfile.id, email: userProfile.email },
+      });
+    } else {
+      let user = await models.users.findOne({
+        where: { email: mediaBody.email },
+      });
+      if (!user) {
+        user = await models.users.create({
+          id: uuidv1(),
+          email: mediaBody.email,
+          isverified: true,
+        });
+      }
+      let userProfileObj = {
+        ...mediaBody,
+        id: uuidv1(),
+        user_id: user.id,
+        first_name: mediaBody.firstName,
+        last_name: mediaBody.lastName,
+        isemailverified: true,
+      };
+      if (type == "facebook") {
+        userProfileObj["facebookid"] = mediaBody.id;
+      } else if (type == "google") {
+        userProfileObj["google_id"] = mediaBody.id;
+      }
+      userProfile = await models.user_profiles.create(userProfileObj);
+      return res.status(200).send({
+        accessToken: token,
+        userprofile: { id: userProfile.id, email: userProfile.email },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: "Some error occured!", ...error });
+  }
+};

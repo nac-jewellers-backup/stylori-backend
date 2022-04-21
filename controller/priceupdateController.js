@@ -1,4 +1,5 @@
 const models = require("./../models");
+import arrayChunk from "array-chunk";
 import "dotenv/config";
 import { sendMail } from "./notify/user_notify";
 const Op = require("sequelize").Op;
@@ -956,7 +957,12 @@ exports.silverPriceUpload = (req, res) => {
         .status(400)
         .send({ message: "sku_details should be an array!" });
     }
-    Promise.all(sku_details.map(updateSkuPrice))
+    sku_details = arrayChunk(sku_details);
+    Promise.all(
+      sku_details.map(async (items) => {
+        return await Promise.all(items.map(updateSkuPrice));
+      })
+    )
       .then(async (_) => {
         /* *** Query to update price of cart post pricing update!  */
         await models.sequelize.query(`update shopping_cart_items i 
