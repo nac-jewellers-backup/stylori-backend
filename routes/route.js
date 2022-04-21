@@ -12,6 +12,7 @@ let {
   initIndex,
 } = require("../controller/elasticServices");
 const { send_sms } = require("../controller/notify/user_notify");
+const price_engine = require("../controller/price_engine");
 const turl = process.env.apibaseurl + "/productesearch";
 const upload = require("../middlewares/multer").single("file");
 
@@ -1090,4 +1091,12 @@ module.exports = function (app) {
     }
   });
   app.post("/api/auth/mediasignin", authcontroller.mediaSignin);
+  app.post("/price_run_new", async (req, res) => {
+    try {
+      res.status(200).send(await price_engine(req.body));
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error);
+    }
+  });
 };
