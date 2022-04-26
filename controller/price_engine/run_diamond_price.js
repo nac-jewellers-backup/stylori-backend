@@ -47,7 +47,7 @@ const calculateDiamondPrice = ({ product_id, vendor_code }) => {
                     ).toFixed(0),
                     cost_price: diamond_cost_price,
                     selling_price: diamond_selling_price,
-                    markup: diamond_selling_price,
+                    markup_price: diamond_selling_price,
                     discount_price: diamond_selling_price,
                     product_id: product_id,
                   });

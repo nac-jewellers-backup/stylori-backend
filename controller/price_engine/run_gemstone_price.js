@@ -7,8 +7,9 @@ const calculateGemstonePrice = ({ product_id, vendor_code }) => {
         where: {
           product_sku: product_id,
         },
+        raw: true,
       })
-      .then((gemstoneList) => {
+      .then(async (gemstoneList) => {
         let results = {
           status: "success",
           gemstones: [],
@@ -19,8 +20,10 @@ const calculateGemstonePrice = ({ product_id, vendor_code }) => {
             status: "no-data",
           });
         } else {
-          Promise.all(
-            gemstoneList.map(async (gemstone, index) => {
+          console.log(gemstoneList.length);
+          try {
+            for (let index = 0; index < gemstoneList.length; index++) {
+              const gemstone = gemstoneList[index];
               let condition = {
                 vendor_code,
                 gemstone_type: {
@@ -40,91 +43,89 @@ const calculateGemstonePrice = ({ product_id, vendor_code }) => {
                 condition["rate_type"] = 2;
               }
 
-              models.gemstone_price_settings
-                .findAll({
-                  where: condition,
-                })
-                .then(async (charges) => {
-                  var gemstone_markup = 0;
-                  var gemstone_cost = 0;
-                  var gemstone_selling_price = 0;
-                  var cost_price_type = 0;
-                  var sell_price_type = 0;
-                  var sell_percent_flat = 0;
+              let charges = await models.gemstone_price_settings.findAll({
+                where: condition,
+                logging: console.log,
+              });
+              console.log(JSON.stringify(charges));
+              var gemstone_markup = 0;
+              var gemstone_cost = 0;
+              var gemstone_selling_price = 0;
+              var cost_price_type = 0;
+              var sell_price_type = 0;
+              var sell_percent_flat = 0;
 
-                  charges.forEach((element) => {
-                    if (element.price_type == 1) {
-                      gemstone_cost = element.price;
-                      cost_price_type = element.rate_type;
-                    } else if (element.price_type == 2) {
-                      gemstone_selling_price = element.price;
-                      sell_price_type = element.rate_type;
-                      sell_percent_flat = element.selling_price_type;
-                    }
-                  });
+              for (let index = 0; index < charges.length; index++) {
+                const element = charges[index];
+                if (element.price_type == 1) {
+                  gemstone_cost = element.price;
+                  cost_price_type = element.rate_type;
+                } else if (element.price_type == 2) {
+                  gemstone_selling_price = element.price;
+                  sell_price_type = element.rate_type;
+                  sell_percent_flat = element.selling_price_type;
+                }
+              }
 
-                  if (cost_price_type == 1) {
-                    if (gemstone.stone_weight) {
-                      gemstone_cost = gemstone_cost * gemstone.stone_weight;
-                    } else {
-                      gemstone_cost = gemstone_cost * gemstone.stone_count;
-                    }
-                  }
+              if (cost_price_type == 1) {
+                if (gemstone.stone_weight) {
+                  gemstone_cost = gemstone_cost * gemstone.stone_weight;
+                } else {
+                  gemstone_cost = gemstone_cost * gemstone.stone_count;
+                }
+              }
 
-                  if (sell_price_type == 1) {
-                    if (sell_percent_flat == 2) {
-                      gemstone_selling_price =
-                        gemstone_cost +
-                        gemstone_cost * (gemstone_selling_price / 100);
-                    } else {
-                      gemstone_selling_price =
-                        gemstone.stone_weight * gemstone_selling_price;
-                    }
-                  } else if (sell_price_type == 2) {
-                    if (gemstone.stone_count) {
-                      gemstone_selling_price =
-                        gemstone.stone_count * gemstone_selling_price;
-                    }
-                  }
+              if (sell_price_type == 1) {
+                if (sell_percent_flat == 2) {
+                  gemstone_selling_price =
+                    gemstone_cost +
+                    gemstone_cost * (gemstone_selling_price / 100);
+                } else {
+                  gemstone_selling_price =
+                    gemstone.stone_weight * gemstone_selling_price;
+                }
+              } else if (sell_price_type == 2) {
+                if (gemstone.stone_count) {
+                  gemstone_selling_price =
+                    gemstone.stone_count * gemstone_selling_price;
+                }
+              }
 
-                  gemstone_markup = await models.material_markups.findOne({
-                    where: {
-                      material_name: "gemstone",
-                      price_min: {
-                        [models.Sequelize.Op.lte]: gemstone_selling_price,
-                      },
-                      price_max: {
-                        [models.Sequelize.Op.gte]: gemstone_selling_price,
-                      },
-                    },
-                  });
+              gemstone_markup = await models.material_markups.findOne({
+                where: {
+                  material_name: "gemstone",
+                  price_min: {
+                    [models.Sequelize.Op.lte]: gemstone_selling_price,
+                  },
+                  price_max: {
+                    [models.Sequelize.Op.gte]: gemstone_selling_price,
+                  },
+                },
+              });
 
-                  if (gemstone_markup) {
-                    if (gemstone_markup.markup_type == 1) {
-                      gemstone_selling_price = gemstone_markup.markup_value;
-                    }
-                  }
-                  let gemstone_margin =
-                    ((gemstone_selling_price - gemstone_cost) / gemstone_cost) *
-                    100;
+              if (gemstone_markup) {
+                if (gemstone_markup.markup_type == 1) {
+                  gemstone_selling_price = gemstone_markup.markup_value;
+                }
+              }
+              let gemstone_margin =
+                ((gemstone_selling_price - gemstone_cost) / gemstone_cost) *
+                100;
 
-                  results.gemstones.push({
-                    component: "gemstone" + (index + 1),
-                    material_name: gemstone.gemstone_type,
-                    margin_percentage: gemstone_margin.toFixed(0),
-                    cost_price: gemstone_cost,
-                    selling_price: gemstone_selling_price,
-                    markup: gemstone_selling_price,
-                    discount_price: gemstone_selling_price,
-                  });
-                })
-                .catch((err) => console.log(err));
-            })
-          )
-            .then(() => {
-              resolve(results);
-            })
-            .catch(reject);
+              results.gemstones.push({
+                component: "gemstone" + (index + 1),
+                material_name: gemstone.gemstone_type,
+                margin_percentage: gemstone_margin.toFixed(0),
+                cost_price: gemstone_cost,
+                selling_price: gemstone_selling_price,
+                markup_price: gemstone_selling_price,
+                discount_price: gemstone_selling_price,
+              });
+            }
+            resolve({ ...results });
+          } catch (error) {
+            reject(error);
+          }
         }
       });
   });

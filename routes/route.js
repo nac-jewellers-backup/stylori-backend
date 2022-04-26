@@ -1091,12 +1091,89 @@ module.exports = function (app) {
     }
   });
   app.post("/api/auth/mediasignin", authcontroller.mediaSignin);
+  const {
+    componentPriceEngine,
+    componentFinalPriceRun,
+    priceUpdate,
+    finalPriceRun,
+    createPriceRunHistory,
+    updatePriceRunHistory,
+  } = require("../controller/price_engine");
   app.post("/price_run_new", async (req, res) => {
     try {
-      res.status(200).send(await price_engine(req.body));
+      let { pricingcomponent: pricing_component, req_product_id } = req.body;
+      if (!req_product_id || req_product_id.length == 0) {
+        throw new Error("req_product_id is required!");
+      }
+      if (!Array.isArray(req_product_id)) {
+        req_product_id = [req_product_id];
+      }
+      let priceHistory = await createPriceRunHistory({
+        pricing_component,
+        product_ids: req_product_id.join(","),
+        total_product: req_product_id.length,
+      });
+      res.status(200).send({ status: "started", priceHistory });
+      const models = require("../models");
+      req_product_id = arrayChunk(req_product_id, 200);
+      Promise.allSettled(
+        req_product_id.map(async (products) => {
+          return await Promise.allSettled(
+            products.map(async (item) => {
+              if (pricing_component == "updateskuprice") {
+                await priceUpdate({ product_id: item });
+              }
+              if (
+                pricing_component == "Diamond" ||
+                pricing_component == "Gemstone"
+              ) {
+                await componentPriceEngine({
+                  product_id: item,
+                  type: pricing_component.toLowerCase(),
+                });
+              }
+              if (pricing_component == "Gold") {
+                await componentPriceEngine({
+                  product_id: item,
+                  type: pricing_component.toLowerCase(),
+                });
+                await componentPriceEngine({
+                  product_id: item,
+                  type: "making_charge",
+                });
+              }
+              return await updatePriceRunHistory(priceHistory.id, {
+                completed_product_count: models.sequelize.literal(
+                  `completed_product_count+1`
+                ),
+                completed_products: models.sequelize.literal(
+                  `completed_products || ',' || ${item}`
+                ),
+              });
+            })
+          );
+        })
+      ).then(async () => {
+        if (pricing_component == "updateskuprice") {
+          await finalPriceRun();
+        } else {
+          let processTypes = [];
+          if (pricing_component == "Gold") {
+            processTypes.push("pricing_sku_metals");
+          } else if (
+            pricing_component.includes("Diamond") ||
+            pricing_component.includes("Gemstone")
+          ) {
+            processTypes.push("pricing_sku_materials");
+          }
+          await componentFinalPriceRun(processTypes);
+        }
+        await updatePriceRunHistory(priceHistory.id, { is_completed: true });
+        await models.temp_price_list.truncate();
+      });
     } catch (error) {
       console.log(error);
-      res.status(500).send(error);
+      res.status(500).send({ ...error });
     }
   });
 };

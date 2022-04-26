@@ -1,6 +1,6 @@
 const models = require("../../models");
 
-const calculateMakingCharge = ({ sku, vendor_code }) => {
+const calculateMakingCharge = ({ product_id, sku, vendor_code }) => {
   return new Promise((resolve, reject) => {
     let { purity, sku_weight, generated_sku } = sku;
     let making_cost_price = 0;
@@ -19,7 +19,7 @@ const calculateMakingCharge = ({ sku, vendor_code }) => {
           },
         },
       })
-      .then((charges) => {
+      .then(async (charges) => {
         let result = {
           status: "success",
         };
@@ -51,13 +51,33 @@ const calculateMakingCharge = ({ sku, vendor_code }) => {
               }
             }
           });
+          await models.temp_price_list.upsert({
+            product_id,
+            generated_sku: sku.generated_sku,
+            pricing: {
+              pricing_sku_metals: [
+                {
+                  material_name: "makingcharge",
+                  cost_price: making_cost_price,
+                  selling_price: making_selling_price,
+                  markup_price: making_selling_price,
+                  discount_price: making_selling_price,
+                  margin_percentage: (
+                    ((making_selling_price - making_cost_price) * 100) /
+                    making_cost_price
+                  ).toFixed(0),
+                  product_sku: generated_sku,
+                },
+              ],
+            },
+          });
           resolve({
             ...result,
             making_charge: {
               material_name: "makingcharge",
               cost_price: making_cost_price,
               selling_price: making_selling_price,
-              markup: making_selling_price,
+              markup_price: making_selling_price,
               discount_price: making_selling_price,
               margin_percentage: (
                 ((making_selling_price - making_cost_price) * 100) /
