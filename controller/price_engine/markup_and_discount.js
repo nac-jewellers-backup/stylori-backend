@@ -10,9 +10,13 @@ exports.createPriceRunHistory = async (priceHistory) => {
 };
 
 exports.updatePriceRunHistory = async (id, updateObj) => {
-  return await models.price_running_history.update(updateObj, {
-    where: { id },
-  });
+  try {
+    return await models.price_running_history.update(updateObj, {
+      where: { id },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const applyMarkupOrDiscount = ({ price, type, value }) => {
@@ -295,7 +299,10 @@ exports.priceUpdate = ({ product_id }) => {
         }
         resolve({ ...response });
       })
-      .catch(reject);
+      .catch((err) => {
+        console.log(err);
+        reject(err);
+      });
   });
 };
 

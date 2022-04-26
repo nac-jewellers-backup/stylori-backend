@@ -1118,7 +1118,7 @@ module.exports = function (app) {
       req_product_id = arrayChunk(req_product_id, 200);
       Promise.allSettled(
         req_product_id.map(async (products) => {
-          return await Promise.allSettled(
+          await Promise.allSettled(
             products.map(async (item) => {
               if (pricing_component == "updateskuprice") {
                 await priceUpdate({ product_id: item });
@@ -1140,14 +1140,14 @@ module.exports = function (app) {
                 await componentPriceEngine({
                   product_id: item,
                   type: "making_charge",
-                });
+                });                
               }
-              return await updatePriceRunHistory(priceHistory.id, {
+              await updatePriceRunHistory(priceHistory.id, {
                 completed_product_count: models.sequelize.literal(
                   `completed_product_count+1`
                 ),
                 completed_products: models.sequelize.literal(
-                  `completed_products || ',' || ${item}`
+                  `completed_products || ',' || '${item}'`
                 ),
               });
             })
@@ -1157,14 +1157,14 @@ module.exports = function (app) {
         if (pricing_component == "updateskuprice") {
           await finalPriceRun();
           /* Updating Carts to Latest Run Price */
-          await models.sequelize.query(`update shopping_cart_items i 
+          await models.sequelize.query(`update shopping_cart_items i
                                         set price = qty * (select markup_price from trans_sku_lists t
                                         where i.product_sku = t.generated_sku)
                                         where shopping_cart_id not in (select cart_id from public.orders)`);
           await models.sequelize
             .query(`update shopping_carts c set gross_amount = sub.total,discounted_price=sub.total
                     from
-                    (select sum(price) as total,shopping_cart_id from shopping_cart_items 
+                    (select sum(price) as total,shopping_cart_id from shopping_cart_items
                     where shopping_cart_id not in (select cart_id from public.orders)
                     group by shopping_cart_id ) as sub
                     where c.id = sub.shopping_cart_id`);

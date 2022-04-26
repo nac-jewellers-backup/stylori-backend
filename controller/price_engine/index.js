@@ -97,8 +97,6 @@ const componentPriceEngine = ({ product_id, type }) => {
             })
           );
         }
-        await finalPriceRun(processTypes);
-        await models.temp_price_list.truncate();
         resolve(response);
       })
       .catch(reject);
