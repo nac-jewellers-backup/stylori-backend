@@ -1120,36 +1120,41 @@ module.exports = function (app) {
         req_product_id.map(async (products) => {
           await Promise.allSettled(
             products.map(async (item) => {
-              if (pricing_component == "updateskuprice") {
-                await priceUpdate({ product_id: item });
-              }
-              if (
-                pricing_component == "Diamond" ||
-                pricing_component == "Gemstone"
-              ) {
-                await componentPriceEngine({
-                  product_id: item,
-                  type: pricing_component.toLowerCase(),
+              try {
+                if (pricing_component == "updateskuprice") {
+                  await priceUpdate({ product_id: item });
+                }
+                if (
+                  pricing_component == "Diamond" ||
+                  pricing_component == "Gemstone"
+                ) {
+                  await componentPriceEngine({
+                    product_id: item,
+                    type: pricing_component.toLowerCase(),
+                  });
+                }
+                if (pricing_component == "Gold") {
+                  await componentPriceEngine({
+                    product_id: item,
+                    type: pricing_component.toLowerCase(),
+                  });
+                  await componentPriceEngine({
+                    product_id: item,
+                    type: "making_charge",
+                  });
+                }
+                await updatePriceRunHistory(priceHistory.id, {
+                  completed_product_count: models.sequelize.literal(
+                    `completed_product_count+1`
+                  ),
+                  completed_products: models.sequelize.literal(
+                    `completed_products || ',' || '${item}'`
+                  ),
                 });
+              } catch (error) {
+                console.log(error);
+                throw error
               }
-              if (pricing_component == "Gold") {
-                await componentPriceEngine({
-                  product_id: item,
-                  type: pricing_component.toLowerCase(),
-                });
-                await componentPriceEngine({
-                  product_id: item,
-                  type: "making_charge",
-                });                
-              }
-              await updatePriceRunHistory(priceHistory.id, {
-                completed_product_count: models.sequelize.literal(
-                  `completed_product_count+1`
-                ),
-                completed_products: models.sequelize.literal(
-                  `completed_products || ',' || '${item}'`
-                ),
-              });
             })
           );
         })

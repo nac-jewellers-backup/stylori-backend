@@ -28,15 +28,20 @@ const componentPriceEngine = ({ product_id, type }) => {
       .then(async (product) => {
         let response = {};
 
-        let diamond_price_details = await price_run_types["diamond"]({
-          product_id,
-          vendor_code: product.vendor_code,
-        });
-        let gemstone_price_details = await price_run_types["gemstone"]({
-          product_id,
-          vendor_code: product.vendor_code,
-        });
-
+        let diamond_price_details = {};
+        if (type == "diamond") {
+          diamond_price_details = await price_run_types["diamond"]({
+            product_id,
+            vendor_code: product.vendor_code,
+          });          
+        }
+        let gemstone_price_details = {};
+        if (type.includes("gemstone")) {
+          gemstone_price_details = await price_run_types["gemstone"]({
+            product_id,
+            vendor_code: product.vendor_code,
+          });
+        }
         for (let index = 0; index < product.trans_sku_lists.length; index++) {
           const sku = product.trans_sku_lists[index];
           response[sku.generated_sku] = {};
@@ -45,12 +50,14 @@ const componentPriceEngine = ({ product_id, type }) => {
             response[sku.generated_sku] = {
               ...response[sku.generated_sku],
               diamond: diamond_price_details?.diamonds,
+              gemstone: [],
             };
           }
           if (type.includes("gemstone")) {
             response[sku.generated_sku] = {
               ...response[sku.generated_sku],
               gemstone: gemstone_price_details?.gemstones,
+              diamond: [],
             };
           }
           if (type == "gold") {
@@ -83,7 +90,7 @@ const componentPriceEngine = ({ product_id, type }) => {
         } else if (type.includes("diamond") || type.includes("gemstone")) {
           processTypes.push("pricing_sku_materials");
           await Promise.all(
-            Object.keys(response).map(async (sku) => {
+            Object.keys(response).map(async (sku) => {              
               return await models.temp_price_list.upsert({
                 product_id,
                 generated_sku: sku,
