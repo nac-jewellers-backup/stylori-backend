@@ -1153,7 +1153,7 @@ module.exports = function (app) {
                 });
               } catch (error) {
                 console.log(error);
-                throw error
+                throw error;
               }
             })
           );
@@ -1193,4 +1193,8 @@ module.exports = function (app) {
       res.status(500).send({ ...error });
     }
   });
+  app.post(
+    "/banner_image_upload",
+    require("../controller/image_controller").banner_image_uploder
+  );
 };

@@ -7,7 +7,14 @@ var storage = multer.diskStorage({
     cb(null, "./uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, `${moment().format("dddd_MM_YYYY_HH:MM:SS")}_${file.originalname}`);
+    if (!file.mimetype.includes("image")) {
+      cb(
+        null,
+        `${moment().format("dddd_MM_YYYY_HH:MM:SS")}_${file.originalname}`
+      );
+    } else {
+      cb(null, file.originalname);
+    }
   },
 });
 

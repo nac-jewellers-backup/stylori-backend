@@ -36,6 +36,7 @@
     "loadash": "^1.0.0",
     "log4js": "^6.3.0",
     "md5": "^2.2.1",
+    "mime-types": "^2.1.35",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "morgan": "^1.10.0",
@@ -48,6 +49,7 @@
     "sequelize": "^5.22.5",
     "sequelize-cli": "^6.4.1",
     "sha256": "^0.2.0",
+    "sharp": "^0.30.4",
     "split-array": "^1.0.1",
     "uuid": "^3.4.0"
   },
