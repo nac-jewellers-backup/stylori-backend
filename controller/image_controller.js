@@ -50,10 +50,9 @@ export const banner_image_uploder = (req, res) => {
             if (req.files[item].length) {
               let { filename, path: filePath } = req.files[item][0];
               const keyExt = path.extname(filename);
-              const keyWebp = `banners/${item.replace(
-                "_img",
-                ""
-              )}/${filename.replace(keyExt, ".webp")}`;
+              const keyWebp = `banners/${item.replace("_img", "")}/${filename
+                .replaceAll(" ", "-")
+                .replace(keyExt, ".webp")}`;
               let buffer = await Sharp(filePath)
                 .webp({ quality: 60 })
                 .toBuffer();
