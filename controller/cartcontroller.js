@@ -30,6 +30,35 @@ aws.config.update({
 });
 const S3_BUCKET = process.env.AWS_IMAGE_BUCKET_NAME;
 
+const loadCountries = () => {
+  return new Promise((resolve, reject) => {
+    models.master_countries
+      .findAll({
+        attributes: [
+          "id",
+          "name",
+          "nicename",
+          "phonecode",
+          "currency",
+          "currency_alias",
+          "currency_symbol",
+          "fx_conversion_rate",
+        ],
+        raw: true,
+      })
+      .then((countries) => {
+        let result = {};
+        countries.forEach((item) => {
+          result[item.name.toLowerCase()] = {
+            ...item,
+          };
+        });
+        resolve(result);
+      })
+      .catch(reject);
+  });
+};
+
 exports.addgiftwrap = async (req, res) => {
   try {
     const { cart_id, gift_from, gift_to, message } = req.body;
@@ -1758,13 +1787,33 @@ exports.removewishlist = async (req, res) => {
 };
 exports.addorder = async (req, res) => {
   try {
+    let countries = await loadCountries();
     let { user_id, cart_id, payment_mode, voucher_code } = req.body;
+    //Getting Cart Details and Address Details
+    let cartDetails = await models.shopping_cart.findByPk(cart_id, {
+      include: {
+        model: models.cart_address,
+        where: {
+          address_type: 1,
+        },
+      },
+      plain: true,
+    });
+
+    //Getting Order Details if already created for this cart to avoid duplicates
     let orderDetails = await models.orders.findOne({
       where: {
         cart_id,
         payment_mode,
       },
     });
+    let address = cartDetails?.cart_addresses[0];
+    if (!address) {
+      return res
+        .status(403)
+        .send({ error: true, message: "No Cart Address found!" });
+    }
+    let country_data = countries[address.country.toLowerCase()];
     var paymentstatus = "Initiated";
     var orderstatus = "Initiated";
     if (payment_mode === "COD") {
@@ -1778,6 +1827,8 @@ exports.addorder = async (req, res) => {
       payment_mode: payment_mode,
       payment_status: paymentstatus,
       order_status: orderstatus,
+      currency: country_data.currency_alias,
+      fx_conversion_rate: country_data.fx_conversion_rate,
     };
     const update_cartstatus = {
       status: "submitted",
@@ -2114,4 +2165,98 @@ exports.trigger_mail = async (req, res) => {
     console.log(error);
     res.status(500).send({ ...error });
   }
+};
+
+exports.syncFxRate = (req, res) => {
+  let syncSourceURL = `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/`;
+  models.master_countries
+    .findAll({
+      attributes: ["id", "currency_alias"],
+      where: { is_active: true },
+      raw: true,
+    })
+    .then((countries) => {
+      Promise.all(
+        countries.map(async ({ id, currency_alias }) => {
+          axios
+            .get(`${syncSourceURL}${currency_alias.toLowerCase()}.json`)
+            .then(async (res) => {
+              if (res.status == 200)
+                await models.master_countries.update(
+                  {
+                    fx_conversion_rate: Number(
+                      res.data[currency_alias.toLowerCase()]["inr"]
+                    ).toFixed(2),
+                  },
+                  {
+                    where: { id },
+                  }
+                );
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          return Promise.resolve("Completed " + currency_alias + " Sync!");
+        })
+      )
+        .then(() => {
+          res
+            .status(200)
+            .send({ message: "Fx Sync for all countries completed!" });
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).send({ ...err });
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send({ ...err });
+    });
+};
+
+exports.getPincodeDetails = ({ pincode }) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${pincode}&key=${process.env.GOOGLE_GEOLOCATION_KEY}`
+      )
+      .then(async ({ data: { status, results } }) => {
+        if (status == "OK") {
+          let pincode_master = await models.pincode_master.findOne({
+            where: { pincode },
+          });
+          if (!pincode_master) {
+            let { address_components } = results[0];
+            let pincodeObject = {
+              id: uuidv1(),
+              pincode,
+              is_cod: true,
+              is_delivery: true,
+              is_active: true,
+              min_cartvalue: 5000,
+              max_cartvalue: 85000,
+            };
+            if (address_components.length == 4) {
+              ["district", "state", "country"].forEach((item, index) => {
+                pincodeObject[item] = address_components[index + 1]?.long_name;
+              });
+            } else {
+              ["area", "district", "state", "country"].forEach(
+                (item, index) => {
+                  pincodeObject[item] =
+                    address_components[index + 1]?.long_name;
+                }
+              );
+            }
+
+            await models.pincode_master.create(pincodeObject);
+          }
+          resolve({ status, results });
+        } else {
+          reject({ status });
+        }
+      })
+      .catch(reject);
+  });
 };
