@@ -188,7 +188,7 @@ module.exports = function (app) {
     "/filterlist",
     [authJwt.checkguest],
     [authJwt.updateLastlogin],
-    filtercontroller.filteroptions
+    filtercontroller.filteroptions_new
   );
   app.post("/getsizes", cartcontroller.getsizes);
   app.post("/updateorderstatus", cartcontroller.updateorderstatus);

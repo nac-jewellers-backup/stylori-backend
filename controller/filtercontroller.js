@@ -850,3 +850,216 @@ exports.filteroptions = async (req, res) => {
     res.send(400, { ...error });
   }
 };
+
+let responseMapper = {
+  master_category: "Category",
+  "Product Type": "Product Type",
+  Style: "Style",
+  Theme: "Theme",
+  Occasion: "Occasion",
+  Material: "Material",
+  Collection: "Collection",
+  Gender: "Gender",
+  Material: "Material",
+  "Metal Purity": "Metal Purity",
+  "Stone Shape": "Stone Shape",
+  "Stone Color": "Stone Colour",
+  "No Of Stones": "No of Stones",
+  "By Design": "Design",
+  "By Weight": "Weights",
+};
+
+let seo_key_mapper = {
+  material: "Material",
+  category: "Category",
+  theme: "Theme",
+  collection: "Collection",
+  occasion: "Occasion",
+  style: "Style",
+  metalpurity: "Metal Purity",
+  producttype: "Product Type",
+  stoneshape: "Stone Shape",
+  gender: "Gender",
+  stonecolor: "Stone Color",
+  metalcolor: "Metal Color",
+  noofstones: "No Of Stones",
+  availability: "Availability",
+  bydesign: "By Design",
+  byweight: "By Weight",
+  offer_max: "Offers",
+};
+
+exports.filteroptions_new = (req, res) => {
+  let filters = req.body;
+  let baseCondition = {};
+  if (filters?.category == "goldcoins") {
+    filters["category"] = "Gold Coins";
+  }
+  let filterArray = Object.keys(filters)
+    .filter(
+      (i) =>
+        !["isJewellery", "availability", "offer_min", "offer_max"].includes(i)
+    )
+    .map((i) => filters[i]);
+  if (filters.isJewellery) {
+    filterArray = [...filterArray, "Jewellery"];
+    baseCondition = {
+      ...baseCondition,
+      attribute_name: { [Op.ne]: "92.5" },
+    };
+  }
+  let silverpricerange = [];
+  if (filters.material == "Silver") {
+    silverpricerange = [
+      {
+        label: "Under 999",
+        min: 0,
+        max: 999,
+      },
+      {
+        label: "999 - 2000",
+        min: 1000,
+        max: 2000,
+      },
+      {
+        label: "2001 - 5000",
+        min: 2001,
+        max: 5000,
+      },
+      {
+        label: "5001 - 8000",
+        min: 5001,
+        max: 8000,
+      },
+      {
+        label: "Above 8000",
+        min: 8001,
+        max: 100000,
+      },
+    ];
+  }
+  let seo_attribute_name = [];
+  let seo_attribute_value = [];
+  Object.keys(filters).forEach((i) => {
+    if (seo_key_mapper[i]) {
+      seo_attribute_name.push(seo_key_mapper[i]);
+      seo_attribute_value.push(filters[i]);
+    }
+  });
+  if (!filters?.category) {
+    filterArray = [...filterArray, "Jewellery"];
+    seo_attribute_name.push("Category");
+    seo_attribute_value.push("Jewellery");
+  }
+  models.product_attribute
+    .findAll({
+      attributes: ["product_id"],
+      where: {
+        attribute_name: {
+          [Op.in]: filterArray,
+          ...baseCondition?.attribute_name,
+        },
+      },
+      include: [
+        {
+          model: models.attributes,
+          attributes: [],
+          include: { model: models.Attribute_master, attributes: [] },
+        },
+        {
+          model: models.product_lists,
+          attributes: [],
+          where: { isactive: true },
+        },
+      ],
+      group: ["product_attribute.product_id"],
+    })
+    .then(async (result) => {
+      let product_lists = result.map((i) => i.product_id);
+      let options = await models.product_attribute.findAll({
+        attributes: [
+          "attribute_name",
+          [
+            models.sequelize.col("attribute.Attribute_master.name"),
+            "attribute_master_name",
+          ],
+          [
+            models.sequelize.col("attribute.filter_position"),
+            "filter_position",
+          ],
+        ],
+        include: [
+          {
+            model: models.attributes,
+            attributes: [],
+            where: {
+              is_active: true,
+              is_filter: true,
+            },
+            include: { model: models.Attribute_master, attributes: [] },
+          },
+        ],
+        where: {
+          product_id: { [Op.in]: product_lists },
+        },
+        order: [[models.attributes, "filter_position", "ASC"]],
+        group: [
+          "attribute_name",
+          "attribute_master_name",
+          "attribute.filter_position",
+        ],
+        raw: true,
+      });
+      let response = {};
+      let keys = Object.keys(responseMapper);
+      for (let index = 0; index < keys.length; index++) {
+        const i = responseMapper[keys[index]];
+        let filter = options
+          .filter((item) => {
+            return item.attribute_master_name == i;
+          })
+          .map((x) => {
+            let name = "name";
+            if (i.toLowerCase().includes("no of")) {
+              name = "stonecount";
+            }
+            return { [name]: x.attribute_name };
+          });
+        response[keys[index]] = filter;
+      }
+      var seooptions = await models.seo_url_priorities.findAll({
+        attributes: ["seo_url", "seo_text", "image_url", "mobile_image_url"],
+        where: {
+          attribute_name: {
+            [Op.in]: seo_attribute_name,
+          },
+          attribute_value: {
+            [Op.in]: seo_attribute_value,
+          },
+        },
+        order: [["priority", "ASC"]],
+      });
+      res.status(200).send({
+        ...response,
+        price: silverpricerange,
+        Offers: ["Up to  5%", "Up to  10%", "Up to  15%", "Up to  20%"],
+        Availability: [
+          "1 Day Shipping",
+          "10 & Above Days Shipping",
+          // "Out of Stock", Diabled as per Vinoth & Dinesh on March 23,2022 WhatsApp confirmation
+        ],
+        seo_url: seooptions.map((i) => i.seo_url).join("-"),
+        seo_text: seooptions.map((i) => i.seo_text).join(" "),
+        seo_banner: seooptions.map((element) => {
+          return {
+            image: element.image_url,
+            mobile_image: element.mobile_image_url,
+          };
+        }),
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send(error);
+    });
+};
