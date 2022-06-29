@@ -556,7 +556,8 @@ exports.filteroptions = async (req, res) => {
 
       product_ids.push(element.product_id);
     });
-
+    console.log(">>>", product_ids.length);
+    console.log(product_ids);
     products_all = await models.product_lists.findAll({
       attributes: [
         ["product_name", "productName"],
@@ -629,5 +630,35 @@ exports.filteroptions = async (req, res) => {
         " - Error message : " +
         err
     );
+  }
+};
+
+exports.filteroptions_new = async (req, res) => {
+  let {} = req.body;
+  let baseCondition = {};
+  if (filters?.category == "goldcoins") {
+    filters["category"] = "Gold Coins";
+  }
+  let filterArray = Object.keys(filters)
+    .filter(
+      (i) =>
+        ![
+          "isJewellery",
+          "availability",
+          "offer_min",
+          "offer_max",
+          "price",
+          "sortBy",
+          "offset",
+          "byweight",
+        ].includes(i)
+    )
+    .map((i) => filters[i]);
+  if (filters.isJewellery) {
+    filterArray = [...filterArray, "Jewellery"];
+    baseCondition = {
+      ...baseCondition,
+      // attribute_name: { [Op.ne]: "92.5" },
+    };
   }
 };
