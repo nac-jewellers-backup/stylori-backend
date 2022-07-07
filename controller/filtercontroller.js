@@ -1,7 +1,7 @@
 const models = require("./../models");
 import "dotenv/config";
 const Op = require("sequelize").Op;
-const sequelize = require("sequelize");
+import { groupBy } from "lodash";
 
 import apidata from "./apidata.json";
 const uuidv1 = require("uuid/v1");
@@ -1062,5 +1062,35 @@ exports.filteroptions_new = (req, res) => {
     .catch((error) => {
       console.log(error);
       res.status(500).send(error);
+    });
+};
+
+exports.fetchFilters = async (req, res) => {
+  models.sequelize
+    .query(
+      `select sub.product_id,jsonb_object_agg(sub.name,sub.value) as attributes
+      from
+      (select p.product_id,
+      array_agg(p.attribute_name) as value, a.name as name 
+      from product_attributes p, "Attribute_masters" a
+      where p.master_id = a.id
+      group by p.product_id,a.name) sub
+      group by sub.product_id`,
+      { type: models.Sequelize.QueryTypes.SELECT }
+    )
+    .then((result) => {
+      result = result.map((i) => {
+        let tempObj = {
+          product_id: i.product_id,
+        };
+        for (const attribute of Object.keys(i.attributes)) {
+          tempObj[attribute] = i.attributes[attribute].join(",");
+        }
+        return tempObj;
+      });
+      res.status(200).send(result);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
     });
 };
