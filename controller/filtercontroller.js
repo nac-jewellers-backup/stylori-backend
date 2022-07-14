@@ -888,6 +888,7 @@ let seo_key_mapper = {
   bydesign: "By Design",
   byweight: "By Weight",
   offer_max: "Offers",
+  finish: "Finish",
 };
 
 exports.filteroptions_new = (req, res) => {
