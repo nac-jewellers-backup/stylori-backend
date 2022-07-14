@@ -867,7 +867,7 @@ let responseMapper = {
   "No Of Stones": "No of Stones",
   "By Design": "Design",
   "By Weight": "Weights",
-  Test: "Test_Master",
+  Finish: "Finish",
 };
 
 let seo_key_mapper = {
