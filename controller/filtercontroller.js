@@ -966,6 +966,7 @@ exports.filteroptions_new = (req, res) => {
         {
           model: models.attributes,
           attributes: [],
+          order: ["filter_position"],
           include: { model: models.Attribute_master, attributes: [] },
         },
         {
