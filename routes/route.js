@@ -1209,20 +1209,5 @@ module.exports = function (app) {
     "/banner_image_upload",
     require("../controller/image_controller").banner_image_uploder
   );
-  // const dynamic_filter_controller = require("../controller/dynamic_filter_controller");
-  // app.get("/get_product_attributes/:product_id", async (req, res) => {
-  //   try {
-  //     res
-  //       .status(200)
-  //       .send(
-  //         await dynamic_filter_controller.getProductAttributes(
-  //           req.params.product_id
-  //         )
-  //       );
-  //   } catch (error) {
-  //     console.log(error);
-  //     res.status(500).send(error);
-  //   }
-  // });
-  app.get("/fetch_filters",filtercontroller.fetchFilters)
+  app.get("/fetch_filters", filtercontroller.fetchFilters);
 };
