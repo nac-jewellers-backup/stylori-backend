@@ -1103,6 +1103,31 @@ module.exports = function (app) {
       res.status(500).send(error);
     }
   });
+  app.post(
+    "/banner_image_upload",
+    require("../controller/image_controller").banner_image_uploder
+  );
+  app.get("/fetch_filters", filtercontroller.fetchFilters);
+  app.post("/bulk_upload_filters", async (req, res) => {
+    try {
+      upload(req, res, (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).send(err);
+        }
+        res
+          .status(200)
+          .send({ status: true, message: "File processing started!" });        
+        filtercontroller.upsertProductFilters({ filepath: req?.file?.path });
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send(error);
+    }
+  });
+  /*
+  This section is for new price engine API
+  */
   const {
     componentPriceEngine,
     componentFinalPriceRun,
@@ -1205,9 +1230,7 @@ module.exports = function (app) {
       res.status(500).send({ ...error });
     }
   });
-  app.post(
-    "/banner_image_upload",
-    require("../controller/image_controller").banner_image_uploder
-  );
-  app.get("/fetch_filters", filtercontroller.fetchFilters);
+  /*
+  This new price engine API section ends here
+  */
 };

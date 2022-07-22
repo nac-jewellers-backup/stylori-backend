@@ -1,7 +1,6 @@
 const models = require("./../models");
 import "dotenv/config";
 const Op = require("sequelize").Op;
-import { groupBy } from "lodash";
 
 import apidata from "./apidata.json";
 const uuidv1 = require("uuid/v1");
@@ -1068,6 +1067,7 @@ exports.filteroptions_new = (req, res) => {
 };
 
 exports.fetchFilters = async (req, res) => {
+  let { product_id } = req.query;
   models.sequelize
     .query(
       `select sub.product_id,jsonb_object_agg(sub.name,sub.value) as attributes
@@ -1075,12 +1075,26 @@ exports.fetchFilters = async (req, res) => {
       (select p.product_id,
       array_agg(p.attribute_name) as value, a.name as name 
       from product_attributes p, "Attribute_masters" a
-      where p.master_id = a.id
+      where p.master_id = a.id ${
+        product_id ? `and product_id = '${product_id}'` : ``
+      }
       group by p.product_id,a.name) sub
       group by sub.product_id`,
       { type: models.Sequelize.QueryTypes.SELECT }
     )
-    .then((result) => {
+    .then(async (result) => {
+      let master_attributes = await models.Attribute_master.findAll({
+        attributes: ["name"],
+        where: {
+          name: {
+            [models.Sequelize.Op.notIn]: [
+              "Weights",
+              "Category",
+              "Product Type",
+            ],
+          },
+        },
+      });
       result = result.map((i) => {
         let tempObj = {
           product_id: i.product_id,
@@ -1090,9 +1104,97 @@ exports.fetchFilters = async (req, res) => {
         }
         return tempObj;
       });
-      res.status(200).send(result);
+      res.status(200).send({
+        master_attributes: master_attributes.map((i) => i.name),
+        result,
+      });
     })
     .catch((err) => {
       res.status(500).send(err);
     });
+};
+
+const loadMasterAttributes = () => {
+  return new Promise((resolve, reject) => {
+    models.Attribute_master.findAll({ attributes: ["id", "name"], raw: true })
+      .then((result) => {
+        resolve(
+          result.reduce((previousValue, item) => {
+            previousValue[item.name] = item.id;
+            return previousValue;
+          }, {})
+        );
+      })
+      .catch(reject);
+  });
+};
+
+const loadAttributeValues = (master_id) => {
+  return new Promise((resolve, reject) => {
+    models.attributes
+      .findAll({ attributes: ["id", "name"], where: { master_id }, raw: true })
+      .then((result) => {
+        resolve(
+          result.reduce((previousValue, item) => {
+            previousValue[item.name] = item.id;
+            return previousValue;
+          }, {})
+        );
+      })
+      .catch(reject);
+  });
+};
+
+exports.upsertProductFilters = async ({ filepath }) => {
+  const masters = await loadMasterAttributes();
+  const checkAndUpsert = ({ product_id, ...rest }) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await models.product_attribute.destroy({
+          where: { product_id: product_id },
+        });
+        let tempValues = [];
+        for (const element of Object.keys(rest)) {
+          if (rest[element]) {
+            let tempAttributes = rest[element].split(",");
+            let master_id = masters[element];
+            let attributes = await loadAttributeValues(master_id);
+            tempValues.push(
+              ...tempAttributes.map((item) => {
+                return {
+                  attribute_name: item,
+                  attribute_id: attributes[item],
+                  product_id,
+                  master_id,
+                  is_active: true
+                };
+              })
+            );
+          }
+        }
+        await models.product_attribute.bulkCreate(tempValues);
+        resolve(product_id);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
+
+  return new Promise((resolve, reject) => {
+    const csv = require("csvtojson");
+    csv()
+      .fromFile(filepath)
+      .subscribe(
+        async (data) => {
+          return await checkAndUpsert(data);
+        },
+        (err) => {
+          console.error(err);
+          reject(err);
+        },
+        () => {
+          resolve("Completed!");
+        }
+      );
+  });
 };
