@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import { postgraphile /* makePluginHook */ } from "postgraphile";
 import PgAggregatesPlugin from "@graphile/pg-aggregates";
 import morgan from "morgan";
+import { socket } from "./middlewares/socket/index.js";
 
 //import Myusers from '../controller/sortbyprice.js';
 const MySchemaExtensionPlugin = require("./controller/sortbyprice.js");
@@ -116,7 +117,13 @@ app.use(
     // ownerConnectionString: `postgres://${connString.user}:${connString.password}@${connString.host}/${connString.database}`,
   })
 );
-
-app.listen(process.env.PORT, () =>
-  console.log(`NAC Ecommerce unning ${process.env.PORT}!`)
+socket.attach(
+  app.listen(process.env.PORT, () =>
+    console.log(`NAC Ecommerce unning ${process.env.PORT}!`)
+  ),
+  {
+    cors: {
+      origin: "*",
+    },
+  }
 );

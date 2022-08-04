@@ -215,6 +215,14 @@ exports.filteroptions_new = async (req, res) => {
     },
   ];
 
+  if (filters?.material == "Silver") {
+    filterArray = [...filterArray, "92.5"];
+    skuCondition = {
+      ...skuCondition,
+      purity: { [Op.eq]: "92.5" },
+    };
+  }
+
   //including trans_sku_lists
   product_includes.push({
     model: models.trans_sku_lists,

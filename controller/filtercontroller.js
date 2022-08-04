@@ -1,5 +1,6 @@
 const models = require("./../models");
 import "dotenv/config";
+import { sendStatus } from "../middlewares/socket";
 const Op = require("sequelize").Op;
 
 import apidata from "./apidata.json";
@@ -1147,7 +1148,7 @@ const loadAttributeValues = (master_id) => {
 
 exports.upsertProductFilters = async ({ filepath }) => {
   const masters = await loadMasterAttributes();
-  const checkAndUpsert = ({ product_id, ...rest }) => {
+  const checkAndUpsert = ({ product_id, ...rest }, index, totalProducts) => {
     return new Promise(async (resolve, reject) => {
       try {
         await models.product_attribute.destroy({
@@ -1166,7 +1167,7 @@ exports.upsertProductFilters = async ({ filepath }) => {
                   attribute_id: attributes[item],
                   product_id,
                   master_id,
-                  is_active: true
+                  is_active: true,
                 };
               })
             );
@@ -1181,20 +1182,55 @@ exports.upsertProductFilters = async ({ filepath }) => {
   };
 
   return new Promise((resolve, reject) => {
-    const csv = require("csvtojson");
-    csv()
-      .fromFile(filepath)
-      .subscribe(
-        async (data) => {
-          return await checkAndUpsert(data);
-        },
-        (err) => {
+    const fs = require("fs");
+    fs.readFile(filepath, "utf8", (err, data) => {
+      let filterArray = [];
+      const csv = require("csvtojson");
+      const arrayChunk = require("array-chunk");
+      csv()
+        .fromFile(filepath)
+        .on("data", async (data) => {
+          const jsonStr = data.toString("utf8");
+          filterArray.push(JSON.parse(jsonStr));        
+        })
+        .on("error", (err) => {
           console.error(err);
           reject(err);
-        },
-        () => {
-          resolve("Completed!");
-        }
-      );
+        })
+        .on("close", async () => {
+          let completedProducts = 0;
+          const totalProducts = filterArray.length;
+          filterArray = arrayChunk(filterArray, 500);
+          for (let index = 0; index < filterArray.length; index++) {
+            await Promise.allSettled(
+              filterArray[index].map(async (data) => {
+                await checkAndUpsert(data);
+              })
+            );
+            completedProducts += filterArray[index].length;
+            sendStatus("filter_sync", {
+              status:
+                completedProducts == totalProducts
+                  ? "completed"
+                  : "in-progress",
+              completed: completedProducts / totalProducts,
+            });
+          }
+          resolve("completed");
+        });
+      // .subscribe(
+      //   async (data) => {
+      //     index++;
+      //     return await checkAndUpsert(data, index, totalProducts);
+      //   },
+      //   (err) => {
+      //     console.error(err);
+      //     reject(err);
+      //   },
+      //   () => {
+      //     resolve("Completed!");
+      //   }
+      // );
+    });
   });
 };
