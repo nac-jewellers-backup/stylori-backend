@@ -1117,7 +1117,7 @@ module.exports = function (app) {
         }
         res
           .status(200)
-          .send({ status: true, message: "File processing started!" });        
+          .send({ status: true, message: "File processing started!" });
         filtercontroller.upsertProductFilters({ filepath: req?.file?.path });
       });
     } catch (error) {
