@@ -269,7 +269,7 @@ exports.filteroptions_new = async (req, res) => {
         },
         ...productListCondition,
       },
-      order: orderBy,
+      order: orderBy,      
     });
     res
       .status(200)

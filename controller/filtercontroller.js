@@ -893,8 +893,7 @@ let seo_key_mapper = {
 };
 
 export const getFilteredProductIds = (filters) => {
-  return new Promise(async (resolve, reject) => {
-    let baseCondition = {};
+  return new Promise(async (resolve, reject) => {    
     if (filters?.category == "goldcoins") {
       filters["category"] = "Gold Coins";
     }
@@ -918,10 +917,6 @@ export const getFilteredProductIds = (filters) => {
       attributeFilter.attribute_ids.push(
         masters["Category"]?.attributes?.["Jewellery"]
       );
-      baseCondition = {
-        ...baseCondition,
-        attribute_name: { [Op.ne]: "92.5" },
-      };
     }
 
     if (filters.material == "Silver") {
@@ -929,10 +924,6 @@ export const getFilteredProductIds = (filters) => {
       attributeFilter.attribute_ids.push(
         masters["Metal Purity"]?.attributes?.["92.5"]
       );
-      // baseCondition = {
-      //   ...baseCondition,
-      //   attribute_name: { [Op.eq]: "92.5" },
-      // };
     }
 
     if (!filters?.category) {
@@ -942,61 +933,27 @@ export const getFilteredProductIds = (filters) => {
       );
     }
 
-    let productAttributeConditions = {};
-
-    if (baseCondition?.attribute_name) {
-      productAttributeConditions = {
-        ...productAttributeConditions,
-        attribute_name: {
-          ...baseCondition?.attribute_name,
-        },
-      };
-    }
-
-    if (attributeFilter?.master_ids?.length) {
-      productAttributeConditions = {
-        ...productAttributeConditions,
-        master_id: {
-          [Op.in]: attributeFilter?.master_ids,
-        },
-      };
-    }
-
-    if (attributeFilter?.attribute_ids?.length) {
-      productAttributeConditions = {
-        ...productAttributeConditions,
-        attribute_id: {
-          [Op.in]: attributeFilter?.attribute_ids,
-        },
-      };
-    }
-
-    models.product_attribute
-      .findAll({
-        attributes: ["product_id"],
-        where: {
-          ...productAttributeConditions,
-        },
-        include: [
-          {
-            model: models.attributes,
-            attributes: [],
-            order: ["filter_position"],
-            // where: { is_active: true, is_filter: true },
-            include: {
-              model: models.Attribute_master,
-              attributes: [],
-              // where: { is_active: true, is_filter: true },
-            },
-          },
-          {
-            model: models.product_lists,
-            attributes: [],
-            where: { isactive: true },
-          },
-        ],        
-        group: ["product_attribute.product_id"],
-      })
+    models.sequelize
+      .query(
+        `select sub.product_id from (SELECT 
+      "product_attribute"."product_id",
+      array_agg("product_attribute"."master_id") as master_ids,
+      array_agg("product_attribute"."attribute_id") as attribute_ids
+      FROM "product_attributes" AS "product_attribute" 
+      LEFT OUTER JOIN "attributes" AS "attribute" ON "product_attribute"."attribute_id" = "attribute"."id" 
+      LEFT OUTER JOIN "Attribute_masters" AS "attribute->Attribute_master" ON "attribute"."master_id" = "attribute->Attribute_master"."id" 
+      INNER JOIN "product_lists" AS "product_list" ON "product_attribute"."product_id" = "product_list"."product_id"
+      AND "product_list"."isactive" = true
+      GROUP BY "product_attribute"."product_id") as sub
+      WHERE  
+      sub.master_ids @> '{:master_ids}'::int[]
+      AND 
+      sub.attribute_ids @> '{:attribute_ids}'::int[]`,
+        {
+          replacements: attributeFilter,
+          type: models.Sequelize.QueryTypes.SELECT,
+        }
+      )
       .then((result) => {
         resolve(result.map((i) => i.product_id));
       })
