@@ -892,180 +892,250 @@ let seo_key_mapper = {
   finish: "Finish",
 };
 
-exports.filteroptions_new = (req, res) => {
-  let filters = req.body;
-  let baseCondition = {};
-  if (filters?.category == "goldcoins") {
-    filters["category"] = "Gold Coins";
-  }
-  let filterArray = Object.keys(filters)
-    .filter(
-      (i) =>
-        !["isJewellery", "availability", "offer_min", "offer_max"].includes(i)
-    )
-    .map((i) => filters[i]);
-  if (filters.isJewellery) {
-    filterArray = [...filterArray, "Jewellery"];
-    baseCondition = {
-      ...baseCondition,
-      attribute_name: { [Op.ne]: "92.5" },
-    };
-  }
-  let silverpricerange = [];
-  if (filters.material == "Silver") {
-    silverpricerange = [
-      {
-        label: "Under 999",
-        min: 0,
-        max: 999,
-      },
-      {
-        label: "999 - 2000",
-        min: 1000,
-        max: 2000,
-      },
-      {
-        label: "2001 - 5000",
-        min: 2001,
-        max: 5000,
-      },
-      {
-        label: "5001 - 8000",
-        min: 5001,
-        max: 8000,
-      },
-      {
-        label: "Above 8000",
-        min: 8001,
-        max: 100000,
-      },
-    ];
-  }
-  let seo_attribute_name = [];
-  let seo_attribute_value = [];
-  Object.keys(filters).forEach((i) => {
-    if (seo_key_mapper[i]) {
-      seo_attribute_name.push(seo_key_mapper[i]);
-      seo_attribute_value.push(filters[i]);
+export const getFilteredProductIds = (filters) => {
+  return new Promise(async (resolve, reject) => {
+    let baseCondition = {};
+    if (filters?.category == "goldcoins") {
+      filters["category"] = "Gold Coins";
     }
-  });
-  if (!filters?.category) {
-    filterArray = [...filterArray, "Jewellery"];
-    seo_attribute_name.push("Category");
-    seo_attribute_value.push("Jewellery");
-  }
-  models.product_attribute
-    .findAll({
-      attributes: ["product_id"],
-      where: {
+
+    let attributeFilter = {
+      attribute_ids: [],
+      master_ids: [],
+    };
+    const masters = await loadMasterAttributes();
+    let masterAttributeName = Object.keys(masters);
+    for (const key of Object.keys(filters)) {
+      if (masterAttributeName.includes(seo_key_mapper[key])) {
+        const element = filters[key];
+        let tempMaster = masters[seo_key_mapper[key]];
+        attributeFilter.master_ids.push(tempMaster?.id);
+        attributeFilter.attribute_ids.push(tempMaster?.attributes?.[element]);
+      }
+    }
+    if (filters.isJewellery) {
+      attributeFilter.master_ids.push(masters["Category"]?.id);
+      attributeFilter.attribute_ids.push(
+        masters["Category"]?.attributes?.["Jewellery"]
+      );
+      baseCondition = {
+        ...baseCondition,
+        attribute_name: { [Op.ne]: "92.5" },
+      };
+    }
+
+    if (filters.material == "Silver") {
+      attributeFilter.master_ids.push(masters["Metal Purity"]?.id);
+      attributeFilter.attribute_ids.push(
+        masters["Metal Purity"]?.attributes?.["92.5"]
+      );
+      // baseCondition = {
+      //   ...baseCondition,
+      //   attribute_name: { [Op.eq]: "92.5" },
+      // };
+    }
+
+    if (!filters?.category) {
+      attributeFilter.master_ids.push(masters["Category"]?.id);
+      attributeFilter.attribute_ids.push(
+        masters["Category"]?.attributes?.["Jewellery"]
+      );
+    }
+
+    let productAttributeConditions = {};
+
+    if (baseCondition?.attribute_name) {
+      productAttributeConditions = {
+        ...productAttributeConditions,
         attribute_name: {
-          [Op.in]: filterArray,
           ...baseCondition?.attribute_name,
         },
-      },
-      include: [
-        {
-          model: models.attributes,
-          attributes: [],
-          order: ["filter_position"],
-          include: { model: models.Attribute_master, attributes: [] },
+      };
+    }
+
+    if (attributeFilter?.master_ids?.length) {
+      productAttributeConditions = {
+        ...productAttributeConditions,
+        master_id: {
+          [Op.in]: attributeFilter?.master_ids,
         },
-        {
-          model: models.product_lists,
-          attributes: [],
-          where: { isactive: true },
+      };
+    }
+
+    if (attributeFilter?.attribute_ids?.length) {
+      productAttributeConditions = {
+        ...productAttributeConditions,
+        attribute_id: {
+          [Op.in]: attributeFilter?.attribute_ids,
         },
-      ],
-      group: ["product_attribute.product_id"],
-    })
-    .then(async (result) => {
-      let product_lists = result.map((i) => i.product_id);
-      let options = await models.product_attribute.findAll({
-        attributes: [
-          "attribute_name",
-          [
-            models.sequelize.col("attribute.Attribute_master.name"),
-            "attribute_master_name",
-          ],
-          [
-            models.sequelize.col("attribute.filter_position"),
-            "filter_position",
-          ],
-        ],
+      };
+    }
+
+    models.product_attribute
+      .findAll({
+        attributes: ["product_id"],
+        where: {
+          ...productAttributeConditions,
+        },
         include: [
           {
             model: models.attributes,
             attributes: [],
-            where: {
-              is_active: true,
-              is_filter: true,
+            order: ["filter_position"],
+            where: { is_active: true, is_filter: true },
+            include: {
+              model: models.Attribute_master,
+              attributes: [],
+              where: { is_active: true, is_filter: true },
             },
-            include: { model: models.Attribute_master, attributes: [] },
           },
-        ],
-        where: {
-          product_id: { [Op.in]: product_lists },
+          {
+            model: models.product_lists,
+            attributes: [],
+            where: { isactive: true },
+          },
+        ],        
+        group: ["product_attribute.product_id"],
+      })
+      .then((result) => {
+        resolve(result.map((i) => i.product_id));
+      })
+      .catch(reject);
+  });
+};
+
+exports.filteroptions_new = async (req, res) => {
+  try {
+    let filters = req.body;
+
+    let silverpricerange = [];
+
+    if (filters.material == "Silver") {
+      silverpricerange = [
+        {
+          label: "Under 999",
+          min: 0,
+          max: 999,
         },
-        order: [[models.attributes, "filter_position", "ASC"]],
-        group: [
-          "attribute_name",
-          "attribute_master_name",
-          "attribute.filter_position",
-        ],
-        raw: true,
-      });
-      let response = {};
-      let keys = Object.keys(responseMapper);
-      for (let index = 0; index < keys.length; index++) {
-        const i = responseMapper[keys[index]];
-        let filter = options
-          .filter((item) => {
-            return item.attribute_master_name == i;
-          })
-          .map((x) => {
-            let name = "name";
-            if (i.toLowerCase().includes("no of")) {
-              name = "stonecount";
-            }
-            return { [name]: x.attribute_name };
-          });
-        response[keys[index]] = filter;
+        {
+          label: "999 - 2000",
+          min: 1000,
+          max: 2000,
+        },
+        {
+          label: "2001 - 5000",
+          min: 2001,
+          max: 5000,
+        },
+        {
+          label: "5001 - 8000",
+          min: 5001,
+          max: 8000,
+        },
+        {
+          label: "Above 8000",
+          min: 8001,
+          max: 100000,
+        },
+      ];
+    }
+
+    let seo_attribute_name = [];
+    let seo_attribute_value = [];
+    Object.keys(filters).forEach((i) => {
+      if (seo_key_mapper[i]) {
+        seo_attribute_name.push(seo_key_mapper[i]);
+        seo_attribute_value.push(filters[i]);
       }
-      var seooptions = await models.seo_url_priorities.findAll({
-        attributes: ["seo_url", "seo_text", "image_url", "mobile_image_url"],
-        where: {
-          attribute_name: {
-            [Op.in]: seo_attribute_name,
-          },
-          attribute_value: {
-            [Op.in]: seo_attribute_value,
-          },
-        },
-        order: [["priority", "ASC"]],
-      });
-      res.status(200).send({
-        ...response,
-        price: silverpricerange,
-        Offers: ["Up to  5%", "Up to  10%", "Up to  15%", "Up to  20%"],
-        Availability: [
-          "1 Day Shipping",
-          "10 & Above Days Shipping",
-          // "Out of Stock", Diabled as per Vinoth & Dinesh on March 23,2022 WhatsApp confirmation
-        ],
-        seo_url: seooptions.map((i) => i.seo_url).join("-"),
-        seo_text: seooptions.map((i) => i.seo_text).join(" "),
-        seo_banner: seooptions.map((element) => {
-          return {
-            image: element.image_url,
-            mobile_image: element.mobile_image_url,
-          };
-        }),
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).send(error);
     });
+    if (!filters?.category) {
+      seo_attribute_name.push("Category");
+      seo_attribute_value.push("Jewellery");
+    }
+
+    let product_lists = await getFilteredProductIds(filters);
+    let options = await models.product_attribute.findAll({
+      attributes: [
+        "attribute_name",
+        [
+          models.sequelize.col("attribute.Attribute_master.name"),
+          "attribute_master_name",
+        ],
+        [models.sequelize.col("attribute.filter_position"), "filter_position"],
+      ],
+      include: [
+        {
+          model: models.attributes,
+          attributes: [],
+          where: {
+            is_active: true,
+            is_filter: true,
+          },
+          include: { model: models.Attribute_master, attributes: [] },
+        },
+      ],
+      where: {
+        product_id: { [Op.in]: product_lists },
+      },
+      order: [[models.attributes, "filter_position", "ASC"]],
+      group: [
+        "attribute_name",
+        "attribute_master_name",
+        "attribute.filter_position",
+      ],
+      raw: true,
+    });
+    let response = {};
+    let keys = Object.keys(responseMapper);
+    for (let index = 0; index < keys.length; index++) {
+      const i = responseMapper[keys[index]];
+      let filter = options
+        .filter((item) => {
+          return item.attribute_master_name == i;
+        })
+        .map((x) => {
+          let name = "name";
+          if (i.toLowerCase().includes("no of")) {
+            name = "stonecount";
+          }
+          return { [name]: x.attribute_name };
+        });
+      response[keys[index]] = filter;
+    }
+    var seooptions = await models.seo_url_priorities.findAll({
+      attributes: ["seo_url", "seo_text", "image_url", "mobile_image_url"],
+      where: {
+        attribute_name: {
+          [Op.in]: seo_attribute_name,
+        },
+        attribute_value: {
+          [Op.in]: seo_attribute_value,
+        },
+      },
+      order: [["priority", "ASC"]],
+    });
+    res.status(200).send({
+      ...response,
+      price: silverpricerange,
+      Offers: ["Up to  5%", "Up to  10%", "Up to  15%", "Up to  20%"],
+      Availability: [
+        "1 Day Shipping",
+        "10 & Above Days Shipping",
+        // "Out of Stock", Diabled as per Vinoth & Dinesh on March 23,2022 WhatsApp confirmation
+      ],
+      seo_url: seooptions.map((i) => i.seo_url).join("-"),
+      seo_text: seooptions.map((i) => i.seo_text).join(" "),
+      seo_banner: seooptions.map((element) => {
+        return {
+          image: element.image_url,
+          mobile_image: element.mobile_image_url,
+        };
+      }),
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
 };
 
 exports.fetchFilters = async (req, res) => {
@@ -1116,7 +1186,7 @@ exports.fetchFilters = async (req, res) => {
     });
 };
 
-const loadMasterAttributes = () => {
+export const loadMasterAttributes = () => {
   return new Promise((resolve, reject) => {
     models.Attribute_master.findAll({
       attributes: ["id", "name"],
@@ -1174,7 +1244,7 @@ exports.upsertProductFilters = async ({ filepath }) => {
         for (const element of Object.keys(rest)) {
           if (rest[element]) {
             let tempAttributes = rest[element].split(",");
-            let master_id = masters[element]?.id;            
+            let master_id = masters[element]?.id;
             tempValues.push(
               ...tempAttributes.map((item) => {
                 if (masters[element]?.attributes[item]) {

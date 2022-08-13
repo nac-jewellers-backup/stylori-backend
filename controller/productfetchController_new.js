@@ -4,6 +4,7 @@ const Op = require("sequelize").Op;
 const sequelize = require("sequelize");
 import { sendMail } from "./notify/user_notify";
 import apidata from "./apidata.json";
+import { getFilteredProductIds } from "./filtercontroller";
 const uuidv1 = require("uuid/v1");
 var splitArray = require("split-array");
 
@@ -41,24 +42,24 @@ exports.filteroptions_new = async (req, res) => {
     filters["category"] = "Gold Coins";
   }
 
-  let filterArray = Object.keys(filters)
-    .filter(
-      (i) =>
-        ![
-          "isJewellery",
-          "availability",
-          "offer_min",
-          "offer_max",
-          "price",
-          "sortBy",
-          "offset",
-          "filters",
-        ].includes(i)
-    )
-    .map((i) => filters[i]);
+  // let filterArray = Object.keys(filters)
+  //   .filter(
+  //     (i) =>
+  //       ![
+  //         "isJewellery",
+  //         "availability",
+  //         "offer_min",
+  //         "offer_max",
+  //         "price",
+  //         "sortBy",
+  //         "offset",
+  //         "filters",
+  //       ].includes(i)
+  //   )
+  //   .map((i) => filters[i]);
 
   if (filters.isJewellery) {
-    filterArray = [...filterArray, "Jewellery"];
+    // filterArray = [...filterArray, "Jewellery"];
     // baseCondition = {
     //   ...baseCondition,
     //   attribute_name: { [Op.ne]: "92.5" },
@@ -216,7 +217,7 @@ exports.filteroptions_new = async (req, res) => {
   ];
 
   if (filters?.material == "Silver") {
-    filterArray = [...filterArray, "92.5"];
+    // filterArray = [...filterArray, "92.5"];
     skuCondition = {
       ...skuCondition,
       purity: { [Op.eq]: "92.5" },
@@ -245,52 +246,36 @@ exports.filteroptions_new = async (req, res) => {
     required: true,
     order: skuSortOrder,
   });
-
-  models.sequelize
-    .query(
-      `select product_id from 
-      (
-      SELECT 
-      "product_id",
-       array_agg(attribute_name)::text[] @> array['${[
-         ...new Set(filterArray),
-       ].join("','")}']
-       as status
-       FROM "product_attributes" AS "product_attribute"       
-       group by product_id
-      ) as s
-      where s.status is true`,
-      { type: models.Sequelize.QueryTypes.SELECT }
-    )
-    .then(async (result) => {
-      let { count, rows } = await models.product_lists.findAndCountAll({
-        attributes: [
-          ["product_name", "productName"],
-          ["product_id", "productId"],
-          ["product_type", "productType"],
-          ["default_size", "defaultSize"],
-          ["size_varient", "sizeVarient"],
-          ["product_type", "productType"],
-          "is_featured",
-          "selling_qty",
-        ],
-        include: product_includes,
-        limit: 24,
-        offset: offset,
-        distinct: "product_id",
-        where: {
-          product_id: {
-            [Op.in]: result.map((i) => i.product_id),
-          },
-          ...productListCondition,
+  try {
+    let product_ids = await getFilteredProductIds(filters);    
+    let { count, rows } = await models.product_lists.findAndCountAll({
+      attributes: [
+        ["product_name", "productName"],
+        ["product_id", "productId"],
+        ["product_type", "productType"],
+        ["default_size", "defaultSize"],
+        ["size_varient", "sizeVarient"],
+        ["product_type", "productType"],
+        "is_featured",
+        "selling_qty",
+      ],
+      include: product_includes,
+      limit: 24,
+      offset: offset,
+      distinct: "product_id",
+      where: {
+        product_id: {
+          [Op.in]: product_ids,
         },
-        order: orderBy,
-      });
-      res
-        .status(200)
-        .send({ data: { totalCount: count, allProductLists: rows } });
-    })
-    .catch((err) => {
-      res.status(500).send(err);
+        ...productListCondition,
+      },
+      order: orderBy,
     });
+    res
+      .status(200)
+      .send({ data: { totalCount: count, allProductLists: rows } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error);
+  }
 };
