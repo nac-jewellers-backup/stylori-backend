@@ -982,11 +982,11 @@ export const getFilteredProductIds = (filters) => {
             model: models.attributes,
             attributes: [],
             order: ["filter_position"],
-            where: { is_active: true, is_filter: true },
+            // where: { is_active: true, is_filter: true },
             include: {
               model: models.Attribute_master,
               attributes: [],
-              where: { is_active: true, is_filter: true },
+              // where: { is_active: true, is_filter: true },
             },
           },
           {
