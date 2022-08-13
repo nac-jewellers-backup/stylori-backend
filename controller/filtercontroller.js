@@ -893,7 +893,7 @@ let seo_key_mapper = {
 };
 
 export const getFilteredProductIds = (filters) => {
-  return new Promise(async (resolve, reject) => {    
+  return new Promise(async (resolve, reject) => {
     if (filters?.category == "goldcoins") {
       filters["category"] = "Gold Coins";
     }
@@ -912,7 +912,7 @@ export const getFilteredProductIds = (filters) => {
         attributeFilter.attribute_ids.push(tempMaster?.attributes?.[element]);
       }
     }
-    if (filters.isJewellery) {
+    if (filters.isJewellery && filters?.category != "Gold Coins") {
       attributeFilter.master_ids.push(masters["Category"]?.id);
       attributeFilter.attribute_ids.push(
         masters["Category"]?.attributes?.["Jewellery"]
