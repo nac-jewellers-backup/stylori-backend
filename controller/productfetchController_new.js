@@ -92,7 +92,7 @@ exports.filteroptions_new = async (req, res) => {
         orderBy.push(["is_featured", "ASC"]);
         break;
       case "New to Stylori":
-        orderBy.push(['"createdAt"', "DESC"]);
+        orderBy.push(["createdAt", "DESC"]);
         break;
       case "Ready to Ship":
         orderBy.push([
@@ -247,7 +247,7 @@ exports.filteroptions_new = async (req, res) => {
     order: skuSortOrder,
   });
   try {
-    let product_ids = await getFilteredProductIds(filters);    
+    let product_ids = await getFilteredProductIds(filters);
     let { count, rows } = await models.product_lists.findAndCountAll({
       attributes: [
         ["product_name", "productName"],
@@ -258,6 +258,7 @@ exports.filteroptions_new = async (req, res) => {
         ["product_type", "productType"],
         "is_featured",
         "selling_qty",
+        "createdAt",
       ],
       include: product_includes,
       limit: 24,
@@ -269,7 +270,7 @@ exports.filteroptions_new = async (req, res) => {
         },
         ...productListCondition,
       },
-      order: orderBy,      
+      order: orderBy,
     });
     res
       .status(200)
