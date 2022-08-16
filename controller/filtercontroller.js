@@ -936,19 +936,19 @@ export const getFilteredProductIds = (filters) => {
     models.sequelize
       .query(
         `select sub.product_id from (SELECT 
-      "product_attribute"."product_id",
-      array_agg("product_attribute"."master_id") as master_ids,
-      array_agg("product_attribute"."attribute_id") as attribute_ids
-      FROM "product_attributes" AS "product_attribute" 
-      LEFT OUTER JOIN "attributes" AS "attribute" ON "product_attribute"."attribute_id" = "attribute"."id" 
-      LEFT OUTER JOIN "Attribute_masters" AS "attribute->Attribute_master" ON "attribute"."master_id" = "attribute->Attribute_master"."id" 
-      INNER JOIN "product_lists" AS "product_list" ON "product_attribute"."product_id" = "product_list"."product_id"
-      AND "product_list"."isactive" = true
-      GROUP BY "product_attribute"."product_id") as sub
-      WHERE  
-      sub.master_ids @> '{:master_ids}'::int[]
-      AND 
-      sub.attribute_ids @> '{:attribute_ids}'::int[]`,
+          "product_attribute"."product_id",
+          array_agg("product_attribute"."master_id") as master_ids,
+          array_agg("product_attribute"."attribute_id") as attribute_ids
+          FROM "product_attributes" AS "product_attribute" 
+          LEFT OUTER JOIN "attributes" AS "attribute" ON "product_attribute"."attribute_id" = "attribute"."id" 
+          LEFT OUTER JOIN "Attribute_masters" AS "attribute->Attribute_master" ON "attribute"."master_id" = "attribute->Attribute_master"."id" 
+          INNER JOIN "product_lists" AS "product_list" ON "product_attribute"."product_id" = "product_list"."product_id"
+          AND "product_list"."isactive" = true
+          GROUP BY "product_attribute"."product_id") as sub
+          WHERE  
+          sub.master_ids @> '{:master_ids}'::int[]
+          AND 
+          sub.attribute_ids @> '{:attribute_ids}'::int[]`,
         {
           replacements: attributeFilter,
           type: models.Sequelize.QueryTypes.SELECT,

@@ -64,10 +64,10 @@ exports.filteroptions_new = async (req, res) => {
     //   ...baseCondition,
     //   attribute_name: { [Op.ne]: "92.5" },
     // };
-    skuCondition = {
-      ...skuCondition,
-      purity: { [Op.ne]: "92.5" },
-    };
+    // skuCondition = {
+    //   ...skuCondition,
+    //   purity: { [Op.ne]: "92.5" },
+    // };
   }
 
   if (filters.metalcolor) {
