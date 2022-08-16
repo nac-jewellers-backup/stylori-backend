@@ -92,7 +92,7 @@ exports.filteroptions_new = async (req, res) => {
         orderBy.push(["is_featured", "ASC"]);
         break;
       case "New to Stylori":
-        orderBy.push(["is_featured", "ASC"]);
+        orderBy.push(['"createdAt"', "DESC"]);
         break;
       case "Ready to Ship":
         orderBy.push([
