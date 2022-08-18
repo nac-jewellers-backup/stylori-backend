@@ -2237,15 +2237,19 @@ exports.getPincodeDetails = ({ pincode }) => {
               min_cartvalue: 5000,
               max_cartvalue: 85000,
             };
+            address_components = address_components.reverse();
             if (address_components.length == 4) {
-              ["district", "state", "country"].forEach((item, index) => {
-                pincodeObject[item] = address_components[index + 1]?.long_name;
+              ["country", "state", "district"].forEach((item, index) => {
+                pincodeObject[item] = address_components[index]?.long_name;
               });
             } else {
-              ["area", "district", "state", "country"].forEach(
+              ["country", "state", "district", "area"].forEach(
                 (item, index) => {
-                  pincodeObject[item] =
-                    address_components[index + 1]?.long_name;
+                  let temp = index;
+                  if (item == "area") {
+                    temp += 1;
+                  }
+                  pincodeObject[item] = address_components[temp]?.long_name;
                 }
               );
             }
