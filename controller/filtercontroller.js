@@ -957,7 +957,6 @@ export const getFilteredProductIds = (filters) => {
         {
           replacements: attributeFilter,
           type: models.Sequelize.QueryTypes.SELECT,
-          logging: console.log,
         }
       )
       .then((result) => {
@@ -972,6 +971,12 @@ exports.filteroptions_new = async (req, res) => {
     let filters = req.body;
 
     let silverpricerange = [];
+
+    let condition = {
+      name: {
+        [models.Sequelize.Op.notIn]: ["Silver", "92.5"],
+      },
+    };
 
     if (filters.material == "Silver") {
       silverpricerange = [
@@ -1001,6 +1006,7 @@ exports.filteroptions_new = async (req, res) => {
           max: 100000,
         },
       ];
+      delete condition.name;
     }
 
     let seo_attribute_name = [];
@@ -1033,8 +1039,15 @@ exports.filteroptions_new = async (req, res) => {
           where: {
             is_active: true,
             is_filter: true,
+            ...condition,
           },
-          include: { model: models.Attribute_master, attributes: [] },
+          include: {
+            model: models.Attribute_master,
+            attributes: [],
+            where: {
+              is_active: true,
+            },
+          },
         },
       ],
       where: {
@@ -1045,7 +1058,7 @@ exports.filteroptions_new = async (req, res) => {
         "attribute_name",
         "attribute_master_name",
         "attribute.filter_position",
-      ],
+      ],      
       raw: true,
     });
     let response = {};
