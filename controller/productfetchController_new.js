@@ -8,6 +8,14 @@ import { getFilteredProductIds } from "./filtercontroller";
 const uuidv1 = require("uuid/v1");
 var splitArray = require("split-array");
 
+function wait(time) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
+      resolve("proceed now");
+    }, time);
+  });
+}
+
 exports.filteroptions_new = async (req, res) => {
   let {
     sortBy,
@@ -18,6 +26,10 @@ exports.filteroptions_new = async (req, res) => {
     availability,
     ...filters
   } = req.body;
+
+  if (Object.keys(filters).length > 2) {    
+    await wait(250)
+  }
 
   let baseCondition = {};
 
