@@ -948,7 +948,11 @@ export const getFilteredProductIds = (filters) => {
           WHERE  
           sub.master_ids @> '{:master_ids}'::int[]
           AND 
-          sub.attribute_ids @> '{:attribute_ids}'::int[]`,
+          sub.attribute_ids @> '{:attribute_ids}'::int[]
+          AND
+          ${
+            filters.material == "Silver" ? `` : `NOT`
+          } EXISTS (SELECT 1 FROM unnest(sub.attribute_ids) as x where x = 226)`,
         {
           replacements: attributeFilter,
           type: models.Sequelize.QueryTypes.SELECT,
