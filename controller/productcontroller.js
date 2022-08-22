@@ -5,6 +5,7 @@ var request = require("request");
 const sequelize = require("sequelize");
 const Op = require("sequelize").Op;
 import apidata from "./apidata.json";
+import { loadMasterAttributes } from "./filtercontroller";
 const axios = require("axios");
 
 const uuidv1 = require("uuid/v1");
@@ -3640,6 +3641,64 @@ exports.productupload2 = async (req, res) => {
     });
     // console.log("gemslistcount");
     // console.log(product_skus.length);
+
+    /* Applying Dynamic Filters here  */
+    const masterAttributes = await loadMasterAttributes();
+
+    let filterKeys = {
+      collections: "Collection",
+      material_names: "Material",
+      metalcolour: "Metal Colour",
+      metalpurity: "Metal Purity",
+      occassions: "Occasion",
+      prod_styles: "Style",
+      product_categoy: "Category",
+      product_type: "Product Type",
+      selectedgender: "Gender",
+      themes: "Theme",
+    };
+
+    let product_attribute = [];
+
+    for (const item of Object.keys(filterKeys)) {
+      if (Array.isArray(apidata[item])) {
+        let tempData = apidata[item];
+        if (["metalpurity", "metalcolour"].includes(item)) {
+          tempData = apidata[item].map((i) => i?.name);
+        }
+        product_attribute = [
+          ...product_attribute,
+          ...tempData.map((i) => {
+            return {
+              product_id,
+              is_active: true,
+              master_id: masterAttributes[filterKeys[item]].id,
+              attribute_name: i,
+              attribute_id: masterAttributes[filterKeys[item]].attributes[i],
+            };
+          }),
+        ];
+      } else {
+        let tempData = apidata[item];
+        if (item == "product_type") {
+          tempData = tempData?.name;
+        }
+        product_attribute = [
+          ...product_attribute,
+          {
+            product_id,
+            is_active: true,
+            master_id: masterAttributes[filterKeys[item]].id,
+            attribute_name: tempData,
+            attribute_id:
+              masterAttributes[filterKeys[item]].attributes[tempData],
+          },
+        ];
+      }
+    }
+    await models.product_attribute.bulkCreate(product_attribute);
+    /* End of Applying Dynamic Filters */
+
     if (product_skus.length == 0) {
       product_skus = skus;
     }
