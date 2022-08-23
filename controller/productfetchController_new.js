@@ -273,7 +273,7 @@ exports.filteroptions_new = async (req, res) => {
         "createdAt",
       ],
       include: product_includes,
-      limit: filters?.material == "Silver" ? 15 : 24,
+      limit: 24,
       offset: offset,
       distinct: "product_id",
       where: {
