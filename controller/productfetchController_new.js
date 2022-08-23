@@ -27,7 +27,7 @@ exports.filteroptions_new = async (req, res) => {
     ...filters
   } = req.body;
 
-  // if (Object.keys(filters).length > 2) {    
+  // if (Object.keys(filters).length > 2) {
   //   await wait(250)
   // }
 
@@ -273,7 +273,7 @@ exports.filteroptions_new = async (req, res) => {
         "createdAt",
       ],
       include: product_includes,
-      limit: 24,
+      limit: filters?.material == "Silver" ? 15 : 24,
       offset: offset,
       distinct: "product_id",
       where: {
