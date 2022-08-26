@@ -249,7 +249,6 @@ exports.filteroptions_new = async (req, res) => {
       "purity",
       ["diamond_type", "diamondType"],
       ["markup_price", "markupPrice"],
-      ["markup_price", "markupPrice"],
       ["sku_id", "skuID"],
       ["sku_url", "skuUrl"],
       ["selling_price", "sellingPrice"],
@@ -265,7 +264,32 @@ exports.filteroptions_new = async (req, res) => {
   });
   try {
     let product_ids = await getFilteredProductIds(filters);
+
     let { count, rows } = await models.product_lists.findAndCountAll({
+      attributes: ["product_id"],
+      include: {
+        model: models.trans_sku_lists,
+        attributes: [],
+        where: {
+          isdefault: true,
+        },
+      },
+      where: {
+        product_id: {
+          [Op.in]: product_ids,
+        },
+        ...productListCondition,
+      },
+      limit: 24,
+      offset: offset,
+      order: orderBy,
+      subQuery: false,
+      distinct: "product_lists.product_id",
+    });
+
+    product_ids = rows.map((i) => i.product_id);
+
+    let data = await models.product_lists.findAll({
       attributes: [
         ["product_name", "productName"],
         ["product_id", "productId"],
@@ -277,10 +301,7 @@ exports.filteroptions_new = async (req, res) => {
         "selling_qty",
         "createdAt",
       ],
-      include: product_includes,      
-      limit: 24,
-      offset: offset,
-      distinct: "product_id",
+      include: product_includes,
       where: {
         product_id: {
           [Op.in]: product_ids,
@@ -288,11 +309,10 @@ exports.filteroptions_new = async (req, res) => {
         ...productListCondition,
       },
       order: orderBy,
-      logging: console.log,
     });
     res
       .status(200)
-      .send({ data: { totalCount: count, allProductLists: rows } });
+      .send({ data: { totalCount: count, allProductLists: data } });
   } catch (error) {
     console.error(error);
     res.status(500).send(error);
