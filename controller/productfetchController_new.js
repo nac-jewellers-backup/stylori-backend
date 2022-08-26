@@ -169,7 +169,12 @@ exports.filteroptions_new = async (req, res) => {
   if (availability) {
     delete skuCondition["isdefault"];
     if (availability === "1 Day Shipping") {
-      skuSortOrder.push(["is_ready_to_ship", "DESC"]);
+      // skuSortOrder.push(["is_ready_to_ship", "DESC"]);
+      orderBy.push([
+        { model: models.trans_sku_lists },
+        "is_ready_to_ship",
+        "desc",
+      ]);
       skuCondition = {
         ...skuCondition,
         is_ready_to_ship: true,
@@ -273,6 +278,7 @@ exports.filteroptions_new = async (req, res) => {
         "createdAt",
       ],
       include: product_includes,
+      subQuery: false,
       limit: 24,
       offset: offset,
       distinct: "product_id",
@@ -283,6 +289,7 @@ exports.filteroptions_new = async (req, res) => {
         ...productListCondition,
       },
       order: orderBy,
+      logging: console.log,
     });
     res
       .status(200)
