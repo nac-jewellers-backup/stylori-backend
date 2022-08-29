@@ -27,9 +27,9 @@ exports.filteroptions_new = async (req, res) => {
     ...filters
   } = req.body;
 
-  // if (Object.keys(filters).length > 2) {
-  //   await wait(250)
-  // }
+  if (Object.keys(filters).length > 2) {
+    await wait(250)
+  }
 
   let baseCondition = {};
 
