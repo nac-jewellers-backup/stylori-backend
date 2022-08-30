@@ -1058,7 +1058,7 @@ exports.filteroptions_new = async (req, res) => {
         "attribute_name",
         "attribute_master_name",
         "attribute.filter_position",
-      ],      
+      ],
       raw: true,
     });
     let response = {};
@@ -1118,16 +1118,21 @@ exports.fetchFilters = async (req, res) => {
   let { product_id } = req.query;
   models.sequelize
     .query(
-      `select sub.product_id,jsonb_object_agg(sub.name,sub.value) as attributes
+      `select sub.product_id,sub.product_name,jsonb_object_agg(sub.name,sub.value) as attributes
       from
-      (select p.product_id,
-      array_agg(p.attribute_name) as value, a.name as name 
-      from product_attributes p, "Attribute_masters" a
-      where p.master_id = a.id ${
-        product_id ? `and product_id = '${product_id}'` : ``
-      }
-      group by p.product_id,a.name) sub
-      group by sub.product_id`,
+      (
+		      select p.product_id,p.product_name,
+      	  array_agg(pa.attribute_name) as value, a.name as name 
+      	  from 
+		      product_lists p left join product_attributes pa on p.product_id = pa.product_id
+		      left join "Attribute_masters" a on pa.master_id = a.id 			  
+      	  where p.master_id = a.id ${
+            product_id ? `and product_id = '${product_id}'` : ``
+          }
+          group by p.product_id,p.product_name,a.name
+	    ) sub
+      group by sub.product_id,sub.product_name
+	  `,
       { type: models.Sequelize.QueryTypes.SELECT }
     )
     .then(async (result) => {
