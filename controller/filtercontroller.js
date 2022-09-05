@@ -1151,6 +1151,7 @@ exports.fetchFilters = async (req, res) => {
       result = result.map((i) => {
         let tempObj = {
           product_id: i.product_id,
+          product_name: i.product_name,
         };
         for (const attribute of Object.keys(i.attributes)) {
           tempObj[attribute] = i.attributes[attribute].join(",");
