@@ -4227,134 +4227,111 @@ exports.addvarient = async (req, res) => {
     );
   }
 };
-exports.csvDownload = (req, res) => {
+
+exports.csvDownload = async (req, res) => {
   try {
     let { type } = req.body;
     if (!type || type == "" || type.includes("%")) {
       return res.status(400).send({ message: "type is mandatory!" });
     }
-    let query = `query($after: Cursor,$type: String!) {
-    product: allProductLists(
-      first: 10000
-      after: $after
-      condition: { isactive: true }
-      filter: { productType: { likeInsensitive: $type } }
-      orderBy: CREATED_AT_DESC
-    ) {
-      nodes {
-        productId
-        productName
-        productCategory
-        productType
-        length
-        height
-        width
-        defaultWeight
-        sizeVarient
-        colourVarient
-        earringBacking
-        gender
-        vendor: masterVendorByVendorCode {
-          name
-        }
-        productVendorCode
-        isactive
-        materials: productMaterialsByProductSku {
-          nodes {
-            name: materialName
+
+    let masterAttributes = Object.keys(await loadMasterAttributes()).filter(
+      (i) => !["Category", "Product Type"].includes(i)
+    );
+
+    let query = `query($after: Cursor, $type: String!) {
+      product: allProductLists(
+        first: 10000
+        after: $after
+        condition: { isactive: true }
+        filter: { productType: { likeInsensitive: $type } }
+        orderBy: CREATED_AT_DESC
+      ) {
+        nodes {
+          productId
+          productName
+          productCategory
+          productType
+          length
+          height
+          width
+          defaultWeight
+          sizeVarient
+          colourVarient
+          earringBacking
+          gender
+          vendor: masterVendorByVendorCode {
+            name
           }
-        }
-        collections: productCollectionsByProductId(
-          condition: { isActive: true }
-        ) {
-          nodes {
-            name: collectionName
-          }
-        }
-        occasions: productOccassionsByProductId(condition: { isActive: true }) {
-          nodes {
-            name: occassionName
-          }
-        }
-        themes: productThemesByProductId(condition: { isActive: true }) {
-          nodes {
-            name: themeName
-          }
-        }
-        stoneColor: productStonecolorsByProductId {
-          nodes {
-            color: stonecolor
-          }
-        }
-        styles: productStylesByProductId(condition: { isActive: true }) {
-          nodes {
-            name: styleName
-          }
-        }
-        stoneCount: productStonecountsByProductId {
-          nodes {
-            count: stonecount
-          }
-        }
-        diamonds: productDiamondsByProductSku {
-          nodes {
-            diamondClarity
-            diamondColour
-            diamondSettings
-            diamondShape
-            diamondType
-            stoneCount
-            stoneWeight
-          }
-        }
-        gemstones: productGemstonesByProductSku {
-          nodes {
-            gemstoneSetting
-            gemstoneShape
-            gemstoneSize
-            gemstoneType
-            gemstonsSize
-            stoneCount
-            stoneWeight
-          }
-        }
-        skus: transSkuListsByProductId {
-          nodes {
-            tagNo: generatedSku
-            diamondType
-            metalColor
-            purity
-            isdefault
-            isReadyToShip
-            costPrice
-            sellingPrice
-            markupPrice
-            discountPrice
-            discount
-            discountDesc
-            skuWeight
-            vendorDeliveryTime
-            transSkuDescriptionsBySkuId {
-              nodes {
-                skuDescription
-                certificate
-                ringsizeImage
+          productVendorCode
+          isactive
+          product_attributes: productAttributesByProductId {
+            nodes {
+              name: attributeName
+              master: attributeMasterByMasterId {
+                name
               }
             }
-            createdAt
-            updatedAt
-            minOrderQty
-            maxOrderQty
+          }
+          diamonds: productDiamondsByProductSku {
+            nodes {
+              diamondClarity
+              diamondColour
+              diamondSettings
+              diamondShape
+              diamondType
+              stoneCount
+              stoneWeight
+            }
+          }
+          gemstones: productGemstonesByProductSku {
+            nodes {
+              gemstoneSetting
+              gemstoneShape
+              gemstoneSize
+              gemstoneType
+              gemstonsSize
+              stoneCount
+              stoneWeight
+            }
+          }
+          skus: transSkuListsByProductId {
+            nodes {
+              tagNo: generatedSku
+              diamondType
+              metalColor
+              purity
+              isdefault
+              isReadyToShip
+              costPrice
+              sellingPrice
+              markupPrice
+              discountPrice
+              discount
+              discountDesc
+              skuWeight
+              vendorDeliveryTime
+              transSkuDescriptionsBySkuId {
+                nodes {
+                  skuDescription
+                  certificate
+                  ringsizeImage
+                }
+              }
+              createdAt
+              updatedAt
+              minOrderQty
+              maxOrderQty
+            }
           }
         }
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
       }
     }
-  }
-  `;
+    `;
     let responseArrays = [];
     const axios = require("axios");
     function loadData({ cursor }) {
@@ -4376,6 +4353,27 @@ exports.csvDownload = (req, res) => {
                 let item = nodes[index];
                 let diamonds = JSON.stringify(item.diamonds.nodes);
                 let gemstones = JSON.stringify(item.gemstones.nodes);
+                let { product_attributes } = item;
+                let tempProductAttributes = product_attributes.nodes.reduce(
+                  (pV, i) => {
+                    if (
+                      !pV[i.master.name] &&
+                      !Array.isArray(pV[i.master.name])
+                    ) {
+                      pV[i.master.name] = [i.name];
+                    } else {
+                      pV[i.master.name].push(i.name);
+                    }
+                    return pV;
+                  },
+                  {}
+                );
+                let finalProductAttributes = {};
+                for (const key of masterAttributes) {
+                  finalProductAttributes[key] = tempProductAttributes[key]
+                    ? tempProductAttributes[key]?.join(",")
+                    : ``;
+                }                
                 for (let i = 0; i < item.skus.nodes.length; i++) {
                   const sku = item.skus.nodes[i];
                   if (sku) {
@@ -4409,23 +4407,24 @@ exports.csvDownload = (req, res) => {
                       is_default: sku.isdefault,
                       diamond_type: sku.diamondType,
                       metal_color: sku.metalColor,
-                      materials: item.materials.nodes
-                        .map((i) => i.name)
-                        .join(","),
-                      collections: item.collections.nodes
-                        .map((i) => i.name)
-                        .join(","),
-                      occasions: item.occasions.nodes
-                        .map((i) => i.name)
-                        .join(","),
-                      themes: item.themes.nodes.map((i) => i.name).join(","),
-                      styles: item.styles.nodes.map((i) => i.name).join(","),
-                      stone_color: item.stoneColor.nodes
-                        .map((i) => i.color)
-                        .join(","),
-                      stone_count: item.stoneCount.nodes
-                        .map((i) => i.count)
-                        .join(","),
+                      // materials: item.materials.nodes
+                      //   .map((i) => i.name)
+                      //   .join(","),
+                      // collections: item.collections.nodes
+                      //   .map((i) => i.name)
+                      //   .join(","),
+                      // occasions: item.occasions.nodes
+                      //   .map((i) => i.name)
+                      //   .join(","),
+                      // themes: item.themes.nodes.map((i) => i.name).join(","),
+                      // styles: item.styles.nodes.map((i) => i.name).join(","),
+                      // stone_color: item.stoneColor.nodes
+                      //   .map((i) => i.color)
+                      //   .join(","),
+                      // stone_count: item.stoneCount.nodes
+                      //   .map((i) => i.count)
+                      //   .join(","),
+                      ...finalProductAttributes,
                       diamonds,
                       gemstones,
                       minimum_order_quantity: sku.minOrderQty,

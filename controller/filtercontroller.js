@@ -1126,8 +1126,8 @@ exports.fetchFilters = async (req, res) => {
       	  from 
 		      product_lists p left join product_attributes pa on p.product_id = pa.product_id
 		      left join "Attribute_masters" a on pa.master_id = a.id 			  
-      	  where p.master_id = a.id ${
-            product_id ? `and product_id = '${product_id}'` : ``
+      	  where pa.master_id = a.id ${
+            product_id ? `and p.product_id = '${product_id}'` : ``
           }
           group by p.product_id,p.product_name,a.name
 	    ) sub
@@ -1163,6 +1163,7 @@ exports.fetchFilters = async (req, res) => {
       });
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).send(err);
     });
 };
