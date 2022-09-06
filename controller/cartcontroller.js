@@ -904,12 +904,14 @@ exports.removecartitem = async (req, res) => {
       // console.log("cartline length");
       updateCartObj = {
         gross_amount: gross_amount.price,
+        net_amount: gross_amount.price,
         discounted_price: gross_amount.price,
         discount: 0,
       };
     } else {
       updateCartObj = {
         gross_amount: 0,
+        net_amount: 0,
         discounted_price: 0,
         discount: 0,
       };
@@ -1030,6 +1032,7 @@ exports.updatecartitem = async (req, res) => {
       .update(
         {
           gross_amount: gross_amount.price,
+          net_amount: gross_amount.price,
           discounted_price: gross_amount.price,
           discount: 0,
         },
@@ -1173,6 +1176,7 @@ exports.addtocart = async (req, res) => {
         .update(
           {
             gross_amount: gross_amount.price,
+            net_amount: gross_amount.price,
             discounted_price: gross_amount.price,
           },
           {
@@ -1394,10 +1398,10 @@ async function updateshippingcharge(cart_id, res) {
         is_active: true,
         is_cart: true,
         range_from: {
-          [models.Sequelize.Op.lte]: cart.gross_amount,
+          [models.Sequelize.Op.lte]: cart.net_amount,
         },
         range_to: {
-          [models.Sequelize.Op.gte]: cart.gross_amount,
+          [models.Sequelize.Op.gte]: cart.net_amount,
         },
       },
     });
@@ -1409,9 +1413,9 @@ async function updateshippingcharge(cart_id, res) {
     await models.shopping_cart.update(
       {
         shipping_charge: final_shipping_charge,
-        gross_amount: Number(cart.gross_amount) + Number(final_shipping_charge),
-        discount_price:
-          Number(cart.discount_price) + Number(final_shipping_charge),
+        gross_amount: Number(cart.net_amount) + Number(final_shipping_charge),
+        discounted_price:
+          Number(cart.discounted_price) + Number(final_shipping_charge),
       },
       {
         where: { id: cart_id },
