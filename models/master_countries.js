@@ -19,12 +19,12 @@ module.exports = (sequelize, DataTypes) => {
   );
   master_countries.associate = function (models) {
     // associations can be defined here
-    // master_countries.belongsToMany(models.shipping_zones, {
-    //   through: {
-    //     model: models.shipping_zone_countries,
-    //   },
-    //   foreignKey: "country_id",      
-    // });
+    master_countries.belongsToMany(models.shipping_zones, {
+      through: {
+        model: models.shipping_zone_countries,
+      },
+      foreignKey: "country_id",
+    });
   };
   return master_countries;
 };

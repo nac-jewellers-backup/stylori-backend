@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   shipping_charges.associate = function(models) {
     // associations can be defined here
+    shipping_charges.belongsTo(models.shipping_zones, {
+      foreignKey: "zone_id",
+      targetKey: "id",
+    });
   };
   return shipping_charges;
 };
