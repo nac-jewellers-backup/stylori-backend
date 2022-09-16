@@ -272,6 +272,7 @@ exports.filteroptions_new = async (req, res) => {
         attributes: [],
         where: {
           isdefault: true,
+          ...skuCondition,
         },
       },
       where: {
