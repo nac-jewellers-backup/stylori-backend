@@ -904,12 +904,14 @@ exports.removecartitem = async (req, res) => {
       // console.log("cartline length");
       updateCartObj = {
         gross_amount: gross_amount.price,
+        net_amount: gross_amount.price,
         discounted_price: gross_amount.price,
         discount: 0,
       };
     } else {
       updateCartObj = {
         gross_amount: 0,
+        net_amount: 0,
         discounted_price: 0,
         discount: 0,
       };
@@ -1030,6 +1032,7 @@ exports.updatecartitem = async (req, res) => {
       .update(
         {
           gross_amount: gross_amount.price,
+          net_amount: gross_amount.price,
           discounted_price: gross_amount.price,
           discount: 0,
         },
@@ -1173,6 +1176,7 @@ exports.addtocart = async (req, res) => {
         .update(
           {
             gross_amount: gross_amount.price,
+            net_amount: gross_amount.price,
             discounted_price: gross_amount.price,
           },
           {
@@ -1350,217 +1354,90 @@ exports.removeaddress = async (req, res) => {
   }
 };
 async function updateshippingcharge(cart_id, res) {
-  try {
-    let cartaddress = await models.cart_address.findOne({
+  let cart = await models.shopping_cart.findByPk(cart_id, {
+    include: {
+      model: models.cart_address,
+      required: false,
       where: {
-        cart_id: cart_id,
-        address_type: 1,
+        cart_id,
+        address_type: {
+          [models.Sequelize.Op.in]: [1, 3],
+        },
       },
-    });
-    let shippingcountry = cartaddress.country;
-    let countryid = await models.master_countries.findOne({
-      where: {
-        name: shippingcountry.toUpperCase(),
-      },
-    });
-    let zones = await models.shipping_zone_countries.findAll({
-      where: {
-        country_id: countryid.id,
-      },
-    });
+    },
+  });
 
-    let zoneids = [];
-    zones.forEach((zoneobj) => {
-      zoneids.push(zoneobj.id);
-    });
-
-    let products = await models.shopping_cart_item.findAll({
-      where: {
-        shopping_cart_id: cart_id,
-      },
-    });
-    if (products.length > 0) {
-      processskus(0);
-    }
-    async function processskus(skucount) {
-      let attributes_condition = [];
-      let itemobj = products[skucount];
-      let product_attributes1 = await models.product_lists.findOne({
-        hierarchy: true,
-        attributes: ["product_id", "product_category", "product_type"],
-        include: [
-          {
-            model: models.trans_sku_lists,
-            attributes: ["purity", "generated_sku"],
-            include: [
-              {
-                model: models.master_metals_purities,
-                attributes: ["alias"],
-              },
-            ],
-            where: {
-              generated_sku: itemobj.product_sku,
+  if (!cart) {
+    return res.status(403).send({ message: "No such cart exists!" });
+  }
+  let charges,
+    final_shipping_charge = 0;
+  cart = JSON.parse(JSON.stringify(cart));
+  if (cart && cart.cart_addresses && cart.cart_addresses.length) {
+    charges = await models.shipping_charges.findOne({
+      attributes: ["shipment_charge"],
+      include: {
+        required: true,
+        attributes: ["name"],
+        model: models.shipping_zones,
+        include: {
+          model: models.master_countries,
+          attributes: [],
+          required: true,
+          through: {
+            attributes: [],
+          },
+          where: {
+            name: {
+              [models.Sequelize.Op.iLike]: cart.cart_addresses[0].country,
             },
           },
-          {
-            model: models.master_product_categories,
-            attributes: ["alias"],
-          },
-          {
-            model: models.master_product_types,
-            attributes: ["alias"],
-          },
-          {
-            model: models.product_materials,
-            attributes: ["material_name"],
-            include: [
-              {
-                model: models.master_materials,
-                attributes: ["alias"],
-              },
-            ],
-          },
-          {
-            model: models.product_collections,
-            attributes: ["collection_name"],
-            include: [
-              {
-                model: models.master_collections,
-                attributes: ["alias"],
-              },
-            ],
-          },
-          {
-            model: models.product_occassions,
-            attributes: ["occassion_name"],
-            include: [
-              {
-                model: models.master_occasions,
-                attributes: ["alias"],
-              },
-            ],
-          },
-          {
-            model: models.product_gemstones,
-            attributes: ["gemstone_type"],
-            include: [
-              {
-                model: models.master_gemstones_types,
-                attributes: ["alias"],
-              },
-            ],
-          },
-          {
-            model: models.product_styles,
-            attributes: ["style_name"],
-            include: [
-              {
-                model: models.master_styles,
-                attributes: ["alias"],
-              },
-            ],
-          },
-          {
-            model: models.product_themes,
-            attributes: ["theme_name"],
-            include: [
-              {
-                model: models.master_themes,
-                attributes: ["alias"],
-              },
-            ],
-          },
-          {
-            model: models.product_stonecolor,
-          },
-          {
-            model: models.product_gender,
-          },
-        ],
-      });
-      delete product_attributes1["dataValues"];
-      delete product_attributes1["_previousDataValues"];
-      delete product_attributes1["_modelOptions"];
-      delete product_attributes1["_options"];
-      delete product_attributes1["isNewRecord"];
-      delete product_attributes1["_changed"];
-
-      let keys = Object.keys(product_attributes1);
-      let attributes = {};
-      function isJson(str) {
-        try {
-          JSON.parse(str);
-        } catch (e) {
-          return false;
-        }
-        return true;
-      }
-
-      keys.forEach((element) => {
-        if (product_attributes1[element]) {
-          let attributeobj = product_attributes1[element];
-
-          if (Array.isArray(attributeobj)) {
-            let attributes_value = [];
-
-            attributeobj.forEach((attr_obj) => {
-              delete attr_obj["dataValues"];
-              delete attr_obj["_previousDataValues"];
-              delete attr_obj["_modelOptions"];
-              delete attr_obj["_options"];
-              delete attr_obj["isNewRecord"];
-              delete attr_obj["_changed"];
-              let nestkeys = Object.keys(attr_obj);
-              nestkeys.forEach((aliasobj) => {
-                if (isJson(JSON.stringify(attr_obj[aliasobj]))) {
-                  attributes_value.push(attr_obj[aliasobj].alias);
-                  // attributes[element+"_key"] = attr_obj[aliasobj]
-                }
-              });
-              // attributes[element] = attr_obj
-            });
-
-            attributes[element] = attributes_value;
-          } else {
-            let attributes_value = [];
-            attributes_value.push(attributeobj.alias);
-            attributes[element] = attributes_value;
-          }
-        }
-      });
-
-      let attrkeys = Object.keys(attributes);
-      attrkeys.forEach((key) => {
-        let attributeobj = attributes[key];
-        if (Array.isArray(attributeobj)) {
-          if (attributeobj.length > 0) {
-            // console.log(attributeobj);
-            let attrobj = {
-              [Op.or]: attributeobj,
-            };
-            attributes_condition.push(attrobj);
-          }
-        }
-      });
-      res.send(200, { attributes });
+        },
+      },
+      where: {
+        is_active: true,
+        is_cart: true,
+        range_from: {
+          [models.Sequelize.Op.lte]: cart.net_amount,
+        },
+        range_to: {
+          [models.Sequelize.Op.gte]: cart.net_amount,
+        },
+      },
+    });
+    charges = JSON.parse(JSON.stringify(charges));
+    if (charges) {
+      final_shipping_charge = charges.shipment_charge;
     }
-  } catch (err) {
-    console.log(
-      new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Calcutta",
-      }) +
-        " - Error message : " +
-        err
+    //updating cart with shipping_charge
+    await models.shopping_cart.update(
+      {
+        shipping_charge: final_shipping_charge,
+        gross_amount: Number(cart.net_amount) + Number(final_shipping_charge),
+        discounted_price:
+          Number(cart.discounted_price) + Number(final_shipping_charge),
+      },
+      {
+        where: { id: cart_id },
+      }
     );
+  } else {
+    return res.status(200).send({
+      ...charges,
+      shipping_charge: "Free",
+    });
   }
+  res.status(200).send({
+    ...charges,
+    shipping_charge:
+      final_shipping_charge == 0 ? "Free" : final_shipping_charge,
+  });
 }
 exports.getshippingcharge = async (req, res) => {
   try {
     const { cart_id } = req.body;
-
-    res.send(200, { shipping_charge: "Free" });
-
-    //await updateshippingcharge(cart_id,res)
+    // res.send(200, { shipping_charge: "Free" });
+    await updateshippingcharge(cart_id, res);
   } catch (err) {
     console.log(
       new Date().toLocaleString("en-US", {
