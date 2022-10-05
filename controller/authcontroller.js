@@ -1212,7 +1212,7 @@ exports.mediaSignin = async (req, res) => {
     if (type == "facebook") {
       profileSearch["facebookid"] = mediaBody.id;
     } else if (type == "google") {
-      profileSearch["google_id"] = mediaBody.id;
+      // profileSearch["google_id"] = mediaBody.id;
     }
     userProfile = await models.user_profiles.findOne({
       where: {
@@ -1232,12 +1232,12 @@ exports.mediaSignin = async (req, res) => {
           { where: { id: userProfile.id } }
         );
       }
-      if (type == "google" && !userProfile.google_id) {
-        await models.user_profiles.update(
-          { google_id: mediaBody.id },
-          { where: { id: userProfile.id } }
-        );
-      }
+      // if (type == "google" && !userProfile.google_id) {
+      //   await models.user_profiles.update(
+      //     { google_id: mediaBody.id },
+      //     { where: { id: userProfile.id } }
+      //   );
+      // }
       return res.status(200).send({
         accessToken: token,
         userprofile: { id: userProfile.id, email: userProfile.email },
@@ -1264,7 +1264,7 @@ exports.mediaSignin = async (req, res) => {
       if (type == "facebook") {
         userProfileObj["facebookid"] = mediaBody.id;
       } else if (type == "google") {
-        userProfileObj["google_id"] = mediaBody.id;
+        // userProfileObj["google_id"] = mediaBody.id;
       }
       userProfile = await models.user_profiles.create(userProfileObj);
       return res.status(200).send({
