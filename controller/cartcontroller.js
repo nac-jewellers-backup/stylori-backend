@@ -2101,20 +2101,42 @@ exports.syncFxRate = (req, res) => {
     });
 };
 
-exports.getPincodeDetails = ({ pincode }) => {
+exports.getPincodeDetails = ({ pincode, country_short_code }) => {
+  const URL = (query) =>
+    `https://maps.googleapis.com/maps/api/geocode/json?${query}&key=${process.env.GOOGLE_GEOLOCATION_KEY}`;
   return new Promise((resolve, reject) => {
+    let api = URL(`address=${pincode}`);
+    if (country_short_code) {
+      api = URL(
+        `components=country:${country_short_code}|postal_code:${pincode}`
+      );
+    }
     axios
-      .get(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${pincode}&key=${process.env.GOOGLE_GEOLOCATION_KEY}`
-      )
+      .get(api)
       .then(async ({ data: { status, results } }) => {
         if (status == "OK") {
           let pincode_master = await models.pincode_master.findOne({
             where: { pincode },
           });
+          let pincodeObject = {};
+          let { address_components } = results[0];
+          address_components = address_components.reverse();
+          if (address_components.length == 4) {
+            ["country", "state", "district"].forEach((item, index) => {
+              pincodeObject[item] = address_components[index]?.long_name;
+            });
+          } else {
+            ["country", "state", "district", "area"].forEach((item, index) => {
+              let temp = index;
+              if (item == "area") {
+                temp += 1;
+              }
+              pincodeObject[item] = address_components[temp]?.long_name;
+            });
+          }
           if (!pincode_master) {
-            let { address_components } = results[0];
             let pincodeObject = {
+              ...pincodeObject,
               id: uuidv1(),
               pincode,
               is_cod: true,
@@ -2123,24 +2145,11 @@ exports.getPincodeDetails = ({ pincode }) => {
               min_cartvalue: 5000,
               max_cartvalue: 85000,
             };
-            address_components = address_components.reverse();
-            if (address_components.length == 4) {
-              ["country", "state", "district"].forEach((item, index) => {
-                pincodeObject[item] = address_components[index]?.long_name;
-              });
-            } else {
-              ["country", "state", "district", "area"].forEach(
-                (item, index) => {
-                  let temp = index;
-                  if (item == "area") {
-                    temp += 1;
-                  }
-                  pincodeObject[item] = address_components[temp]?.long_name;
-                }
-              );
-            }
-
             await models.pincode_master.create(pincodeObject);
+          } else {
+            await models.pincode_master.update(pincodeObject, {
+              where: { id: pincode_master?.id },
+            });
           }
           resolve({ status, results });
         } else {
