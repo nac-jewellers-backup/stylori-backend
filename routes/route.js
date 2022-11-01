@@ -520,41 +520,22 @@ module.exports = function (app) {
                         })
                       );
                     })();
-                    skuArray = arrayChunk(skuArray, 8);
-                    for (let index = 0; index < skuArray.length; index++) {
-                      const element = skuArray[index];
-                      await docBulk(element);
+
+                    let dataSet = [productArray, seoArray, skuArray];
+
+                    for (const item of dataSet) {
+                      console.log(">>", item.length);
+                      let tempArray = arrayChunk(item, 800);
+                      for (let index = 0; index < tempArray.length; index++) {
+                        const element = tempArray[index];
+                        await docBulk(element);
+                        console.log(">> Completed >>", index);
+                      }
                     }
-                    productArray = arrayChunk(productArray, 8);
-                    for (let index = 0; index < productArray.length; index++) {
-                      const element = productArray[index];
-                      await docBulk(element);
-                    }
-                    seoArray = arrayChunk(seoArray, 8);
-                    for (let index = 0; index < seoArray.length; index++) {
-                      const element = seoArray[index];
-                      await docBulk(element);
-                    }
+
                     res
                       .status(200)
                       .send({ message: "Successfully reindexed all data!" });
-                    // skuArray.map((el) => doc_array.push(docBulk(el)));
-
-                    // doc_array.push(docBulk(productArray));
-
-                    // doc_array.push(docBulk(seoArray));
-
-                    // console.info("totalPromises", doc_array.length);
-
-                    // Promise.all(doc_array)
-                    //   .then((response) => {
-                    //     console.log("» » » Docs Uploaded");
-                    //     console.log("Promises Resolved ", response.length);
-                    //   })
-                    //   .catch((_e) => {
-                    //     console.log(_e);
-                    //     console.log("Errror");
-                    //   });
                   })
                   .catch((fetch_err) => {
                     console.error(fetch_err);
