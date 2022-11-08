@@ -1093,7 +1093,7 @@ exports.filteroptions_new = async (req, res) => {
     res.status(200).send({
       ...response,
       price: silverpricerange,
-      Offers: ["Up to  5%", "Up to  10%", "Up to  15%", "Up to  20%"],
+      // Offers: ["Up to  5%", "Up to  10%", "Up to  15%", "Up to  20%"],
       Availability: [
         "1 Day Shipping",
         "10 & Above Days Shipping",
