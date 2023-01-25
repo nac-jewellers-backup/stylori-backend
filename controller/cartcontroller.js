@@ -1676,7 +1676,17 @@ exports.addorder = async (req, res) => {
       },
       plain: true,
     });
-
+    if (cartDetails && cartDetails?.voucher_code) {
+      voucher_code = cartDetails?.voucher_code;
+      await models.shopping_cart.update(
+        {
+          discounted_price: models.sequelize.literal(
+            `gross_amount+shipping_charge-discount`
+          ),
+        },
+        { where: { id: cartDetails?.id } }
+      );
+    }
     //Getting Order Details if already created for this cart to avoid duplicates
     let orderDetails = await models.orders.findOne({
       where: {
@@ -1909,7 +1919,7 @@ exports.updatecart_latestprice = async (req, res) => {
       /* Update Cart with latest prices*/
       await models.sequelize.query(`update shopping_carts c set 
       gross_amount = (select sum(price) from shopping_cart_items i where i.shopping_cart_id = '${cart.id}'),
-      discounted_price = (select sum(price) from shopping_cart_items i where i.shopping_cart_id = '${cart.id}')
+      discounted_price = (select sum(price) from shopping_cart_items i where i.shopping_cart_id = '${cart.id}')+shipping_charge-COALESCE(discount,0)
       where id = '${cart.id}'`);
 
       res.status(200).send({ message: "Cart Updated Successfully!" });
