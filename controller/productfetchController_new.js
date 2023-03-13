@@ -133,6 +133,8 @@ exports.filteroptions_new = async (req, res) => {
       default:
         break;
     }
+    //ordering by product_id
+    orderBy.push(["product_id", "asc"]);
   }
 
   if (offer_min && offer_max) {
@@ -175,6 +177,8 @@ exports.filteroptions_new = async (req, res) => {
         "is_ready_to_ship",
         "desc",
       ]);
+      //ordering by product_id
+      orderBy.push(["product_id", "asc"]);
       skuCondition = {
         ...skuCondition,
         is_ready_to_ship: true,
