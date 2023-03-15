@@ -169,4 +169,9 @@ module.exports = {
 
     console.log(_results);
   },
+  indexDocumentsCount: function ({ indexName }) {
+    return new Promise((resolve, reject) => {
+      esClient.count({ index: indexName }).then(resolve).catch(reject);
+    });
+  },
 };

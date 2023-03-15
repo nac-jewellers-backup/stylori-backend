@@ -10,11 +10,17 @@ let {
   deleteIndex,
   initMapping,
   initIndex,
+  indexDocumentsCount,
 } = require("../controller/elasticServices");
 const { send_sms } = require("../controller/notify/user_notify");
 const price_engine = require("../controller/price_engine");
+const {
+  fetchESRecordsFromDB,
+  fullIndexSync,
+} = require("../controller/elastic_sync");
 const turl = process.env.apibaseurl + "/productesearch";
 const upload = require("../middlewares/multer").single("file");
+let ES_INDEXS = ["product_search", "sku_search", "seo_search"];
 
 module.exports = function (app) {
   const configurationcontroller = require("../controller/master_configuration.js");
@@ -414,7 +420,7 @@ module.exports = function (app) {
         },
       };
 
-      let _index = ["product_search", "sku_search", "seo_search"];
+      let _index = ES_INDEXS;
 
       Promise.all([
         deleteIndex(_index[0]),
@@ -1214,4 +1220,72 @@ module.exports = function (app) {
   /*
   This new price engine API section ends here
   */
+  app.post("/fetch_es_list", async (req, res) => {
+    try {
+      res.status(200).send(await fetchESRecordsFromDB(req.body));
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ ...error });
+    }
+  });
+  app.post("/sync_elastic_search", async (req, res) => {
+    try {
+      let { type, product_ids } = req.body;
+      let fetchProducts = true,
+        fetchSeos = true,
+        fetchSkus = true;
+      if (type == "products") {
+        fetchSeos = false;
+        fetchSkus = false;
+      }
+      if (type == "sku") {
+        fetchSeos = false;
+        fetchProducts = false;
+      }
+      if (type == "seo") {
+        fetchProducts = false;
+        fetchSkus = false;
+      }
+      res.status(200).send({
+        success: true,
+        message: "Sync initiated successfully!",
+      });
+      let result = await fetchESRecordsFromDB({
+        product_ids,
+        fetchProducts,
+        fetchSeos,
+        fetchSkus,
+      });
+      await Promise.all(
+        Object.keys(result).map(async (i) => {
+          await fullIndexSync({
+            indexName: i.replace("list", "search"),
+            feedData: result[i],
+            initalizeRequired: product_ids && product_ids.length == 0,
+          });
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ ...error });
+    }
+  });
+  app.post("/es_status", async (req, res) => {
+    try {
+      let result = await Promise.all(
+        ES_INDEXS.map(async (indexName) => {
+          return await indexDocumentsCount({ indexName });
+        })
+      );
+      res.status(200).send(
+        result.reduce((accumulator, item, index) => {
+          accumulator[ES_INDEXS[index]] = item.count;
+          return accumulator;
+        }, {})
+      );
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ ...error });
+    }
+  });
 };
