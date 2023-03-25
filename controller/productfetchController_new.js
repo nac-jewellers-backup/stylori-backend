@@ -237,13 +237,13 @@ exports.filteroptions_new = async (req, res) => {
     },
   ];
 
-  if (filters?.material == "Silver") {
-    // filterArray = [...filterArray, "92.5"];
-    skuCondition = {
-      ...skuCondition,
-      purity: { [Op.eq]: "92.5" },
-    };
-  }
+  // if (filters?.material == "Silver") {
+  //   // filterArray = [...filterArray, "92.5"];
+  //   skuCondition = {
+  //     ...skuCondition,
+  //     purity: { [Op.eq]: "92.5" },
+  //   };
+  // }
 
   //including trans_sku_lists
   product_includes.push({
@@ -268,32 +268,28 @@ exports.filteroptions_new = async (req, res) => {
   });
   try {
     let product_ids = await getFilteredProductIds(filters);
+    // let { count, rows } = await models.product_lists.findAndCountAll({
+    //   attributes: ["product_id"],
+    //   include: {
+    //     model: models.trans_sku_lists,
+    //     attributes: [],
+    //     where: {
+    //       isdefault: true,
+    //       ...skuCondition,
+    //     },
+    //   },
+    //   where: {
+    //     product_id: {
+    //       [Op.in]: product_ids,
+    //     },
+    //     ...productListCondition,
+    //   },
+    //   order: orderBy,
+    //   subQuery: false,
+    //   distinct: "product_lists.product_id",
+    // });
 
-    let { count, rows } = await models.product_lists.findAndCountAll({
-      attributes: ["product_id"],
-      include: {
-        model: models.trans_sku_lists,
-        attributes: [],
-        where: {
-          isdefault: true,
-          ...skuCondition,
-        },
-      },
-      where: {
-        product_id: {
-          [Op.in]: product_ids,
-        },
-        ...productListCondition,
-      },
-      limit: 24,
-      offset: offset,
-      order: orderBy,
-      subQuery: false,
-      distinct: "product_lists.product_id",
-    });
-
-    product_ids = rows.map((i) => i.product_id);
-
+    // product_ids = rows.map((i) => i.product_id);
     let data = await models.product_lists.findAll({
       attributes: [
         ["product_name", "productName"],
@@ -313,11 +309,16 @@ exports.filteroptions_new = async (req, res) => {
         },
         ...productListCondition,
       },
+      limit: 24,
+      offset: offset,
       order: orderBy,
     });
-    res
-      .status(200)
-      .send({ data: { totalCount: count, allProductLists: data } });
+    res.status(200).send({
+      data: {
+        totalCount: product_ids.length,
+        allProductLists: data,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send(error);
