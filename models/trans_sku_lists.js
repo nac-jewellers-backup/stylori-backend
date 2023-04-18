@@ -91,6 +91,12 @@ module.exports = (sequelize, DataTypes) => {
       max_order_qty: {
         type: DataTypes.INTEGER,
       },
+      is_orderable: {
+        type: DataTypes.BOOLEAN,
+      },
+      order_shipping_days: {
+        type: DataTypes.INTEGER,
+      },
     },
     {
       timestamps: true,
