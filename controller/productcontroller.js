@@ -2398,6 +2398,8 @@ exports.updateskuinfo = async (req, res) => {
       isActive,
       isReadyToShip,
       approxMetalWeight,
+      isOrderable,
+      orderShippingDays,
     } = req.body;
     let response_obj1 = await models.trans_sku_lists.update(
       // Values to update
@@ -2408,6 +2410,8 @@ exports.updateskuinfo = async (req, res) => {
         is_active: isActive,
         discount_desc: discount,
         is_ready_to_ship: isReadyToShip,
+        is_orderable: isOrderable,
+        order_shipping_days: orderShippingDays,
       },
       {
         // Clause
@@ -4373,7 +4377,7 @@ exports.csvDownload = async (req, res) => {
                   finalProductAttributes[key] = tempProductAttributes[key]
                     ? tempProductAttributes[key]?.join(",")
                     : ``;
-                }                
+                }
                 for (let i = 0; i < item.skus.nodes.length; i++) {
                   const sku = item.skus.nodes[i];
                   if (sku) {
