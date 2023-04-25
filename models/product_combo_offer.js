@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   product_combo_offer.init(
     {
-      main_product: DataTypes.STRING,
+      main_product: { type: DataTypes.STRING, unique: true },
       offered_products: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,

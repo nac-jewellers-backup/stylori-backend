@@ -18,6 +18,7 @@ const {
   fetchESRecordsFromDB,
   fullIndexSync,
 } = require("../controller/elastic_sync");
+const { upsertComboOffers } = require("../controller/combo_offers");
 const turl = process.env.apibaseurl + "/productesearch";
 const upload = require("../middlewares/multer").single("file");
 let ES_INDEXS = ["product_search", "sku_search", "seo_search"];
@@ -1286,6 +1287,23 @@ module.exports = function (app) {
     } catch (error) {
       console.log(error);
       res.status(500).send({ ...error });
+    }
+  });
+  app.post("/bulk_upload_combo", async (req, res) => {
+    try {
+      upload(req, res, (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).send(err);
+        }
+        res
+          .status(200)
+          .send({ status: true, message: "File processing started!" });
+        upsertComboOffers({ filepath: req?.file?.path });
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send(error);
     }
   });
 };
