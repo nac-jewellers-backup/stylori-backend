@@ -10,6 +10,7 @@ import aws from "aws-sdk";
 import dotenv from "dotenv";
 import { sequelize } from "../models";
 import axios from "axios";
+import { checkCartAndApplyCombo } from "./combo_offers";
 var request = require("request");
 var dateFormat = require("dateformat");
 const moment = require("moment");
@@ -865,7 +866,7 @@ exports.getsizes = async (req, res) => {
 };
 exports.removecartitem = async (req, res) => {
   try {
-    let { cart_id, product_id } = req.body;
+    let { cart_id, product_id, combo_products } = req.body;
 
     let cart = await models.shopping_cart.findByPk(cart_id);
 
@@ -883,7 +884,14 @@ exports.removecartitem = async (req, res) => {
         product_sku: product_id,
       },
     });
-
+    if (combo_products) {
+      await models.shopping_cart_item.destroy({
+        where: {
+          shopping_cart_id: cart_id,
+          combo_main_product: combo_products.main_product,
+        },
+      });
+    }
     let totalCartItems = await models.shopping_cart_item.count({
       where: {
         shopping_cart_id: cart_id,
@@ -1075,7 +1083,7 @@ exports.addtocart = async (req, res) => {
       });
     };
 
-    let { user_id, products, cart_id } = req.body;
+    let { user_id, products, cart_id, combo_products } = req.body;
 
     try {
       if (cart_id) {
@@ -1131,7 +1139,12 @@ exports.addtocart = async (req, res) => {
           });
         }
       }
-
+      if (combo_products) {
+        await checkCartAndApplyCombo({
+          cartID: cart_id,
+          cartComboRequested: combo_products,
+        });
+      }
       // products.forEach((element) => {
       //   // console.log("productscart");
       //   // console.log(product_in_cart.length);

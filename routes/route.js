@@ -21,6 +21,7 @@ const {
 const {
   upsertComboOffers,
   displayComboOffer,
+  checkCartAndApplyCombo,
 } = require("../controller/combo_offers");
 const turl = process.env.apibaseurl + "/productesearch";
 const upload = require("../middlewares/multer").single("file");
@@ -1306,12 +1307,10 @@ module.exports = function (app) {
       });
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .send({
-          error: true,
-          message: error?.message || "Something went wrong!",
-        });
+      res.status(500).send({
+        error: true,
+        message: error?.message || "Something went wrong!",
+      });
     }
   });
   app.post("/fetch_combo_offer", async (req, res) => {
