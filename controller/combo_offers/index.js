@@ -1,6 +1,6 @@
 import { get, sum } from "lodash";
 import { sendStatus } from "../../middlewares/socket";
-import uuid from "uuid";
+const uuid = require("uuid/v4");
 const models = require("./../../models");
 const csv = require("csvtojson");
 const arrayChunk = require("array-chunk");
@@ -231,9 +231,15 @@ export const checkCartAndApplyCombo = ({ cartComboRequested, cartID }) => {
             comboOffer,
             comboProducts: finalComboSet,
           });
+        await models.shopping_cart_item.destroy({
+          where: {
+            shopping_cart_id: cartID,
+            combo_main_product: main_product,
+          },
+        });
         let cartItems = comboProducts.map((item) => {
           return {
-            id: uuid.v4,
+            id: `'${uuid()}'`,
             shopping_cart_id: cartID,
             product_sku: item.generated_sku,
             qty: 1,
