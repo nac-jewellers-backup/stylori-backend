@@ -189,7 +189,11 @@ export const displayComboOffer = ({ product_id: main_product }) => {
       let { comboOffer, comboProducts } = await fetchComboProducts({
         main_product,
       });
-      let { totalPrice, offerPrice } = comboOfferPriceCalculation({
+      let {
+        totalPrice,
+        offerPrice,
+        comboProducts: calculatedComboProducts,
+      } = comboOfferPriceCalculation({
         comboOffer,
         comboProducts,
       });
@@ -198,7 +202,7 @@ export const displayComboOffer = ({ product_id: main_product }) => {
         discount_value: comboOffer.discount_value,
         totalPrice,
         offerPrice,
-        comboProducts,
+        comboProducts: calculatedComboProducts,
       });
     } catch (error) {
       console.log(error);
