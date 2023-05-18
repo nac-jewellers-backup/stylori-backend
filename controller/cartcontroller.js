@@ -1065,6 +1065,10 @@ exports.updatecartitem = async (req, res) => {
 };
 exports.addtocart = async (req, res) => {
   try {
+    let { user_id, products, cart_id, combo_products } = req.body;
+    if (!Boolean(user_id)) {
+      user_id = null;
+    }
     let createNewCart = () => {
       return new Promise(async (resolve, reject) => {
         try {
@@ -1082,8 +1086,6 @@ exports.addtocart = async (req, res) => {
         }
       });
     };
-
-    let { user_id, products, cart_id, combo_products } = req.body;
 
     try {
       if (cart_id) {
