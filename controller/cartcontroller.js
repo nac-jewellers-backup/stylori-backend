@@ -2223,7 +2223,7 @@ export const fetchCartDetails = ({ cart_id, combo_products, products }) => {
               productSku: product_sku,
               price: markup_price,
               isComboOffer: false,
-              main_product: null,
+              comboMainProduct: null,
             });
           })
         );
@@ -2246,7 +2246,7 @@ export const fetchCartDetails = ({ cart_id, combo_products, products }) => {
                 price: item.offerPrice,
                 markup_price: item.markup_price,
                 isComboOffer: true,
-                main_product: main_product,
+                comboMainProduct: main_product,
               });
             });
           })
