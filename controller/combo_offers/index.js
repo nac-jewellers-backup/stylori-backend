@@ -235,24 +235,26 @@ export const checkCartAndApplyCombo = ({ cartComboRequested, cartID }) => {
             comboOffer,
             comboProducts: finalComboSet,
           });
-        await models.shopping_cart_item.destroy({
-          where: {
-            shopping_cart_id: cartID,
-            combo_main_product: main_product,
-          },
-        });
-        let cartItems = comboProducts.map((item) => {
-          return {
-            id: `'${uuid()}'`,
-            shopping_cart_id: cartID,
-            product_sku: item.generated_sku,
-            qty: 1,
-            price: item.offerPrice,
-            is_combo_offer: true,
-            combo_main_product: main_product,
-          };
-        });
-        await models.shopping_cart_item.bulkCreate(cartItems);
+        if (Boolean(cartID)) {
+          await models.shopping_cart_item.destroy({
+            where: {
+              shopping_cart_id: cartID,
+              combo_main_product: main_product,
+            },
+          });
+          let cartItems = comboProducts.map((item) => {
+            return {
+              id: `'${uuid()}'`,
+              shopping_cart_id: cartID,
+              product_sku: item.generated_sku,
+              qty: 1,
+              price: item.offerPrice,
+              is_combo_offer: true,
+              combo_main_product: main_product,
+            };
+          });
+          await models.shopping_cart_item.bulkCreate(cartItems);
+        }
         resolve({ totalPrice, offerPrice, comboProducts });
       }
     } catch (error) {

@@ -2174,3 +2174,87 @@ exports.getPincodeDetails = ({ pincode, country_short_code }) => {
       .catch(reject);
   });
 };
+
+export const fetchCartDetails = ({ cart_id, combo_products, products }) => {
+  return new Promise(async (resolve, reject) => {
+    let response = [];
+    try {
+      let tempComboProducts = {};
+      let tempProducts = [];
+      if (Boolean(cart_id)) {
+        let cart_items = await models.shopping_cart_item.findAll({
+          include: {
+            model: models.trans_sku_lists,
+            attributes: ["product_id"],
+          },
+          where: { shopping_cart_id: cart_id },
+        });
+        if (cart_items && cart_items.length) {
+          for (let index = 0; index < cart_items.length; index++) {
+            const element = cart_items[index];
+            if (element.is_combo_offer) {
+              if (!tempComboProducts[element.combo_main_product]) {
+                tempComboProducts[element.combo_main_product] = [];
+              }
+              tempComboProducts[element.combo_main_product] = [
+                ...tempComboProducts[element.combo_main_product],
+                { product_id: element.trans_sku_list.product_id },
+              ];
+            } else {
+              tempProducts.push(element.product_sku);
+            }
+          }
+        }
+        combo_products = {
+          ...combo_products,
+          ...tempComboProducts,
+        };
+        products = [...products, ...tempProducts];
+      }
+      if (products.length) {
+        await Promise.all(
+          products.map(async (product_sku) => {
+            let { markup_price } = await models.trans_sku_lists.findOne({
+              attributes: ["markup_price"],
+              where: { generated_sku: product_sku },
+            });
+            response.push({
+              qty: 1,
+              productSku: product_sku,
+              price: markup_price,
+              isComboOffer: false,
+              main_product: null,
+            });
+          })
+        );
+      }
+      let tempMainProducts = Object.keys(combo_products);
+      if (tempMainProducts.length) {
+        await Promise.all(
+          tempMainProducts.map(async (main_product) => {
+            let { totalPrice, offerPrice, comboProducts } =
+              await checkCartAndApplyCombo({
+                cartComboRequested: {
+                  main_product,
+                  combo_products: combo_products[main_product],
+                },
+              });
+            comboProducts.forEach((item) => {
+              response.push({
+                qty: 1,
+                productSku: item.generated_sku,
+                price: item.offerPrice,
+                markup_price: item.markup_price,
+                isComboOffer: true,
+                main_product: main_product,
+              });
+            });
+          })
+        );
+      }
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};

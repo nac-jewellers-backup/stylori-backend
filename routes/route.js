@@ -1324,4 +1324,15 @@ module.exports = function (app) {
       });
     }
   });
+  app.post("/fetch_cart_details", async (req, res) => {
+    try {
+      res.status(200).send(await cartcontroller.fetchCartDetails(req.body));
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        error: true,
+        message: error?.message || "Something went wrong!",
+      });
+    }
+  });
 };
