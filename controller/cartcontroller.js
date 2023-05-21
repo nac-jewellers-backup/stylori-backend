@@ -1141,11 +1141,15 @@ exports.addtocart = async (req, res) => {
           });
         }
       }
-      if (combo_products) {
-        await checkCartAndApplyCombo({
-          cartID: cart_id,
-          cartComboRequested: combo_products,
-        });
+      if (combo_products && combo_products.length) {
+        await Promise.all(
+          combo_products.map(async (cartComboRequested) => {
+            await checkCartAndApplyCombo({
+              cartID: cart_id,
+              cartComboRequested,
+            });
+          })
+        );
       }
       // products.forEach((element) => {
       //   // console.log("productscart");
