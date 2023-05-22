@@ -1,4 +1,4 @@
-import { get, sum } from "lodash";
+import { get, groupBy, sum } from "lodash";
 import { sendStatus } from "../../middlewares/socket";
 const uuid = require("uuid/v4");
 const models = require("./../../models");
@@ -262,4 +262,39 @@ export const checkCartAndApplyCombo = ({ cartComboRequested, cartID }) => {
       reject(error);
     }
   });
+};
+
+export const checkExistingCartAndUpdateLatestPrice = async ({ cartID }) => {
+  if (!cartID) return;
+  let shopping_cart_items = await models.shopping_cart_item.findAll({
+    attributes: ["combo_main_product", "product_sku"],
+    where: { shopping_cart_id: cartID, is_combo_offer: true },
+    raw: true,
+  });
+  if (shopping_cart_items.length <= 0) return;
+  shopping_cart_items = groupBy(shopping_cart_items, (item) => {
+    return item.combo_main_product;
+  });
+
+  let comboMainProducts = Object.keys(shopping_cart_items);
+  for (let index = 0; index < comboMainProducts.length; index++) {
+    const item = comboMainProducts[index];
+    let element = shopping_cart_items[item];
+    element = await Promise.all(
+      element
+        .filter((i) => !i.product_sku.includes(item))
+        .map(async (item) => {
+          let { product_id } = await models.trans_sku_lists.findOne({
+            where: { generated_sku: item.product_sku },
+          });
+          return {
+            product_id,
+          };
+        })
+    );
+    await checkCartAndApplyCombo({
+      cartComboRequested: { main_product: item, combo_products: element },
+      cartID,
+    });
+  }
 };

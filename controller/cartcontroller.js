@@ -10,7 +10,10 @@ import aws from "aws-sdk";
 import dotenv from "dotenv";
 import { sequelize } from "../models";
 import axios from "axios";
-import { checkCartAndApplyCombo } from "./combo_offers";
+import {
+  checkCartAndApplyCombo,
+  checkExistingCartAndUpdateLatestPrice,
+} from "./combo_offers";
 var request = require("request");
 var dateFormat = require("dateformat");
 const moment = require("moment");
@@ -1188,6 +1191,7 @@ exports.addtocart = async (req, res) => {
           shopping_cart_id: cart_id,
         },
       });
+      console.log(gross_amount);
       // console.log("cartline length");
 
       await models.shopping_cart
@@ -1929,11 +1933,13 @@ exports.updatecart_latestprice = async (req, res) => {
         return;
       }
 
-      /* Update Cart Items to latest price based on SKUs*/
+      /* Update Cart Items to latest price based on SKUs Except Combo Offer*/
       await models.sequelize.query(`update shopping_cart_items i 
       set price = qty * (select markup_price from trans_sku_lists t
       where i.product_sku = t.generated_sku)
-      where shopping_cart_id = '${cart.id}'`);
+      where shopping_cart_id = '${cart.id}' and is_combo_offer is false`);
+      /* Updating cart with Combo Offer if any exists */
+      await checkExistingCartAndUpdateLatestPrice({ cartID: cart.id });
       /* Update Cart with latest prices*/
       await models.sequelize.query(`update shopping_carts c set 
       gross_amount = (select sum(price) from shopping_cart_items i where i.shopping_cart_id = '${cart.id}'),
