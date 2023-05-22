@@ -1686,7 +1686,6 @@ exports.removewishlist = async (req, res) => {
 };
 exports.addorder = async (req, res) => {
   try {
-    let countries = await loadCountries();
     let { user_id, cart_id, payment_mode, voucher_code } = req.body;
     //Getting Cart Details and Address Details
     let cartDetails = await models.shopping_cart.findByPk(cart_id, {
@@ -1722,7 +1721,19 @@ exports.addorder = async (req, res) => {
         .status(403)
         .send({ error: true, message: "No Cart Address found!" });
     }
-    let country_data = countries[address.country.toLowerCase()];
+    let country_data = await models.master_countries.findOne({
+      logging: console.log,
+      where: {
+        [models.Sequelize.Op.or]: {
+          iso: { [models.Sequelize.Op.iLike]: address.country },
+          iso3: { [models.Sequelize.Op.iLike]: address.country },
+          name: { [models.Sequelize.Op.iLike]: address.country },
+          nicename: { [models.Sequelize.Op.iLike]: address.country },
+        },
+      },
+    });
+
+    // let country_data = countries[address.country.toLowerCase()];
     var paymentstatus = "Initiated";
     var orderstatus = "Initiated";
     if (payment_mode === "COD") {
