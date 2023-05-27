@@ -108,27 +108,27 @@ exports.filteroptions_new = async (req, res) => {
         break;
       case "Ready to Ship":
         skuSortOrder.push(["is_ready_to_ship", "desc"]);
-        // orderBy.push([
-        //   { model: models.trans_sku_lists },
-        //   "is_ready_to_ship",
-        //   "desc",
-        // ]);
+        orderBy.push([
+          { model: models.trans_sku_lists },
+          "is_ready_to_ship",
+          "desc",
+        ]);
         break;
       case "Price High to Low":
         skuSortOrder.push(["markup_price", "desc"]);
-        // orderBy.push([
-        //   { model: models.trans_sku_lists },
-        //   "markup_price",
-        //   "desc",
-        // ]);
+        orderBy.push([
+          { model: models.trans_sku_lists },
+          "markup_price",
+          "desc",
+        ]);
         break;
       case "Price Low to High":
         skuSortOrder.push(["markup_price", "asc"]);
-        // orderBy.push([
-        //   { model: models.trans_sku_lists },
-        //   "markup_price",
-        //   "asc",
-        // ]);
+        orderBy.push([
+          { model: models.trans_sku_lists },
+          "markup_price",
+          "asc",
+        ]);
         break;
       case "Best Seller":
         orderBy.push(["selling_qty", "ASC"]);
@@ -175,11 +175,11 @@ exports.filteroptions_new = async (req, res) => {
     delete skuCondition["isdefault"];
     if (availability === "1 Day Shipping") {
       skuSortOrder.push(["is_ready_to_ship", "DESC"]);
-      // orderBy.push([
-      //   { model: models.trans_sku_lists },
-      //   "is_ready_to_ship",
-      //   "desc",
-      // ]);
+      orderBy.push([
+        { model: models.trans_sku_lists },
+        "is_ready_to_ship",
+        "desc",
+      ]);
       //ordering by product_id
       orderBy.push(["product_id", "asc"]);
       skuCondition = {
