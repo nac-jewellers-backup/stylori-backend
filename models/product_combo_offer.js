@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      product_combo_offer.belongsTo(models.trans_sku_lists, {
+        targetKey: "product_id",
+        foreignKey: "main_product",
+      });
     }
   }
   product_combo_offer.init(

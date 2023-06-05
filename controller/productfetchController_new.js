@@ -107,6 +107,7 @@ exports.filteroptions_new = async (req, res) => {
         orderBy.push(["createdAt", "DESC"]);
         break;
       case "Ready to Ship":
+        skuSortOrder.push(["is_ready_to_ship", "desc"]);
         orderBy.push([
           { model: models.trans_sku_lists },
           "is_ready_to_ship",
@@ -114,6 +115,7 @@ exports.filteroptions_new = async (req, res) => {
         ]);
         break;
       case "Price High to Low":
+        skuSortOrder.push(["markup_price", "desc"]);
         orderBy.push([
           { model: models.trans_sku_lists },
           "markup_price",
@@ -121,6 +123,7 @@ exports.filteroptions_new = async (req, res) => {
         ]);
         break;
       case "Price Low to High":
+        skuSortOrder.push(["markup_price", "asc"]);
         orderBy.push([
           { model: models.trans_sku_lists },
           "markup_price",
@@ -171,7 +174,7 @@ exports.filteroptions_new = async (req, res) => {
   if (availability) {
     delete skuCondition["isdefault"];
     if (availability === "1 Day Shipping") {
-      // skuSortOrder.push(["is_ready_to_ship", "DESC"]);
+      skuSortOrder.push(["is_ready_to_ship", "DESC"]);
       orderBy.push([
         { model: models.trans_sku_lists },
         "is_ready_to_ship",
@@ -263,8 +266,6 @@ exports.filteroptions_new = async (req, res) => {
       ["vendor_delivery_time", "vendorDeliveryTime"],
     ],
     where: skuCondition,
-    required: true,
-    order: skuSortOrder,
   });
   try {
     let product_ids = await getFilteredProductIds(filters);
@@ -290,6 +291,24 @@ exports.filteroptions_new = async (req, res) => {
     // });
 
     // product_ids = rows.map((i) => i.product_id);
+    let sortedTransProductIds = [];
+    if (skuSortOrder.length) {
+      sortedTransProductIds = await models.trans_sku_lists.findAll({
+        attributes: ["product_id"],
+        where: {
+          ...skuCondition,
+          product_id: {
+            [Op.in]: product_ids,
+          },
+        },
+        limit: 24,
+        offset,
+        order: skuSortOrder,
+        distinct: "product_id",
+      });
+      sortedTransProductIds = sortedTransProductIds.map((i) => i?.product_id);
+    }
+
     let data = await models.product_lists.findAll({
       attributes: [
         ["product_name", "productName"],
@@ -305,12 +324,12 @@ exports.filteroptions_new = async (req, res) => {
       include: product_includes,
       where: {
         product_id: {
-          [Op.in]: product_ids,
+          [Op.in]: sortedTransProductIds.length
+            ? sortedTransProductIds
+            : product_ids,
         },
         ...productListCondition,
       },
-      limit: 24,
-      offset: offset,
       order: orderBy,
     });
     res.status(200).send({

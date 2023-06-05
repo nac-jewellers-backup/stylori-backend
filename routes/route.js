@@ -18,7 +18,11 @@ const {
   fetchESRecordsFromDB,
   fullIndexSync,
 } = require("../controller/elastic_sync");
-const { upsertComboOffers } = require("../controller/combo_offers");
+const {
+  upsertComboOffers,
+  displayComboOffer,
+  checkCartAndApplyCombo,
+} = require("../controller/combo_offers");
 const turl = process.env.apibaseurl + "/productesearch";
 const upload = require("../middlewares/multer").single("file");
 let ES_INDEXS = ["product_search", "sku_search", "seo_search"];
@@ -1303,7 +1307,32 @@ module.exports = function (app) {
       });
     } catch (error) {
       console.error(error);
-      res.status(500).send(error);
+      res.status(500).send({
+        error: true,
+        message: error?.message || "Something went wrong!",
+      });
+    }
+  });
+  app.post("/fetch_combo_offer", async (req, res) => {
+    try {
+      res.status(200).send(await displayComboOffer(req.body));
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        error: true,
+        message: error?.message || "Something went wrong!",
+      });
+    }
+  });
+  app.post("/fetch_cart_details", async (req, res) => {
+    try {
+      res.status(200).send(await cartcontroller.fetchCartDetails(req.body));
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        error: true,
+        message: error?.message || "Something went wrong!",
+      });
     }
   });
 };
