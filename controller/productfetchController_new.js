@@ -292,6 +292,10 @@ exports.filteroptions_new = async (req, res) => {
 
     // product_ids = rows.map((i) => i.product_id);
     let sortedTransProductIds = [];
+    let paginate = {
+      limit: 24,
+      offset,
+    };
     if (skuSortOrder.length) {
       sortedTransProductIds = await models.trans_sku_lists.findAll({
         attributes: ["product_id"],
@@ -307,6 +311,7 @@ exports.filteroptions_new = async (req, res) => {
         distinct: "product_id",
       });
       sortedTransProductIds = sortedTransProductIds.map((i) => i?.product_id);
+      paginate = {};
     }
 
     let data = await models.product_lists.findAll({
@@ -331,6 +336,7 @@ exports.filteroptions_new = async (req, res) => {
         ...productListCondition,
       },
       order: orderBy,
+      ...paginate,
     });
     res.status(200).send({
       data: {
