@@ -7,6 +7,10 @@
     "start:nodemon": "nodemon app.js --exec babel-node",
     "smell-code": "node sonarqube-scanner.js"
   },
+  "engines" : { 
+    "npm" : ">=8.0.0 <9.0.0",
+    "node" : ">=16.0.0 <=18.0.0"
+  },
   "author": "sandeep",
   "license": "ISC",
   "dependencies": {
