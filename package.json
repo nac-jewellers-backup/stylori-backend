@@ -1,6 +1,6 @@
 {
   "name": "nac-auth",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Nac authentication server",
   "scripts": {
     "start": "npx babel-node --expose-gc --max-old-space-size=4096 app.js",
