@@ -1,0 +1,17 @@
+# PORT = 9000
+# DB_HOST=stylori-dev.cgdst30jpehd.ap-south-1.rds.amazonaws.com
+# DB_USER= AXfEwmdHbDjXQGMb
+# DB_PASS= dWrXcTeHJryvUqwG
+# DATABASE= nac_production
+# SECRET= LF4CWCc64jVG6ANV
+# DB_PORT = 5432
+# NODE_ENV = staging
+
+PORT = 9000
+DB_HOST=stylori-prod.cgdst30jpehd.ap-south-1.rds.amazonaws.com
+DB_USER= MacV3khhqLb3qyb5
+DB_PASS= SUk7H4y4L7Jcpskk
+DATABASE= nac_production
+SECRET= LF4CWCc64jVG6ANV
+DB_PORT = 5432
+NODE_ENV = production
