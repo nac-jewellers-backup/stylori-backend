@@ -3123,8 +3123,10 @@ exports.productdetails = async (req, res) => {
             ? "old"
             : "new",
         availability: "In Stock",
+        // price: "INR" + prod.trans_sku_lists[0].discount_price, -- Code change by Subha as per client 'discount_price' to 'markup_price'
+        // sale_price: "INR" + prod.trans_sku_lists[0].selling_price,
         price: "INR" + prod.trans_sku_lists[0].discount_price,
-        sale_price: "INR" + prod.trans_sku_lists[0].selling_price,
+        sale_price: "INR" + prod.trans_sku_lists[0].markup_price,
         sale_price_effective_date: moment(prod.trans_sku_lists[0].updatedAt),
         brand: "Stylori",
         color: prod.trans_sku_lists[0].metal_color,
