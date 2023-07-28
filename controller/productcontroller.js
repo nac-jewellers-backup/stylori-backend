@@ -4342,7 +4342,7 @@ exports.csvDownload = async (req, res) => {
     const axios = require("axios");
     function loadData({ cursor }) {
       axios
-        .post("http://localhost:8000/graphql", {
+        .post(`http://localhost:${process.env.PORT}/graphql`, {
           query,
           variables: { after: cursor, type },
         })
