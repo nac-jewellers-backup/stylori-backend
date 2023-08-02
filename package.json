@@ -4,7 +4,6 @@
   "description": "Nac authentication server",
   "scripts": {
     "start": "npx --expose-gc --max-old-space-size=4096 babel-node app.js",
-    "start:nodemon": "nodemon app.js --exec babel-node",
     "smell-code": "node sonarqube-scanner.js"
   },
   "engines" : { 
