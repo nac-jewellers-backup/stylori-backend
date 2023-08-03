@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "Nac authentication server",
   "scripts": {
-    "start": "npx --verbose --expose-gc --max-old-space-size=4096 babel-node app.js",
+    "start": "npx --expose-gc --max-old-space-size=4096 babel-node app.js",
     "smell-code": "node sonarqube-scanner.js"
   },
   "engines": {
